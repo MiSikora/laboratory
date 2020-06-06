@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="Theme.Laboratory" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <item name="colorPrimary">#2196f3</item>
+    <item name="colorPrimaryDark">#0069c0</item>
+  </style>
+
+</resources>

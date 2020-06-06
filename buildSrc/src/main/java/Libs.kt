@@ -32,4 +32,10 @@ object Libs {
 
     const val TestExtJUnitKtx = "androidx.test.ext:junit-ktx:1.1.1"
   }
+
+  const val Material = "com.google.android.material:material:1.2.0-beta01"
+
+  const val HyperionPlugin = "com.willowtreeapps.hyperion:hyperion-plugin:0.9.27"
+
+  const val AutoService = "com.google.auto.service:auto-service:1.0-rc6"
 }
