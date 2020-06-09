@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.mehow.laboratory.inspector.LaboratoryActivity
 import com.willowtreeapps.hyperion.plugin.v1.PluginModule as HyperionPluginModule
 
 internal class PluginModule : HyperionPluginModule() {

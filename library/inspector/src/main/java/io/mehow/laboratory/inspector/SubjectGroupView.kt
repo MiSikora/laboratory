@@ -1,4 +1,4 @@
-package io.mehow.laboratory.hyperion
+package io.mehow.laboratory.inspector
 
 import android.annotation.SuppressLint
 import android.content.Context

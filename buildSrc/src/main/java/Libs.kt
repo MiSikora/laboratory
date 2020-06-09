@@ -20,6 +20,8 @@ object Libs {
   object AndroidX {
     const val CoreKtx = "androidx.core:core-ktx:1.3.0"
 
+    const val AppCompat = "androidx.appcompat:appcompat:1.1.0"
+
     object Test {
       const val Version = "1.2.0"
 

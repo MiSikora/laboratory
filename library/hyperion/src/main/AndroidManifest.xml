@@ -3,13 +3,6 @@
     package="io.mehow.laboratory.hyperion"
     >
 
-  <application android:supportsRtl="true">
-    <activity
-        android:name=".LaboratoryActivity"
-        android:exported="false"
-        android:launchMode="singleInstance"
-        android:theme="@style/IoMehowLaboratory.Theme"
-        />
-  </application>
+  <application android:supportsRtl="true" />
 
 </manifest>

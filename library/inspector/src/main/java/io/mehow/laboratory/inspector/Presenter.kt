@@ -1,4 +1,4 @@
-package io.mehow.laboratory.hyperion
+package io.mehow.laboratory.inspector
 
 import io.mehow.laboratory.SubjectFactory
 import io.mehow.laboratory.SubjectStorage

@@ -1,4 +1,4 @@
-package io.mehow.laboratory.hyperion
+package io.mehow.laboratory.inspector
 
 internal class SubjectGroup(
   val name: String,

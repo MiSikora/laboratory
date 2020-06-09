@@ -9,16 +9,11 @@ android {
 }
 
 dependencies {
-  api(project(":library:laboratory"))
-  api(project(":library:subject-factory"))
+  api(project(":library:inspector"))
   api(Libs.HyperionPlugin)
   implementation(Libs.Kotlin.StdLibJdk7)
-  implementation(Libs.AndroidX.CoreKtx)
-  implementation(Libs.Material)
+  implementation(Libs.AndroidX.AppCompat)
   kapt(Libs.AutoService)
-
-  testImplementation(Libs.Kotest.RunnerJunit5)
-  testImplementation(Libs.Kotest.Assertions)
 }
 
 apply(from = rootProject.file("gradle/gradle-mvn-push.gradle"))
