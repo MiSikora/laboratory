@@ -6,11 +6,13 @@ buildscript {
   repositories {
     gradlePluginPortal()
     google()
+    mavenLocal()
   }
 
   dependencies {
     classpath(Libs.AndroidGradlePlugin)
     classpath(Libs.Kotlin.GradlePlugin)
+    classpath(Libs.MavenPublishGradlePlugin)
   }
 }
 
@@ -19,6 +21,7 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
+    mavenLocal()
   }
 
   tasks.withType<JavaCompile> {

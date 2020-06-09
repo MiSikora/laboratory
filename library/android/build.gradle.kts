@@ -23,3 +23,5 @@ dependencies {
   androidTestImplementation(Libs.AndroidX.Test.Runner)
   androidTestImplementation(Libs.Kotest.Assertions)
 }
+
+apply(from = rootProject.file("gradle/gradle-mvn-push.gradle"))
