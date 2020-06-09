@@ -3,111 +3,72 @@ package io.mehow.laboratory.inspector
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
-import io.mehow.laboratory.SubjectFactory
-import io.mehow.laboratory.SubjectStorage
-import io.mehow.laboratory.inspector.Presenter
-import io.mehow.laboratory.inspector.SubjectGroup
-import io.mehow.laboratory.inspector.SubjectModel
+import io.mehow.laboratory.FeatureFactory
+import io.mehow.laboratory.FeatureStorage
 
 class PresenterSpec : DescribeSpec({
   describe("presenter") {
-    it("filters empty subject groups") {
-      val presenter = Presenter(
-        AllSubjectFactory,
-        SubjectStorage.inMemory()
-      )
+    it("filters empty feature groups") {
+      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
 
-      val subjectNames = presenter.getSubjectGroups().map(SubjectGroup::name)
+      val featureNames = presenter.getFeatureGroups().map(FeatureGroup::name)
 
-      subjectNames shouldNotContain "Empty"
+      featureNames shouldNotContain "Empty"
     }
 
-    it("orders subject groups by name") {
-      val presenter = Presenter(
-        AllSubjectFactory,
-        SubjectStorage.inMemory()
-      )
+    it("orders feature groups by name") {
+      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
 
-      val subjectNames = presenter.getSubjectGroups().map(SubjectGroup::name)
+      val featureNames = presenter.getFeatureGroups().map(FeatureGroup::name)
 
-      subjectNames shouldContainExactly listOf("First", "Second")
+      featureNames shouldContainExactly listOf("First", "Second")
     }
 
-    it("does not order subject values") {
-      val presenter = Presenter(
-        AllSubjectFactory,
-        SubjectStorage.inMemory()
-      )
+    it("does not order feature values") {
+      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
 
-      val subjects = presenter.getSubjectGroups()
-        .map(SubjectGroup::models)
-        .map { models -> models.map(SubjectModel::subject) }
+      val features = presenter.getFeatureGroups()
+        .map(FeatureGroup::models)
+        .map { models -> models.map(FeatureModel::feature) }
 
-      subjects[0] shouldContainExactly listOf(
-        First.C,
-        First.B,
-        First.A
-      )
-      subjects[1] shouldContainExactly listOf(
-        Second.B,
-        Second.C,
-        Second.A
-      )
+      features[0] shouldContainExactly listOf(First.C, First.B, First.A)
+      features[1] shouldContainExactly listOf(Second.B, Second.C, Second.A)
     }
 
-    it("marks first subject as selected by default") {
-      val presenter = Presenter(
-        AllSubjectFactory,
-        SubjectStorage.inMemory()
-      )
+    it("marks first feature as selected by default") {
+      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
 
-      presenter.getSelectedSubjects() shouldContainExactly listOf(
-        First.C,
-        Second.B
-      )
+      presenter.getSelectedFeatures() shouldContainExactly listOf(First.C, Second.B)
     }
 
-    it("marks saved subject as selected") {
-      val storage = SubjectStorage.inMemory().apply {
-        setSubject(First.A)
-        setSubject(Second.C)
+    it("marks saved feature as selected") {
+      val storage = FeatureStorage.inMemory().apply {
+        setFeature(First.A)
+        setFeature(Second.C)
       }
-      val presenter = Presenter(
-        AllSubjectFactory,
-        storage
-      )
+      val presenter = Presenter(AllFeatureFactory, storage)
 
-      presenter.getSelectedSubjects() shouldContainExactly listOf(
-        First.A,
-        Second.C
-      )
+      presenter.getSelectedFeatures() shouldContainExactly listOf(First.A, Second.C)
     }
 
-    it("selects subjects") {
-      val presenter = Presenter(
-        AllSubjectFactory,
-        SubjectStorage.inMemory()
-      )
+    it("selects features") {
+      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
 
-      presenter.selectSubject(First.B)
-      presenter.selectSubject(Second.A)
+      presenter.selectFeature(First.B)
+      presenter.selectFeature(Second.A)
 
-      presenter.getSelectedSubjects() shouldContainExactly listOf(
-        First.B,
-        Second.A
-      )
+      presenter.getSelectedFeatures() shouldContainExactly listOf(First.B, Second.A)
     }
   }
 })
 
-internal fun Presenter.getSelectedSubjects(): List<Enum<*>> {
-  return getSubjectGroups()
-    .map(SubjectGroup::models)
-    .map { models -> models.single(SubjectModel::isSelected).let(
-      SubjectModel::subject) }
+internal fun Presenter.getSelectedFeatures(): List<Enum<*>> {
+  return getFeatureGroups()
+    .map(FeatureGroup::models)
+    .map { models -> models.single(FeatureModel::isSelected).let(FeatureModel::feature) }
 }
 
-private object AllSubjectFactory : SubjectFactory {
+private object AllFeatureFactory : FeatureFactory {
   override fun create(): Set<Class<Enum<*>>> {
     @Suppress("UNCHECKED_CAST")
     return setOf(Second::class.java, First::class.java, Empty::class.java) as Set<Class<Enum<*>>>

@@ -11,8 +11,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import com.google.android.material.textview.MaterialTextView
-import io.mehow.laboratory.SubjectFactory
-import io.mehow.laboratory.SubjectStorage
+import io.mehow.laboratory.FeatureFactory
+import io.mehow.laboratory.FeatureStorage
 
 class LaboratoryActivity : Activity() {
   private lateinit var presenter: Presenter
@@ -23,9 +23,9 @@ class LaboratoryActivity : Activity() {
     setContentView(R.layout.io_mehow_laboratory)
     val container = findViewById<ViewGroup>(R.id.io_mehow_laboratory_container)
     val spacing = resources.getDimensionPixelSize(R.dimen.io_mehow_laboratory_spacing)
-    for (group in presenter.getSubjectGroups()) {
-      val groupLabel = createSubjectGroupLabel(group, spacing)
-      val groupView = SubjectGroupView(this, group, presenter::selectSubject)
+    for (group in presenter.getFeatureGroups()) {
+      val groupLabel = createFeatureGroupLabel(group, spacing)
+      val groupView = FeatureGroupView(this, group, presenter::selectFeature)
       container.addView(groupLabel)
       container.addView(groupView)
     }
@@ -39,7 +39,7 @@ class LaboratoryActivity : Activity() {
 
   override fun onRetainNonConfigurationInstance(): Any? = presenter
 
-  private fun createSubjectGroupLabel(group: SubjectGroup, spacing: Int): TextView {
+  private fun createFeatureGroupLabel(group: FeatureGroup, spacing: Int): TextView {
     return MaterialTextView(this).apply {
       layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
         setMargins(spacing, spacing, spacing, 0)
@@ -52,7 +52,7 @@ class LaboratoryActivity : Activity() {
   companion object {
     internal var presenterFactory: (() -> Presenter)? = null
 
-    fun initialize(factory: SubjectFactory, storage: SubjectStorage) {
+    fun initialize(factory: FeatureFactory, storage: FeatureStorage) {
       presenterFactory = { Presenter(factory, storage) }
     }
 

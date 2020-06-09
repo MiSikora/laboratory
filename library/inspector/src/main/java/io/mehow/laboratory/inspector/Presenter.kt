@@ -1,42 +1,42 @@
 package io.mehow.laboratory.inspector
 
-import io.mehow.laboratory.SubjectFactory
-import io.mehow.laboratory.SubjectStorage
+import io.mehow.laboratory.FeatureFactory
+import io.mehow.laboratory.FeatureStorage
 
 internal class Presenter(
-  factory: SubjectFactory,
-  private val storage: SubjectStorage
+  factory: FeatureFactory,
+  private val storage: FeatureStorage
 ) {
   private val groups = factory.create()
 
-  fun getSubjectGroups(): List<SubjectGroup> {
+  fun getFeatureGroups(): List<FeatureGroup> {
     return groups
       .sortedBy(::groupName)
-      .map(::createSubjectGroup)
-      .filter(SubjectGroup::hasSubjects)
+      .map(::createFeatureGroup)
+      .filter(FeatureGroup::hasFeatures)
   }
 
-  fun selectSubject(subject: Enum<*>) = storage.setSubject(subject)
+  fun selectFeature(feature: Enum<*>) = storage.setFeature(feature)
 
   private fun groupName(group: Class<Enum<*>>): String = group.simpleName
 
-  private fun createSubjectGroup(group: Class<Enum<*>>): SubjectGroup {
-    return SubjectGroup(groupName(group), getSubjectModels(group))
+  private fun createFeatureGroup(group: Class<Enum<*>>): FeatureGroup {
+    return FeatureGroup(groupName(group), getFeatureModels(group))
   }
 
-  private fun getSubjectModels(group: Class<Enum<*>>): List<SubjectModel> {
-    val subjectName = storage.getSubjectName(group)
+  private fun getFeatureModels(group: Class<Enum<*>>): List<FeatureModel> {
+    val featureName = storage.getFeatureName(group)
     return group.enumConstants
       .orEmpty()
-      .map { subject -> SubjectModel(subject, isSelected = subject.name == subjectName) }
+      .map { feature -> FeatureModel(feature, isSelected = feature.name == featureName) }
       .let(::ensureOneModelSelected)
   }
 
-  private fun ensureOneModelSelected(models: List<SubjectModel>): List<SubjectModel> {
-    return if (models.any(SubjectModel::isSelected)) models else models.selectFirst()
+  private fun ensureOneModelSelected(models: List<FeatureModel>): List<FeatureModel> {
+    return if (models.any(FeatureModel::isSelected)) models else models.selectFirst()
   }
 
-  private fun List<SubjectModel>.selectFirst(): List<SubjectModel> {
-    return take(1).map(SubjectModel::select) + drop(1)
+  private fun List<FeatureModel>.selectFirst(): List<FeatureModel> {
+    return take(1).map(FeatureModel::select) + drop(1)
   }
 }

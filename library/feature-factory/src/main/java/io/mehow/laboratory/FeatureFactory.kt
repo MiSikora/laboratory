@@ -1,6 +1,6 @@
 package io.mehow.laboratory
 
-interface SubjectFactory {
+interface FeatureFactory {
   fun create(): Set<Class<Enum<*>>>
 
   companion object

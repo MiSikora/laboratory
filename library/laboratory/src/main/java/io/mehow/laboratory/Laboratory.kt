@@ -1,20 +1,20 @@
 package io.mehow.laboratory
 
-class Laboratory(private val storage: SubjectStorage) {
+class Laboratory(private val storage: FeatureStorage) {
   fun <T : Enum<T>> experiment(group: Class<T>): T {
-    val subjects = group.enumConstants!!
-    require(subjects.isNotEmpty()) { "${group.name} must have at least one value" }
-    val firstSubject = subjects.first()
-    val expectedName = storage.getSubjectName(firstSubject.javaClass) ?: firstSubject.name
-    return subjects.firstOrNull { it.name == expectedName } ?: firstSubject
+    val features = group.enumConstants!!
+    require(features.isNotEmpty()) { "${group.name} must have at least one value" }
+    val defaultFeature = features.first()
+    val expectedName = storage.getFeatureName(defaultFeature.javaClass) ?: defaultFeature.name
+    return features.firstOrNull { it.name == expectedName } ?: defaultFeature
   }
 
-  fun <T : Enum<T>> setSubject(subject: T) {
-    storage.setSubject(subject)
+  fun <T : Enum<T>> setFeature(feature: T) {
+    storage.setFeature(feature)
   }
 
   companion object {
-    fun inMemory() = Laboratory(SubjectStorage.inMemory())
+    fun inMemory() = Laboratory(FeatureStorage.inMemory())
   }
 }
 

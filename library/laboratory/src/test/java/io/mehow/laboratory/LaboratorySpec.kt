@@ -7,44 +7,44 @@ import io.kotest.matchers.throwable.shouldHaveMessage
 
 class LaboratorySpec : DescribeSpec({
   describe("laboratory") {
-    it("cannot use subjects without values") {
+    it("cannot use features without values") {
       val laboratory = Laboratory(ThrowingStorage)
 
       shouldThrowExactly<IllegalArgumentException> {
-        laboratory.experiment<InvalidSubject>()
-      } shouldHaveMessage "io.mehow.laboratory.InvalidSubject must have at least one value"
+        laboratory.experiment<InvalidFeature>()
+      } shouldHaveMessage "io.mehow.laboratory.InvalidFeature must have at least one value"
     }
 
-    it("uses first subject by default") {
+    it("uses first feature by default") {
       val laboratory = Laboratory(NullStorage)
 
-      laboratory.experiment<ValidSubject>() shouldBe ValidSubject.A
+      laboratory.experiment<ValidFeature>() shouldBe ValidFeature.A
     }
 
-    it("uses first subject if no name match found") {
+    it("uses first feature if no name match found") {
       val laboratory = Laboratory(EmptyStorage)
 
-      laboratory.experiment<ValidSubject>() shouldBe ValidSubject.A
+      laboratory.experiment<ValidFeature>() shouldBe ValidFeature.A
     }
 
-    it("uses subject saved in a storage") {
-      val storage = SubjectStorage.inMemory()
+    it("uses feature saved in a storage") {
+      val storage = FeatureStorage.inMemory()
       val laboratory = Laboratory(storage)
 
-      for (subject in ValidSubject.values()) {
-        storage.setSubject(subject)
+      for (feature in ValidFeature.values()) {
+        storage.setFeature(feature)
 
-        laboratory.experiment<ValidSubject>() shouldBe subject
+        laboratory.experiment<ValidFeature>() shouldBe feature
       }
     }
 
-    it("can directly change a subject") {
+    it("can directly change a feature") {
       val laboratory = Laboratory.inMemory()
 
-      for (subject in ValidSubject.values()) {
-        laboratory.setSubject(subject)
+      for (feature in ValidFeature.values()) {
+        laboratory.setFeature(feature)
 
-        laboratory.experiment<ValidSubject>() shouldBe subject
+        laboratory.experiment<ValidFeature>() shouldBe feature
       }
     }
   }
@@ -54,35 +54,35 @@ class LaboratorySpec : DescribeSpec({
       val firstLaboratory = Laboratory.inMemory()
       val secondLaboratory = Laboratory.inMemory()
 
-      firstLaboratory.setSubject(ValidSubject.B)
-      firstLaboratory.experiment<ValidSubject>() shouldBe ValidSubject.B
-      secondLaboratory.experiment<ValidSubject>() shouldBe ValidSubject.A
+      firstLaboratory.setFeature(ValidFeature.B)
+      firstLaboratory.experiment<ValidFeature>() shouldBe ValidFeature.B
+      secondLaboratory.experiment<ValidFeature>() shouldBe ValidFeature.A
 
-      secondLaboratory.setSubject(ValidSubject.C)
-      firstLaboratory.experiment<ValidSubject>() shouldBe ValidSubject.B
-      secondLaboratory.experiment<ValidSubject>() shouldBe ValidSubject.C
+      secondLaboratory.setFeature(ValidFeature.C)
+      firstLaboratory.experiment<ValidFeature>() shouldBe ValidFeature.B
+      secondLaboratory.experiment<ValidFeature>() shouldBe ValidFeature.C
     }
   }
 })
 
-private enum class ValidSubject {
+private enum class ValidFeature {
   A, B, C
 }
 
-private enum class InvalidSubject
+private enum class InvalidFeature
 
-private object ThrowingStorage : SubjectStorage {
-  override fun <T : Enum<*>> getSubjectName(group: Class<T>) = assert()
-  override fun <T : Enum<*>> setSubject(subject: T) = assert()
+private object ThrowingStorage : FeatureStorage {
+  override fun <T : Enum<*>> getFeatureName(group: Class<T>) = assert()
+  override fun <T : Enum<*>> setFeature(feature: T) = assert()
   private fun assert(): Nothing = throw AssertionError("Test failed!")
 }
 
-private object NullStorage : SubjectStorage {
-  override fun <T : Enum<*>> getSubjectName(group: Class<T>): String? = null
-  override fun <T : Enum<*>> setSubject(subject: T) = Unit
+private object NullStorage : FeatureStorage {
+  override fun <T : Enum<*>> getFeatureName(group: Class<T>): String? = null
+  override fun <T : Enum<*>> setFeature(feature: T) = Unit
 }
 
-private object EmptyStorage : SubjectStorage {
-  override fun <T : Enum<*>> getSubjectName(group: Class<T>) = ""
-  override fun <T : Enum<*>> setSubject(subject: T) = Unit
+private object EmptyStorage : FeatureStorage {
+  override fun <T : Enum<*>> getFeatureName(group: Class<T>) = ""
+  override fun <T : Enum<*>> setFeature(feature: T) = Unit
 }

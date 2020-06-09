@@ -11,10 +11,10 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
 @SuppressLint("ViewConstructor") // Created only from code.
-internal class SubjectGroupView constructor(
+internal class FeatureGroupView constructor(
   context: Context,
-  subjectGroup: SubjectGroup,
-  private val onCheckSubjectChipListener: (Enum<*>) -> Unit
+  featureGroup: FeatureGroup,
+  private val onCheckFeatureChipListener: (Enum<*>) -> Unit
 ) : ChipGroup(context) {
   private val inflater = LayoutInflater.from(context)
   private val spacing = resources.getDimensionPixelSize(R.dimen.io_mehow_laboratory_spacing)
@@ -24,18 +24,18 @@ internal class SubjectGroupView constructor(
       setMargins(spacing, spacing, spacing, 0)
     }
     isSelectionRequired = true
-    subjectGroup.models.map(::createChip).forEach(::addView)
+    featureGroup.models.map(::createChip).forEach(::addView)
   }
 
-  private fun createChip(model: SubjectModel): Chip {
-    val chip = inflater.inflate(R.layout.io_mehow_laboratory_subject_chip, this, false) as Chip
+  private fun createChip(model: FeatureModel): Chip {
+    val chip = inflater.inflate(R.layout.io_mehow_laboratory_feature_chip, this, false) as Chip
     return chip.apply {
-      text = model.subject.name
+      text = model.feature.name
       isChecked = model.isSelected
       setOnCheckedChangeListener { _, isChecked ->
         if (isChecked) {
           deselectOtherChips()
-          onCheckSubjectChipListener(model.subject)
+          onCheckFeatureChipListener(model.feature)
         }
       }
     }

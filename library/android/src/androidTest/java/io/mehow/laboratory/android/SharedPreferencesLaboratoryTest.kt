@@ -12,17 +12,17 @@ class SharedPreferencesLaboratoryTest {
   private val preferences = ApplicationProvider
     .getApplicationContext<Context>()
     .getSharedPreferences("laboratory", MODE_PRIVATE)
-  private val storage = SharedPreferencesSubjectStorage(preferences)
+  private val storage = SharedPreferencesFeatureStorage(preferences)
   private val laboratory = Laboratory(storage)
 
-  @Test fun storedSubjectIsAvailableAsExperiment() {
-    storage.setSubject(Feature.B)
+  @Test fun storedFeatureIsAvailableAsExperiment() {
+    storage.setFeature(Feature.B)
 
     laboratory.experiment<Feature>() shouldBe Feature.B
   }
 
-  @Test fun corruptedSubjectYieldsDefaultExperiment() {
-    storage.setSubject(Feature.B)
+  @Test fun corruptedFeatureYieldsDefaultExperiment() {
+    storage.setFeature(Feature.B)
     preferences.edit().putInt(Feature::class.java.name, 1).commit()
 
     laboratory.experiment<Feature>() shouldBe Feature.A

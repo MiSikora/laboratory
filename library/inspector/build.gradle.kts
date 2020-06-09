@@ -9,7 +9,7 @@ android {
 
 dependencies {
   api(project(":library:laboratory"))
-  api(project(":library:subject-factory"))
+  api(project(":library:feature-factory"))
   implementation(Libs.Kotlin.StdLibJdk7)
   implementation(Libs.AndroidX.CoreKtx)
   implementation(Libs.Material)
