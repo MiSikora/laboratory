@@ -1,6 +1,11 @@
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.plugins.BasePlugin
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+  id(Libs.Detekt.GradlePluginId) version Libs.Detekt.Version
+}
 
 buildscript {
   repositories {
@@ -13,6 +18,7 @@ buildscript {
     classpath(Libs.AndroidGradlePlugin)
     classpath(Libs.Kotlin.GradlePlugin)
     classpath(Libs.MavenPublishGradlePlugin)
+    classpath(Libs.Detekt.GradlePlugin)
   }
 }
 
@@ -57,4 +63,32 @@ allprojects {
       }
     }
   }
+}
+
+dependencies {
+  detekt(Libs.Detekt.Formatting)
+  detekt(Libs.Detekt.Cli)
+}
+
+tasks.withType<Detekt> {
+  parallel = true
+  config.setFrom(rootProject.file("detekt-config.yml"))
+  setSource(files(projectDir))
+  exclude("**/test/**", "**/androidTest/**")
+  exclude("buildSrc/")
+  exclude("**/*.kts")
+  exclude(subprojects.map { "${it.buildDir.relativeTo(rootDir).path}/" })
+  reports {
+    xml {
+      enabled = isCi()
+      destination = file("build/reports/detekt/detekt-results.xml")
+    }
+    html.enabled = !isCi()
+    txt.enabled = false
+  }
+}
+
+tasks.register("check") {
+  group = "Verification"
+  description = "Allows to attach Detekt to the root project."
 }

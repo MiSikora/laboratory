@@ -40,4 +40,16 @@ object Libs {
   const val AutoService = "com.google.auto.service:auto-service:1.0-rc6"
 
   const val MavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.11.1"
+
+  object Detekt {
+    const val Version = "1.9.1"
+
+    const val GradlePluginId = "io.gitlab.arturbosch.detekt"
+
+    const val GradlePlugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$Version"
+
+    const val Formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:$Version"
+
+    const val Cli = "io.gitlab.arturbosch.detekt:detekt-cli:$Version"
+  }
 }
