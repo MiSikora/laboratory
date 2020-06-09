@@ -1,4 +1,4 @@
-package io.mehow.laboratory.hyperion
+package io.mehow.laboratory
 
 interface SubjectFactory {
   fun create(): Set<Class<Enum<*>>>

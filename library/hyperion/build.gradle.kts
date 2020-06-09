@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
   api(project(":library:laboratory"))
+  api(project(":library:subject-factory"))
   api(Libs.HyperionPlugin)
   implementation(Libs.Kotlin.StdLibJdk7)
   implementation(Libs.AndroidX.CoreKtx)
