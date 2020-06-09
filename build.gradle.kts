@@ -1,4 +1,6 @@
+import com.android.build.api.variant.VariantFilter
 import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.internal.plugins.BasePlugin
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
@@ -45,6 +47,14 @@ allprojects {
         "-progressive",
         "-XXLanguage:+NewInference"
       )
+    }
+  }
+
+  plugins.withType<LibraryPlugin> {
+    extensions.findByType<BaseExtension>()?.apply {
+      variantFilter = Action<VariantFilter> {
+        ignore = name != "release"
+      }
     }
   }
 
