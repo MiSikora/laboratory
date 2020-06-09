@@ -15,7 +15,7 @@
       android:layout_height="@dimen/hype_plugin_icon_size"
       android:layout_marginEnd="28dp"
       android:duplicateParentState="true"
-      app:srcCompat="@drawable/ic_io_mehow_laboratory"
+      app:srcCompat="@drawable/io_mehow_laboratory_icon"
       />
 
   <androidx.appcompat.widget.AppCompatButton
