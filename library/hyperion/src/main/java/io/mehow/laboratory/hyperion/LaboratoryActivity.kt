@@ -50,7 +50,7 @@ class LaboratoryActivity : Activity() {
   }
 
   companion object {
-    private var presenterFactory: (() -> Presenter)? = null
+    internal var presenterFactory: (() -> Presenter)? = null
 
     fun initialize(factory: SubjectFactory, storage: SubjectStorage) {
       presenterFactory = { Presenter(factory, storage) }

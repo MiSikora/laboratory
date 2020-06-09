@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+  <issue id="ObsoleteSdkInt" severity="error" />
+  <issue id="PrivateResource" severity="error" />
+  <issue id="UnusedIds" severity="warning" />
+  <issue id="UnusedResources" severity="warning" />
+  <issue id="SyntheticAccessor" severity="error">
+    <ignore path="src/test*/**" />
+    <ignore path="src/androidTest*/**" />
+    <ignore path="build*/**" />
+  </issue>
+  <issue id="RequiredSize" severity="warning" />
+  <issue id="Registered" severity="error" />
+  <!-- No one cares. -->
+  <issue id="GoogleAppIndexingWarning" severity="ignore" />
+  <issue id="IncompatibleIidVersion" severity="ignore" />
+</lint>

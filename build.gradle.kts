@@ -61,6 +61,23 @@ allprojects {
 
         vectorDrawables.useSupportLibrary = true
       }
+
+      lintOptions {
+        lintConfig = rootProject.file("lint.xml")
+
+        htmlReport  = !isCi()
+        xmlReport = isCi()
+        xmlOutput = file("build/reports/lint/lint-results.xml")
+
+        textReport = true
+        textOutput("stdout")
+        isExplainIssues = false
+
+        isCheckDependencies = false
+        isCheckGeneratedSources = true
+        isCheckTestSources = false
+        isCheckReleaseBuilds = false
+      }
     }
   }
 }
