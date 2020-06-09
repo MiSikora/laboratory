@@ -1,10 +1,12 @@
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.plugins.BasePlugin
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id(Libs.Detekt.GradlePluginId) version Libs.Detekt.Version
+  id(Libs.GradleVersions.GradlePluginId) version Libs.GradleVersions.Version
 }
 
 buildscript {
@@ -19,6 +21,7 @@ buildscript {
     classpath(Libs.Kotlin.GradlePlugin)
     classpath(Libs.MavenPublishGradlePlugin)
     classpath(Libs.Detekt.GradlePlugin)
+    classpath(Libs.GradleVersions.GradlePlugin)
   }
 }
 
@@ -65,7 +68,7 @@ allprojects {
       lintOptions {
         lintConfig = rootProject.file("lint.xml")
 
-        htmlReport  = !isCi()
+        htmlReport = !isCi()
         xmlReport = isCi()
         xmlOutput = file("build/reports/lint/lint-results.xml")
 
@@ -108,4 +111,15 @@ tasks.withType<Detekt> {
 tasks.register("check") {
   group = "Verification"
   description = "Allows to attach Detekt to the root project."
+}
+
+tasks.withType<DependencyUpdatesTask> {
+  rejectVersionIf {
+    isNonStable(candidate.version) && !isNonStable(currentVersion)
+  }
+}
+
+fun isNonStable(version: String): Boolean {
+  val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+  return !regex.matches(version)
 }

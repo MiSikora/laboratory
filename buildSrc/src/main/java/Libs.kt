@@ -37,7 +37,7 @@ object Libs {
 
   const val HyperionPlugin = "com.willowtreeapps.hyperion:hyperion-plugin:0.9.27"
 
-  const val AutoService = "com.google.auto.service:auto-service:1.0-rc6"
+  const val AutoService = "com.google.auto.service:auto-service:1.0-rc7"
 
   const val MavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.11.1"
 
@@ -51,5 +51,13 @@ object Libs {
     const val Formatting = "io.gitlab.arturbosch.detekt:detekt-formatting:$Version"
 
     const val Cli = "io.gitlab.arturbosch.detekt:detekt-cli:$Version"
+  }
+
+  object GradleVersions {
+    const val Version = "0.28.0"
+
+    const val GradlePluginId = "com.github.ben-manes.versions"
+
+    const val GradlePlugin = "com.github.ben-manes:gradle-versions-plugin:$Version"
   }
 }
