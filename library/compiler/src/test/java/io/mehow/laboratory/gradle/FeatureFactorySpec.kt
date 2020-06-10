@@ -43,7 +43,7 @@ class FeatureFactorySpec : DescribeSpec({
   val factoryBuilder = FeatureFactoryModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
-    flags = listOf(featureA, featureB, featureC)
+    features = listOf(featureA, featureB, featureC)
   )
 
   describe("feature factory model") {
@@ -83,7 +83,7 @@ class FeatureFactorySpec : DescribeSpec({
 
       context("flags") {
         it("can be empty") {
-          val builder = factoryBuilder.copy(flags = emptyList())
+          val builder = factoryBuilder.copy(features = emptyList())
 
           val result = builder.build()
 
@@ -91,15 +91,15 @@ class FeatureFactorySpec : DescribeSpec({
         }
 
         it("cannot have duplicates") {
-          val builderA = factoryBuilder.copy(flags = listOf(featureA, featureA, featureB, featureC))
+          val builderA = factoryBuilder.copy(features = listOf(featureA, featureA, featureB, featureC))
           val resultA = builderA.build()
           resultA shouldBeLeft FlagNamespaceCollision(featureA.nel())
 
-          val builderB = factoryBuilder.copy(flags = listOf(featureA, featureB, featureB, featureC))
+          val builderB = factoryBuilder.copy(features = listOf(featureA, featureB, featureB, featureC))
           val resultB = builderB.build()
           resultB shouldBeLeft FlagNamespaceCollision(featureB.nel())
 
-          val builderC = factoryBuilder.copy(flags = listOf(featureA, featureB, featureC, featureC))
+          val builderC = factoryBuilder.copy(features = listOf(featureA, featureB, featureC, featureC))
           val resultC = builderC.build()
           resultC shouldBeLeft FlagNamespaceCollision(featureC.nel())
         }
@@ -180,7 +180,7 @@ class FeatureFactorySpec : DescribeSpec({
     it("is optimized in case of no flags") {
       setOf(1).map {  }
       val tempDir = createTempDir()
-      val builder = factoryBuilder.copy(flags = emptyList())
+      val builder = factoryBuilder.copy(features = emptyList())
 
       val outputFile = builder.build().map { model -> model.generate(tempDir) }
 

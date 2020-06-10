@@ -9,7 +9,7 @@ class FeatureFactoryModel private constructor(
   internal val visibility: Visiblity,
   internal val packageName: String,
   internal val name: String,
-  internal val flags: List<FeatureFlagModel>
+  internal val features: List<FeatureFlagModel>
 ) {
   fun generate(file: File): File {
     FeatureFactoryGenerator(this).generate(file)
@@ -20,7 +20,7 @@ class FeatureFactoryModel private constructor(
   data class Builder(
     internal val visibility: Visiblity = Internal,
     internal val packageName: String = "",
-    internal val flags: List<FeatureFlagModel>
+    internal val features: List<FeatureFlagModel>
   ) {
     internal val name = "GeneratedFeatureFactory"
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
@@ -28,7 +28,7 @@ class FeatureFactoryModel private constructor(
     fun build(): Either<CompilationFailure, FeatureFactoryModel> {
       return Either.fx {
         val packageName = !validatePackageName()
-        val flags = !flags.checkForDuplicates(::FlagNamespaceCollision)
+        val flags = !features.checkForDuplicates(::FlagNamespaceCollision)
         FeatureFactoryModel(visibility, packageName, name, flags)
       }
     }

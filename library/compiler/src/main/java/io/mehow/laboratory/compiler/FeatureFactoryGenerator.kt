@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 class FeatureFactoryGenerator(
   factory: FeatureFactoryModel
 ) {
-  private val featureClasses = factory.flags
+  private val featureClasses = factory.features
     .map(FeatureFlagModel::fqcn)
     .sorted()
     .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
@@ -36,7 +36,7 @@ class FeatureFactoryGenerator(
   private val discoveryFunctionOverride = FunSpec.builder("create")
     .addModifiers(OVERRIDE)
     .apply {
-      if (factory.flags.isNotEmpty()) {
+      if (factory.features.isNotEmpty()) {
         addAnnotation(suppressCast)
         addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
       } else addStatement("return %M()", MemberName("kotlin.collections", "emptySet"))
