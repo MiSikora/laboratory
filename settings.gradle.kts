@@ -1,5 +1,4 @@
 include(":library:laboratory")
-include(":library:feature-factory")
 include(":library:android")
 include(":library:inspector")
 include(":library:hyperion")
