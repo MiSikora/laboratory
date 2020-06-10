@@ -1,5 +1,6 @@
 package io.mehow.laboratory.gradle
 
+import arrow.core.Nel
 import arrow.core.getOrElse
 import arrow.core.identity
 import arrow.core.nel

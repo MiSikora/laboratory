@@ -189,12 +189,14 @@ class FeatureFactorySpec : DescribeSpec({
             |package io.mehow
             |
             |import io.mehow.laboratory.FeatureFactory
+            |import java.lang.Class
+            |import kotlin.Enum
             |import kotlin.collections.emptySet
             |
             |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
             |
             |private object GeneratedFeatureFactory : FeatureFactory {
-            |  override fun create() = emptySet()
+            |  override fun create() = emptySet<Class<Enum<*>>>()
             |}
             |
           """.trimMargin("|")

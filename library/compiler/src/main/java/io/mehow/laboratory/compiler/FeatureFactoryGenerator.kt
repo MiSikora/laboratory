@@ -27,11 +27,13 @@ internal class FeatureFactoryGenerator(
     .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
     .joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
 
-  private val setOf = MemberName("kotlin.collections", "setOf")
-
   private val suppressCast = AnnotationSpec.builder(Suppress::class)
     .addMember("%S", "UNCHECKED_CAST")
     .build()
+
+  private val setOf = MemberName("kotlin.collections", "setOf")
+
+  private val emptySet = MemberName("kotlin.collections", "emptySet")
 
   private val discoveryFunctionOverride = FunSpec.builder("create")
     .addModifiers(OVERRIDE)
@@ -39,7 +41,7 @@ internal class FeatureFactoryGenerator(
       if (factory.features.isNotEmpty()) {
         addAnnotation(suppressCast)
         addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
-      } else addStatement("return %M()", MemberName("kotlin.collections", "emptySet"))
+      } else addStatement("return %M<%T>()", emptySet, setType)
     }
     .build()
 
@@ -64,7 +66,8 @@ internal class FeatureFactoryGenerator(
   fun generate(file: File) = factoryFile.writeTo(file)
 
   private companion object {
-    val factoryReturnType = Set::class(Class::class(Enum::class(STAR)))
+    val setType = Class::class(Enum::class(STAR))
+    val factoryReturnType = Set::class(setType)
 
     operator fun KClass<*>.invoke(parameter: TypeName) = asClassName().parameterizedBy(parameter)
   }
