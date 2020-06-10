@@ -1,6 +1,5 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.Nel
 import arrow.core.getOrElse
 import arrow.core.identity
 import arrow.core.nel
@@ -19,8 +18,8 @@ import io.mehow.laboratory.compiler.InvalidFlagName
 import io.mehow.laboratory.compiler.InvalidFlagValues
 import io.mehow.laboratory.compiler.InvalidPackageName
 import io.mehow.laboratory.compiler.NoFlagValues
-import io.mehow.laboratory.compiler.Visiblity.Internal
-import io.mehow.laboratory.compiler.Visiblity.Public
+import io.mehow.laboratory.compiler.Visibility.Internal
+import io.mehow.laboratory.compiler.Visibility.Public
 import io.mehow.laboratory.compiler.buildAll
 
 class FeatureFlagSpec : DescribeSpec({

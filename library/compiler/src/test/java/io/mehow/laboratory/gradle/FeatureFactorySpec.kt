@@ -15,8 +15,8 @@ import io.mehow.laboratory.compiler.FeatureFactoryModel
 import io.mehow.laboratory.compiler.FeatureFlagModel
 import io.mehow.laboratory.compiler.FlagNamespaceCollision
 import io.mehow.laboratory.compiler.InvalidPackageName
-import io.mehow.laboratory.compiler.Visiblity.Internal
-import io.mehow.laboratory.compiler.Visiblity.Public
+import io.mehow.laboratory.compiler.Visibility.Internal
+import io.mehow.laboratory.compiler.Visibility.Public
 
 class FeatureFactorySpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(

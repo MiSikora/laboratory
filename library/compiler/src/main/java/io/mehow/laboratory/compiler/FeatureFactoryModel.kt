@@ -2,11 +2,11 @@ package io.mehow.laboratory.compiler
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import io.mehow.laboratory.compiler.Visiblity.Internal
+import io.mehow.laboratory.compiler.Visibility.Internal
 import java.io.File
 
 class FeatureFactoryModel private constructor(
-  internal val visibility: Visiblity,
+  internal val visibility: Visibility,
   internal val packageName: String,
   internal val name: String,
   internal val features: List<FeatureFlagModel>
@@ -18,7 +18,7 @@ class FeatureFactoryModel private constructor(
   }
 
   data class Builder(
-    internal val visibility: Visiblity = Internal,
+    internal val visibility: Visibility = Internal,
     internal val packageName: String = "",
     internal val features: List<FeatureFlagModel>
   ) {

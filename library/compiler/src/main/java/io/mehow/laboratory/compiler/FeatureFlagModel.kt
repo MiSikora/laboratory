@@ -11,7 +11,7 @@ import arrow.core.flatMap
 import java.io.File
 
 class FeatureFlagModel private constructor(
-  internal val visibility: Visiblity,
+  internal val visibility: Visibility,
   internal val packageName: String,
   internal val name: String,
   internal val values: Nel<String>
@@ -31,7 +31,7 @@ class FeatureFlagModel private constructor(
   override fun toString() = fqcn
 
   data class Builder(
-    internal val visibility: Visiblity,
+    internal val visibility: Visibility,
     internal val packageName: String,
     internal val name: String,
     internal val values: List<String>
