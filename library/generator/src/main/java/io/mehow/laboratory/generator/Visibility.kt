@@ -1,4 +1,4 @@
-package io.mehow.laboratory.compiler
+package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.KModifier.INTERNAL

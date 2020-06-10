@@ -1,4 +1,4 @@
-package io.mehow.laboratory.gradle
+package io.mehow.laboratory.generator
 
 import arrow.core.Nel
 import arrow.core.getOrElse
@@ -12,16 +12,8 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.int
 import io.kotest.property.arbitrary.stringPattern
 import io.kotest.property.checkAll
-import io.mehow.laboratory.compiler.FeatureFlagModel
-import io.mehow.laboratory.compiler.FlagNameCollision
-import io.mehow.laboratory.compiler.FlagNamespaceCollision
-import io.mehow.laboratory.compiler.InvalidFlagName
-import io.mehow.laboratory.compiler.InvalidFlagValues
-import io.mehow.laboratory.compiler.InvalidPackageName
-import io.mehow.laboratory.compiler.NoFlagValues
-import io.mehow.laboratory.compiler.Visibility.Internal
-import io.mehow.laboratory.compiler.Visibility.Public
-import io.mehow.laboratory.compiler.buildAll
+import io.mehow.laboratory.generator.Visibility.Internal
+import io.mehow.laboratory.generator.Visibility.Public
 
 class FeatureFlagSpec : DescribeSpec({
   val flagBuilder = FeatureFlagModel.Builder(

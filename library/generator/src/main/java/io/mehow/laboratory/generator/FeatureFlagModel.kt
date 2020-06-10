@@ -1,4 +1,4 @@
-package io.mehow.laboratory.compiler
+package io.mehow.laboratory.generator
 
 import arrow.core.Either
 import arrow.core.Nel
@@ -38,7 +38,7 @@ class FeatureFlagModel private constructor(
   ) {
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
-    fun build(): Either<CompilationFailure, FeatureFlagModel> {
+    fun build(): Either<GenerationFailure, FeatureFlagModel> {
       return Either.fx {
         val packageName = !validatePackageName()
         val name = !validateName()
@@ -47,7 +47,7 @@ class FeatureFlagModel private constructor(
       }
     }
 
-    private fun validatePackageName(): Either<CompilationFailure, String> {
+    private fun validatePackageName(): Either<GenerationFailure, String> {
       return Either.cond(
         test = packageName.isEmpty() || packageName.matches(packageNameRegex),
         ifTrue = { packageName },
@@ -55,7 +55,7 @@ class FeatureFlagModel private constructor(
       )
     }
 
-    private fun validateName(): Either<CompilationFailure, String> {
+    private fun validateName(): Either<GenerationFailure, String> {
       return Either.cond(
         test = name.matches(nameRegex),
         ifTrue = { name },
@@ -63,14 +63,14 @@ class FeatureFlagModel private constructor(
       )
     }
 
-    private fun validateValues(): Either<CompilationFailure, Nel<String>> {
+    private fun validateValues(): Either<GenerationFailure, Nel<String>> {
       return Nel.fromList(values)
         .toEither { NoFlagValues(fqcn) }
         .flatMap(::validateValueNames)
         .flatMap(::validateDuplicates)
     }
 
-    private fun validateValueNames(values: Nel<String>): Either<CompilationFailure, Nel<String>> {
+    private fun validateValueNames(values: Nel<String>): Either<GenerationFailure, Nel<String>> {
       val invalidNames = values.toList().filterNot(valueRegex::matches)
       return Nel.fromList(invalidNames)
         .toEither { values }
@@ -78,7 +78,7 @@ class FeatureFlagModel private constructor(
         .mapLeft { InvalidFlagValues(it, fqcn) }
     }
 
-    private fun validateDuplicates(values: Nel<String>): Either<CompilationFailure, Nel<String>> {
+    private fun validateDuplicates(values: Nel<String>): Either<GenerationFailure, Nel<String>> {
       val duplicates = values.toList().findDuplicates()
       return Nel.fromList(duplicates.toList())
         .toEither { values }
@@ -95,7 +95,7 @@ class FeatureFlagModel private constructor(
   }
 }
 
-fun List<FeatureFlagModel.Builder>.buildAll(): Either<CompilationFailure, List<FeatureFlagModel>> {
+fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
   return traverse(Either.applicative(), FeatureFlagModel.Builder::build)
     .map { listKind -> listKind.fix() }
     .flatMap { models -> models.checkForDuplicates(::FlagNamespaceCollision) }

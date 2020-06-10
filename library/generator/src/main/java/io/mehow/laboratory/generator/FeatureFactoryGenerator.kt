@@ -1,4 +1,4 @@
-package io.mehow.laboratory.compiler
+package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.CodeBlock

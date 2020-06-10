@@ -1,8 +1,8 @@
-package io.mehow.laboratory.compiler
+package io.mehow.laboratory.generator
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import io.mehow.laboratory.compiler.Visibility.Internal
+import io.mehow.laboratory.generator.Visibility.Internal
 import java.io.File
 
 class FeatureFactoryModel private constructor(
@@ -25,7 +25,7 @@ class FeatureFactoryModel private constructor(
     internal val name = "GeneratedFeatureFactory"
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
-    fun build(): Either<CompilationFailure, FeatureFactoryModel> {
+    fun build(): Either<GenerationFailure, FeatureFactoryModel> {
       return Either.fx {
         val packageName = !validatePackageName()
         val flags = !features.checkForDuplicates(::FlagNamespaceCollision)
@@ -33,7 +33,7 @@ class FeatureFactoryModel private constructor(
       }
     }
 
-    private fun validatePackageName(): Either<CompilationFailure, String> {
+    private fun validatePackageName(): Either<GenerationFailure, String> {
       return Either.cond(
         test = packageName.isEmpty() || packageName.matches(packageNameRegex),
         ifTrue = { packageName },
