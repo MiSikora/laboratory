@@ -37,7 +37,7 @@ internal data class InvalidFlagValues(
   override val message
     get() = "" +
         "Flag values must contain only alphanumeric characters or underscores " +
-        "and must start with a letter. Found $invalidNames in $fqcn."
+        "and must start with a letter. Found ${invalidNames.toList()} in $fqcn."
 }
 
 internal data class FlagNameCollision(
@@ -45,12 +45,12 @@ internal data class FlagNameCollision(
   private val fqcn: String
 ) : CompilationFailure {
   override val message: String
-    get() = "Found collision in values for $fqcn: $collisionNames."
+    get() = "Found collision in values for $fqcn: ${collisionNames.toList()}."
 }
 
 internal data class FlagNamespaceCollision(
   private val collisionFlags: Nel<FeatureFlagModel>
 ) : CompilationFailure {
   override val message: String
-    get() = "Found feature flags namespace collision: $collisionFlags."
+    get() = "Found feature flags namespace collision: ${collisionFlags.toList()}."
 }
