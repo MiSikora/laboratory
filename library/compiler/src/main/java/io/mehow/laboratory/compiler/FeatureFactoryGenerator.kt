@@ -18,7 +18,7 @@ import io.mehow.laboratory.FeatureFactory
 import java.io.File
 import kotlin.reflect.KClass
 
-class FeatureFactoryGenerator(
+internal class FeatureFactoryGenerator(
   factory: FeatureFactoryModel
 ) {
   private val featureClasses = factory.features
