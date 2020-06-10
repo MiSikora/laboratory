@@ -1,6 +1,8 @@
 package io.mehow.laboratory
 
-import kotlin.annotation.AnnotationRetention.RUNTIME
+import kotlin.annotation.AnnotationRetention.BINARY
+import kotlin.annotation.AnnotationTarget.CLASS
 
-@Retention(RUNTIME)
+@Target(CLASS)
+@Retention(BINARY)
 annotation class Feature

@@ -5,6 +5,8 @@ plugins {
 
 android {
   defaultConfig {
+    consumerProguardFile("laboratory-shrinking.pro")
+
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     testInstrumentationRunnerArgument("clearPackageData", "true")
   }
