@@ -7,6 +7,8 @@ object Libs {
     const val GradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$Version"
 
     const val StdLibJdk7 = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$Version"
+
+    const val StdLibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$Version"
   }
 
   object Kotest {
@@ -15,6 +17,10 @@ object Libs {
     const val RunnerJunit5 = "io.kotest:kotest-runner-junit5-jvm:$Version"
 
     const val Assertions = "io.kotest:kotest-assertions-core-jvm:$Version"
+
+    const val AssertionsArrow = "io.kotest:kotest-assertions-arrow:$Version"
+
+    const val Property = "io.kotest:kotest-property-jvm:$Version"
   }
 
   object AndroidX {
@@ -62,4 +68,8 @@ object Libs {
 
     const val GradlePlugin = "com.github.ben-manes:gradle-versions-plugin:$Version"
   }
+
+  const val KotlinPoet = "com.squareup:kotlinpoet:1.5.0"
+
+  const val Arrow = "io.arrow-kt:arrow-core:0.10.5"
 }
