@@ -59,13 +59,13 @@ class FeatureFlagModel private constructor(
       return Either.cond(
         test = name.matches(nameRegex),
         ifTrue = { name },
-        ifFalse = { InvalidFlagName(name, fqcn) }
+        ifFalse = { InvalidFeatureName(name, fqcn) }
       )
     }
 
     private fun validateValues(): Either<GenerationFailure, Nel<String>> {
       return Nel.fromList(values)
-        .toEither { NoFlagValues(fqcn) }
+        .toEither { NoFeatureValues(fqcn) }
         .flatMap(::validateValueNames)
         .flatMap(::validateDuplicates)
     }
@@ -75,7 +75,7 @@ class FeatureFlagModel private constructor(
       return Nel.fromList(invalidNames)
         .toEither { values }
         .swap()
-        .mapLeft { InvalidFlagValues(it, fqcn) }
+        .mapLeft { InvalidFeatureValues(it, fqcn) }
     }
 
     private fun validateDuplicates(values: Nel<String>): Either<GenerationFailure, Nel<String>> {
@@ -83,7 +83,7 @@ class FeatureFlagModel private constructor(
       return Nel.fromList(duplicates.toList())
         .toEither { values }
         .swap()
-        .mapLeft { FlagNameCollision(it, fqcn) }
+        .mapLeft { FeatureValuesCollision(it, fqcn) }
     }
 
     internal companion object {
@@ -98,5 +98,5 @@ class FeatureFlagModel private constructor(
 fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
   return traverse(Either.applicative(), FeatureFlagModel.Builder::build)
     .map { listKind -> listKind.fix() }
-    .flatMap { models -> models.checkForDuplicates(::FlagNamespaceCollision) }
+    .flatMap { models -> models.checkForDuplicates(FeaturesCollision::fromFeatures) }
 }

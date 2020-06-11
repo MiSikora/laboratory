@@ -1,7 +1,6 @@
 package io.mehow.laboratory.generator
 
 import arrow.core.Nel
-import arrow.core.getOrElse
 import arrow.core.identity
 import arrow.core.nel
 import io.kotest.assertions.arrow.either.shouldBeLeft
@@ -16,7 +15,7 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 
 class FeatureFlagSpec : DescribeSpec({
-  val flagBuilder = FeatureFlagModel.Builder(
+  val featureBuilder = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
     name = "Feature",
@@ -27,37 +26,37 @@ class FeatureFlagSpec : DescribeSpec({
     context("name") {
       it("cannot be blank") {
         checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
-          val builder = flagBuilder.copy(name = name)
+          val builder = featureBuilder.copy(name = name)
 
           val result = builder.build()
 
-          result shouldBeLeft InvalidFlagName(name, builder.fqcn)
+          result shouldBeLeft InvalidFeatureName(name, builder.fqcn)
         }
       }
 
       it("cannot start with an underscore") {
         checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = flagBuilder.copy(name = name)
+          val builder = featureBuilder.copy(name = name)
 
           val result = builder.build()
 
-          result shouldBeLeft InvalidFlagName(name, builder.fqcn)
+          result shouldBeLeft InvalidFeatureName(name, builder.fqcn)
         }
       }
 
       it("cannot contain characters that are not alphanumeric or underscores") {
         checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-          val builder = flagBuilder.copy(name = name)
+          val builder = featureBuilder.copy(name = name)
 
           val result = builder.build()
 
-          result shouldBeLeft InvalidFlagName(name, builder.fqcn)
+          result shouldBeLeft InvalidFeatureName(name, builder.fqcn)
         }
       }
 
       it("can contain alphanumeric characters or underscores") {
         checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = flagBuilder.copy(name = name)
+          val builder = featureBuilder.copy(name = name)
 
           val result = builder.build()
 
@@ -68,7 +67,7 @@ class FeatureFlagSpec : DescribeSpec({
 
     context("package name") {
       it("can be empty") {
-        val builder = flagBuilder.copy(packageName = "")
+        val builder = featureBuilder.copy(packageName = "")
 
         val result = builder.build()
 
@@ -82,7 +81,7 @@ class FeatureFlagSpec : DescribeSpec({
           val packageName = List(count, ::identity).joinToString(".") {
             part.take(1) + part.drop(1).toList().shuffled().joinToString("")
           }
-          val builder = flagBuilder.copy(packageName = packageName)
+          val builder = featureBuilder.copy(packageName = packageName)
 
           val result = builder.build()
 
@@ -92,7 +91,7 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("cannot contain characters that are not alphanumeric or underscores") {
         checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { packageName ->
-          val builder = flagBuilder.copy(packageName = packageName)
+          val builder = featureBuilder.copy(packageName = packageName)
 
           val result = builder.build()
 
@@ -102,48 +101,48 @@ class FeatureFlagSpec : DescribeSpec({
 
       context("values") {
         it("cannot be empty") {
-          val builder = flagBuilder.copy(values = emptyList())
+          val builder = featureBuilder.copy(values = emptyList())
 
           val result = builder.build()
 
-          result shouldBeLeft NoFlagValues(builder.fqcn)
+          result shouldBeLeft NoFeatureValues(builder.fqcn)
         }
 
         it("cannot have blank names") {
           val blanks = Arb.stringPattern("([ ]{0,10})")
           checkAll(blanks, blanks, blanks) { valueA, valueB, valueC ->
             val blankNames = Nel(valueA, valueB, valueC)
-            val builder = flagBuilder.copy(values = blankNames.toList())
+            val builder = featureBuilder.copy(values = blankNames.toList())
 
             val result = builder.build()
 
-            result shouldBeLeft InvalidFlagValues(blankNames, builder.fqcn)
+            result shouldBeLeft InvalidFeatureValues(blankNames, builder.fqcn)
           }
         }
 
         it("cannot have names that start with an underscore") {
           checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-            val builder = flagBuilder.copy(values = listOf(name))
+            val builder = featureBuilder.copy(values = listOf(name))
 
             val result = builder.build()
 
-            result shouldBeLeft InvalidFlagValues(name.nel(), builder.fqcn)
+            result shouldBeLeft InvalidFeatureValues(name.nel(), builder.fqcn)
           }
         }
 
         it("cannot have names that are not alphanumeric characters or underscores") {
           checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-            val builder = flagBuilder.copy(values = listOf(name))
+            val builder = featureBuilder.copy(values = listOf(name))
 
             val result = builder.build()
 
-            result shouldBeLeft InvalidFlagValues(name.nel(), builder.fqcn)
+            result shouldBeLeft InvalidFeatureValues(name.nel(), builder.fqcn)
           }
         }
 
         it("can have names that have alphanumeric characters or underscores") {
           checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-            val builder = flagBuilder.copy(values = listOf(name))
+            val builder = featureBuilder.copy(values = listOf(name))
 
             val result = builder.build()
 
@@ -157,11 +156,11 @@ class FeatureFlagSpec : DescribeSpec({
             val nameB = name + "B"
             val nameC = name + "C"
             val names = listOf(name, name, nameA, nameB, nameC, nameC, nameC)
-            val builder = flagBuilder.copy(values = names.toList())
+            val builder = featureBuilder.copy(values = names.toList())
 
             val result = builder.build()
 
-            result shouldBeLeft FlagNameCollision(Nel(name, nameC), builder.fqcn)
+            result shouldBeLeft FeatureValuesCollision(Nel(name, nameC), builder.fqcn)
           }
         }
       }
@@ -170,10 +169,10 @@ class FeatureFlagSpec : DescribeSpec({
         it("can have unique features") {
           checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
             val nameA = name + "A"
-            val builder = flagBuilder.copy(name = name)
-            val builderA = flagBuilder.copy(name = nameA)
-            val builderB = flagBuilder.copy(packageName = name)
-            val builderC = flagBuilder.copy(packageName = nameA)
+            val builder = featureBuilder.copy(name = name)
+            val builderA = featureBuilder.copy(name = nameA)
+            val builderB = featureBuilder.copy(packageName = name)
+            val builderC = featureBuilder.copy(packageName = nameA)
             val builders = listOf(builder, builderA, builderB, builderC)
 
             val result = builders.buildAll()
@@ -186,16 +185,15 @@ class FeatureFlagSpec : DescribeSpec({
           checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
             val nameA = name + "A"
             val nameB = name + "B"
-            val builder = flagBuilder.copy(name = name)
-            val builderA = flagBuilder.copy(name = nameA)
-            val builderB = flagBuilder.copy(name = nameB)
-            val builderC = flagBuilder.copy(packageName = name)
+            val builder = featureBuilder.copy(name = name)
+            val builderA = featureBuilder.copy(name = nameA)
+            val builderB = featureBuilder.copy(name = nameB)
+            val builderC = featureBuilder.copy(packageName = name)
             val builders = listOf(builder, builder, builderA, builderB, builderC)
-            val duplicate = builder.build().getOrElse { error("Should be right") }
 
             val result = builders.buildAll()
 
-            result shouldBeLeft FlagNamespaceCollision(duplicate.nel())
+            result shouldBeLeft FeaturesCollision(builder.fqcn.nel())
           }
         }
       }
@@ -206,7 +204,7 @@ class FeatureFlagSpec : DescribeSpec({
     it("can be internal") {
       val tempDir = createTempDir()
 
-      val outputFile = flagBuilder.build().map { model -> model.generate(tempDir) }
+      val outputFile = featureBuilder.build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -227,7 +225,7 @@ class FeatureFlagSpec : DescribeSpec({
 
     it("can be public") {
       val tempDir = createTempDir()
-      val builder = flagBuilder.copy(visibility = Public)
+      val builder = featureBuilder.copy(visibility = Public)
 
       val outputFile = builder.build().map { model -> model.generate(tempDir) }
 

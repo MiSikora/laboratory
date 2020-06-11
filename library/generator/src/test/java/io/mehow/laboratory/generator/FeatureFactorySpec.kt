@@ -77,7 +77,7 @@ class FeatureFactorySpec : DescribeSpec({
         }
       }
 
-      context("flags") {
+      context("values") {
         it("can be empty") {
           val builder = factoryBuilder.copy(features = emptyList())
 
@@ -87,17 +87,23 @@ class FeatureFactorySpec : DescribeSpec({
         }
 
         it("cannot have duplicates") {
-          val builderA = factoryBuilder.copy(features = listOf(featureA, featureA, featureB, featureC))
+          val builderA = factoryBuilder.copy(
+            features = listOf(featureA, featureA, featureB, featureC)
+          )
           val resultA = builderA.build()
-          resultA shouldBeLeft FlagNamespaceCollision(featureA.nel())
+          resultA shouldBeLeft FeaturesCollision(featureA.fqcn.nel())
 
-          val builderB = factoryBuilder.copy(features = listOf(featureA, featureB, featureB, featureC))
+          val builderB = factoryBuilder.copy(
+            features = listOf(featureA, featureB, featureB, featureC)
+          )
           val resultB = builderB.build()
-          resultB shouldBeLeft FlagNamespaceCollision(featureB.nel())
+          resultB shouldBeLeft FeaturesCollision(featureB.fqcn.nel())
 
-          val builderC = factoryBuilder.copy(features = listOf(featureA, featureB, featureC, featureC))
+          val builderC = factoryBuilder.copy(
+            features = listOf(featureA, featureB, featureC, featureC)
+          )
           val resultC = builderC.build()
-          resultC shouldBeLeft FlagNamespaceCollision(featureC.nel())
+          resultC shouldBeLeft FeaturesCollision(featureC.fqcn.nel())
         }
 
         it("can have unique features") {
@@ -173,8 +179,8 @@ class FeatureFactorySpec : DescribeSpec({
       }
     }
 
-    it("is optimized in case of no flags") {
-      setOf(1).map {  }
+    it("is optimized in case of no features") {
+      setOf(1).map { }
       val tempDir = createTempDir()
       val builder = factoryBuilder.copy(features = emptyList())
 

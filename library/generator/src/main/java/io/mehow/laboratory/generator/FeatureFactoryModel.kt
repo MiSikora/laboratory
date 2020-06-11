@@ -2,7 +2,6 @@ package io.mehow.laboratory.generator
 
 import arrow.core.Either
 import arrow.core.extensions.fx
-import io.mehow.laboratory.generator.Visibility.Internal
 import java.io.File
 
 class FeatureFactoryModel private constructor(
@@ -18,8 +17,8 @@ class FeatureFactoryModel private constructor(
   }
 
   data class Builder(
-    internal val visibility: Visibility = Internal,
-    internal val packageName: String = "",
+    internal val visibility: Visibility,
+    internal val packageName: String,
     internal val features: List<FeatureFlagModel>
   ) {
     internal val name = "GeneratedFeatureFactory"
@@ -28,8 +27,8 @@ class FeatureFactoryModel private constructor(
     fun build(): Either<GenerationFailure, FeatureFactoryModel> {
       return Either.fx {
         val packageName = !validatePackageName()
-        val flags = !features.checkForDuplicates(::FlagNamespaceCollision)
-        FeatureFactoryModel(visibility, packageName, name, flags)
+        val features = !features.checkForDuplicates(FeaturesCollision::fromFeatures)
+        FeatureFactoryModel(visibility, packageName, name, features)
       }
     }
 
