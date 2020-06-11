@@ -275,4 +275,23 @@ class GenerateFactoryTaskSpec : StringSpec({
     val feature = fixture.factoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
+
+  "generates factory for Android project" {
+    val fixture = "factory-android-smoke".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
+
+    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    factory.shouldExist()
+
+    factory.readText() shouldContain """
+      |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+      |
+      |private object GeneratedFeatureFactory : FeatureFactory {
+      |  override fun create() = emptySet<Class<Enum<*>>>()
+      |}
+    """.trimMargin("|")
+  }
 })

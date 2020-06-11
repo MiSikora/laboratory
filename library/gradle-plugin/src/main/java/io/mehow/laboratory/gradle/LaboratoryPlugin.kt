@@ -1,5 +1,6 @@
 package io.mehow.laboratory.gradle
 
+import com.android.build.gradle.BaseExtension
 import io.mehow.laboratory.laboratoryVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -14,11 +15,13 @@ private const val pluginName = "laboratory"
 
 class LaboratoryPlugin : Plugin<Project> {
   private val hasKotlin = AtomicBoolean(false)
+  private val hasAndroid = AtomicBoolean(false)
   private lateinit var extension: LaboratoryExtension
 
   override fun apply(project: Project) {
     extension = project.extensions.create(pluginName, LaboratoryExtension::class.java)
     project.requireKotlinPlugin()
+    project.checkIfHasAndroid()
 
     project.registerFeaturesTask()
     project.registerFactoryTask()
@@ -33,6 +36,15 @@ class LaboratoryPlugin : Plugin<Project> {
       check(hasKotlin.get()) { "Laboratory Gradle plugin requires Kotlin plugin." }
       addLaboratoryDependency()
     }
+  }
+
+  private fun Project.checkIfHasAndroid() {
+    val androidPluginHandler = { _: Plugin<*> -> hasAndroid.set(true) }
+    plugins.withId("com.android.application", androidPluginHandler)
+    plugins.withId("com.android.library", androidPluginHandler)
+    plugins.withId("com.android.instantapp", androidPluginHandler)
+    plugins.withId("com.android.feature", androidPluginHandler)
+    plugins.withId("com.android.dynamic-feature", androidPluginHandler)
   }
 
   private fun Project.registerFeaturesTask() = afterEvaluate {
@@ -84,9 +96,15 @@ class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.addOutputDirToMainSourceSet(outputDir: File) {
-    val sourceSetContainer = property("sourceSets") as SourceSetContainer
-    val mainSourceSet = sourceSetContainer.getByName("main")
-    mainSourceSet.java.srcDirs(outputDir)
+    if (hasAndroid.get()) {
+      val sourceSetContainer = extensions.getByType(BaseExtension::class.java).sourceSets
+      val mainSourceSet = sourceSetContainer.getByName("main")
+      mainSourceSet.java.srcDirs(outputDir)
+    } else {
+      val sourceSetContainer = property("sourceSets") as SourceSetContainer
+      val mainSourceSet = sourceSetContainer.getByName("main")
+      mainSourceSet.java.srcDirs(outputDir)
+    }
   }
 
   private fun Project.addLaboratoryDependency() {
@@ -96,7 +114,7 @@ class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.makeKotlinDependOn(task: TaskProvider<out Task>) {
-    tasks.named("compileKotlin", KotlinCompile::class.java) { kotlinTask ->
+    tasks.withType(KotlinCompile::class.java) { kotlinTask ->
       kotlinTask.dependsOn(task)
     }
   }

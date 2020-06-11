@@ -283,4 +283,21 @@ class GenerateFeaturesTaskSpec : StringSpec({
     val feature = fixture.featureFile("io.mehow.Feature")
     feature.shouldNotExist()
   }
+
+  "generates feature flag for Android project" {
+    val fixture = "feature-android-smoke".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |enum class Feature {
+      |  First
+      |}
+    """.trimMargin("|")
+  }
 })

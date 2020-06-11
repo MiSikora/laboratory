@@ -22,6 +22,7 @@ dependencies {
   implementation(Libs.Kotlin.StdLibJdk8)
   implementation(project(":library:generator"))
   implementation(Libs.Kotlin.GradlePlugin)
+  implementation(Libs.AndroidGradlePlugin)
 
   testImplementation(Libs.Kotest.RunnerJunit5)
   testImplementation(Libs.Kotest.Assertions)

@@ -1,0 +1,8 @@
+plugins {
+  id("com.android.application")
+  id("io.mehow.laboratory")
+}
+
+android {
+  compileSdkVersion 29
+}

@@ -40,6 +40,27 @@ class LaboratoryPluginSpec : StringSpec({
     result.task(":generateFeatureFlags").shouldNotBeNull()
   }
 
+  "fails for Android project without Kotlin Android plugin" {
+    val fixture = "plugin-kotlin-android-missing".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("generateFeatureFlags", "--stacktrace")
+      .buildAndFail()
+
+    result.task(":generateFeatureFlags").shouldBeNull()
+    result.output shouldContain "Laboratory Gradle plugin requires Kotlin plugin."
+  }
+
+  "registers feature flags task for project with Kotlin Android plugin" {
+    val fixture = "plugin-kotlin-android-present".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("generateFeatureFlags", "--stacktrace")
+      .build()
+
+    result.task(":generateFeatureFlags").shouldNotBeNull()
+  }
+
   "does not register feature factory for project without factory extension" {
     val fixture = "plugin-factory-missing".toFixture()
 
