@@ -33,6 +33,9 @@ allprojects {
     jcenter()
   }
 
+  group = properties["GROUP"]!!
+  version = properties["VERSION_NAME"]!!
+
   tasks.withType<JavaCompile> {
     sourceCompatibility = "1.8"
     targetCompatibility = "1.8"
