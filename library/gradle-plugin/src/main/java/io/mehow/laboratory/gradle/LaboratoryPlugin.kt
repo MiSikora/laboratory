@@ -108,9 +108,9 @@ class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.addLaboratoryDependency() {
-    configurations.getByName("api").dependencies.add(
-      dependencies.create("io.mehow.laboratory:laboratory:$laboratoryVersion")
-    )
+    val artifactId = if (hasAndroid.get()) "laboratory-android" else "laboratory"
+    val dependency = "io.mehow.laboratory:$artifactId:$laboratoryVersion"
+    dependencies.add("api", dependency)
   }
 
   private fun Project.makeKotlinDependOn(task: TaskProvider<out Task>) {
