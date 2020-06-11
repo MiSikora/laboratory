@@ -1,0 +1,16 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("FeatureA") {
+    withValue("First")
+    withValue("Second")
+  }
+
+  feature("FeatureB") {
+    withValue("First")
+    withValue("Second")
+  }
+}

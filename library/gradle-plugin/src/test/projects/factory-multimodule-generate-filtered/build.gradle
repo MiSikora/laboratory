@@ -1,0 +1,16 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  factory {
+    excludeProjects { project ->
+      project.name == "feature-a"
+    }
+  }
+
+  feature("FeatureFactory") {
+    withValue("First")
+  }
+}

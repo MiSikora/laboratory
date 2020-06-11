@@ -15,7 +15,6 @@ buildscript {
   repositories {
     gradlePluginPortal()
     google()
-    mavenLocal()
   }
 
   dependencies {
@@ -32,7 +31,6 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
-    mavenLocal()
   }
 
   tasks.withType<JavaCompile> {

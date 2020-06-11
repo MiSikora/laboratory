@@ -1,0 +1,18 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  packageName = "io.mehow.implicit"
+
+  feature("FeatureA") {
+    withValue("FirstA")
+    withValue("SecondA")
+  }
+
+  feature("FeatureB") {
+    withValue("FirstB")
+    withValue("SecondB")
+  }
+}

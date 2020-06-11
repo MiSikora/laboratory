@@ -1,0 +1,13 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("Feature") {
+    isPublic = false
+
+    withValue("First")
+    withValue("Second")
+  }
+}
