@@ -1,5 +1,5 @@
 include(":library:laboratory")
 include(":library:android")
 include(":library:inspector")
-include(":library:hyperion")
+include(":library:hyperion-plugin")
 include(":library:generator")
