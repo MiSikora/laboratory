@@ -36,6 +36,12 @@ allprojects {
   group = properties["GROUP"]!!
   version = properties["VERSION_NAME"]!!
 
+  tasks.withType<Test> {
+    testLogging {
+      events("skipped", "failed", "passed")
+    }
+  }
+
   tasks.withType<JavaCompile> {
     sourceCompatibility = "1.8"
     targetCompatibility = "1.8"
