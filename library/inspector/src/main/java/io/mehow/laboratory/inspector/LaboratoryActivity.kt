@@ -11,9 +11,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import com.google.android.material.textview.MaterialTextView
+import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 
+@HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
 class LaboratoryActivity : Activity() {
   private lateinit var presenter: Presenter
 

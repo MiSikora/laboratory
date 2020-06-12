@@ -9,6 +9,7 @@ android {
 
 dependencies {
   api(project(":library:laboratory"))
+  implementation(Libs.HyperionPlugin)
   implementation(Libs.Kotlin.StdLibJdk7)
   implementation(Libs.AndroidX.CoreKtx)
   implementation(Libs.Material)
