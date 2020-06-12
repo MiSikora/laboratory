@@ -1,13 +1,10 @@
 package io.mehow.laboratory.gradle
 
-import com.android.build.gradle.BaseExtension
 import io.mehow.laboratory.laboratoryVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskProvider
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -48,22 +45,20 @@ class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.registerFeaturesTask() = afterEvaluate {
-    val codeGenDir = File("$buildDir/generated/source/laboratory/feature")
+    val codeGenDir = File("$buildDir/generated/laboratory/code/feature")
     val featuresTask = registerTask<FeatureFlagsTask>("generateFeatureFlags") { task ->
       task.group = pluginName
       task.description = "Generate Laboratory features."
       task.features = extension.featureInputs
       task.codeGenDir = codeGenDir
     }
-
-    addOutputDirToMainSourceSet(codeGenDir)
-    makeKotlinDependOn(featuresTask)
+    featuresTask.contributeToSourceSets(codeGenDir, this)
   }
 
   private fun Project.registerFactoryTask() = afterEvaluate {
-    val codeGenDir = File("${project.buildDir}/generated/source/laboratory/factory")
     val factoryInput = extension.factoryInput ?: return@afterEvaluate
 
+    val codeGenDir = File("${project.buildDir}/generated/laboratory/code/factory")
     val featureInputs = mutableListOf<FeatureFlagInput>()
     val factoryTask = registerTask<FeatureFactoryTask>("generateFeatureFactory") { task ->
       task.group = pluginName
@@ -72,10 +67,8 @@ class LaboratoryPlugin : Plugin<Project> {
       task.features = featureInputs
       task.codeGenDir = codeGenDir
     }
-
-    addOutputDirToMainSourceSet(codeGenDir)
-    makeKotlinDependOn(factoryTask)
     findAllFeatures(factoryInput.projectFilter, featureInputs::addAll)
+    factoryTask.contributeToSourceSets(codeGenDir, this)
   }
 
   private fun Project.findAllFeatures(
@@ -95,28 +88,10 @@ class LaboratoryPlugin : Plugin<Project> {
     }
   }
 
-  private fun Project.addOutputDirToMainSourceSet(outputDir: File) {
-    if (hasAndroid.get()) {
-      val sourceSetContainer = extensions.getByType(BaseExtension::class.java).sourceSets
-      val mainSourceSet = sourceSetContainer.getByName("main")
-      mainSourceSet.java.srcDirs(outputDir)
-    } else {
-      val sourceSetContainer = property("sourceSets") as SourceSetContainer
-      val mainSourceSet = sourceSetContainer.getByName("main")
-      mainSourceSet.java.srcDirs(outputDir)
-    }
-  }
-
   private fun Project.addLaboratoryDependency() {
     val artifactId = if (hasAndroid.get()) "laboratory-android" else "laboratory"
     val dependency = "io.mehow.laboratory:$artifactId:$laboratoryVersion"
     dependencies.add("api", dependency)
-  }
-
-  private fun Project.makeKotlinDependOn(task: TaskProvider<out Task>) {
-    tasks.withType(KotlinCompile::class.java) { kotlinTask ->
-      kotlinTask.dependsOn(task)
-    }
   }
 
   private inline fun <reified T : Task> Project.registerTask(

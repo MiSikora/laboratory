@@ -4,7 +4,6 @@ import arrow.core.Either
 import io.mehow.laboratory.generator.buildAll
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Internal
-import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
