@@ -22,7 +22,7 @@ class IntroductionPresenter(private val laboratory: Laboratory) {
   fun onIntroductionFinished() = when(laboratory.experiment<AuthFeature>) {
     AuthMethod.None -> TODO("Go to the main screen")
     AuthMethod.Fingerprint -> TODO("Show fingerprint scanner")
-    AuthMethod.Retina -> TODO("Show face scanner")
+    AuthMethod.Face -> TODO("Show face scanner")
   }
 }
 
