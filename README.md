@@ -2,7 +2,7 @@
 
 [![Build Status](https://app.bitrise.io/app/148b95503bea5e3f/status.svg?token=gL99D2VRSIBv3ZulLGQBWA)](https://app.bitrise.io/app/148b95503bea5e3f)
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.mehow.laboratory/laboratory/badge.svg)](https://search.maven.org/search?q=g:io.mehow.ruler)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.mehow.laboratory/laboratory/badge.svg)](https://search.maven.org/search?q=g:io.mehow.laboratory)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 
 Feature flags for multi-module Java and Android projects.
