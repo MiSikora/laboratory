@@ -10,7 +10,7 @@ import java.io.File
 
 open class FeatureFlagsTask : DefaultTask() {
   @get:Internal internal lateinit var features: List<FeatureFlagInput>
-  @get:OutputDirectory internal lateinit var codeGenDir: File
+  @get:Internal internal lateinit var codeGenDir: File
 
   @TaskAction fun generateFeatureFlags() {
     when (val buildIntent = features.map(FeatureFlagInput::toBuilder).buildAll()) {

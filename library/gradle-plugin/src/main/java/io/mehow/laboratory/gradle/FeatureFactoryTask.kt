@@ -12,7 +12,7 @@ import java.io.File
 open class FeatureFactoryTask : DefaultTask() {
   @get:Internal internal lateinit var factory: FeatureFactoryInput
   @get:Internal internal lateinit var features: List<FeatureFlagInput>
-  @get:OutputDirectory internal lateinit var codeGenDir: File
+  @get:Internal internal lateinit var codeGenDir: File
 
   @TaskAction fun generateFeatureFlags() {
     val featureModels = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
