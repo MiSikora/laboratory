@@ -1,6 +1,8 @@
 package io.mehow.laboratory
 
 class Laboratory(private val storage: FeatureStorage) {
+  inline fun <reified T : Enum<T>> experiment() = experiment(T::class.java)
+
   fun <T : Enum<T>> experiment(group: Class<T>): T {
     val features = group.enumConstants!!
     require(features.isNotEmpty()) { "${group.name} must have at least one value" }
@@ -17,5 +19,3 @@ class Laboratory(private val storage: FeatureStorage) {
     fun inMemory() = Laboratory(FeatureStorage.inMemory())
   }
 }
-
-inline fun <reified T : Enum<T>> Laboratory.experiment() = experiment(T::class.java)
