@@ -132,7 +132,7 @@ enum class Trombulation {
 
 internal fun Laboratory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
 
-private class GeneratedFeatureFactory : FeatureFactory {
+private object GeneratedFeatureFactory : FeatureFactory {
   @Suppress("UNCHECKED_CAST")
   override fun create() = setOf(
     Class.forName("io.mehow.sample.Brombulation"),
