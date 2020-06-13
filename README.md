@@ -179,6 +179,8 @@ laboratory {
 }
 ```
 
+You can also check [the sample](sample/) for more info.
+
 ## Integration
 
 Laboratory requires Java 8 bytecode. To enable Java 8 desugaring configure it in your Gradle script.

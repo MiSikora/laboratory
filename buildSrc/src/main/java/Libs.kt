@@ -43,7 +43,13 @@ object Libs {
 
   const val Material = "com.google.android.material:material:1.2.0-beta01"
 
-  const val HyperionPlugin = "com.willowtreeapps.hyperion:hyperion-plugin:0.9.27"
+  object Hyperion {
+    const val Version = "0.9.27"
+
+    const val Plugin = "com.willowtreeapps.hyperion:hyperion-plugin:$Version"
+
+    const val Core = "com.willowtreeapps.hyperion:hyperion-core:$Version"
+  }
 
   const val AutoService = "com.google.auto.service:auto-service:1.0-rc7"
 
