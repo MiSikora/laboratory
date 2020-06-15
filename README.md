@@ -19,7 +19,7 @@ enum class AuthMethod {
 
 class IntroductionPresenter(private val laboratory: Laboratory) {
   // Read feature from the laboratory.
-  fun onIntroductionFinished() = when(laboratory.experiment<AuthFeature>) {
+  fun onIntroductionFinished() = when(laboratory.experiment<AuthFeature>()) {
     AuthMethod.None -> TODO("Go to the main screen")
     AuthMethod.Fingerprint -> TODO("Show fingerprint scanner")
     AuthMethod.Face -> TODO("Show face scanner")
