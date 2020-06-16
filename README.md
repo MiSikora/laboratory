@@ -65,7 +65,7 @@ fun openLaboratory(context: Context) {
 }
 ```
 
-A `FeatureStorage` persistance mechanism should come from the DI graph and must be shared with `Laboratory` instances in order to keep changes in sync. A `FeatureFactory` should return all enum classes that should be used as features. You can provide your custom implementation but it should be easier to rely on `laboratory-gradle-plugin` to do this job.
+A `FeatureStorage` persistence mechanism should come from the DI graph and must be shared with `Laboratory` instances in order to keep changes in sync. A `FeatureFactory` should return all enum classes that should be used as features. You can provide your custom implementation but it should be easier to rely on `laboratory-gradle-plugin` to do this job.
 
 | Inspector                 | Hyperion                 |
 |:-------------------------:|:------------------------:|
