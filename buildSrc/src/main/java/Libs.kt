@@ -41,7 +41,7 @@ object Libs {
     const val TestExtJUnitKtx = "androidx.test.ext:junit-ktx:1.1.1"
   }
 
-  const val Material = "com.google.android.material:material:1.2.0-beta01"
+  const val Material = "com.google.android.material:material:1.2.1"
 
   object Hyperion {
     const val Version = "0.9.27"
