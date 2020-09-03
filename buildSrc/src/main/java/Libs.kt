@@ -29,7 +29,7 @@ object Libs {
     const val AppCompat = "androidx.appcompat:appcompat:1.2.0"
 
     object Test {
-      const val Version = "1.2.0"
+      const val Version = "1.3.0"
 
       const val CoreKtx = "androidx.test:core-ktx:$Version"
 
