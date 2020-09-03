@@ -44,7 +44,7 @@ object Libs {
   const val Material = "com.google.android.material:material:1.2.1"
 
   object Hyperion {
-    const val Version = "0.9.27"
+    const val Version = "0.9.29"
 
     const val Plugin = "com.willowtreeapps.hyperion:hyperion-plugin:$Version"
 
