@@ -68,7 +68,7 @@ object Libs {
   }
 
   object GradleVersions {
-    const val Version = "0.28.0"
+    const val Version = "0.29.0"
 
     const val GradlePluginId = "com.github.ben-manes.versions"
 
