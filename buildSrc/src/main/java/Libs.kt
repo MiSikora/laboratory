@@ -38,7 +38,7 @@ object Libs {
       const val Runner = "androidx.test:runner:$Version"
     }
 
-    const val TestExtJUnitKtx = "androidx.test.ext:junit-ktx:1.1.1"
+    const val TestExtJUnitKtx = "androidx.test.ext:junit-ktx:1.1.2"
   }
 
   const val Material = "com.google.android.material:material:1.2.1"
