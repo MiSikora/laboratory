@@ -27,7 +27,7 @@ class FeatureFactoryModel private constructor(
     fun build(): Either<GenerationFailure, FeatureFactoryModel> {
       return Either.fx {
         val packageName = !validatePackageName()
-        val features = !features.checkForDuplicates(FeaturesCollision::fromFeatures)
+        val features = !features.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) }
         FeatureFactoryModel(visibility, packageName, name, features)
       }
     }

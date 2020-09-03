@@ -66,8 +66,8 @@ class FeatureFlagModel private constructor(
     private fun validateValues(): Either<GenerationFailure, Nel<String>> {
       return Nel.fromList(values)
         .toEither { NoFeatureValues(fqcn) }
-        .flatMap(::validateValueNames)
-        .flatMap(::validateDuplicates)
+        .flatMap { @Kt41142 validateValueNames(it) }
+        .flatMap { @Kt41142 validateDuplicates(it) }
     }
 
     private fun validateValueNames(values: Nel<String>): Either<GenerationFailure, Nel<String>> {
@@ -96,7 +96,7 @@ class FeatureFlagModel private constructor(
 }
 
 fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
-  return traverse(Either.applicative(), FeatureFlagModel.Builder::build)
+  return traverse(Either.applicative()) { @Kt41142 it.build() }
     .map { listKind -> listKind.fix() }
-    .flatMap { models -> models.checkForDuplicates(FeaturesCollision::fromFeatures) }
+    .flatMap { models -> models.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) } }
 }

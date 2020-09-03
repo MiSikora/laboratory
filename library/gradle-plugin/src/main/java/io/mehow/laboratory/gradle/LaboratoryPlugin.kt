@@ -67,7 +67,7 @@ class LaboratoryPlugin : Plugin<Project> {
       task.features = featureInputs
       task.codeGenDir = codeGenDir
     }
-    findAllFeatures(factoryInput.projectFilter, featureInputs::addAll)
+    findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
     factoryTask.contributeToSourceSets(codeGenDir, this)
   }
 
