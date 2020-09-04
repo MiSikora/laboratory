@@ -9,7 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
-class SharedPreferencesLaboratoryTest {
+class SharedPreferencesFeaturesStorageTest {
   private val preferences = ApplicationProvider
     .getApplicationContext<Context>()
     .getSharedPreferences("laboratory", MODE_PRIVATE)
