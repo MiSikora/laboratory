@@ -43,6 +43,7 @@ laboratory {
 
 dependencies {
   implementation(Libs.Kotlin.StdLibJdk7)
+  implementation(Libs.Kotlin.Coroutines.Android)
   implementation(Libs.Material)
   implementation(Libs.Hyperion.Core)
   @Suppress("GradleDynamicVersion") // We want the latest version as we control it.

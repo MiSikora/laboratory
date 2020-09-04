@@ -9,6 +9,14 @@ object Libs {
     const val StdLibJdk7 = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$Version"
 
     const val StdLibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$Version"
+
+    object Coroutines {
+      const val Version = "1.3.9"
+
+      const val Android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$Version"
+
+      const val Test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$Version"
+    }
   }
 
   object Kotest {

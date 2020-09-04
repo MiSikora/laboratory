@@ -74,17 +74,17 @@ private enum class ValidFeature {
 private enum class InvalidFeature
 
 private object ThrowingStorage : FeatureStorage {
-  override fun <T : Enum<*>> getFeatureName(group: Class<T>) = assert()
-  override fun <T : Enum<*>> setFeature(feature: T) = assert()
+  override suspend fun <T : Enum<*>> getFeatureName(group: Class<T>) = assert()
+  override suspend fun <T : Enum<*>> setFeature(feature: T) = assert()
   private fun assert(): Nothing = throw AssertionError("Test failed!")
 }
 
 private object NullStorage : FeatureStorage {
-  override fun <T : Enum<*>> getFeatureName(group: Class<T>): String? = null
-  override fun <T : Enum<*>> setFeature(feature: T) = Unit
+  override suspend fun <T : Enum<*>> getFeatureName(group: Class<T>): String? = null
+  override suspend fun <T : Enum<*>> setFeature(feature: T) = Unit
 }
 
 private object EmptyStorage : FeatureStorage {
-  override fun <T : Enum<*>> getFeatureName(group: Class<T>) = ""
-  override fun <T : Enum<*>> setFeature(feature: T) = Unit
+  override suspend fun <T : Enum<*>> getFeatureName(group: Class<T>) = ""
+  override suspend fun <T : Enum<*>> setFeature(feature: T) = Unit
 }

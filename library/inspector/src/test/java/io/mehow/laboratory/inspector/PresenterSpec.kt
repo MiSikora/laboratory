@@ -62,7 +62,7 @@ class PresenterSpec : DescribeSpec({
   }
 })
 
-internal fun Presenter.getSelectedFeatures(): List<Enum<*>> {
+internal suspend fun Presenter.getSelectedFeatures(): List<Enum<*>> {
   return getFeatureGroups()
     .map(FeatureGroup::models)
     .map { models -> models.single(FeatureModel::isSelected).let(FeatureModel::feature) }

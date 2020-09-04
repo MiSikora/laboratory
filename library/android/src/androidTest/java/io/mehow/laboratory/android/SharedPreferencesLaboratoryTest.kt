@@ -5,6 +5,8 @@ import android.content.Context.MODE_PRIVATE
 import androidx.test.core.app.ApplicationProvider
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Laboratory
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
 
 class SharedPreferencesLaboratoryTest {
@@ -14,13 +16,15 @@ class SharedPreferencesLaboratoryTest {
   private val storage = SharedPreferencesFeatureStorage(preferences)
   private val laboratory = Laboratory(storage)
 
-  @Test fun storedFeatureIsAvailableAsExperiment() {
+  @OptIn(ExperimentalCoroutinesApi::class)
+  @Test fun storedFeatureIsAvailableAsExperiment() = runBlockingTest {
     storage.setFeature(Feature.B)
 
     laboratory.experiment<Feature>() shouldBe Feature.B
   }
 
-  @Test fun corruptedFeatureYieldsDefaultExperiment() {
+  @OptIn(ExperimentalCoroutinesApi::class)
+  @Test fun corruptedFeatureYieldsDefaultExperiment() = runBlockingTest {
     storage.setFeature(Feature.B)
     preferences.edit().putInt(Feature::class.java.name, 1).commit()
 

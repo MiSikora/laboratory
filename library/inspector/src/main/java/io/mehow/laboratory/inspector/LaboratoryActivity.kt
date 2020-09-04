@@ -14,10 +14,14 @@ import com.google.android.material.textview.MaterialTextView
 import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
 class LaboratoryActivity : Activity() {
   private lateinit var presenter: Presenter
+  private val mainScope = MainScope()
 
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
@@ -25,12 +29,21 @@ class LaboratoryActivity : Activity() {
     setContentView(R.layout.io_mehow_laboratory)
     val container = findViewById<ViewGroup>(R.id.io_mehow_laboratory_container)
     val spacing = resources.getDimensionPixelSize(R.dimen.io_mehow_laboratory_spacing)
-    for (group in presenter.getFeatureGroups()) {
-      val groupLabel = createFeatureGroupLabel(group, spacing)
-      val groupView = FeatureGroupView(this, group, presenter::selectFeature)
-      container.addView(groupLabel)
-      container.addView(groupView)
+    mainScope.launch {
+      for (group in presenter.getFeatureGroups()) {
+        val groupLabel = createFeatureGroupLabel(group, spacing)
+        val groupView = FeatureGroupView(this@LaboratoryActivity, group) { feature ->
+          mainScope.launch { presenter.selectFeature(feature) }
+        }
+        container.addView(groupLabel)
+        container.addView(groupView)
+      }
     }
+  }
+
+  override fun onDestroy() {
+    mainScope.cancel()
+    super.onDestroy()
   }
 
   override fun getLastNonConfigurationInstance(): Any? {

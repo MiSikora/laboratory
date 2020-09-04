@@ -13,6 +13,7 @@ dependencies {
   implementation(Libs.Kotlin.StdLibJdk7)
   implementation(Libs.AndroidX.CoreKtx)
   implementation(Libs.Material)
+  implementation(Libs.Kotlin.Coroutines.Android)
 
   testImplementation(Libs.Kotest.RunnerJunit5)
   testImplementation(Libs.Kotest.Assertions)

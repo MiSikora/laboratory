@@ -10,6 +10,9 @@ import io.mehow.laboratory.brombulator.Brombulation
 import io.mehow.laboratory.frombulator.Frombulation
 import io.mehow.laboratory.inspector.LaboratoryActivity
 import io.mehow.laboratory.trombulator.Trombulation
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 @SuppressLint("SetTextI18n")
 class SampleActivity : Activity() {
@@ -17,6 +20,7 @@ class SampleActivity : Activity() {
   private lateinit var brombulation: TextView
   private lateinit var frombulation: TextView
   private lateinit var trombulation: TextView
+  private val mainScope = MainScope()
 
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
@@ -33,8 +37,15 @@ class SampleActivity : Activity() {
 
   override fun onResume() {
     super.onResume()
-    brombulation.text = "Brombulation: ${laboratory.experiment<Brombulation>()}"
-    frombulation.text = "Frombulation: ${laboratory.experiment<Frombulation>()}"
-    trombulation.text = "Trombulation: ${laboratory.experiment<Trombulation>()}"
+    mainScope.launch {
+      brombulation.text = "Brombulation: ${laboratory.experiment<Brombulation>()}"
+      frombulation.text = "Frombulation: ${laboratory.experiment<Frombulation>()}"
+      trombulation.text = "Trombulation: ${laboratory.experiment<Trombulation>()}"
+    }
+  }
+
+  override fun onDestroy() {
+    mainScope.cancel()
+    super.onDestroy()
   }
 }

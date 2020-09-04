@@ -23,10 +23,10 @@
         >
 
       <com.google.android.material.appbar.MaterialToolbar
-          style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
           app:title="@string/io_mehow_laboratory"
+          style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
           />
 
     </com.google.android.material.appbar.AppBarLayout>

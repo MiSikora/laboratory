@@ -9,22 +9,22 @@ internal class Presenter(
 ) {
   private val groups = factory.create()
 
-  fun getFeatureGroups(): List<FeatureGroup> {
+  suspend fun getFeatureGroups(): List<FeatureGroup> {
     return groups
       .sortedBy(::groupName)
-      .map(::createFeatureGroup)
+      .map { createFeatureGroup(it) }
       .filter(FeatureGroup::hasFeatures)
   }
 
-  fun selectFeature(feature: Enum<*>) = storage.setFeature(feature)
+  suspend fun selectFeature(feature: Enum<*>) = storage.setFeature(feature)
 
   private fun groupName(group: Class<Enum<*>>): String = group.simpleName
 
-  private fun createFeatureGroup(group: Class<Enum<*>>): FeatureGroup {
+  private suspend fun createFeatureGroup(group: Class<Enum<*>>): FeatureGroup {
     return FeatureGroup(groupName(group), getFeatureModels(group))
   }
 
-  private fun getFeatureModels(group: Class<Enum<*>>): List<FeatureModel> {
+  private suspend fun getFeatureModels(group: Class<Enum<*>>): List<FeatureModel> {
     val featureName = storage.getFeatureName(group)
     return group.enumConstants
       .orEmpty()
