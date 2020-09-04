@@ -4,6 +4,7 @@ include(":library:inspector")
 include(":library:hyperion-plugin")
 include(":library:generator")
 include(":library:gradle-plugin")
+include(":library:data-store")
 
 include(":sample")
 include(":sample:brombulator")

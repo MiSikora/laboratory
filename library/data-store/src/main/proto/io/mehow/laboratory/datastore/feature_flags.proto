@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package io.mehow.laboratory.datastore;
+
+message FeatureFlags {
+  map<string, string> value = 1;
+}

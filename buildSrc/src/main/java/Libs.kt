@@ -36,6 +36,8 @@ object Libs {
 
     const val AppCompat = "androidx.appcompat:appcompat:1.2.0"
 
+    const val DataStore = "androidx.datastore:datastore-core:1.0.0-alpha01"
+
     object Test {
       const val Version = "1.3.0"
 
@@ -86,4 +88,12 @@ object Libs {
   const val KotlinPoet = "com.squareup:kotlinpoet:1.6.0"
 
   const val Arrow = "io.arrow-kt:arrow-core:0.10.5"
+
+  object Wire {
+    const val Version = "3.2.2"
+
+    const val Runtime = "com.squareup.wire:wire-runtime:$Version"
+
+    const val GradlePlugin = "com.squareup.wire:wire-gradle-plugin:$Version"
+  }
 }
