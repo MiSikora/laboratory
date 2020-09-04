@@ -5,7 +5,6 @@ import android.content.Context.MODE_PRIVATE
 import androidx.test.core.app.ApplicationProvider
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Laboratory
-import io.mehow.laboratory.experiment
 import org.junit.Test
 
 class SharedPreferencesLaboratoryTest {
