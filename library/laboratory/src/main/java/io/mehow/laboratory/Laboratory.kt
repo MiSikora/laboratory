@@ -11,9 +11,7 @@ class Laboratory(private val storage: FeatureStorage) {
     return features.firstOrNull { it.name == expectedName } ?: defaultFeature
   }
 
-  suspend fun <T : Enum<T>> setFeature(feature: T) {
-    storage.setFeature(feature)
-  }
+  suspend fun <T : Enum<T>> setFeature(feature: T) = storage.setFeature(feature)
 
   companion object {
     fun inMemory() = Laboratory(FeatureStorage.inMemory())

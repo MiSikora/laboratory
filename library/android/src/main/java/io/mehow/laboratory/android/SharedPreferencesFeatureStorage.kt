@@ -13,7 +13,10 @@ class SharedPreferencesFeatureStorage(
     null
   }
 
-  override suspend fun <T : Enum<*>> setFeature(feature: T) = preferences.edit {
-    putString(feature.javaClass.name, feature.name)
+  override suspend fun <T : Enum<*>> setFeature(feature: T): Boolean {
+    preferences.edit {
+      putString(feature.javaClass.name, feature.name)
+    }
+    return true
   }
 }

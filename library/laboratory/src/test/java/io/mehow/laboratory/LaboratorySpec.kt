@@ -81,10 +81,10 @@ private object ThrowingStorage : FeatureStorage {
 
 private object NullStorage : FeatureStorage {
   override suspend fun <T : Enum<*>> getFeatureName(group: Class<T>): String? = null
-  override suspend fun <T : Enum<*>> setFeature(feature: T) = Unit
+  override suspend fun <T : Enum<*>> setFeature(feature: T) = throw AssertionError("Test failed!")
 }
 
 private object EmptyStorage : FeatureStorage {
   override suspend fun <T : Enum<*>> getFeatureName(group: Class<T>) = ""
-  override suspend fun <T : Enum<*>> setFeature(feature: T) = Unit
+  override suspend fun <T : Enum<*>> setFeature(feature: T) = throw AssertionError("Test failed!")
 }
