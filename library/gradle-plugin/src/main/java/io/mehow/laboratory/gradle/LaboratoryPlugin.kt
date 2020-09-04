@@ -73,7 +73,7 @@ class LaboratoryPlugin : Plugin<Project> {
 
   private fun Project.findAllFeatures(
     projectFilter: ProjectFilter,
-    onFeatureInputsFound: (List<FeatureFlagInput>) -> Unit
+    onFeatureInputsFound: (List<FeatureFlagInput>) -> Unit,
   ) {
     rootProject.allprojects { project ->
       if (!projectFilter.reject(project)) {
@@ -96,7 +96,7 @@ class LaboratoryPlugin : Plugin<Project> {
 
   private inline fun <reified T : Task> Project.registerTask(
     name: String,
-    crossinline action: (T) -> Unit
+    crossinline action: (T) -> Unit,
   ): TaskProvider<out T> {
     return tasks.register(name, T::class.java) { action(it) }
   }

@@ -3,7 +3,6 @@ package io.mehow.laboratory.gradle
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.GradleRunner
 import java.io.File

@@ -92,11 +92,10 @@ formatting:
     active: true
   CommentSpacing:
     active: true
-  #  TODO: Enable after https://youtrack.jetbrains.com/issue/KT-10974
-  #  ImportOrdering:
-  #    active: true
-  Indentation:
+  ImportOrdering:
     active: true
+  Indentation:
+    active: false # TODO: https://github.com/pinterest/ktlint/issues/854
     indentSize: 2
     continuationIndentSize: 4
   NoBlankLineBeforeRbrace:
@@ -226,7 +225,7 @@ style:
     maxJumpCount: 1
   MaxLineLength:
     active: true
-    maxLineLength: 100
+    maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: true

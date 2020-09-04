@@ -87,8 +87,7 @@ class FeatureFlagModel private constructor(
     }
 
     internal companion object {
-      val packageNameRegex =
-        """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
+      val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
       val nameRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
       val valueRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
     }
