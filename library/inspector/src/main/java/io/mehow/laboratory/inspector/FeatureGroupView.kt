@@ -14,7 +14,7 @@ import com.google.android.material.chip.ChipGroup
 internal class FeatureGroupView constructor(
   context: Context,
   featureGroup: FeatureGroup,
-  private val onCheckFeatureChipListener: (Enum<*>) -> Unit
+  private val onCheckFeatureChipListener: (Enum<*>) -> Unit,
 ) : ChipGroup(context) {
   private val inflater = LayoutInflater.from(context)
   private val spacing = resources.getDimensionPixelSize(R.dimen.io_mehow_laboratory_spacing)

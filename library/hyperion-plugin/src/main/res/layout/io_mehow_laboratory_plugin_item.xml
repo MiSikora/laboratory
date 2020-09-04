@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,21 +9,21 @@
     android:padding="@dimen/hype_plugin_padding"
     >
 
+  <androidx.appcompat.widget.AppCompatButton
+      android:id="@+id/io_mehow_open_laboratory_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:duplicateParentState="true"
+      android:text="@string/io_mehow_laboratory"
+      style="@style/Widget.AppCompat.Button.Colored"
+      />
+
   <androidx.appcompat.widget.AppCompatImageView
       android:layout_width="@dimen/hype_plugin_icon_size"
       android:layout_height="@dimen/hype_plugin_icon_size"
       android:layout_marginEnd="28dp"
       android:duplicateParentState="true"
       app:srcCompat="@drawable/io_mehow_laboratory_icon"
-      />
-
-  <androidx.appcompat.widget.AppCompatButton
-      android:id="@+id/io_mehow_open_laboratory_button"
-      style="@style/Widget.AppCompat.Button.Colored"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:duplicateParentState="true"
-      android:text="@string/io_mehow_laboratory"
       />
 
 </LinearLayout>

@@ -1,7 +1,5 @@
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.mehow.laboratory.hyperion"
-    >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.mehow.laboratory.hyperion">
 
   <application android:supportsRtl="true" />
 

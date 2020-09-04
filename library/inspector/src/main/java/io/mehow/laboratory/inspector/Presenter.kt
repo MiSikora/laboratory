@@ -5,7 +5,7 @@ import io.mehow.laboratory.FeatureStorage
 
 internal class Presenter(
   factory: FeatureFactory,
-  private val storage: FeatureStorage
+  private val storage: FeatureStorage,
 ) {
   private val groups = factory.create()
 

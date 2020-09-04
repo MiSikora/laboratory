@@ -8,7 +8,7 @@ class FeatureFactoryModel private constructor(
   internal val visibility: Visibility,
   internal val packageName: String,
   internal val name: String,
-  internal val features: List<FeatureFlagModel>
+  internal val features: List<FeatureFlagModel>,
 ) {
   fun generate(file: File): File {
     FeatureFactoryGenerator(this).generate(file)
@@ -19,7 +19,7 @@ class FeatureFactoryModel private constructor(
   data class Builder(
     internal val visibility: Visibility,
     internal val packageName: String,
-    internal val features: List<FeatureFlagModel>
+    internal val features: List<FeatureFlagModel>,
   ) {
     internal val name = "GeneratedFeatureFactory"
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"

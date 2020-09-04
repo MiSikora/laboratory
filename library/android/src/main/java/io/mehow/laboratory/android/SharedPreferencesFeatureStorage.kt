@@ -5,7 +5,7 @@ import androidx.core.content.edit
 import io.mehow.laboratory.FeatureStorage
 
 class SharedPreferencesFeatureStorage(
-  private val preferences: SharedPreferences
+  private val preferences: SharedPreferences,
 ) : FeatureStorage {
   override fun <T : Enum<*>> getFeatureName(group: Class<T>) = try {
     preferences.getString(group.name, null)

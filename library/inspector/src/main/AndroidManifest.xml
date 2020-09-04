@@ -1,15 +1,12 @@
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.mehow.laboratory.inspector"
-    >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.mehow.laboratory.inspector">
 
   <application android:supportsRtl="true">
     <activity
         android:name=".LaboratoryActivity"
         android:exported="false"
         android:launchMode="singleInstance"
-        android:theme="@style/IoMehowLaboratory.Theme"
-        />
+        android:theme="@style/IoMehowLaboratory.Theme" />
   </application>
 
 </manifest>

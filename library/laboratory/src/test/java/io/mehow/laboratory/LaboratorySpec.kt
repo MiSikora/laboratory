@@ -66,7 +66,9 @@ class LaboratorySpec : DescribeSpec({
 })
 
 private enum class ValidFeature {
-  A, B, C
+  A,
+  B,
+  C
 }
 
 private enum class InvalidFeature

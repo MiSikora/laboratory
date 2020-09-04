@@ -14,7 +14,7 @@ class FeatureFlagModel private constructor(
   internal val visibility: Visibility,
   internal val packageName: String,
   internal val name: String,
-  internal val values: Nel<String>
+  internal val values: Nel<String>,
 ) {
   val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
@@ -34,7 +34,7 @@ class FeatureFlagModel private constructor(
     internal val visibility: Visibility,
     internal val packageName: String,
     internal val name: String,
-    internal val values: List<String>
+    internal val values: List<String>,
   ) {
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 

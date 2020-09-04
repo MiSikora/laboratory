@@ -76,11 +76,15 @@ private object AllFeatureFactory : FeatureFactory {
 }
 
 private enum class First {
-  C, B, A
+  C,
+  B,
+  A
 }
 
 private enum class Second {
-  B, C, A
+  B,
+  C,
+  A
 }
 
 private enum class Empty

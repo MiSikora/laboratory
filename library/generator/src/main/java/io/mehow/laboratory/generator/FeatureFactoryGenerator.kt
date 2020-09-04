@@ -19,7 +19,7 @@ import java.io.File
 import kotlin.reflect.KClass
 
 internal class FeatureFactoryGenerator(
-  factory: FeatureFactoryModel
+  factory: FeatureFactoryModel,
 ) {
   private val featureClasses = factory.features
     .map(FeatureFlagModel::fqcn)

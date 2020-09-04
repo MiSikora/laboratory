@@ -6,7 +6,7 @@ import io.mehow.laboratory.Feature
 import java.io.File
 
 internal class FeatureFlagGenerator(
-  private val feature: FeatureFlagModel
+  private val feature: FeatureFlagModel,
 ) {
   private val typeSpec = TypeSpec.enumBuilder(feature.name)
     .addModifiers(feature.visibility.modifier)

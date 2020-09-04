@@ -30,5 +30,6 @@ class SharedPreferencesLaboratoryTest {
 }
 
 private enum class Feature {
-  A, B
+  A,
+  B
 }
