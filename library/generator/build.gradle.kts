@@ -10,7 +10,7 @@ dependencies {
   api(Libs.Arrow)
   api(Libs.Kotlin.StdLibJdk8)
   implementation(project(":library:laboratory"))
-  implementation(Libs.KotlinPoet)
+  api(Libs.KotlinPoet)
 
   testImplementation(Libs.Kotest.RunnerJunit5)
   testImplementation(Libs.Kotest.Property)

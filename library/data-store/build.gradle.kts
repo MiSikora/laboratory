@@ -24,7 +24,6 @@ tasks.withType<Test> {
 
 dependencies {
   api(project(":library:laboratory"))
-  implementation(Libs.Kotlin.StdLibJdk7)
   api(Libs.AndroidX.DataStore)
   api(Libs.Wire.Runtime)
 

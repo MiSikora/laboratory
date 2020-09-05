@@ -7,7 +7,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
-  implementation(Libs.Kotlin.StdLibJdk7)
+  api(Libs.Kotlin.StdLibJdk7)
 
   testImplementation(Libs.Kotest.RunnerJunit5)
   testImplementation(Libs.Kotest.Assertions)

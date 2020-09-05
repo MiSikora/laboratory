@@ -19,9 +19,9 @@ tasks.withType<Test> {
 }
 
 dependencies {
-  implementation(Libs.Kotlin.StdLibJdk8)
+  api(Libs.Kotlin.StdLibJdk8)
   implementation(project(":library:generator"))
-  implementation(Libs.Kotlin.GradlePlugin)
+  api(Libs.Kotlin.GradlePlugin)
   implementation(Libs.AndroidGradlePlugin)
 
   testImplementation(Libs.Kotest.RunnerJunit5)

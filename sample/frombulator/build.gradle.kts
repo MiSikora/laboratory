@@ -13,5 +13,5 @@ laboratory {
 }
 
 dependencies {
-  implementation(Libs.Kotlin.StdLibJdk7)
+  api(Libs.Kotlin.StdLibJdk7)
 }
