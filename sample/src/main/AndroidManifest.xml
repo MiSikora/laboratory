@@ -8,7 +8,7 @@
       android:label="Laboratory"
       android:supportsRtl="true"
       android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
-      tools:ignore="AllowBackup">
+      tools:ignore="AllowBackup,MissingApplicationIcon">
     <activity android:name=".SampleActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
