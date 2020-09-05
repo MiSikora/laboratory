@@ -5,43 +5,42 @@ import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.brombulator.Brombulation
 import io.mehow.laboratory.frombulator.Frombulation
 import io.mehow.laboratory.inspector.LaboratoryActivity
 import io.mehow.laboratory.trombulator.Trombulation
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @SuppressLint("SetTextI18n")
 class SampleActivity : Activity() {
-  private lateinit var laboratory: Laboratory
-  private lateinit var brombulation: TextView
-  private lateinit var frombulation: TextView
-  private lateinit var trombulation: TextView
   private val mainScope = MainScope()
 
+  @Suppress("LongMethod", "StringLiteralDuplication")
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
-    laboratory = SampleApplication.getLaboratory(application)
+    val laboratory = SampleApplication.getLaboratory(application)
 
     setContentView(R.layout.io_mehow_laboratory_sample_main)
     findViewById<Button>(R.id.launch_laboratory).setOnClickListener {
       LaboratoryActivity.start(this)
     }
-    brombulation = findViewById(R.id.brombulation)
-    frombulation = findViewById(R.id.frombulation)
-    trombulation = findViewById(R.id.trombulation)
-  }
 
-  override fun onResume() {
-    super.onResume()
-    mainScope.launch {
-      brombulation.text = "Brombulation: ${laboratory.experiment<Brombulation>()}"
-      frombulation.text = "Frombulation: ${laboratory.experiment<Frombulation>()}"
-      trombulation.text = "Trombulation: ${laboratory.experiment<Trombulation>()}"
-    }
+    val brombulation = findViewById<TextView>(R.id.brombulation)
+    val frombulation = findViewById<TextView>(R.id.frombulation)
+    val trombulation = findViewById<TextView>(R.id.trombulation)
+
+    laboratory.observe<Brombulation>()
+      .onEach { brombulation.text = "${it.javaClass.simpleName}: $it" }
+      .launchIn(mainScope)
+    laboratory.observe<Frombulation>()
+      .onEach { frombulation.text = "${it.javaClass.simpleName}: $it" }
+      .launchIn(mainScope)
+    laboratory.observe<Trombulation>()
+      .onEach { trombulation.text = "${it.javaClass.simpleName}: $it" }
+      .launchIn(mainScope)
   }
 
   override fun onDestroy() {
