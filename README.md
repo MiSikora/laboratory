@@ -158,7 +158,7 @@ laboratory {
   // Sets namespace of generated features and factories. Empty by default.
   packageName = "io.mehow.sample"
 
-  // Adds 'generateFeatureFlags' task to the module. Optional.
+  // Adds 'generateFeatureFactory' task to the module. Optional.
   factory {
     // Overrides globally declared namespace. No value by default.
     packageName = "io.mehow.sample.factory"
