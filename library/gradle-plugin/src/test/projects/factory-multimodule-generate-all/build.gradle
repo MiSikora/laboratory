@@ -6,7 +6,7 @@ plugins {
 laboratory {
   factory()
 
-  feature("FeatureFactory") {
-    withValue("First")
+  feature("RootFeature") {
+    withFallbackValue("First")
   }
 }

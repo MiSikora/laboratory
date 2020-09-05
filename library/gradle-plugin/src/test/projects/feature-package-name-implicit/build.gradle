@@ -7,7 +7,7 @@ laboratory {
   packageName = "io.mehow.implicit"
 
   feature("Feature") {
-    withValue("First")
+    withFallbackValue("First")
     withValue("Second")
   }
 }

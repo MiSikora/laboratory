@@ -6,6 +6,6 @@ plugins {
 laboratory {
   feature("Feature") {
     packageName = "!!!"
-    withValue("First")
+    withFallbackValue("First")
   }
 }

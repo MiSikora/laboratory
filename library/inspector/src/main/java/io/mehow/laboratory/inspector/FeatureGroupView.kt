@@ -9,12 +9,13 @@ import android.widget.LinearLayout
 import androidx.core.view.children
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import io.mehow.laboratory.Feature
 
 @SuppressLint("ViewConstructor") // Created only from code.
 internal class FeatureGroupView constructor(
   context: Context,
   featureGroup: FeatureGroup,
-  private val onCheckFeatureChipListener: (Enum<*>) -> Unit,
+  private val onCheckFeatureChipListener: (Feature<*>) -> Unit,
 ) : ChipGroup(context) {
   private val inflater = LayoutInflater.from(context)
   private val spacing = resources.getDimensionPixelSize(R.dimen.io_mehow_laboratory_spacing)

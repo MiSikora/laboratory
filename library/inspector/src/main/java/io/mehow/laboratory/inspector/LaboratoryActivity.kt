@@ -14,6 +14,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
+import io.mehow.laboratory.Laboratory
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -68,7 +69,7 @@ class LaboratoryActivity : Activity() {
     internal var presenterFactory: (() -> Presenter)? = null
 
     fun initialize(factory: FeatureFactory, storage: FeatureStorage) {
-      presenterFactory = { Presenter(factory, storage) }
+      presenterFactory = { Presenter(factory, Laboratory(storage)) }
     }
 
     fun start(context: Context) {

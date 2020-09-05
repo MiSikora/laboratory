@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import androidx.test.core.app.ApplicationProvider
 import io.kotest.matchers.shouldBe
+import io.mehow.laboratory.Feature
 import io.mehow.laboratory.Laboratory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -18,21 +19,22 @@ class SharedPreferencesFeaturesStorageTest {
 
   @OptIn(ExperimentalCoroutinesApi::class)
   @Test fun storedFeatureIsAvailableAsExperiment() = runBlockingTest {
-    storage.setFeature(Feature.B)
+    storage.setFeature(FeatureA.B)
 
-    laboratory.experiment<Feature>() shouldBe Feature.B
+    laboratory.experiment<FeatureA>() shouldBe FeatureA.B
   }
 
   @OptIn(ExperimentalCoroutinesApi::class)
   @Test fun corruptedFeatureYieldsDefaultExperiment() = runBlockingTest {
-    storage.setFeature(Feature.B)
-    preferences.edit().putInt(Feature::class.java.name, 1).commit()
+    storage.setFeature(FeatureA.B)
+    preferences.edit().putInt(FeatureA::class.java.name, 1).commit()
 
-    laboratory.experiment<Feature>() shouldBe Feature.A
+    laboratory.experiment<FeatureA>() shouldBe FeatureA.A
   }
 }
 
-private enum class Feature {
+private enum class FeatureA(override val isFallbackValue: Boolean = false) : Feature<FeatureA> {
   A,
-  B
+  B,
+  ;
 }

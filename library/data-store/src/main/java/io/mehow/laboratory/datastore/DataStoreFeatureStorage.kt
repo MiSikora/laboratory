@@ -4,6 +4,7 @@ import androidx.datastore.DataMigration
 import androidx.datastore.DataStoreFactory
 import androidx.datastore.Serializer
 import androidx.datastore.handlers.ReplaceFileCorruptionHandler
+import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,13 +29,13 @@ class DataStoreFeatureStorage @JvmOverloads constructor(
     scope = scope,
   )
 
-  override suspend fun <T : Enum<*>> getFeatureName(group: Class<T>) = try {
+  override suspend fun <T : Feature<*>> getFeatureName(group: Class<T>) = try {
     dataStore.data.first().value[group.name]
   } catch (_: IOException) {
     null
   }
 
-  override suspend fun <T : Enum<*>> setFeature(feature: T) = try {
+  override suspend fun <T : Feature<*>> setFeature(feature: T) = try {
     dataStore.updateData { flags ->
       val updatedFeatures = flags.value + (feature.javaClass.name to feature.name)
       return@updateData flags.copy(value = updatedFeatures)

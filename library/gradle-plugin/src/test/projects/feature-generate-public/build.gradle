@@ -7,7 +7,7 @@ laboratory {
   feature("Feature") {
     isPublic = true
 
-    withValue("First")
+    withFallbackValue("First")
     withValue("Second")
   }
 }

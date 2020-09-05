@@ -1,4 +1,4 @@
--keep @io.mehow.laboratory.Feature class * extends java.lang.Enum {
+-keep class * extends io.mehow.laboratory.Feature {
   <fields>;
   **[] $VALUES;
   **[] values();

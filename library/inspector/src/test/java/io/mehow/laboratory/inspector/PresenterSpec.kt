@@ -3,13 +3,14 @@ package io.mehow.laboratory.inspector
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
+import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
-import io.mehow.laboratory.FeatureStorage
+import io.mehow.laboratory.Laboratory
 
 class PresenterSpec : DescribeSpec({
   describe("presenter") {
     it("filters empty feature groups") {
-      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
+      val presenter = Presenter(AllFeatureFactory, Laboratory.inMemory())
 
       val featureNames = presenter.getFeatureGroups().map(FeatureGroup::name)
 
@@ -17,7 +18,7 @@ class PresenterSpec : DescribeSpec({
     }
 
     it("orders feature groups by name") {
-      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
+      val presenter = Presenter(AllFeatureFactory, Laboratory.inMemory())
 
       val featureNames = presenter.getFeatureGroups().map(FeatureGroup::name)
 
@@ -25,7 +26,7 @@ class PresenterSpec : DescribeSpec({
     }
 
     it("does not order feature values") {
-      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
+      val presenter = Presenter(AllFeatureFactory, Laboratory.inMemory())
 
       val features = presenter.getFeatureGroups()
         .map(FeatureGroup::models)
@@ -36,13 +37,13 @@ class PresenterSpec : DescribeSpec({
     }
 
     it("marks first feature as selected by default") {
-      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
+      val presenter = Presenter(AllFeatureFactory, Laboratory.inMemory())
 
       presenter.getSelectedFeatures() shouldContainExactly listOf(First.C, Second.B)
     }
 
     it("marks saved feature as selected") {
-      val storage = FeatureStorage.inMemory().apply {
+      val storage = Laboratory.inMemory().apply {
         setFeature(First.A)
         setFeature(Second.C)
       }
@@ -52,7 +53,7 @@ class PresenterSpec : DescribeSpec({
     }
 
     it("selects features") {
-      val presenter = Presenter(AllFeatureFactory, FeatureStorage.inMemory())
+      val presenter = Presenter(AllFeatureFactory, Laboratory.inMemory())
 
       presenter.selectFeature(First.B)
       presenter.selectFeature(Second.A)
@@ -62,29 +63,31 @@ class PresenterSpec : DescribeSpec({
   }
 })
 
-internal suspend fun Presenter.getSelectedFeatures(): List<Enum<*>> {
+internal suspend fun Presenter.getSelectedFeatures(): List<Feature<*>> {
   return getFeatureGroups()
     .map(FeatureGroup::models)
     .map { models -> models.single(FeatureModel::isSelected).let(FeatureModel::feature) }
 }
 
 private object AllFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<Enum<*>>> {
+  override fun create(): Set<Class<Feature<*>>> {
     @Suppress("UNCHECKED_CAST")
-    return setOf(Second::class.java, First::class.java, Empty::class.java) as Set<Class<Enum<*>>>
+    return setOf(Second::class.java, First::class.java, Empty::class.java) as Set<Class<Feature<*>>>
   }
 }
 
-private enum class First {
+private enum class First(override val isFallbackValue: Boolean = false) : Feature<First> {
   C,
   B,
-  A
+  A,
+  ;
 }
 
-private enum class Second {
+private enum class Second(override val isFallbackValue: Boolean = false) : Feature<Second> {
   B,
   C,
-  A
+  A,
+  ;
 }
 
 private enum class Empty

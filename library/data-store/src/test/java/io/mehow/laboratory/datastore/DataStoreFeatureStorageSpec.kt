@@ -3,6 +3,7 @@ package io.mehow.laboratory.datastore
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.shouldBe
+import io.mehow.laboratory.Feature
 import io.mehow.laboratory.Laboratory
 import okio.ByteString.Companion.decodeHex
 
@@ -12,9 +13,9 @@ class DataStoreFeatureStorageSpec : StringSpec({
     val storage = DataStoreFeatureStorage({ tempFile })
     val laboratory = Laboratory(storage)
 
-    storage.setFeature(Feature.B)
+    storage.setFeature(FeatureA.B)
 
-    laboratory.experiment<Feature>() shouldBe Feature.B
+    laboratory.experiment<FeatureA>() shouldBe FeatureA.B
   }
 
   "corrupted file yields default experiment" {
@@ -28,11 +29,12 @@ class DataStoreFeatureStorageSpec : StringSpec({
       .toByteArray()
     tempFile.writeBytes(corruptedBytes)
 
-    laboratory.experiment<Feature>() shouldBe Feature.A
+    laboratory.experiment<FeatureA>() shouldBe FeatureA.A
   }
 })
 
-private enum class Feature {
+private enum class FeatureA(override val isFallbackValue: Boolean = false) : Feature<FeatureA> {
   A,
-  B
+  B,
+  ;
 }

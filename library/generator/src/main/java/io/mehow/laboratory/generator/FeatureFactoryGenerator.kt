@@ -14,6 +14,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.joinToCode
+import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import java.io.File
 import kotlin.reflect.KClass
@@ -45,7 +46,7 @@ internal class FeatureFactoryGenerator(
     }
     .build()
 
-  private val factoryType = TypeSpec.objectBuilder(factory.name)
+  private val factoryType = TypeSpec.objectBuilder(factory.className)
     .addModifiers(PRIVATE)
     .addSuperinterface(FeatureFactory::class)
     .addFunction(discoveryFunctionOverride)
@@ -66,7 +67,7 @@ internal class FeatureFactoryGenerator(
   fun generate(file: File) = factoryFile.writeTo(file)
 
   private companion object {
-    val setType = Class::class(Enum::class(STAR))
+    val setType = Class::class(Feature::class(STAR))
     val factoryReturnType = Set::class(setType)
 
     operator fun KClass<*>.invoke(parameter: TypeName) = asClassName().parameterizedBy(parameter)

@@ -9,10 +9,10 @@ laboratory {
   factory()
 
   feature("Feature") {
-    withValue("First")
+    withFallbackValue("First")
   }
 
   feature("Feature") {
-    withValue("Second")
+    withFallbackValue("Second")
   }
 }

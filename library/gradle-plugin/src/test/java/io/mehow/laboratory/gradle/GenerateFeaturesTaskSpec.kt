@@ -42,10 +42,12 @@ class GenerateFeaturesTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |enum class Feature {
-      |  First,
+      |enum class Feature(
+      |  override val isFallbackValue: Boolean = false
+      |) : io.mehow.laboratory.Feature<Feature> {
+      |  First(isFallbackValue = true),
       |
-      |  Second
+      |  Second;
       |}
     """.trimMargin("|")
   }
@@ -61,10 +63,12 @@ class GenerateFeaturesTaskSpec : StringSpec({
     featureA.shouldExist()
 
     featureA.readText() shouldContain """
-      |enum class FeatureA {
-      |  FirstA,
+      |enum class FeatureA(
+      |  override val isFallbackValue: Boolean = false
+      |) : Feature<FeatureA> {
+      |  FirstA(isFallbackValue = true),
       |
-      |  SecondA
+      |  SecondA;
       |}
     """.trimMargin("|")
 
@@ -72,10 +76,12 @@ class GenerateFeaturesTaskSpec : StringSpec({
     featureB.shouldExist()
 
     featureB.readText() shouldContain """
-      |enum class FeatureB {
-      |  FirstB,
+      |enum class FeatureB(
+      |  override val isFallbackValue: Boolean = false
+      |) : Feature<FeatureB> {
+      |  FirstB(isFallbackValue = true),
       |
-      |  SecondB
+      |  SecondB;
       |}
     """.trimMargin("|")
   }
@@ -193,10 +199,12 @@ class GenerateFeaturesTaskSpec : StringSpec({
     featureA.shouldExist()
 
     featureA.readText() shouldContain """
-      |enum class FeatureA {
-      |  First,
+      |enum class FeatureA(
+      |  override val isFallbackValue: Boolean = false
+      |) : Feature<FeatureA> {
+      |  First(isFallbackValue = true),
       |
-      |  Second
+      |  Second;
       |}
     """.trimMargin("|")
 
@@ -204,10 +212,12 @@ class GenerateFeaturesTaskSpec : StringSpec({
     featureB.shouldExist()
 
     featureB.readText() shouldContain """
-      |enum class FeatureB {
-      |  First,
+      |enum class FeatureB(
+      |  override val isFallbackValue: Boolean = false
+      |) : Feature<FeatureB> {
+      |  First(isFallbackValue = true),
       |
-      |  Second
+      |  Second;
       |}
     """.trimMargin("|")
   }
@@ -295,8 +305,10 @@ class GenerateFeaturesTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |enum class Feature {
-      |  First
+      |enum class Feature(
+      |  override val isFallbackValue: Boolean = false
+      |) : io.mehow.laboratory.Feature<Feature> {
+      |  First(isFallbackValue = true);
       |}
     """.trimMargin("|")
   }

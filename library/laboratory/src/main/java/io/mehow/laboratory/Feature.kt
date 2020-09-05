@@ -1,8 +1,7 @@
 package io.mehow.laboratory
 
-import kotlin.annotation.AnnotationRetention.BINARY
-import kotlin.annotation.AnnotationTarget.CLASS
-
-@Target(CLASS)
-@Retention(BINARY)
-annotation class Feature
+// Declare as Comparable in order to enforce correct generic parameter.
+interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
+  val name: String
+  val isFallbackValue: Boolean
+}

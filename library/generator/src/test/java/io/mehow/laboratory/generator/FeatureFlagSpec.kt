@@ -18,8 +18,8 @@ class FeatureFlagSpec : DescribeSpec({
   val featureBuilder = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
-    name = "Feature",
-    values = listOf("First", "Second")
+    name = "FeatureA",
+    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   )
 
   describe("feature flag model") {
@@ -98,103 +98,149 @@ class FeatureFlagSpec : DescribeSpec({
           result shouldBeLeft InvalidPackageName(builder.fqcn)
         }
       }
+    }
 
-      context("values") {
-        it("cannot be empty") {
-          val builder = featureBuilder.copy(values = emptyList())
+    context("values") {
+      it("cannot be empty") {
+        val builder = featureBuilder.copy(values = emptyList())
+
+        val result = builder.build()
+
+        result shouldBeLeft NoFeatureValues(builder.fqcn)
+      }
+
+      it("cannot have blank names") {
+        val blanks = Arb.stringPattern("([ ]{0,10})")
+        checkAll(blanks, blanks, blanks) { valueA, valueB, valueC ->
+          val blankNames = Nel(valueA, valueB, valueC)
+          val builder = featureBuilder.copy(values = blankNames.toList().map(::FeatureValue))
 
           val result = builder.build()
 
-          result shouldBeLeft NoFeatureValues(builder.fqcn)
-        }
-
-        it("cannot have blank names") {
-          val blanks = Arb.stringPattern("([ ]{0,10})")
-          checkAll(blanks, blanks, blanks) { valueA, valueB, valueC ->
-            val blankNames = Nel(valueA, valueB, valueC)
-            val builder = featureBuilder.copy(values = blankNames.toList())
-
-            val result = builder.build()
-
-            result shouldBeLeft InvalidFeatureValues(blankNames, builder.fqcn)
-          }
-        }
-
-        it("cannot have names that start with an underscore") {
-          checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-            val builder = featureBuilder.copy(values = listOf(name))
-
-            val result = builder.build()
-
-            result shouldBeLeft InvalidFeatureValues(name.nel(), builder.fqcn)
-          }
-        }
-
-        it("cannot have names that are not alphanumeric characters or underscores") {
-          checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-            val builder = featureBuilder.copy(values = listOf(name))
-
-            val result = builder.build()
-
-            result shouldBeLeft InvalidFeatureValues(name.nel(), builder.fqcn)
-          }
-        }
-
-        it("can have names that have alphanumeric characters or underscores") {
-          checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-            val builder = featureBuilder.copy(values = listOf(name))
-
-            val result = builder.build()
-
-            result.shouldBeRight()
-          }
-        }
-
-        it("cannot have duplicates") {
-          checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-            val nameA = name + "A"
-            val nameB = name + "B"
-            val nameC = name + "C"
-            val names = listOf(name, name, nameA, nameB, nameC, nameC, nameC)
-            val builder = featureBuilder.copy(values = names.toList())
-
-            val result = builder.build()
-
-            result shouldBeLeft FeatureValuesCollision(Nel(name, nameC), builder.fqcn)
-          }
+          result shouldBeLeft InvalidFeatureValues(blankNames, builder.fqcn)
         }
       }
 
-      context("group") {
-        it("can have unique features") {
-          checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-            val nameA = name + "A"
-            val builder = featureBuilder.copy(name = name)
-            val builderA = featureBuilder.copy(name = nameA)
-            val builderB = featureBuilder.copy(packageName = name)
-            val builderC = featureBuilder.copy(packageName = nameA)
-            val builders = listOf(builder, builderA, builderB, builderC)
+      it("cannot have names that start with an underscore") {
+        checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
+          val builder = featureBuilder.copy(values = listOf(name).map(::FeatureValue))
 
-            val result = builders.buildAll()
+          val result = builder.build()
 
-            result.shouldBeRight()
-          }
+          result shouldBeLeft InvalidFeatureValues(name.nel(), builder.fqcn)
         }
+      }
 
-        it("cannot have namespace collisions") {
-          checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-            val nameA = name + "A"
-            val nameB = name + "B"
-            val builder = featureBuilder.copy(name = name)
-            val builderA = featureBuilder.copy(name = nameA)
-            val builderB = featureBuilder.copy(name = nameB)
-            val builderC = featureBuilder.copy(packageName = name)
-            val builders = listOf(builder, builder, builderA, builderB, builderC)
+      it("cannot have names that are not alphanumeric characters or underscores") {
+        checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
+          val builder = featureBuilder.copy(values = listOf(name).map(::FeatureValue))
 
-            val result = builders.buildAll()
+          val result = builder.build()
 
-            result shouldBeLeft FeaturesCollision(builder.fqcn.nel())
-          }
+          result shouldBeLeft InvalidFeatureValues(name.nel(), builder.fqcn)
+        }
+      }
+
+      it("can have names that have alphanumeric characters or underscores") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val builder = featureBuilder.copy(values = listOf(name).map { FeatureValue(it, isFallbackValue = true) })
+
+          val result = builder.build()
+
+          result.shouldBeRight()
+        }
+      }
+
+      it("cannot have duplicates") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val nameA = name + "A"
+          val nameB = name + "B"
+          val nameC = name + "C"
+          val names = listOf(name, name, nameA, nameB, nameC, nameC, nameC)
+          val builder = featureBuilder.copy(values = names.toList().map(::FeatureValue))
+
+          val result = builder.build()
+
+          result shouldBeLeft FeatureValuesCollision(Nel(name, nameC), builder.fqcn)
+        }
+      }
+    }
+
+    context("group") {
+      it("can have unique features") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val nameA = name + "A"
+          val builder = featureBuilder.copy(name = name)
+          val builderA = featureBuilder.copy(name = nameA)
+          val builderB = featureBuilder.copy(packageName = name)
+          val builderC = featureBuilder.copy(packageName = nameA)
+          val builders = listOf(builder, builderA, builderB, builderC)
+
+          val result = builders.buildAll()
+
+          result.shouldBeRight()
+        }
+      }
+
+      it("cannot have namespace collisions") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val nameA = name + "A"
+          val nameB = name + "B"
+          val builder = featureBuilder.copy(name = name)
+          val builderA = featureBuilder.copy(name = nameA)
+          val builderB = featureBuilder.copy(name = nameB)
+          val builderC = featureBuilder.copy(packageName = name)
+          val builders = listOf(builder, builder, builderA, builderB, builderC)
+
+          val result = builders.buildAll()
+
+          result shouldBeLeft FeaturesCollision(builder.fqcn.nel())
+        }
+      }
+    }
+
+    context("fallback") {
+      it("cannot have no values") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val builder = featureBuilder.copy(
+            name = name,
+            values = listOf(FeatureValue("First"), FeatureValue("Second"))
+          )
+          val result = builder.build()
+
+          result shouldBeLeft NoFeatureFallbackValue(builder.fqcn)
+        }
+      }
+
+      it("cannot have multiple values") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val builder = featureBuilder.copy(
+            name = name,
+            values = listOf(
+              FeatureValue("First", isFallbackValue = true),
+              FeatureValue("Second"),
+              FeatureValue("Third", isFallbackValue = true),
+            )
+          )
+          val result = builder.build()
+
+          result shouldBeLeft MultipleFeatureFallbackValues(Nel("First", "Third"), builder.fqcn)
+        }
+      }
+
+      it("can have one value") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val builder = featureBuilder.copy(
+            name = name,
+            values = listOf(
+              FeatureValue("First"),
+              FeatureValue("Second"),
+              FeatureValue("Third", isFallbackValue = true),
+            )
+          )
+          val result = builder.build()
+
+          result.shouldBeRight()
         }
       }
     }
@@ -211,12 +257,14 @@ class FeatureFlagSpec : DescribeSpec({
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
+            |import kotlin.Boolean
             |
-            |@Feature
-            |internal enum class Feature {
-            |  First,
+            |internal enum class FeatureA(
+            |  override val isFallbackValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isFallbackValue = true),
             |
-            |  Second
+            |  Second;
             |}
             |
           """.trimMargin("|")
@@ -234,12 +282,14 @@ class FeatureFlagSpec : DescribeSpec({
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
+            |import kotlin.Boolean
             |
-            |@Feature
-            |enum class Feature {
-            |  First,
+            |enum class FeatureA(
+            |  override val isFallbackValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isFallbackValue = true),
             |
-            |  Second
+            |  Second;
             |}
             |
           """.trimMargin("|")

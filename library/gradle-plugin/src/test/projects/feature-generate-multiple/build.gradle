@@ -5,12 +5,12 @@ plugins {
 
 laboratory {
   feature("FeatureA") {
-    withValue("FirstA")
+    withFallbackValue("FirstA")
     withValue("SecondA")
   }
 
   feature("FeatureB") {
-    withValue("FirstB")
+    withFallbackValue("FirstB")
     withValue("SecondB")
   }
 }

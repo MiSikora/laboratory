@@ -10,7 +10,7 @@ laboratory {
     }
   }
 
-  feature("FeatureFactory") {
-    withValue("First")
+  feature("RootFeature") {
+    withFallbackValue("First")
   }
 }

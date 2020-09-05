@@ -45,7 +45,7 @@ class GenerateFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  override fun create() = emptySet<Class<Enum<*>>>()
+      |  override fun create() = emptySet<Class<Feature<*>>>()
       |}
     """.trimMargin("|")
   }
@@ -68,7 +68,7 @@ class GenerateFactoryTaskSpec : StringSpec({
       |  override fun create() = setOf(
       |    Class.forName("io.mehow.first.FeatureA"),
       |    Class.forName("io.mehow.second.FeatureB")
-      |  ) as Set<Class<Enum<*>>>
+      |  ) as Set<Class<Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -235,8 +235,8 @@ class GenerateFactoryTaskSpec : StringSpec({
       |  override fun create() = setOf(
       |    Class.forName("FeatureA"),
       |    Class.forName("FeatureB"),
-      |    Class.forName("FeatureFactory")
-      |  ) as Set<Class<Enum<*>>>
+      |    Class.forName("RootFeature")
+      |  ) as Set<Class<Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -258,8 +258,8 @@ class GenerateFactoryTaskSpec : StringSpec({
       |  @Suppress("UNCHECKED_CAST")
       |  override fun create() = setOf(
       |    Class.forName("FeatureB"),
-      |    Class.forName("FeatureFactory")
-      |  ) as Set<Class<Enum<*>>>
+      |    Class.forName("RootFeature")
+      |  ) as Set<Class<Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -290,7 +290,7 @@ class GenerateFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  override fun create() = emptySet<Class<Enum<*>>>()
+      |  override fun create() = emptySet<Class<Feature<*>>>()
       |}
     """.trimMargin("|")
   }

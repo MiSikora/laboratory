@@ -7,6 +7,6 @@ laboratory {
   factory()
 
   feature("!!!") {
-    withValue("First")
+    withFallbackValue("First")
   }
 }

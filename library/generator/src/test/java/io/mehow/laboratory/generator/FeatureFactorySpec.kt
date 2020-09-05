@@ -19,21 +19,21 @@ class FeatureFactorySpec : DescribeSpec({
     visibility = Internal,
     packageName = "io.mehow",
     name = "FeatureA",
-    values = listOf("First", "Second")
+    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second"))
   ).build().getOrElse { error("Should be right") }
 
   val featureB = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
     name = "FeatureB",
-    values = listOf("First", "Second")
+    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second"))
   ).build().getOrElse { error("Should be right") }
 
   val featureC = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow.c",
     name = "FeatureA",
-    values = listOf("First", "Second")
+    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second"))
   ).build().getOrElse { error("Should be right") }
 
   val factoryBuilder = FeatureFactoryModel.Builder(
@@ -76,41 +76,41 @@ class FeatureFactorySpec : DescribeSpec({
           result shouldBeLeft InvalidPackageName(builder.fqcn)
         }
       }
+    }
 
-      context("values") {
-        it("can be empty") {
-          val builder = factoryBuilder.copy(features = emptyList())
+    context("values") {
+      it("can be empty") {
+        val builder = factoryBuilder.copy(features = emptyList())
 
-          val result = builder.build()
+        val result = builder.build()
 
-          result.shouldBeRight()
-        }
+        result.shouldBeRight()
+      }
 
-        it("cannot have duplicates") {
-          val builderA = factoryBuilder.copy(
-            features = listOf(featureA, featureA, featureB, featureC)
-          )
-          val resultA = builderA.build()
-          resultA shouldBeLeft FeaturesCollision(featureA.fqcn.nel())
+      it("cannot have duplicates") {
+        val builderA = factoryBuilder.copy(
+          features = listOf(featureA, featureA, featureB, featureC)
+        )
+        val resultA = builderA.build()
+        resultA shouldBeLeft FeaturesCollision(featureA.fqcn.nel())
 
-          val builderB = factoryBuilder.copy(
-            features = listOf(featureA, featureB, featureB, featureC)
-          )
-          val resultB = builderB.build()
-          resultB shouldBeLeft FeaturesCollision(featureB.fqcn.nel())
+        val builderB = factoryBuilder.copy(
+          features = listOf(featureA, featureB, featureB, featureC)
+        )
+        val resultB = builderB.build()
+        resultB shouldBeLeft FeaturesCollision(featureB.fqcn.nel())
 
-          val builderC = factoryBuilder.copy(
-            features = listOf(featureA, featureB, featureC, featureC)
-          )
-          val resultC = builderC.build()
-          resultC shouldBeLeft FeaturesCollision(featureC.fqcn.nel())
-        }
+        val builderC = factoryBuilder.copy(
+          features = listOf(featureA, featureB, featureC, featureC)
+        )
+        val resultC = builderC.build()
+        resultC shouldBeLeft FeaturesCollision(featureC.fqcn.nel())
+      }
 
-        it("can have unique features") {
-          val result = factoryBuilder.build()
+      it("can have unique features") {
+        val result = factoryBuilder.build()
 
-          result.shouldBeRight()
-        }
+        result.shouldBeRight()
       }
     }
   }
@@ -125,9 +125,9 @@ class FeatureFactorySpec : DescribeSpec({
         file.readText() shouldBe """
             |package io.mehow
             |
+            |import io.mehow.laboratory.Feature
             |import io.mehow.laboratory.FeatureFactory
             |import java.lang.Class
-            |import kotlin.Enum
             |import kotlin.Suppress
             |import kotlin.collections.Set
             |import kotlin.collections.setOf
@@ -140,7 +140,7 @@ class FeatureFactorySpec : DescribeSpec({
             |    Class.forName("io.mehow.FeatureA"),
             |    Class.forName("io.mehow.FeatureB"),
             |    Class.forName("io.mehow.c.FeatureA")
-            |  ) as Set<Class<Enum<*>>>
+            |  ) as Set<Class<Feature<*>>>
             |}
             |
           """.trimMargin("|")
@@ -157,9 +157,9 @@ class FeatureFactorySpec : DescribeSpec({
         file.readText() shouldBe """
             |package io.mehow
             |
+            |import io.mehow.laboratory.Feature
             |import io.mehow.laboratory.FeatureFactory
             |import java.lang.Class
-            |import kotlin.Enum
             |import kotlin.Suppress
             |import kotlin.collections.Set
             |import kotlin.collections.setOf
@@ -172,7 +172,7 @@ class FeatureFactorySpec : DescribeSpec({
             |    Class.forName("io.mehow.FeatureA"),
             |    Class.forName("io.mehow.FeatureB"),
             |    Class.forName("io.mehow.c.FeatureA")
-            |  ) as Set<Class<Enum<*>>>
+            |  ) as Set<Class<Feature<*>>>
             |}
             |
           """.trimMargin("|")
@@ -190,15 +190,15 @@ class FeatureFactorySpec : DescribeSpec({
         file.readText() shouldBe """
             |package io.mehow
             |
+            |import io.mehow.laboratory.Feature
             |import io.mehow.laboratory.FeatureFactory
             |import java.lang.Class
-            |import kotlin.Enum
             |import kotlin.collections.emptySet
             |
             |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
             |
             |private object GeneratedFeatureFactory : FeatureFactory {
-            |  override fun create() = emptySet<Class<Enum<*>>>()
+            |  override fun create() = emptySet<Class<Feature<*>>>()
             |}
             |
           """.trimMargin("|")

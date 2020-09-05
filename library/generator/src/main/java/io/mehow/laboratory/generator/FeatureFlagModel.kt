@@ -8,15 +8,20 @@ import arrow.core.extensions.fx
 import arrow.core.extensions.list.traverse.traverse
 import arrow.core.fix
 import arrow.core.flatMap
+import arrow.core.getOrElse
+import arrow.core.left
+import arrow.core.right
+import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
 class FeatureFlagModel private constructor(
   internal val visibility: Visibility,
-  internal val packageName: String,
-  internal val name: String,
-  internal val values: Nel<String>,
+  internal val className: ClassName,
+  internal val values: Nel<FeatureValue>,
 ) {
-  val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
+  internal val packageName = className.packageName
+  internal val name = className.simpleName
+  internal val fqcn = className.canonicalName
 
   fun generate(file: File): File {
     FeatureFlagGenerator(this).generate(file)
@@ -34,7 +39,7 @@ class FeatureFlagModel private constructor(
     internal val visibility: Visibility,
     internal val packageName: String,
     internal val name: String,
-    internal val values: List<String>,
+    internal val values: List<FeatureValue>,
   ) {
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
@@ -43,7 +48,7 @@ class FeatureFlagModel private constructor(
         val packageName = !validatePackageName()
         val name = !validateName()
         val values = !validateValues()
-        FeatureFlagModel(visibility, packageName, name, values)
+        FeatureFlagModel(visibility, ClassName(packageName, name), values)
       }
     }
 
@@ -63,27 +68,40 @@ class FeatureFlagModel private constructor(
       )
     }
 
-    private fun validateValues(): Either<GenerationFailure, Nel<String>> {
+    private fun validateValues(): Either<GenerationFailure, Nel<FeatureValue>> {
       return Nel.fromList(values)
         .toEither { NoFeatureValues(fqcn) }
         .flatMap { @Kt41142 validateValueNames(it) }
         .flatMap { @Kt41142 validateDuplicates(it) }
+        .flatMap { @Kt41142 validateSingleFallback(it) }
     }
 
-    private fun validateValueNames(values: Nel<String>): Either<GenerationFailure, Nel<String>> {
-      val invalidNames = values.toList().filterNot(valueRegex::matches)
+    private fun validateValueNames(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
+      val invalidNames = values.toList().map { @Kt41142 it.name }.filterNot(valueRegex::matches)
       return Nel.fromList(invalidNames)
         .toEither { values }
         .swap()
         .mapLeft { InvalidFeatureValues(it, fqcn) }
     }
 
-    private fun validateDuplicates(values: Nel<String>): Either<GenerationFailure, Nel<String>> {
-      val duplicates = values.toList().findDuplicates()
+    private fun validateDuplicates(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
+      val duplicates = values.toList().map { @Kt41142 it.name }.findDuplicates()
       return Nel.fromList(duplicates.toList())
         .toEither { values }
         .swap()
         .mapLeft { FeatureValuesCollision(it, fqcn) }
+    }
+
+    private fun validateSingleFallback(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
+      val fallbackProblems = values.toList()
+        .filter { @Kt41142 it.isFallbackValue }
+        .takeIf { it.size != 1 }
+        ?.map { @Kt41142 it.name }
+      return if (fallbackProblems == null) values.right()
+      else Nel.fromList(fallbackProblems)
+        .map { MultipleFeatureFallbackValues(it, fqcn) }
+        .getOrElse { NoFeatureFallbackValue(fqcn) }
+        .left()
     }
 
     internal companion object {
