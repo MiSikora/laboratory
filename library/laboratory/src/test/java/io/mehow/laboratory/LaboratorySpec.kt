@@ -1,11 +1,16 @@
 package io.mehow.laboratory
 
+import app.cash.turbine.test
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.spec.style.scopes.DescribeScope
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlin.time.ExperimentalTime
 
 class LaboratorySpec : DescribeSpec({
   describe("laboratory") {
@@ -62,6 +67,29 @@ class LaboratorySpec : DescribeSpec({
     val features = listOf(NoFallbackFeature::class, FallbackFeature::class, MultiFallbackFeature::class)
     for (feature in features) {
       verifyFeatureChanges(feature.java)
+    }
+
+    it("observes feature changes") {
+      val laboratory = Laboratory.inMemory()
+
+      @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
+      laboratory.observe<NoFallbackFeature>().test {
+        expectItem() shouldBe NoFallbackFeature.A
+
+        laboratory.setFeature(NoFallbackFeature.B)
+        expectItem() shouldBe NoFallbackFeature.B
+
+        laboratory.setFeature(NoFallbackFeature.A)
+        expectItem() shouldBe NoFallbackFeature.A
+
+        laboratory.setFeature(NoFallbackFeature.A)
+        expectNoEvents()
+
+        laboratory.setFeature(NoFallbackFeature.C)
+        expectItem() shouldBe NoFallbackFeature.C
+
+        cancel()
+      }
     }
   }
 
@@ -129,17 +157,20 @@ private enum class MultiFallbackFeature(override val isFallbackValue: Boolean = 
 private enum class NoValuesFeature : Feature<NoValuesFeature>
 
 private object ThrowingStorage : FeatureStorage {
-  override suspend fun <T : Feature<*>> getFeatureName(group: Class<T>) = fail()
+  override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = fail()
+  override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = fail()
   override suspend fun <T : Feature<*>> setFeature(feature: T) = fail()
 }
 
 private object NullStorage : FeatureStorage {
-  override suspend fun <T : Feature<*>> getFeatureName(group: Class<T>): String? = null
+  override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>): Flow<String?> = flowOf(null)
+  override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>): String? = null
   override suspend fun <T : Feature<*>> setFeature(feature: T) = fail()
 }
 
 private object EmptyStorage : FeatureStorage {
-  override suspend fun <T : Feature<*>> getFeatureName(group: Class<T>) = ""
+  override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = flowOf("")
+  override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = ""
   override suspend fun <T : Feature<*>> setFeature(feature: T) = fail()
 }
 

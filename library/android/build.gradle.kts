@@ -36,7 +36,7 @@ dependencies {
   androidTestImplementation(Libs.AndroidX.Test.CoreKtx)
   androidTestImplementation(Libs.AndroidX.Test.Runner)
   androidTestImplementation(Libs.Kotest.Assertions)
-  androidTestImplementation(Libs.Kotlin.Coroutines.Test)
+  androidTestImplementation(Libs.Turbine)
 }
 
 apply(from = rootProject.file("gradle/gradle-mvn-push.gradle"))

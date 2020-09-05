@@ -7,7 +7,7 @@ laboratory {
   packageName = "io.mehow.laboratory.frombulator"
 
   feature("Frombulation") {
-    withValue("Enabled")
+    withFallbackValue("Enabled")
     withValue("Disabled")
   }
 }

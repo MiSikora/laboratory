@@ -8,7 +8,7 @@ laboratory {
 
   feature("Trombulation") {
     withValue("LevelOne")
-    withValue("LevelTwo")
+    withFallbackValue("LevelTwo")
     withValue("LevelThree")
   }
 }

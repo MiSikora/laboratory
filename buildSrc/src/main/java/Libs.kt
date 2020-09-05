@@ -13,9 +13,9 @@ object Libs {
     object Coroutines {
       const val Version = "1.3.9"
 
-      const val Android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$Version"
+      const val Core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$Version"
 
-      const val Test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$Version"
+      const val Android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$Version"
     }
   }
 
@@ -96,4 +96,6 @@ object Libs {
 
     const val GradlePlugin = "com.squareup.wire:wire-gradle-plugin:$Version"
   }
+
+  const val Turbine = "app.cash.turbine:turbine:0.2.1"
 }

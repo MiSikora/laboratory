@@ -7,7 +7,7 @@ laboratory {
   packageName = "io.mehow.laboratory.brombulator"
 
   feature("Brombulation") {
-    withValue("Enabled")
+    withFallbackValue("Enabled")
     withValue("Disabled")
   }
 }

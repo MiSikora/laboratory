@@ -1,11 +1,14 @@
 package io.mehow.laboratory.datastore
 
+import app.cash.turbine.test
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.Laboratory
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okio.ByteString.Companion.decodeHex
+import kotlin.time.ExperimentalTime
 
 class DataStoreFeatureStorageSpec : StringSpec({
   "stored feature is available as experiment" {
@@ -30,6 +33,27 @@ class DataStoreFeatureStorageSpec : StringSpec({
     tempFile.writeBytes(corruptedBytes)
 
     laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+  }
+
+  "observes feature changes" {
+    val tempFile = tempfile()
+    val storage = DataStoreFeatureStorage({ tempFile })
+
+    @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
+    storage.observeFeatureName(FeatureA::class.java).test {
+      expectItem() shouldBe null
+
+      storage.setFeature(FeatureA.B)
+      expectItem() shouldBe FeatureA.B.name
+
+      storage.setFeature(FeatureA.B)
+      expectNoEvents()
+
+      storage.setFeature(FeatureA.A)
+      expectItem() shouldBe FeatureA.A.name
+
+      cancel()
+    }
   }
 })
 

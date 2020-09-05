@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import okio.IOException
 import java.io.File
 
@@ -29,8 +30,12 @@ class DataStoreFeatureStorage @JvmOverloads constructor(
     scope = scope,
   )
 
-  override suspend fun <T : Feature<*>> getFeatureName(group: Class<T>) = try {
-    dataStore.data.first().value[group.name]
+  override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = dataStore
+    .data
+    .map { it.value[featureClass.name] }
+
+  override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = try {
+    dataStore.data.first().value[featureClass.name]
   } catch (_: IOException) {
     null
   }
