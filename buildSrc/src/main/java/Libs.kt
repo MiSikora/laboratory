@@ -20,7 +20,7 @@ object Libs {
   }
 
   object Kotest {
-    const val Version = "4.2.3"
+    const val Version = "4.2.5"
 
     const val RunnerJunit5 = "io.kotest:kotest-runner-junit5-jvm:$Version"
 
