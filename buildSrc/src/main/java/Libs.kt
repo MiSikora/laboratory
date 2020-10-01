@@ -10,6 +10,8 @@ object Libs {
 
     const val StdLibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$Version"
 
+    const val DokkaGradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:$Version"
+
     object Coroutines {
       const val Version = "1.3.9"
 
@@ -63,7 +65,7 @@ object Libs {
 
   const val AutoService = "com.google.auto.service:auto-service:1.0-rc7"
 
-  const val MavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.12.0"
+  const val MavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.13.0"
 
   object Detekt {
     const val Version = "1.14.1"

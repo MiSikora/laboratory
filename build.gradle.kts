@@ -23,6 +23,7 @@ buildscript {
     classpath(Libs.AndroidGradlePlugin)
     classpath(Libs.Kotlin.GradlePlugin)
     classpath(Libs.MavenPublishGradlePlugin)
+    classpath(Libs.Kotlin.DokkaGradlePlugin)
     classpath(Libs.Detekt.GradlePlugin)
     classpath(Libs.GradleVersions.GradlePlugin)
     classpath(Libs.Wire.GradlePlugin)
