@@ -92,7 +92,7 @@ object Libs {
   const val Arrow = "io.arrow-kt:arrow-core:0.10.5"
 
   object Wire {
-    const val Version = "3.2.2"
+    const val Version = "3.4.0"
 
     const val Runtime = "com.squareup.wire:wire-runtime:$Version"
 
