@@ -2,6 +2,7 @@ package io.mehow.laboratory
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 class Laboratory(private val storage: FeatureStorage) {
   inline fun <reified T : Feature<T>> observe() = observe(T::class.java)
@@ -16,13 +17,22 @@ class Laboratory(private val storage: FeatureStorage) {
 
   suspend inline fun <reified T : Feature<T>> experiment() = experiment(T::class.java)
 
+  @BlockingIoCall
+  inline fun <reified T : Feature<T>> experimentBlocking() = runBlocking { experiment<T>() }
+
   suspend fun <T : Feature<T>> experiment(featureClass: Class<T>): T {
     val (features, defaultFeature) = extractFeatureMetadata(featureClass)
     val expectedName = storage.getFeatureName(defaultFeature.javaClass) ?: defaultFeature.name
     return features.firstOrNull { it.name == expectedName } ?: defaultFeature
   }
 
+  @BlockingIoCall
+  fun <T : Feature<T>> experimentBlocking(featureClass: Class<T>) = runBlocking { experiment(featureClass) }
+
   suspend fun <T : Feature<*>> setFeature(feature: T) = storage.setFeature(feature)
+
+  @BlockingIoCall
+  fun <T : Feature<*>> setFeatureBlocking(feature: T) = runBlocking { storage.setFeature(feature) }
 
   private fun <T : Feature<T>> extractFeatureMetadata(group: Class<T>): Pair<Array<T>, T> {
     val features = requireNotNull(group.enumConstants) { "${group.name} must be an enum" }
