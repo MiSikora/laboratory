@@ -89,7 +89,7 @@ class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.addLaboratoryDependency() {
-    val artifactId = if (hasAndroid.get()) "laboratory-android" else "laboratory"
+    val artifactId = if (hasAndroid.get()) "shared-preferences" else "laboratory"
     val dependency = "io.mehow.laboratory:$artifactId:$laboratoryVersion"
     dependencies.add("api", dependency)
   }

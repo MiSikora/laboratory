@@ -1,4 +1,4 @@
-package io.mehow.laboratory.android
+package io.mehow.laboratory.sharedpreferences
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE

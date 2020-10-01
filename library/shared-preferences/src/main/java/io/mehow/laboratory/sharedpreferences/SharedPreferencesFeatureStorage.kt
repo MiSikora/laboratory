@@ -1,4 +1,4 @@
-package io.mehow.laboratory.android
+package io.mehow.laboratory.sharedpreferences
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
