@@ -12,13 +12,11 @@ private const val pluginName = "laboratory"
 
 class LaboratoryPlugin : Plugin<Project> {
   private val hasKotlin = AtomicBoolean(false)
-  private val hasAndroid = AtomicBoolean(false)
   private lateinit var extension: LaboratoryExtension
 
   override fun apply(project: Project) {
     extension = project.extensions.create(pluginName, LaboratoryExtension::class.java)
     project.requireKotlinPlugin()
-    project.checkIfHasAndroid()
 
     project.registerFeaturesTask()
     project.registerFactoryTask()
@@ -33,15 +31,6 @@ class LaboratoryPlugin : Plugin<Project> {
       check(hasKotlin.get()) { "Laboratory Gradle plugin requires Kotlin plugin." }
       addLaboratoryDependency()
     }
-  }
-
-  private fun Project.checkIfHasAndroid() {
-    val androidPluginHandler = { _: Plugin<*> -> hasAndroid.set(true) }
-    plugins.withId("com.android.application", androidPluginHandler)
-    plugins.withId("com.android.library", androidPluginHandler)
-    plugins.withId("com.android.instantapp", androidPluginHandler)
-    plugins.withId("com.android.feature", androidPluginHandler)
-    plugins.withId("com.android.dynamic-feature", androidPluginHandler)
   }
 
   private fun Project.registerFeaturesTask() = afterEvaluate {
@@ -89,9 +78,7 @@ class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.addLaboratoryDependency() {
-    val artifactId = if (hasAndroid.get()) "shared-preferences" else "laboratory"
-    val dependency = "io.mehow.laboratory:$artifactId:$laboratoryVersion"
-    dependencies.add("api", dependency)
+    dependencies.add("api", "io.mehow.laboratory:laboratory:$laboratoryVersion")
   }
 
   private inline fun <reified T : Task> Project.registerTask(
