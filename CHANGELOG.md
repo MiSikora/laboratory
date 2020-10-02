@@ -4,7 +4,7 @@ Change Log
 Version 0.2.1 *(2020-10-02)*
 ----------------------------
 
-* Enable to read and write features with Laboratory in a opt in, blocking way.
+* Enable to read and write features with Laboratory in an opt in, blocking way.
 * Renamed `android` artifact to `shared-preferences` artifact.
 * `shared-preferences` artifact (old `android`) is no longer applied by Gradle automatically.
 
