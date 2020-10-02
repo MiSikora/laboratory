@@ -35,15 +35,15 @@ class SettingsPresenter(private val laboratory: Laboratory) {
 
 By default, if a feature is not set, the first enum value that has has `isFallbackValue` property set to `true` is used. If no value has this property set to `true` then first enum is used as a fallback. `Laboratory` instances delegate their work to a `FeatureStorage` interface that you generally do not have to use in your application code.
 
-| Artifact                                               | Description                                                                                                                                     |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `io.mehow.laboratory:laboratory:0.2.0`                 | Core of the library. Defines classes and interfaces that you should interact with. It also provides a `Laboratory.inMemory()` method for tests. |
-| `io.mehow.laboratory:laboratory-android:0.2.0`         | Provides implementation of `FeatureStorage` based on `SharedPreferences` and adds R8 rules for features.                                        |
-| `io.mehow.laboratory:laboratory-data-store:0.2.0`      | Provides implementation of `FeatureStorage` based on Jetpack `DataStore` and adds R8 rules for features.                                        |
-| `io.mehow.laboratory:laboratory-inspector:0.2.0`       | QA module that allows to preview all features and change them at runtime from one place.                                                        |
-| `io.mehow.laboratory:laboratory-hyperion-plugin:0.2.0` | QA module that integrates `laboratory-inspector` with the [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).                       |
-| `io.mehow.laboratory:laboratory-gradle-plugin:0.2.0`   | Gradle plugin for feature management. It is highly recommended to be used when `laboratory-inspector` is availalbe in the application.          |
-| `io.mehow.laboratory:laboratory-generator:0.2.0`       | Generates feature flags and feature flag factory classes.                                                                                       |
+| Artifact                                                          | Description                                                                                                                                     |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `io.mehow.laboratory:laboratory:0.2.1`                            | Core of the library. Defines classes and interfaces that you should interact with. It also provides a `Laboratory.inMemory()` method for tests. |
+| `io.mehow.laboratory:laboratory-shared-preferences:0.2.1`         | Provides implementation of `FeatureStorage` based on `SharedPreferences` and adds R8 rules for features.                                        |
+| `io.mehow.laboratory:laboratory-data-store:0.2.1`                 | Provides implementation of `FeatureStorage` based on Jetpack `DataStore` and adds R8 rules for features.                                        |
+| `io.mehow.laboratory:laboratory-inspector:0.2.1`                  | QA module that allows to preview all features and change them at runtime from one place.                                                        |
+| `io.mehow.laboratory:laboratory-hyperion-plugin:0.2.1`            | QA module that integrates `laboratory-inspector` with the [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).                       |
+| `io.mehow.laboratory:laboratory-gradle-plugin:0.2.1`              | Gradle plugin for feature management. It is highly recommended to be used when `laboratory-inspector` is availalbe in the application.          |
+| `io.mehow.laboratory:laboratory-generator:0.2.1`                  | Generates feature flags and feature flag factory classes.                                                                                       |
 
 ## QA support
 
