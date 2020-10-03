@@ -5,8 +5,8 @@ Version 0.2.1 *(2020-10-02)*
 ----------------------------
 
 * Enable to read and write features with Laboratory in an opt in, blocking way.
-* Renamed `android` artifact to `shared-preferences` artifact.
-* `shared-preferences` artifact (old `android`) is no longer applied by Gradle automatically.
+* Renamed `laboratory-android` artifact to `laboratory-shared-preferences` artifact.
+* `laboratory-shared-preferences` artifact (old `laboratory-android`) is no longer applied by Gradle automatically.
 
 Version 0.2.0 *(2020-09-05)*
 ----------------------------
