@@ -59,7 +59,8 @@ allprojects {
       jvmTarget = "1.8"
       freeCompilerArgs = listOf(
         "-progressive",
-        "-Xopt-in=kotlin.RequiresOptIn"
+        "-Xopt-in=kotlin.RequiresOptIn",
+        "-Xjvm-default=enable"
       )
     }
   }

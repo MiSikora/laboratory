@@ -4,4 +4,5 @@ package io.mehow.laboratory
 interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
   val name: String
   val isFallbackValue: Boolean
+  @JvmDefault val sourcedWith: Class<Feature<*>>? get() = null
 }

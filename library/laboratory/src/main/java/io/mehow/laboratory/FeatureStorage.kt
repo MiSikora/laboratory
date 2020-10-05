@@ -23,11 +23,15 @@ interface FeatureStorage {
       override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = features[featureClass]
 
       override suspend fun <T : Feature<*>> setFeature(feature: T): Boolean {
-        if (features[feature.javaClass] == feature.name) return true
         features += feature.javaClass to feature.name
         featureFlow.value = features
         return true
       }
     }
+
+    fun sourced(
+      localSource: FeatureStorage,
+      remoteSources: Map<String, FeatureStorage>,
+    ): FeatureStorage = SourcedFeatureStorage(localSource, remoteSources)
   }
 }
