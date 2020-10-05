@@ -1,0 +1,16 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("Feature") {
+    isPublic = true
+
+    withFallbackValue("First")
+    withValue("Second")
+
+    withSource("RemoteA")
+    withSource("RemoteB")
+  }
+}

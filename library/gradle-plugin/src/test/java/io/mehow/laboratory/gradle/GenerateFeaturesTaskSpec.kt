@@ -86,6 +86,185 @@ class GenerateFeaturesTaskSpec : StringSpec({
     """.trimMargin("|")
   }
 
+  "generates a single feature flag with source" {
+    val fixture = "feature-generate-sources-single".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |enum class Feature(
+      |  override val isFallbackValue: Boolean = false
+      |) : io.mehow.laboratory.Feature<Feature> {
+      |  First(isFallbackValue = true),
+      |
+      |  Second;
+      |
+      |  @Suppress("UNCHECKED_CAST")
+      |  override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |      Class<io.mehow.laboratory.Feature<*>>
+      |
+      |  enum class Source(
+      |    override val isFallbackValue: Boolean = false
+      |  ) : io.mehow.laboratory.Feature<Source> {
+      |    Local(isFallbackValue = true),
+      |
+      |    RemoteA,
+      |
+      |    RemoteB;
+      |  }
+      |}
+    """.trimMargin("|")
+  }
+
+  "generates an internal feature flag with source" {
+    val fixture = "feature-generate-sources-internal".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |internal enum class Feature(
+      |  override val isFallbackValue: Boolean = false
+      |) : io.mehow.laboratory.Feature<Feature> {
+      |  First(isFallbackValue = true),
+      |
+      |  Second;
+      |
+      |  @Suppress("UNCHECKED_CAST")
+      |  override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |      Class<io.mehow.laboratory.Feature<*>>
+      |
+      |  internal enum class Source(
+      |    override val isFallbackValue: Boolean = false
+      |  ) : io.mehow.laboratory.Feature<Source> {
+      |    Local(isFallbackValue = true),
+      |
+      |    RemoteA,
+      |
+      |    RemoteB;
+      |  }
+      |}
+    """.trimMargin("|")
+  }
+
+  "generates a public feature flag with source" {
+    val fixture = "feature-generate-sources-public".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |
+      |enum class Feature(
+      |  override val isFallbackValue: Boolean = false
+      |) : io.mehow.laboratory.Feature<Feature> {
+      |  First(isFallbackValue = true),
+      |
+      |  Second;
+      |
+      |  @Suppress("UNCHECKED_CAST")
+      |  override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |      Class<io.mehow.laboratory.Feature<*>>
+      |
+      |  enum class Source(
+      |    override val isFallbackValue: Boolean = false
+      |  ) : io.mehow.laboratory.Feature<Source> {
+      |    Local(isFallbackValue = true),
+      |
+      |    RemoteA,
+      |
+      |    RemoteB;
+      |  }
+      |}
+    """.trimMargin("|")
+  }
+
+  "generates multiple feature flags with sources" {
+    val fixture = "feature-generate-sources-multiple".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val featureA = fixture.featureFile("FeatureA")
+    featureA.shouldExist()
+
+    featureA.readText() shouldContain """
+      |enum class FeatureA(
+      |  override val isFallbackValue: Boolean = false
+      |) : Feature<FeatureA> {
+      |  First(isFallbackValue = true),
+      |
+      |  Second;
+      |
+      |  @Suppress("UNCHECKED_CAST")
+      |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+      |
+      |  enum class Source(
+      |    override val isFallbackValue: Boolean = false
+      |  ) : Feature<Source> {
+      |    Local(isFallbackValue = true),
+      |
+      |    RemoteA,
+      |
+      |    RemoteB;
+      |  }
+      |}
+    """.trimMargin("|")
+
+    val featureB = fixture.featureFile("FeatureB")
+    featureB.shouldExist()
+
+    featureB.readText() shouldContain """
+      |enum class FeatureB(
+      |  override val isFallbackValue: Boolean = false
+      |) : Feature<FeatureB> {
+      |  First(isFallbackValue = true),
+      |
+      |  Second;
+      |}
+    """.trimMargin("|")
+
+    val featureC = fixture.featureFile("FeatureC")
+    featureC.shouldExist()
+
+    featureC.readText() shouldContain """
+      |enum class FeatureC(
+      |  override val isFallbackValue: Boolean = false
+      |) : Feature<FeatureC> {
+      |  First(isFallbackValue = true),
+      |
+      |  Second;
+      |
+      |  @Suppress("UNCHECKED_CAST")
+      |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+      |
+      |  enum class Source(
+      |    override val isFallbackValue: Boolean = false
+      |  ) : Feature<Source> {
+      |    Local,
+      |
+      |    RemoteA(isFallbackValue = true),
+      |
+      |    RemoteC;
+      |  }
+      |}
+    """.trimMargin("|")
+  }
+
   "uses implicit package name" {
     val fixture = "feature-package-name-implicit".toFixture()
 
