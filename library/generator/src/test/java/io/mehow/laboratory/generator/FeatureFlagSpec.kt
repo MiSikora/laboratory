@@ -295,5 +295,148 @@ class FeatureFlagSpec : DescribeSpec({
           """.trimMargin("|")
       }
     }
+
+    it("can have sourcedWith parameter") {
+      val tempDir = createTempDir()
+
+      val outputFile = featureBuilder
+        .copy(sourcedWithValues = listOf(FeatureValue("Remote")))
+        .build().map { model -> model.generate(tempDir) }
+
+      outputFile shouldBeRight { file ->
+        file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import java.lang.Class
+            |import kotlin.Boolean
+            |import kotlin.Suppress
+            |
+            |internal enum class FeatureA(
+            |  override val isFallbackValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isFallbackValue = true),
+            |
+            |  Second;
+            |
+            |  @Suppress("UNCHECKED_CAST")
+            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |
+            |  internal enum class Source(
+            |    override val isFallbackValue: Boolean = false
+            |  ) : Feature<Source> {
+            |    Local(isFallbackValue = true),
+            |
+            |    Remote;
+            |  }
+            |}
+            |
+          """.trimMargin("|")
+      }
+    }
+
+    it("does not have sourcedWith parameter if only source is Local") {
+      val tempDir = createTempDir()
+
+      val outputFile = featureBuilder
+        .copy(sourcedWithValues = listOf(FeatureValue("Local")))
+        .build().map { model -> model.generate(tempDir) }
+
+      outputFile shouldBeRight { file ->
+        file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import kotlin.Boolean
+            |
+            |internal enum class FeatureA(
+            |  override val isFallbackValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isFallbackValue = true),
+            |
+            |  Second;
+            |}
+            |
+          """.trimMargin("|")
+      }
+    }
+
+    it("allows to set not Local default fallback for source") {
+      val tempDir = createTempDir()
+
+      val outputFile = featureBuilder
+        .copy(sourcedWithValues = listOf(FeatureValue("Remote", isFallbackValue = true)))
+        .build().map { model -> model.generate(tempDir) }
+
+      outputFile shouldBeRight { file ->
+        file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import java.lang.Class
+            |import kotlin.Boolean
+            |import kotlin.Suppress
+            |
+            |internal enum class FeatureA(
+            |  override val isFallbackValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isFallbackValue = true),
+            |
+            |  Second;
+            |
+            |  @Suppress("UNCHECKED_CAST")
+            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |
+            |  internal enum class Source(
+            |    override val isFallbackValue: Boolean = false
+            |  ) : Feature<Source> {
+            |    Local,
+            |
+            |    Remote(isFallbackValue = true);
+            |  }
+            |}
+            |
+          """.trimMargin("|")
+      }
+    }
+
+    it("source visibility follows feature visibility") {
+      val tempDir = createTempDir()
+
+      val outputFile = featureBuilder
+        .copy(visibility = Public, sourcedWithValues = listOf(FeatureValue("Remote")))
+        .build().map { model -> model.generate(tempDir) }
+
+      outputFile shouldBeRight { file ->
+        file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import java.lang.Class
+            |import kotlin.Boolean
+            |import kotlin.Suppress
+            |
+            |enum class FeatureA(
+            |  override val isFallbackValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isFallbackValue = true),
+            |
+            |  Second;
+            |
+            |  @Suppress("UNCHECKED_CAST")
+            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |
+            |  enum class Source(
+            |    override val isFallbackValue: Boolean = false
+            |  ) : Feature<Source> {
+            |    Local(isFallbackValue = true),
+            |
+            |    Remote;
+            |  }
+            |}
+            |
+          """.trimMargin("|")
+      }
+    }
   }
 })

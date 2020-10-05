@@ -42,7 +42,7 @@ internal class FeatureFactoryGenerator(
       if (factory.features.isNotEmpty()) {
         addAnnotation(suppressCast)
         addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
-      } else addStatement("return %M<%T>()", emptySet, setType)
+      } else addStatement("return %M<%T>()", emptySet, featureType)
     }
     .build()
 
@@ -67,8 +67,8 @@ internal class FeatureFactoryGenerator(
   fun generate(file: File) = factoryFile.writeTo(file)
 
   private companion object {
-    val setType = Class::class(Feature::class(STAR))
-    val factoryReturnType = Set::class(setType)
+    val featureType = Class::class(Feature::class(STAR))
+    val factoryReturnType = Set::class(featureType)
 
     operator fun KClass<*>.invoke(parameter: TypeName) = asClassName().parameterizedBy(parameter)
   }

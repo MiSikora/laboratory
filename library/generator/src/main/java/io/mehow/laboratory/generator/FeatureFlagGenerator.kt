@@ -1,5 +1,6 @@
 package io.mehow.laboratory.generator
 
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -7,6 +8,7 @@ import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
@@ -31,12 +33,30 @@ internal class FeatureFlagGenerator(
     .initializer(fallbackValuePropertyName)
     .build()
 
-  private val typeSpec = TypeSpec.enumBuilder(feature.className)
+  private val suppressCast = AnnotationSpec.builder(Suppress::class)
+    .addMember("%S", "UNCHECKED_CAST")
+    .build()
+
+  private val featureSource = feature.nestedSource?.let { nestedSource ->
+    nestedSource to PropertySpec
+      .builder(sourcedWithPropertyName, featureType, OVERRIDE)
+      .addAnnotation(suppressCast)
+      .initializer("%L::class.java as %T", nestedSource.name, featureType)
+      .build()
+  }
+
+  private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
     .addModifiers(feature.visibility.modifier)
     .primaryConstructor(primaryConstructor)
     .addSuperinterface(Feature::class(feature.className))
     .addProperty(isFallbackValueProperty)
     .let { feature.values.foldLeft(it) { builder, featureValue -> builder.addEnumConstant(featureValue) } }
+    .apply {
+      featureSource?.let { (nestedSource, sourceWithOverride) ->
+        addType(FeatureFlagGenerator(nestedSource).typeSpec)
+        addProperty(sourceWithOverride)
+      }
+    }
     .build()
 
   private fun TypeSpec.Builder.addEnumConstant(featureValue: FeatureValue) = if (featureValue.isFallbackValue) {
@@ -57,6 +77,10 @@ internal class FeatureFlagGenerator(
 
   private companion object {
     const val fallbackValuePropertyName = "isFallbackValue"
+    const val sourcedWithPropertyName = "sourcedWith"
+
+    val featureType = Class::class(Feature::class(STAR))
+
     operator fun KClass<*>.invoke(parameter: TypeName) = asClassName().parameterizedBy(parameter)
   }
 }

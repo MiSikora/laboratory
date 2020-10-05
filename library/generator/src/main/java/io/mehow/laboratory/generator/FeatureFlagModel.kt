@@ -18,10 +18,27 @@ class FeatureFlagModel private constructor(
   internal val visibility: Visibility,
   internal val className: ClassName,
   internal val values: Nel<FeatureValue>,
+  sourcedWithValues: List<FeatureValue>?,
 ) {
   internal val packageName = className.packageName
   internal val name = className.simpleName
   internal val fqcn = className.canonicalName
+  internal val nestedSource = sourcedWithValues
+    ?.filter { it.name != "Local" }
+    ?.takeIf { it.isNotEmpty() }
+    ?.let { values ->
+      val sourceValues = Nel(
+        FeatureValue("Local", isFallbackValue = values.none(FeatureValue::isFallbackValue)),
+        values,
+      )
+
+      FeatureFlagModel(
+        visibility = visibility,
+        className = ClassName(fqcn, "Source"),
+        values = sourceValues,
+        sourcedWithValues = null,
+      )
+    }
 
   fun generate(file: File): File {
     FeatureFlagGenerator(this).generate(file)
@@ -40,6 +57,7 @@ class FeatureFlagModel private constructor(
     internal val packageName: String,
     internal val name: String,
     internal val values: List<FeatureValue>,
+    internal val sourcedWithValues: List<FeatureValue>? = null,
   ) {
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
@@ -48,7 +66,7 @@ class FeatureFlagModel private constructor(
         val packageName = !validatePackageName()
         val name = !validateName()
         val values = !validateValues()
-        FeatureFlagModel(visibility, ClassName(packageName, name), values)
+        FeatureFlagModel(visibility, ClassName(packageName, name), values, sourcedWithValues)
       }
     }
 
