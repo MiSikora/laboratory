@@ -8,7 +8,7 @@ open class LaboratoryExtension {
   internal var factoryInput: FeatureFactoryInput? = null
     private set
 
-  fun factory() = factory(Action<FeatureFactoryInput> { })
+  fun factory() = factory { }
 
   fun factory(action: Action<FeatureFactoryInput>) {
     factoryInput = FeatureFactoryInput().let { input ->
