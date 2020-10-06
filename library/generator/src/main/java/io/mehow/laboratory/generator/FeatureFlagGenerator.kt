@@ -41,7 +41,7 @@ internal class FeatureFlagGenerator(
     nestedSource to PropertySpec
       .builder(sourcedWithPropertyName, featureType, OVERRIDE)
       .addAnnotation(suppressCast)
-      .initializer("%L::class.java as %T", nestedSource.name, featureType)
+      .initializer("%T::class.java as %T", nestedSource.className, featureType)
       .build()
   }
 
