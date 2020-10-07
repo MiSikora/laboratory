@@ -1,0 +1,29 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  sourcedStorage()
+
+  feature("RootFeature") {
+    withFallbackValue("First")
+
+    withSource("local")
+    withSource("locaL")
+    withSource("locAl")
+    withSource("loCal")
+    withSource("lOcal")
+    withSource("Local")
+    withSource("LocaL")
+    withSource("LocAl")
+    withSource("LoCal")
+    withSource("LOcal")
+    withSource("LOcaL")
+    withSource("LOcAl")
+    withSource("LOCal")
+    withSource("LOCaL")
+    withSource("LOCAl")
+    withSource("LOCAL")
+  }
+}

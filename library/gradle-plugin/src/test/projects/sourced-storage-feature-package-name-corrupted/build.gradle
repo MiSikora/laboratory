@@ -1,0 +1,13 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  sourcedStorage()
+
+  feature("Feature") {
+    packageName = "!!!"
+    withValue("First")
+  }
+}

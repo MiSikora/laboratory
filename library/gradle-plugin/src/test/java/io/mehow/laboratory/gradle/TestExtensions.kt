@@ -7,11 +7,15 @@ internal fun String.toFixture(): File {
 }
 
 internal fun File.featureFile(fqcn: String): File {
-  return File(this, "build/generated/laboratory/code/feature/${fqcn.replace(".", "/")}.kt")
+  return File(this, "build/generated/laboratory/code/feature-flags/${fqcn.replace(".", "/")}.kt")
 }
 
 internal fun File.factoryFile(fqcn: String): File {
-  return File(this, "build/generated/laboratory/code/factory/${fqcn.replace(".", "/")}.kt")
+  return File(this, "build/generated/laboratory/code/feature-factory/${fqcn.replace(".", "/")}.kt")
+}
+
+internal fun File.storageFile(fqcn: String): File {
+  return File(this, "build/generated/laboratory/code/sourced-storage/${fqcn.replace(".", "/")}.kt")
 }
 
 internal fun File.cleanUpDir() {

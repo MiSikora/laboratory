@@ -28,4 +28,17 @@ open class LaboratoryExtension {
       return@let input
     }
   }
+
+  internal var storageInput: SourcedFeatureStorageInput? = null
+    private set
+
+  fun sourcedStorage() = sourcedStorage { }
+
+  fun sourcedStorage(action: Action<SourcedFeatureStorageInput>) {
+    storageInput = SourcedFeatureStorageInput().let { input ->
+      action.execute(input)
+      input.packageName = input.packageName ?: packageName
+      return@let input
+    }
+  }
 }

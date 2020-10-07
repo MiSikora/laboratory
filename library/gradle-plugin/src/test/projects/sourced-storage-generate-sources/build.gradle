@@ -1,0 +1,20 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  sourcedStorage()
+
+  feature("FeatureA") {
+    withFallbackValue("FirstA")
+
+    withSource("RemoteA")
+  }
+
+  feature("FeatureB") {
+    withFallbackValue("FirstB")
+
+    withSource("RemoteB")
+  }
+}

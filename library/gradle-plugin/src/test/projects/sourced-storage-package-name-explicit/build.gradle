@@ -1,0 +1,10 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  sourcedStorage {
+    packageName = "io.mehow.explicit"
+  }
+}

@@ -19,7 +19,8 @@ class LaboratoryPlugin : Plugin<Project> {
     project.requireKotlinPlugin()
 
     project.registerFeaturesTask()
-    project.registerFactoryTask()
+    project.registerFeatureFactoryTask()
+    project.registerSourcedFeatureStorageTask()
   }
 
   private fun Project.requireKotlinPlugin() {
@@ -34,7 +35,7 @@ class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.registerFeaturesTask() = afterEvaluate {
-    val codeGenDir = File("$buildDir/generated/laboratory/code/feature")
+    val codeGenDir = File("$buildDir/generated/laboratory/code/feature-flags")
     val featuresTask = registerTask<FeatureFlagsTask>("generateFeatureFlags") { task ->
       task.group = pluginName
       task.description = "Generate Laboratory features."
@@ -44,10 +45,10 @@ class LaboratoryPlugin : Plugin<Project> {
     featuresTask.contributeToSourceSets(codeGenDir, this)
   }
 
-  private fun Project.registerFactoryTask() = afterEvaluate {
+  private fun Project.registerFeatureFactoryTask() = afterEvaluate {
     val factoryInput = extension.factoryInput ?: return@afterEvaluate
 
-    val codeGenDir = File("${project.buildDir}/generated/laboratory/code/factory")
+    val codeGenDir = File("${project.buildDir}/generated/laboratory/code/feature-factory")
     val featureInputs = mutableListOf<FeatureFlagInput>()
     val factoryTask = registerTask<FeatureFactoryTask>("generateFeatureFactory") { task ->
       task.group = pluginName
@@ -58,6 +59,22 @@ class LaboratoryPlugin : Plugin<Project> {
     }
     findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
     factoryTask.contributeToSourceSets(codeGenDir, this)
+  }
+
+  private fun Project.registerSourcedFeatureStorageTask() = afterEvaluate {
+    val storageInput = extension.storageInput ?: return@afterEvaluate
+
+    val codeGenDir = File("${project.buildDir}/generated/laboratory/code/sourced-storage")
+    val featureInputs = mutableListOf<FeatureFlagInput>()
+    val storageTask = registerTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage") { task ->
+      task.group = pluginName
+      task.group = "Generate Laboratory sourced feature storage."
+      task.storage = storageInput
+      task.features = featureInputs
+      task.codeGenDir = codeGenDir
+    }
+    findAllFeatures(storageInput.projectFilter) { featureInputs.addAll(it) }
+    storageTask.contributeToSourceSets(codeGenDir, this)
   }
 
   private fun Project.findAllFeatures(

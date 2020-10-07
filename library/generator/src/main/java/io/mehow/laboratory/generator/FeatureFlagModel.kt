@@ -135,3 +135,8 @@ fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<Fe
     .map { listKind -> listKind.fix() }
     .flatMap { models -> models.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) } }
 }
+
+fun List<FeatureFlagModel>.sourceNames() = mapNotNull { @Kt41142 it.source }
+  .map { @Kt41142 it.values }
+  .flatMap { it.toList() }
+  .map { @Kt41142 it.name }

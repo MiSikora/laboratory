@@ -89,4 +89,34 @@ class LaboratoryPluginSpec : StringSpec({
 
     result.task(":generateFeatureFactory").shouldNotBeNull()
   }
+
+  "does not register sourced storage for project without sourced storage extension" {
+    val fixture = "plugin-sourced-storage-missing".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("--stacktrace")
+      .build()
+
+    result.task(":generateSourcedFeatureStorage").shouldBeNull()
+  }
+
+  "fails for project without sourced storage extension with factory argument" {
+    val fixture = "plugin-sourced-storage-missing".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+      .buildAndFail()
+
+    result.task(":generateSourcedFeatureStorage").shouldBeNull()
+  }
+
+  "registers ourced storage for project with factory extension" {
+    val fixture = "plugin-sourced-storage-present".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+      .build()
+
+    result.task(":generateSourcedFeatureStorage").shouldNotBeNull()
+  }
 })
