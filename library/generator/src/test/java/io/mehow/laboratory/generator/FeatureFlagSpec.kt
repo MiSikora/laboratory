@@ -255,46 +255,103 @@ class FeatureFlagSpec : DescribeSpec({
     }
   }
 
-  describe("feature flag source model name") {
-    it("cannot be blank") {
-      checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
-        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+  describe("feature flag source model") {
+    context("name") {
+      it("cannot be blank") {
+        checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
+          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
 
-        val result = builder.build()
+          val result = builder.build()
 
-        result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+          result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+        }
+      }
+
+      it("cannot start with an underscore") {
+        checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
+          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+
+          val result = builder.build()
+
+          result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+        }
+      }
+
+      it("cannot contain characters that are not alphanumeric or underscores") {
+        checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
+          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+
+          val result = builder.build()
+
+          result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+        }
+      }
+
+      it("can contain alphanumeric characters or underscores") {
+        checkAll(Arb.stringPattern("[a-zA-Z][0-9]([a-zA-Z0-9_]{0,10})")) { name ->
+          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+
+          val result = builder.build()
+
+          result.shouldBeRight()
+        }
       }
     }
 
-    it("cannot start with an underscore") {
-      checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+    context("fallback") {
+      it("can have no values") {
+        checkAll(
+          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+        ) { first, second ->
+          val builder = featureBuilder.copy(
+            sourceValues = listOf(FeatureValue(first), FeatureValue(second))
+          )
+          val result = builder.build()
 
-        val result = builder.build()
+          result.shouldBeRight()
+        }
+      }
 
-        result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+      it("cannot have multiple values") {
+        checkAll(
+          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+        ) { first, second, third ->
+          val builder = featureBuilder.copy(
+            sourceValues = listOf(
+              FeatureValue(first, isFallbackValue = true),
+              FeatureValue(second),
+              FeatureValue(third, isFallbackValue = true),
+            )
+          )
+          val result = builder.build()
+
+          result shouldBeLeft MultipleFeatureFallbackValues(Nel(first, third), "${builder.fqcn}.Source")
+        }
+      }
+
+      it("can have one value") {
+        checkAll(
+          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+        ) { first, second, third ->
+          val builder = featureBuilder.copy(
+            sourceValues = listOf(
+              FeatureValue(first),
+              FeatureValue(second),
+              FeatureValue(third, isFallbackValue = true),
+            )
+          )
+          val result = builder.build()
+
+          result.shouldBeRight()
+        }
       }
     }
 
-    it("cannot contain characters that are not alphanumeric or underscores") {
-      checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
-
-        val result = builder.build()
-
-        result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
-      }
-    }
-
-    it("can contain alphanumeric characters or underscores") {
-      checkAll(Arb.stringPattern("[a-zA-Z][0-9]([a-zA-Z0-9_]{0,10})")) { name ->
-        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
-
-        val result = builder.build()
-
-        result.shouldBeRight()
-      }
-    }
   }
 
   describe("generated feature flag") {
