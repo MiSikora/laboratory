@@ -18,21 +18,21 @@ class FeatureFactorySpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
-    name = "FeatureA",
+    names = listOf("FeatureA"),
     values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureB = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
-    name = "FeatureB",
+    names = listOf("FeatureB"),
     values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureC = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow.c",
-    name = "FeatureA",
+    names = listOf("FeatureA"),
     values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
@@ -126,19 +126,19 @@ class FeatureFactorySpec : DescribeSpec({
           features = listOf(featureA, featureA, featureB, featureC)
         )
         val resultA = builderA.build("GeneratedFeatureFactory")
-        resultA shouldBeLeft FeaturesCollision(featureA.fqcn.nel())
+        resultA shouldBeLeft FeaturesCollision(featureA.reflectionName.nel())
 
         val builderB = factoryBuilder.copy(
           features = listOf(featureA, featureB, featureB, featureC)
         )
         val resultB = builderB.build("GeneratedFeatureFactory")
-        resultB shouldBeLeft FeaturesCollision(featureB.fqcn.nel())
+        resultB shouldBeLeft FeaturesCollision(featureB.reflectionName.nel())
 
         val builderC = factoryBuilder.copy(
           features = listOf(featureA, featureB, featureC, featureC)
         )
         val resultC = builderC.build("GeneratedFeatureFactory")
-        resultC shouldBeLeft FeaturesCollision(featureC.fqcn.nel())
+        resultC shouldBeLeft FeaturesCollision(featureC.reflectionName.nel())
       }
 
       it("can have unique features") {

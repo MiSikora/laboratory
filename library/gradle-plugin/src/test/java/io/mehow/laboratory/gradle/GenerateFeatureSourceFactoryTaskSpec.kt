@@ -68,8 +68,8 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
       |  override fun create() = setOf(
-      |    Class.forName("io.mehow.first.FeatureA.Source"),
-      |    Class.forName("io.mehow.second.FeatureB.Source")
+      |    Class.forName("io.mehow.first.FeatureA${"\${'$'}"}Source"),
+      |    Class.forName("io.mehow.second.FeatureB${"\${'$'}"}Source")
       |  ) as Set<Class<Feature<*>>>
       |}
     """.trimMargin("|")
@@ -236,9 +236,9 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
       |  override fun create() = setOf(
-      |    Class.forName("FeatureA.Source"),
-      |    Class.forName("FeatureB.Source"),
-      |    Class.forName("RootFeature.Source")
+      |    Class.forName("FeatureA${"\${'$'}"}Source"),
+      |    Class.forName("FeatureB${"\${'$'}"}Source"),
+      |    Class.forName("RootFeature${"\${'$'}"}Source")
       |  ) as Set<Class<Feature<*>>>
       |}
     """.trimMargin("|")
@@ -261,8 +261,8 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
       |  override fun create() = setOf(
-      |    Class.forName("FeatureB.Source"),
-      |    Class.forName("RootFeature.Source")
+      |    Class.forName("FeatureB${"\${'$'}"}Source"),
+      |    Class.forName("RootFeature${"\${'$'}"}Source")
       |  ) as Set<Class<Feature<*>>>
       |}
     """.trimMargin("|")

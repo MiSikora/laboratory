@@ -19,7 +19,7 @@ class FeatureFlagSpec : DescribeSpec({
   val featureBuilder = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
-    name = "FeatureA",
+    names = listOf("FeatureA"),
     values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   )
 
@@ -27,7 +27,7 @@ class FeatureFlagSpec : DescribeSpec({
     context("name") {
       it("cannot be blank") {
         checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
-          val builder = featureBuilder.copy(name = name)
+          val builder = featureBuilder.copy(names = listOf(name))
 
           val result = builder.build()
 
@@ -37,7 +37,7 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("cannot start with an underscore") {
         checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = featureBuilder.copy(name = name)
+          val builder = featureBuilder.copy(names = listOf(name))
 
           val result = builder.build()
 
@@ -47,7 +47,7 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("cannot contain characters that are not alphanumeric or underscores") {
         checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-          val builder = featureBuilder.copy(name = name)
+          val builder = featureBuilder.copy(names = listOf(name))
 
           val result = builder.build()
 
@@ -57,7 +57,7 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("can contain alphanumeric characters or underscores") {
         checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = featureBuilder.copy(name = name)
+          val builder = featureBuilder.copy(names = listOf(name))
 
           val result = builder.build()
 
@@ -171,8 +171,8 @@ class FeatureFlagSpec : DescribeSpec({
       it("can have unique features") {
         checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
           val nameA = name + "A"
-          val builder = featureBuilder.copy(name = name)
-          val builderA = featureBuilder.copy(name = nameA)
+          val builder = featureBuilder.copy(names = listOf(name))
+          val builderA = featureBuilder.copy(names = listOf(nameA))
           val builderB = featureBuilder.copy(packageName = name)
           val builderC = featureBuilder.copy(packageName = nameA)
           val builders = listOf(builder, builderA, builderB, builderC)
@@ -187,9 +187,9 @@ class FeatureFlagSpec : DescribeSpec({
         checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
           val nameA = name + "A"
           val nameB = name + "B"
-          val builder = featureBuilder.copy(name = name)
-          val builderA = featureBuilder.copy(name = nameA)
-          val builderB = featureBuilder.copy(name = nameB)
+          val builder = featureBuilder.copy(names = listOf(name))
+          val builderA = featureBuilder.copy(names = listOf(nameA))
+          val builderB = featureBuilder.copy(names = listOf(nameB))
           val builderC = featureBuilder.copy(packageName = name)
           val builders = listOf(builder, builder, builderA, builderB, builderC)
 

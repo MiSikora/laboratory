@@ -81,7 +81,7 @@ data class FeaturesCollision(
 
   companion object {
     fun fromFeatures(models: Nel<FeatureFlagModel>): FeaturesCollision {
-      return FeaturesCollision(models.map { @Kt41142 it.fqcn })
+      return FeaturesCollision(models.map { @Kt41142 it.reflectionName })
     }
   }
 }

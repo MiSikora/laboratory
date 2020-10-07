@@ -22,7 +22,7 @@ class FeatureFlagModel private constructor(
 ) {
   internal val packageName = className.packageName
   internal val name = className.simpleName
-  internal val fqcn = className.canonicalName
+  internal val reflectionName = className.reflectionName()
 
   fun generate(file: File): File {
     FeatureFlagGenerator(this).generate(file)
@@ -30,28 +30,28 @@ class FeatureFlagModel private constructor(
     return File(outputDir, "$name.kt")
   }
 
-  override fun equals(other: Any?) = other is FeatureFlagModel && fqcn == other.fqcn
+  override fun equals(other: Any?) = other is FeatureFlagModel && reflectionName == other.reflectionName
 
-  override fun hashCode() = fqcn.hashCode()
+  override fun hashCode() = reflectionName.hashCode()
 
-  override fun toString() = fqcn
+  override fun toString() = reflectionName
 
   data class Builder(
     internal val visibility: Visibility,
     internal val packageName: String,
-    internal val name: String,
+    internal val names: List<String>,
     internal val values: List<FeatureValue>,
     internal val sourceValues: List<FeatureValue> = emptyList(),
   ) {
-    internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
+    internal val fqcn = ClassName(packageName, names).canonicalName
 
     fun build(): Either<GenerationFailure, FeatureFlagModel> {
       return Either.fx {
         val packageName = !validatePackageName()
-        val name = !validateName()
+        val names = !validateName()
         val values = !validateValues()
         val nestedSource = createNestedSource()?.bind()
-        FeatureFlagModel(visibility, ClassName(packageName, name), values, nestedSource)
+        FeatureFlagModel(visibility, ClassName(packageName, names), values, nestedSource)
       }
     }
 
@@ -63,12 +63,14 @@ class FeatureFlagModel private constructor(
       )
     }
 
-    private fun validateName(): Either<GenerationFailure, String> {
-      return Either.cond(
-        test = name.matches(nameRegex),
-        ifTrue = { name },
-        ifFalse = { InvalidFeatureName(name, fqcn) }
-      )
+    private fun validateName(): Either<GenerationFailure, List<String>> {
+      return names.traverse(Either.applicative()) { name ->
+        Either.cond(
+          test = name.matches(nameRegex),
+          ifTrue = { name },
+          ifFalse = { InvalidFeatureName(name, fqcn) }
+        )
+      }.map { listKind -> listKind.fix() }
     }
 
     private fun validateValues(): Either<GenerationFailure, Nel<FeatureValue>> {
@@ -115,8 +117,8 @@ class FeatureFlagModel private constructor(
           val isFallbackValue = values.none(FeatureValue::isFallbackValue)
           return@let Builder(
             visibility = visibility,
-            packageName = fqcn,
-            name = "Source",
+            packageName = packageName,
+            names = names + "Source",
             values = Nel(FeatureValue("Local", isFallbackValue), values).toList(),
           )
         }?.build()

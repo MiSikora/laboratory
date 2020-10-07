@@ -24,7 +24,7 @@ internal class FeatureFactoryGenerator(
   functionName: String,
 ) {
   private val featureClasses = factory.features
-    .map(FeatureFlagModel::fqcn)
+    .map(FeatureFlagModel::reflectionName)
     .sorted()
     .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
     .joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
