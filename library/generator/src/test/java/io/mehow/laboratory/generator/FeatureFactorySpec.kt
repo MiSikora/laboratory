@@ -153,7 +153,9 @@ class FeatureFactorySpec : DescribeSpec({
     it("can be internal") {
       val tempDir = createTempDir()
 
-      val outputFile = factoryBuilder.build("GeneratedFeatureFactory").map { model -> model.generate(tempDir) }
+      val outputFile = factoryBuilder
+        .build("GeneratedFeatureFactory")
+        .map { model -> model.generate("generated", tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -185,7 +187,9 @@ class FeatureFactorySpec : DescribeSpec({
       val tempDir = createTempDir()
       val builder = factoryBuilder.copy(visibility = Public)
 
-      val outputFile = builder.build("GeneratedFeatureFactory").map { model -> model.generate(tempDir) }
+      val outputFile = builder
+        .build("GeneratedFeatureFactory")
+        .map { model -> model.generate("generated", tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -218,7 +222,9 @@ class FeatureFactorySpec : DescribeSpec({
       val tempDir = createTempDir()
       val builder = factoryBuilder.copy(features = emptyList())
 
-      val outputFile = builder.build("GeneratedFeatureFactory").map { model -> model.generate(tempDir) }
+      val outputFile = builder
+        .build("GeneratedFeatureFactory")
+        .map { model -> model.generate("generated", tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """

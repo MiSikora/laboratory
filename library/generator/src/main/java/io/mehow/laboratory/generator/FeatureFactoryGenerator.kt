@@ -21,6 +21,7 @@ import kotlin.reflect.KClass
 
 internal class FeatureFactoryGenerator(
   factory: FeatureFactoryModel,
+  functionName: String,
 ) {
   private val featureClasses = factory.features
     .map(FeatureFlagModel::fqcn)
@@ -52,7 +53,7 @@ internal class FeatureFactoryGenerator(
     .addFunction(discoveryFunctionOverride)
     .build()
 
-  private val factoryExtension = FunSpec.builder("generated")
+  private val factoryExtension = FunSpec.builder(functionName)
     .addModifiers(factory.visibility.modifier)
     .receiver(FeatureFactory.Companion::class)
     .returns(FeatureFactory::class)

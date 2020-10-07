@@ -13,8 +13,8 @@ class FeatureFactoryModel private constructor(
   internal val packageName = className.packageName
   internal val name = className.simpleName
 
-  fun generate(file: File): File {
-    FeatureFactoryGenerator(this).generate(file)
+  fun generate(functionName: String, file: File): File {
+    FeatureFactoryGenerator(this, functionName).generate(file)
     val outputDir = file.toPath().resolve(packageName.replace(".", "/")).toFile()
     return File(outputDir, "$name.kt")
   }

@@ -42,7 +42,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+      |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  override fun create() = emptySet<Class<Feature<*>>>()
@@ -61,7 +61,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+      |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
@@ -114,7 +114,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
-    factory.readText() shouldContain "internal fun FeatureFactory.Companion.generated()"
+    factory.readText() shouldContain "internal fun FeatureFactory.Companion.featureGenerated()"
   }
 
   "generates public factory" {
@@ -129,7 +129,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     // Change after https://github.com/square/kotlinpoet/pull/933
     factory.readText() shouldContain """
       |
-      |fun FeatureFactory.Companion.generated()
+      |fun FeatureFactory.Companion.featureGenerated()
     """.trimMargin("|")
   }
 
@@ -228,7 +228,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+      |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
@@ -252,7 +252,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+      |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
@@ -287,7 +287,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+      |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  override fun create() = emptySet<Class<Feature<*>>>()

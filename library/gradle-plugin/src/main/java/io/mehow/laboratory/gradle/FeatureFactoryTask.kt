@@ -23,7 +23,7 @@ open class FeatureFactoryTask : DefaultTask() {
       is Either.Left -> error(buildIntent.a.message)
       is Either.Right -> {
         codeGenDir.deleteRecursively()
-        buildIntent.b.generate(codeGenDir)
+        buildIntent.b.generate("featureGenerated", codeGenDir)
       }
     }
   }
