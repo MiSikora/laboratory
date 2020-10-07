@@ -6,5 +6,5 @@ plugins {
 laboratory {
   packageName = "io.mehow.implicit"
 
-  factory()
+  featureFactory()
 }

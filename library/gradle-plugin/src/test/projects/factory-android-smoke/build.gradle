@@ -9,5 +9,5 @@ android {
 }
 
 laboratory {
-  factory()
+  featureFactory()
 }

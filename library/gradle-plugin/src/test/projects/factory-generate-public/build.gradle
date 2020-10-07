@@ -4,7 +4,7 @@ plugins {
 }
 
 laboratory {
-  factory {
+  featureFactory {
     isPublic = true
   }
 }

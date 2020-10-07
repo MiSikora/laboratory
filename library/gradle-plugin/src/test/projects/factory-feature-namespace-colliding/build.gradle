@@ -6,7 +6,7 @@ plugins {
 laboratory {
   packageName = "io.mehow"
 
-  factory()
+  featureFactory()
 
   feature("Feature") {
     withFallbackValue("First")

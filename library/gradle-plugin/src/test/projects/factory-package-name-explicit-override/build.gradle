@@ -6,7 +6,7 @@ plugins {
 laboratory {
   packageName = "io.mehow.implicit"
 
-  factory {
+  featureFactory {
     packageName = "io.mehow.explicit"
   }
 }

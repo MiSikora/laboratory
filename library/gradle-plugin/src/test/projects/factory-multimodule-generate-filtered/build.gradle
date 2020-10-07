@@ -4,7 +4,7 @@ plugins {
 }
 
 laboratory {
-  factory {
+  featureFactory {
     excludeProjects { project ->
       project.name == "feature-a"
     }

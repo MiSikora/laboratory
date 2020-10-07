@@ -60,7 +60,7 @@ class LaboratoryPluginSpec : StringSpec({
     result.task(":generateFeatureFlags").shouldNotBeNull()
   }
 
-  "does not register feature factory for project without factory extension" {
+  "does not register feature factory for project without feature factory extension" {
     val fixture = "plugin-factory-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
@@ -70,7 +70,7 @@ class LaboratoryPluginSpec : StringSpec({
     result.task(":generateFeatureFactory").shouldBeNull()
   }
 
-  "fails for project without factory extension with factory argument" {
+  "fails for project without feature factory extension with feature factory argument" {
     val fixture = "plugin-factory-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
@@ -80,7 +80,7 @@ class LaboratoryPluginSpec : StringSpec({
     result.task(":generateFeatureFactory").shouldBeNull()
   }
 
-  "registers feature factory for project with factory extension" {
+  "registers feature factory for project with feature factory extension" {
     val fixture = "plugin-factory-present".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
