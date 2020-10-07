@@ -10,11 +10,11 @@ internal fun File.featureFile(fqcn: String): File {
   return File(this, "build/generated/laboratory/code/feature-flags/${fqcn.replace(".", "/")}.kt")
 }
 
-internal fun File.factoryFile(fqcn: String): File {
+internal fun File.featureFactoryFile(fqcn: String): File {
   return File(this, "build/generated/laboratory/code/feature-factory/${fqcn.replace(".", "/")}.kt")
 }
 
-internal fun File.storageFile(fqcn: String): File {
+internal fun File.sourcedStorageFile(fqcn: String): File {
   return File(this, "build/generated/laboratory/code/sourced-storage/${fqcn.replace(".", "/")}.kt")
 }
 

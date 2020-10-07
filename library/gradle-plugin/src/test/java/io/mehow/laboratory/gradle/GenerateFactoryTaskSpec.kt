@@ -38,7 +38,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain """
@@ -57,7 +57,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain """
@@ -78,7 +78,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.factoryFile("io.mehow.implicit.GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("io.mehow.implicit.GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain "package io.mehow.implicit"
@@ -89,7 +89,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.factoryFile("io.mehow.explicit.GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("io.mehow.explicit.GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain "package io.mehow.explicit"
@@ -100,7 +100,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.factoryFile("io.mehow.explicit.GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("io.mehow.explicit.GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain "package io.mehow.explicit"
@@ -111,7 +111,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain "internal fun FeatureFactory.Companion.generated()"
@@ -122,7 +122,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     // Ensure public by checking a new line before enum declaration.
@@ -141,7 +141,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain InvalidPackageName("!!!.GeneratedFeatureFactory").message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -153,7 +153,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain NoFeatureValues("Feature").message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -165,7 +165,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain FeatureValuesCollision("First".nel(), "Feature").message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -177,7 +177,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain InvalidFeatureValues(NonEmptyList("!!!, ???"), "Feature").message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -189,7 +189,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain InvalidFeatureName("!!!", "!!!").message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -201,7 +201,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain InvalidPackageName("!!!.Feature").message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -213,7 +213,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain FeaturesCollision("io.mehow.Feature".nel()).message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -224,7 +224,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain """
@@ -248,7 +248,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain """
@@ -272,7 +272,7 @@ class GenerateFactoryTaskSpec : StringSpec({
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
     result.output shouldContain FeaturesCollision("Feature".nel()).message
 
-    val feature = fixture.factoryFile("GeneratedFeatureFactory")
+    val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()
   }
 
@@ -283,7 +283,7 @@ class GenerateFactoryTaskSpec : StringSpec({
 
     result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.factoryFile("GeneratedFeatureFactory")
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain """

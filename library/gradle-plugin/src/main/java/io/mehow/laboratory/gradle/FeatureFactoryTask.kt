@@ -13,7 +13,7 @@ open class FeatureFactoryTask : DefaultTask() {
   @get:Internal internal lateinit var features: List<FeatureFlagInput>
   @get:Internal internal lateinit var codeGenDir: File
 
-  @TaskAction fun generateFeatureFlags() {
+  @TaskAction fun generateFeatureFactory() {
     val featureModels = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
       ifLeft = { failure -> error(failure.message) },
       ifRight = ::identity
