@@ -140,3 +140,5 @@ fun List<FeatureFlagModel>.sourceNames() = mapNotNull { @Kt41142 it.source }
   .map { @Kt41142 it.values }
   .flatMap { it.toList() }
   .map { @Kt41142 it.name }
+
+fun List<FeatureFlagModel>.sourceModels() = mapNotNull { @Kt41142 it.source }

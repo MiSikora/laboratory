@@ -1,5 +1,6 @@
 package io.mehow.laboratory.gradle
 
+import io.mehow.laboratory.generator.sourceModels
 import io.mehow.laboratory.laboratoryVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -21,6 +22,7 @@ class LaboratoryPlugin : Plugin<Project> {
     project.registerFeaturesTask()
     project.registerFeatureFactoryTask()
     project.registerSourcedFeatureStorageTask()
+    project.registerFeatureSourcesFactoryTask()
   }
 
   private fun Project.requireKotlinPlugin() {
@@ -56,6 +58,9 @@ class LaboratoryPlugin : Plugin<Project> {
       task.factory = factoryInput
       task.features = featureInputs
       task.codeGenDir = codeGenDir
+      task.factoryClassName = "GeneratedFeatureFactory"
+      task.factoryFunctionName = "featureGenerated"
+      task.featureModelsMapper = { it }
     }
     findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
     factoryTask.contributeToSourceSets(codeGenDir, this)
@@ -75,6 +80,25 @@ class LaboratoryPlugin : Plugin<Project> {
     }
     findAllFeatures(storageInput.projectFilter) { featureInputs.addAll(it) }
     storageTask.contributeToSourceSets(codeGenDir, this)
+  }
+
+  private fun Project.registerFeatureSourcesFactoryTask() = afterEvaluate {
+    val factoryInput = extension.featureSourcesFactory ?: return@afterEvaluate
+
+    val codeGenDir = File("${project.buildDir}/generated/laboratory/code/feature-source-factory")
+    val featureInputs = mutableListOf<FeatureFlagInput>()
+    val factoryTask = registerTask<FeatureFactoryTask>("generateFeatureSourceFactory") { task ->
+      task.group = pluginName
+      task.description = "Generate Laboratory feature sources factory."
+      task.factory = factoryInput
+      task.features = featureInputs
+      task.codeGenDir = codeGenDir
+      task.factoryClassName = "GeneratedFeatureSourceFactory"
+      task.factoryFunctionName = "featureSourceGenerated"
+      task.featureModelsMapper = { it.sourceModels() }
+    }
+    findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
+    factoryTask.contributeToSourceSets(codeGenDir, this)
   }
 
   private fun Project.findAllFeatures(

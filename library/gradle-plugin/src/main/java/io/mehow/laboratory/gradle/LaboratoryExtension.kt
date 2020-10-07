@@ -41,4 +41,17 @@ open class LaboratoryExtension {
       return@let input
     }
   }
+
+  internal var featureSourcesFactory: FeatureFactoryInput? = null
+    private set
+
+  fun featureSourceFactory() = featureSourceFactory { }
+
+  fun featureSourceFactory(action: Action<FeatureFactoryInput>) {
+    featureSourcesFactory = FeatureFactoryInput().let { input ->
+      action.execute(input)
+      input.packageName = input.packageName ?: packageName
+      return@let input
+    }
+  }
 }

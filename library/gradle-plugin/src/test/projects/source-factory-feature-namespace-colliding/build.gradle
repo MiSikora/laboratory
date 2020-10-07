@@ -1,0 +1,18 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  packageName = "io.mehow"
+
+  featureSourceFactory()
+
+  feature("Feature") {
+    withFallbackValue("First")
+  }
+
+  feature("Feature") {
+    withFallbackValue("Second")
+  }
+}

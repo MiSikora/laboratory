@@ -1,0 +1,13 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  featureSourceFactory()
+
+  feature("Feature") {
+    withValue("First")
+    withValue("First")
+  }
+}

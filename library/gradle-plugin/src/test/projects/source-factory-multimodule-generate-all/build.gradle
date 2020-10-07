@@ -1,0 +1,14 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  featureSourceFactory()
+
+  feature("RootFeature") {
+    withFallbackValue("First")
+
+    withSource("Remote")
+  }
+}

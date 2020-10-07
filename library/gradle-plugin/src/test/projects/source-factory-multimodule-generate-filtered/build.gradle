@@ -1,0 +1,18 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  featureSourceFactory {
+    excludeProjects { project ->
+      project.name == "feature-a"
+    }
+  }
+
+  feature("RootFeature") {
+    withFallbackValue("First")
+
+    withSource("Remote")
+  }
+}

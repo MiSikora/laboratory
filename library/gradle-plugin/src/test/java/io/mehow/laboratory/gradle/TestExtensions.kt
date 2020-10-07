@@ -18,6 +18,10 @@ internal fun File.sourcedStorageFile(fqcn: String): File {
   return File(this, "build/generated/laboratory/code/sourced-storage/${fqcn.replace(".", "/")}.kt")
 }
 
+internal fun File.featureSourceStorageFile(fqcn: String): File {
+  return File(this, "build/generated/laboratory/code/feature-source-factory/${fqcn.replace(".", "/")}.kt")
+}
+
 internal fun File.cleanUpDir() {
   if (isDirectory) {
     for (file in listFiles()!!) file.cleanUpDir()

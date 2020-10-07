@@ -119,4 +119,34 @@ class LaboratoryPluginSpec : StringSpec({
 
     result.task(":generateSourcedFeatureStorage").shouldNotBeNull()
   }
+
+  "does not register feature source factory for project without feature source factory extension" {
+    val fixture = "plugin-source-factory-missing".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("--stacktrace")
+      .build()
+
+    result.task(":generateFeatureSourceFactory").shouldBeNull()
+  }
+
+  "fails for project without feature source factory extension with feature source factory argument" {
+    val fixture = "plugin-source-factory-missing".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("generateFeatureSourceFactory", "--stacktrace")
+      .buildAndFail()
+
+    result.task(":generateFeatureSourceFactory").shouldBeNull()
+  }
+
+  "registers feature source factory for project with feature source factory extension" {
+    val fixture = "plugin-source-factory-present".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+      .withArguments("generateFeatureSourceFactory", "--stacktrace")
+      .build()
+
+    result.task(":generateFeatureSourceFactory").shouldNotBeNull()
+  }
 })
