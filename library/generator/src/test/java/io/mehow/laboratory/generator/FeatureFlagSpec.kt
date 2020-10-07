@@ -202,10 +202,12 @@ class FeatureFlagSpec : DescribeSpec({
 
     context("fallback") {
       it("cannot have no values") {
-        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+        checkAll(
+          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+        ) { first, second ->
           val builder = featureBuilder.copy(
-            name = name,
-            values = listOf(FeatureValue("First"), FeatureValue("Second"))
+            values = listOf(FeatureValue(first), FeatureValue(second))
           )
           val result = builder.build()
 
@@ -214,29 +216,35 @@ class FeatureFlagSpec : DescribeSpec({
       }
 
       it("cannot have multiple values") {
-        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+        checkAll(
+          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+        ) { first, second, third ->
           val builder = featureBuilder.copy(
-            name = name,
             values = listOf(
-              FeatureValue("First", isFallbackValue = true),
-              FeatureValue("Second"),
-              FeatureValue("Third", isFallbackValue = true),
+              FeatureValue(first, isFallbackValue = true),
+              FeatureValue(second),
+              FeatureValue(third, isFallbackValue = true),
             )
           )
           val result = builder.build()
 
-          result shouldBeLeft MultipleFeatureFallbackValues(Nel("First", "Third"), builder.fqcn)
+          result shouldBeLeft MultipleFeatureFallbackValues(Nel(first, third), builder.fqcn)
         }
       }
 
       it("can have one value") {
-        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+        checkAll(
+          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+        ) { first, second, third ->
           val builder = featureBuilder.copy(
-            name = name,
             values = listOf(
-              FeatureValue("First"),
-              FeatureValue("Second"),
-              FeatureValue("Third", isFallbackValue = true),
+              FeatureValue(first),
+              FeatureValue(second),
+              FeatureValue(third, isFallbackValue = true),
             )
           )
           val result = builder.build()
