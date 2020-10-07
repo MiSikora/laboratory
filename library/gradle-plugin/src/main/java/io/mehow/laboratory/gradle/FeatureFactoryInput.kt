@@ -23,7 +23,7 @@ class FeatureFactoryInput internal constructor() {
     return FeatureFactoryModel.Builder(
       visibility = if (isPublic) Public else Internal,
       packageName = packageName ?: "",
-      features = features
+      features = features,
     )
   }
 }

@@ -37,7 +37,7 @@ internal class FeatureFlagGenerator(
     .addMember("%S", "UNCHECKED_CAST")
     .build()
 
-  private val featureSource = feature.nestedSource?.let { nestedSource ->
+  private val featureSource = feature.source?.let { nestedSource ->
     nestedSource to PropertySpec
       .builder(sourcedWithPropertyName, featureType, OVERRIDE)
       .addAnnotation(suppressCast)

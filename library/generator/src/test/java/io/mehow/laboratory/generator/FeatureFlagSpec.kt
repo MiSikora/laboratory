@@ -13,6 +13,7 @@ import io.kotest.property.arbitrary.stringPattern
 import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import java.util.Locale
 
 class FeatureFlagSpec : DescribeSpec({
   val featureBuilder = FeatureFlagModel.Builder(
@@ -246,6 +247,48 @@ class FeatureFlagSpec : DescribeSpec({
     }
   }
 
+  describe("feature flag source model name") {
+    it("cannot be blank") {
+      checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
+        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+
+        val result = builder.build()
+
+        result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+      }
+    }
+
+    it("cannot start with an underscore") {
+      checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
+        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+
+        val result = builder.build()
+
+        result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+      }
+    }
+
+    it("cannot contain characters that are not alphanumeric or underscores") {
+      checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
+        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+
+        val result = builder.build()
+
+        result shouldBeLeft InvalidFeatureValues(name.nel(), "${builder.fqcn}.Source")
+      }
+    }
+
+    it("can contain alphanumeric characters or underscores") {
+      checkAll(Arb.stringPattern("[a-zA-Z][0-9]([a-zA-Z0-9_]{0,10})")) { name ->
+        val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+
+        val result = builder.build()
+
+        result.shouldBeRight()
+      }
+    }
+  }
+
   describe("generated feature flag") {
     it("can be internal") {
       val tempDir = createTempDir()
@@ -300,7 +343,7 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(sourcedWithValues = listOf(FeatureValue("Remote")))
+        .copy(sourceValues = listOf(FeatureValue("Remote")))
         .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -339,7 +382,7 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(sourcedWithValues = listOf(FeatureValue("Local")))
+        .copy(sourceValues = listOf(FeatureValue("Local")))
         .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -361,11 +404,59 @@ class FeatureFlagSpec : DescribeSpec({
       }
     }
 
+    it("filters out any custom local source") {
+      val tempDir = createTempDir()
+
+      val localPermutations = (0b00000..0b11111).map {
+        listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
+          .map { mask -> mask != 0 }
+          .mapIndexed { index, mask ->
+            val char = "local"[index].toString()
+            if(mask) char else char.capitalize(Locale.ROOT)
+          }.joinToString(separator = "")
+      }
+
+      val outputFile = featureBuilder
+        .copy(sourceValues = (localPermutations + "Remote").map(::FeatureValue))
+        .build().map { model -> model.generate(tempDir) }
+
+      outputFile shouldBeRight { file ->
+        file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import java.lang.Class
+            |import kotlin.Boolean
+            |import kotlin.Suppress
+            |
+            |internal enum class FeatureA(
+            |  override val isFallbackValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isFallbackValue = true),
+            |
+            |  Second;
+            |
+            |  @Suppress("UNCHECKED_CAST")
+            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |
+            |  internal enum class Source(
+            |    override val isFallbackValue: Boolean = false
+            |  ) : Feature<Source> {
+            |    Local(isFallbackValue = true),
+            |
+            |    Remote;
+            |  }
+            |}
+            |
+          """.trimMargin("|")
+      }
+    }
+
     it("allows to set not Local default fallback for source") {
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(sourcedWithValues = listOf(FeatureValue("Remote", isFallbackValue = true)))
+        .copy(sourceValues = listOf(FeatureValue("Remote", isFallbackValue = true)))
         .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -404,7 +495,7 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(visibility = Public, sourcedWithValues = listOf(FeatureValue("Remote")))
+        .copy(visibility = Public, sourceValues = listOf(FeatureValue("Remote")))
         .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->

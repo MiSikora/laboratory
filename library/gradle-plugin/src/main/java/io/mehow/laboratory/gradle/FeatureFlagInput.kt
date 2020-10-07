@@ -33,7 +33,7 @@ class FeatureFlagInput internal constructor(private val name: String) {
       packageName = packageName ?: "",
       name = name,
       values = values,
-      sourcedWithValues = sources
+      sourceValues = sources,
     )
   }
 }
