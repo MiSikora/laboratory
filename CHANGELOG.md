@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 0.3.0 *(2020-10-08)*
+----------------------------
+
+* `factory()` extension is renamed to `featureFactory()`
+* Feature flags can have different sources that can be toggled at runtime.
+* `feature()` extension enabled setting feature sources with `withSource()` and `withFallbackSource()` functions.
+* Gradle plugin has a new `sourcedStorage()` extension. It is responsible for generating a customized `FeatureStorage` based on all available feature sources.
+* Gradle plugin has a new `featureSourceFactory()` extension. It works similarly to `featureFactory()` extension except that it collects only feature sources.
+* `LaboratoryActivity` is now configured with `configure()` function instead of `initialize()`.
+* `LaboratoryActivity` displays features on tabs. This allows to display features and features separately.
+
 Version 0.2.1 *(2020-10-02)*
 ----------------------------
 
