@@ -19,27 +19,27 @@ class FeatureFactorySpec : DescribeSpec({
     visibility = Internal,
     packageName = "io.mehow",
     name = "FeatureA",
-    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second"))
+    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureB = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
     name = "FeatureB",
-    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second"))
+    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureC = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow.c",
     name = "FeatureA",
-    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second"))
+    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val factoryBuilder = FeatureFactoryModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
-    features = listOf(featureA, featureB, featureC)
+    features = listOf(featureA, featureB, featureC),
   )
 
   describe("feature factory model") {
@@ -47,7 +47,7 @@ class FeatureFactorySpec : DescribeSpec({
       it("can be empty") {
         val builder = factoryBuilder.copy(packageName = "")
 
-        val result = builder.build()
+        val result = builder.build("GeneratedFeatureFactory")
 
         result.shouldBeRight()
       }
@@ -61,7 +61,7 @@ class FeatureFactorySpec : DescribeSpec({
           }
           val builder = factoryBuilder.copy(packageName = packageName)
 
-          val result = builder.build()
+          val result = builder.build("GeneratedFeatureFactory")
 
           result.shouldBeRight()
         }
@@ -71,9 +71,43 @@ class FeatureFactorySpec : DescribeSpec({
         checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { packageName ->
           val builder = factoryBuilder.copy(packageName = packageName)
 
-          val result = builder.build()
+          val result = builder.build("GeneratedFeatureFactory")
 
-          result shouldBeLeft InvalidPackageName(builder.fqcn)
+          result shouldBeLeft InvalidPackageName("${packageName}.GeneratedFeatureFactory")
+        }
+      }
+    }
+
+    context("name") {
+      it("cannot be blank") {
+        checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
+          val result = factoryBuilder.build(name)
+
+          result shouldBeLeft InvalidFactoryName(name, "${factoryBuilder.packageName}.${name}")
+        }
+      }
+
+      it("cannot start with an underscore") {
+        checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
+          val result = factoryBuilder.build(name)
+
+          result shouldBeLeft InvalidFactoryName(name, "${factoryBuilder.packageName}.${name}")
+        }
+      }
+
+      it("cannot contain characters that are not alphanumeric or underscores") {
+        checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
+          val result = factoryBuilder.build(name)
+
+          result shouldBeLeft InvalidFactoryName(name, "${factoryBuilder.packageName}.${name}")
+        }
+      }
+
+      it("can contain alphanumeric characters or underscores") {
+        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
+          val result = factoryBuilder.build(name)
+
+          result.shouldBeRight()
         }
       }
     }
@@ -82,7 +116,7 @@ class FeatureFactorySpec : DescribeSpec({
       it("can be empty") {
         val builder = factoryBuilder.copy(features = emptyList())
 
-        val result = builder.build()
+        val result = builder.build("GeneratedFeatureFactory")
 
         result.shouldBeRight()
       }
@@ -91,24 +125,24 @@ class FeatureFactorySpec : DescribeSpec({
         val builderA = factoryBuilder.copy(
           features = listOf(featureA, featureA, featureB, featureC)
         )
-        val resultA = builderA.build()
+        val resultA = builderA.build("GeneratedFeatureFactory")
         resultA shouldBeLeft FeaturesCollision(featureA.fqcn.nel())
 
         val builderB = factoryBuilder.copy(
           features = listOf(featureA, featureB, featureB, featureC)
         )
-        val resultB = builderB.build()
+        val resultB = builderB.build("GeneratedFeatureFactory")
         resultB shouldBeLeft FeaturesCollision(featureB.fqcn.nel())
 
         val builderC = factoryBuilder.copy(
           features = listOf(featureA, featureB, featureC, featureC)
         )
-        val resultC = builderC.build()
+        val resultC = builderC.build("GeneratedFeatureFactory")
         resultC shouldBeLeft FeaturesCollision(featureC.fqcn.nel())
       }
 
       it("can have unique features") {
-        val result = factoryBuilder.build()
+        val result = factoryBuilder.build("GeneratedFeatureFactory")
 
         result.shouldBeRight()
       }
@@ -119,7 +153,7 @@ class FeatureFactorySpec : DescribeSpec({
     it("can be internal") {
       val tempDir = createTempDir()
 
-      val outputFile = factoryBuilder.build().map { model -> model.generate(tempDir) }
+      val outputFile = factoryBuilder.build("GeneratedFeatureFactory").map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -151,7 +185,7 @@ class FeatureFactorySpec : DescribeSpec({
       val tempDir = createTempDir()
       val builder = factoryBuilder.copy(visibility = Public)
 
-      val outputFile = builder.build().map { model -> model.generate(tempDir) }
+      val outputFile = builder.build("GeneratedFeatureFactory").map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -184,7 +218,7 @@ class FeatureFactorySpec : DescribeSpec({
       val tempDir = createTempDir()
       val builder = factoryBuilder.copy(features = emptyList())
 
-      val outputFile = builder.build().map { model -> model.generate(tempDir) }
+      val outputFile = builder.build("GeneratedFeatureFactory").map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """

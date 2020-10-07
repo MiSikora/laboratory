@@ -19,7 +19,7 @@ open class FeatureFactoryTask : DefaultTask() {
       ifRight = ::identity
     )
 
-    when (val buildIntent = factory.toBuilder(featureModels).build()) {
+    when (val buildIntent = factory.toBuilder(featureModels).build("GeneratedFeatureFactory")) {
       is Either.Left -> error(buildIntent.a.message)
       is Either.Right -> {
         codeGenDir.deleteRecursively()

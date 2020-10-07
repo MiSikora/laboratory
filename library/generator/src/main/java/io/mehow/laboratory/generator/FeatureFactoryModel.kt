@@ -24,18 +24,17 @@ class FeatureFactoryModel private constructor(
     internal val packageName: String,
     internal val features: List<FeatureFlagModel>,
   ) {
-    internal val name = "GeneratedFeatureFactory"
-    internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
-
-    fun build(): Either<GenerationFailure, FeatureFactoryModel> {
+    fun build(name: String): Either<GenerationFailure, FeatureFactoryModel> {
+      val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
       return Either.fx {
-        val packageName = !validatePackageName()
+        val packageName = !validatePackageName(fqcn)
+        val name = !validateName(fqcn, name)
         val features = !features.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) }
         FeatureFactoryModel(visibility, ClassName(packageName, name), features)
       }
     }
 
-    private fun validatePackageName(): Either<GenerationFailure, String> {
+    private fun validatePackageName(fqcn: String): Either<GenerationFailure, String> {
       return Either.cond(
         test = packageName.isEmpty() || packageName.matches(packageNameRegex),
         ifTrue = { packageName },
@@ -43,8 +42,17 @@ class FeatureFactoryModel private constructor(
       )
     }
 
+    private fun validateName(fqcn: String, name: String): Either<GenerationFailure, String> {
+      return Either.cond(
+        test = name.matches(nameRegex),
+        ifTrue = { name },
+        ifFalse = { InvalidFactoryName(name, fqcn) }
+      )
+    }
+
     private companion object {
       val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
+      val nameRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
     }
   }
 }

@@ -23,6 +23,16 @@ data class InvalidFeatureName(
       "and must start with a letter. Found $name in $fqcn."
 }
 
+data class InvalidFactoryName(
+  private val name: String,
+  private val fqcn: String,
+) : GenerationFailure {
+  override val message
+    get() = "" +
+      "Factory name must contain only alphanumeric characters or underscores " +
+      "and must start with a letter. Found $name in $fqcn."
+}
+
 data class NoFeatureValues(
   private val fqcn: String,
 ) : GenerationFailure {
