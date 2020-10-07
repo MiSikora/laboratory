@@ -191,6 +191,7 @@ While there is no magic to this code and it can be written manually it can very 
 ```groovy
 laboratory {
   sourcedStorage()
+  
   feature("PowerPlant") {
     withValue("Coal")
     withFallbackValue("Solar")
