@@ -38,7 +38,9 @@ android {
 
 laboratory {
   packageName = "io.mehow.laboratory.sample"
-  factory()
+  sourcedStorage()
+  featureFactory()
+  featureSourceFactory()
 }
 
 dependencies {
@@ -48,6 +50,8 @@ dependencies {
   implementation(Libs.Hyperion.Core)
   @Suppress("GradleDynamicVersion") // We want the latest version as we control it.
   implementation("io.mehow.laboratory:laboratory-hyperion-plugin:+")
+  @Suppress("GradleDynamicVersion") // We want the latest version as we control it.
+  implementation("io.mehow.laboratory:laboratory-shared-preferences:+")
   implementation(project(":sample:brombulator"))
   implementation(project(":sample:frombulator"))
   implementation(project(":sample:trombulator"))

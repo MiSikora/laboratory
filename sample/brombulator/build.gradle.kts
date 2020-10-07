@@ -9,6 +9,9 @@ laboratory {
   feature("Brombulation") {
     withFallbackValue("Enabled")
     withValue("Disabled")
+
+    withSource("Firebase")
+    withSource("Aws")
   }
 }
 

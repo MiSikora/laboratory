@@ -10,6 +10,14 @@ laboratory {
     withValue("LevelOne")
     withFallbackValue("LevelTwo")
     withValue("LevelThree")
+
+    withSource("Firebase")
+    withFallbackSource("Aws")
+  }
+
+  feature("UnsourcedTrombulation") {
+    withValue("HalfPower")
+    withFallbackValue("UnlimitedPower")
   }
 }
 

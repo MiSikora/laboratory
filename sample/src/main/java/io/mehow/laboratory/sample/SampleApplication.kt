@@ -2,9 +2,10 @@ package io.mehow.laboratory.sample
 
 import android.app.Application
 import io.mehow.laboratory.FeatureFactory
+import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
-import io.mehow.laboratory.android.SharedPreferencesFeatureStorage
 import io.mehow.laboratory.inspector.LaboratoryActivity
+import io.mehow.laboratory.sharedpreferences.SharedPreferencesFeatureStorage
 
 class SampleApplication : Application() {
   lateinit var laboratory: Laboratory
@@ -13,10 +14,26 @@ class SampleApplication : Application() {
   @Suppress("LongMethod")
   override fun onCreate() {
     super.onCreate()
-    val sharedPreferences = getSharedPreferences("laboratory", MODE_PRIVATE)
-    val featureStorage = SharedPreferencesFeatureStorage(sharedPreferences)
-    laboratory = Laboratory(featureStorage)
-    LaboratoryActivity.initialize(FeatureFactory.generated(), featureStorage)
+    val localStorage = SharedPreferencesFeatureStorage(
+      getSharedPreferences("localFeatures", MODE_PRIVATE)
+    )
+    val firebaseStorage = SharedPreferencesFeatureStorage(
+      getSharedPreferences("firebaseFeatures", MODE_PRIVATE)
+    )
+    val awsStorage = SharedPreferencesFeatureStorage(
+      getSharedPreferences("awsFeatures", MODE_PRIVATE)
+    )
+    val sourcedStorage = FeatureStorage.generatedSourced(
+      localSource = localStorage,
+      firebaseSource = firebaseStorage,
+      awsSource = awsStorage,
+    )
+    laboratory = Laboratory(sourcedStorage)
+    LaboratoryActivity.configure(
+      localStorage = localStorage,
+      featureFactory = FeatureFactory.featureGenerated(),
+      featureSourceFactory = FeatureFactory.featureSourceGenerated()
+    )
   }
 
   companion object {

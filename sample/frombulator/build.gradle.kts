@@ -9,6 +9,8 @@ laboratory {
   feature("Frombulation") {
     withFallbackValue("Enabled")
     withValue("Disabled")
+
+    withFallbackSource("Firebase")
   }
 }
 
