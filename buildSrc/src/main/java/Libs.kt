@@ -40,6 +40,10 @@ object Libs {
 
     const val DataStore = "androidx.datastore:datastore-core:1.0.0-alpha01"
 
+    const val FragmentKtx = "androidx.fragment:fragment-ktx:1.2.5"
+
+    const val ViewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+
     object Test {
       const val Version = "1.3.0"
 

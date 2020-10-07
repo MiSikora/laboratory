@@ -1,75 +1,70 @@
 package io.mehow.laboratory.inspector
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.widget.TextViewCompat
-import com.google.android.material.textview.MaterialTextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
-class LaboratoryActivity : Activity() {
-  private lateinit var presenter: Presenter
-  private val mainScope = MainScope()
-
+class LaboratoryActivity : AppCompatActivity() {
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
-    presenter = lastNonConfigurationInstance as Presenter
     setContentView(R.layout.io_mehow_laboratory)
-    val container = findViewById<ViewGroup>(R.id.io_mehow_laboratory_container)
-    val spacing = resources.getDimensionPixelSize(R.dimen.io_mehow_laboratory_spacing)
-    mainScope.launch {
-      for (group in presenter.getFeatureGroups()) {
-        val groupLabel = createFeatureGroupLabel(group, spacing)
-        val groupView = FeatureGroupView(this@LaboratoryActivity, group) { feature ->
-          mainScope.launch { presenter.selectFeature(feature) }
-        }
-        container.addView(groupLabel)
-        container.addView(groupView)
-      }
+    val groupNames = configuration.featureFactories.keys.toList()
+    val viewPager = findViewById<ViewPager2>(R.id.io_mehow_laboratory_view_pager).apply {
+      adapter = FeaturesAdapter(this@LaboratoryActivity, groupNames)
     }
+    val tabLayout = findViewById<TabLayout>(R.id.io_mehow_laboratory_tab_layout)
+    TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+      tab.text = groupNames[position]
+    }.attach()
   }
 
-  override fun onDestroy() {
-    mainScope.cancel()
-    super.onDestroy()
-  }
-
-  override fun getLastNonConfigurationInstance(): Any? {
-    return super.getLastNonConfigurationInstance() ?: requireNotNull(presenterFactory) {
-      "LaboratoryActivity must be initialized before using it."
-    }.invoke()
-  }
-
-  override fun onRetainNonConfigurationInstance(): Any? = presenter
-
-  private fun createFeatureGroupLabel(group: FeatureGroup, spacing: Int): TextView {
-    return MaterialTextView(this).apply {
-      layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
-        setMargins(spacing, spacing, spacing, 0)
-      }
-      TextViewCompat.setTextAppearance(this, R.style.TextAppearance_MaterialComponents_Headline5)
-      text = group.name
-    }
+  class Configuration(
+    localStorage: FeatureStorage,
+    internal val featureFactories: Map<String, FeatureFactory>,
+  ) {
+    internal val laboratory = Laboratory(localStorage)
   }
 
   companion object {
-    internal var presenterFactory: (() -> Presenter)? = null
+    internal var backingConfiguration: Configuration? = null
+      private set
+    internal val configuration
+      get() = requireNotNull(backingConfiguration) {
+        "LaboratoryActivity must be initialized before using it."
+      }
 
-    fun initialize(factory: FeatureFactory, storage: FeatureStorage) {
-      presenterFactory = { Presenter(factory, Laboratory(storage)) }
+    fun configure(
+      localStorage: FeatureStorage,
+      featureFactory: FeatureFactory,
+    ) {
+      configure(Configuration(
+        localStorage,
+        linkedMapOf("Features" to featureFactory)
+      ))
+    }
+
+    fun configure(
+      localStorage: FeatureStorage,
+      featureFactory: FeatureFactory,
+      featureSourceFactory: FeatureFactory,
+    ) {
+      configure(Configuration(
+        localStorage,
+        linkedMapOf("Features" to featureFactory, "Sources" to featureSourceFactory)
+      ))
+    }
+
+    fun configure(configuration: Configuration) {
+      backingConfiguration = configuration
     }
 
     fun start(context: Context) {

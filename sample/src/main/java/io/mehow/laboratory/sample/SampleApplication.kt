@@ -10,6 +10,7 @@ class SampleApplication : Application() {
   lateinit var laboratory: Laboratory
     private set
 
+  @Suppress("LongMethod")
   override fun onCreate() {
     super.onCreate()
     val sharedPreferences = getSharedPreferences("laboratory", MODE_PRIVATE)
