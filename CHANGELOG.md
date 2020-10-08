@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 0.5.0 *(2020-10-08)*
+----------------------------
+
+* Change 'fallback' nomenclature to 'default'. This affects Gradle plugin `withFallbackValue()` and `withFallbackSource` extensions as well as `isFallbackValue` property on `Feature` interface.
+
 Version 0.4.0 *(2020-10-08)*
 ----------------------------
 
