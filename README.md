@@ -318,7 +318,7 @@ You can also check [the sample](sample/) for more info.
 
 ## Integration
 
-Laboratory requires Java 8 bytecode. To enable Java 8 desugaring configure it in your Gradle script.
+Laboratory requires Java 8 bytecode and enabled `@JvmDefault` annotation. To enable Java 8 desugaring configure it in your Gradle script.
 
 ```groovy
 android {
@@ -332,6 +332,8 @@ android {
   }
 }
 ```
+
+To enabled `@JvmDefault` [add a compiler flag](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-default/).
 
 ## License
 
