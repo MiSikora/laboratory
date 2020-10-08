@@ -74,7 +74,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import kotlin.collections.mapOf
             |import kotlin.to
             |
-            |internal fun FeatureStorage.Companion.generatedSourced(
+            |internal fun FeatureStorage.Companion.sourcedGenerated(
             |  localSource: FeatureStorage,
             |  firebaseSource: FeatureStorage,
             |  s3Source: FeatureStorage
@@ -106,7 +106,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import kotlin.collections.mapOf
             |import kotlin.to
             |
-            |fun FeatureStorage.Companion.generatedSourced(
+            |fun FeatureStorage.Companion.sourcedGenerated(
             |  localSource: FeatureStorage,
             |  firebaseSource: FeatureStorage,
             |  s3Source: FeatureStorage
@@ -138,7 +138,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import kotlin.collections.mapOf
             |import kotlin.to
             |
-            |fun FeatureStorage.Companion.generatedSourced(
+            |fun FeatureStorage.Companion.sourcedGenerated(
             |  localSource: FeatureStorage,
             |  fooSource: FeatureStorage,
             |  barSource: FeatureStorage,
@@ -181,7 +181,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import kotlin.collections.mapOf
             |import kotlin.to
             |
-            |fun FeatureStorage.Companion.generatedSourced(localSource: FeatureStorage,
+            |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage,
             |    fooSource: FeatureStorage): FeatureStorage = sourced(
             |  localSource,
             |  mapOf(
@@ -208,7 +208,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import io.mehow.laboratory.FeatureStorage.Companion.sourced
             |import kotlin.collections.emptyMap
             |
-            |fun FeatureStorage.Companion.generatedSourced(localSource: FeatureStorage): FeatureStorage =
+            |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage =
             |    sourced(
             |  localSource,
             |  emptyMap()

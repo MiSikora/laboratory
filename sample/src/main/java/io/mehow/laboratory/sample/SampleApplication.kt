@@ -23,7 +23,7 @@ class SampleApplication : Application() {
     val awsStorage = SharedPreferencesFeatureStorage(
       getSharedPreferences("awsFeatures", MODE_PRIVATE)
     )
-    val sourcedStorage = FeatureStorage.generatedSourced(
+    val sourcedStorage = FeatureStorage.sourcedGenerated(
       localSource = localStorage,
       firebaseSource = firebaseStorage,
       awsSource = awsStorage,

@@ -25,7 +25,7 @@ internal class SourcedFeatureStorageGenerator(
 
   private val infixTo = MemberName("kotlin", "to")
 
-  private val storageExtension = FunSpec.builder("generatedSourced")
+  private val storageExtension = FunSpec.builder("sourcedGenerated")
     .addModifiers(storage.visibility.modifier)
     .receiver(FeatureStorage.Companion::class)
     .returns(FeatureStorage::class)

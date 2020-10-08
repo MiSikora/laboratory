@@ -38,11 +38,11 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.generatedSourced(localSource: FeatureStorage): FeatureStorage
+      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
       |    = sourced(
       |  localSource,
       |  emptyMap()
@@ -57,11 +57,11 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.generatedSourced(
+      |fun FeatureStorage.Companion.sourcedGenerated(
       |  localSource: FeatureStorage,
       |  remoteASource: FeatureStorage,
       |  remoteBSource: FeatureStorage
@@ -80,7 +80,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("io.mehow.implicit.GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("io.mehow.implicit.sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain "package io.mehow.implicit"
@@ -91,7 +91,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("io.mehow.explicit.GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("io.mehow.explicit.sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain "package io.mehow.explicit"
@@ -102,7 +102,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("io.mehow.explicit.GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("io.mehow.explicit.sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain "package io.mehow.explicit"
@@ -113,10 +113,10 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
-    factory.readText() shouldContain "internal fun FeatureStorage.Companion.generatedSourced(localSource: FeatureStorage)"
+    factory.readText() shouldContain "internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage)"
   }
 
   "generates public storage" {
@@ -124,14 +124,14 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     // Ensure public by checking a new line before enum declaration.
     // Change after https://github.com/square/kotlinpoet/pull/933
     factory.readText() shouldContain """
       |
-      |fun FeatureStorage.Companion.generatedSourced(localSource: FeatureStorage)
+      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage)
     """.trimMargin("|")
   }
 
@@ -141,9 +141,9 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidPackageName("!!!.GeneratedSourcedFeatureStorage").message
+    result.output shouldContain InvalidPackageName("!!!.sourcedGeneratedFeatureStorage").message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -155,7 +155,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
     result.output shouldContain NoFeatureValues("Feature").message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -167,7 +167,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
     result.output shouldContain FeatureValuesCollision("First".nel(), "Feature").message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -179,7 +179,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
     result.output shouldContain InvalidFeatureValues(NonEmptyList("!!!, ???"), "Feature").message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -191,7 +191,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
     result.output shouldContain InvalidFeatureName("!!!", "!!!").message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -203,7 +203,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
     result.output shouldContain InvalidPackageName("!!!.Feature").message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -215,7 +215,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
     result.output shouldContain FeaturesCollision("io.mehow.Feature".nel()).message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -226,11 +226,11 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.generatedSourced(
+      |fun FeatureStorage.Companion.sourcedGenerated(
       |  localSource: FeatureStorage,
       |  remoteSource: FeatureStorage,
       |  remoteASource: FeatureStorage,
@@ -253,11 +253,11 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.generatedSourced(
+      |fun FeatureStorage.Companion.sourcedGenerated(
       |  localSource: FeatureStorage,
       |  remoteSource: FeatureStorage,
       |  remoteBSource: FeatureStorage
@@ -279,7 +279,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
     result.output shouldContain FeaturesCollision("Feature".nel()).message
 
-    val feature = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val feature = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
   }
 
@@ -290,11 +290,11 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.generatedSourced(localSource: FeatureStorage): FeatureStorage
+      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
       |    = sourced(
       |  localSource,
       |  emptyMap()
@@ -309,11 +309,11 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("GeneratedSourcedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.generatedSourced(localSource: FeatureStorage): FeatureStorage
+      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
       |    = sourced(
       |  localSource,
       |  emptyMap()

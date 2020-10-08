@@ -24,7 +24,7 @@ class SourcedFeatureStorageModel private constructor(
     internal val packageName: String,
     internal val sourceNames: List<String>,
   ) {
-    internal val name = "GeneratedSourcedFeatureStorage"
+    internal val name = "sourcedGeneratedFeatureStorage"
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
     fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> {
