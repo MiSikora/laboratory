@@ -22,49 +22,49 @@ class LaboratorySpec : DescribeSpec({
       } shouldHaveMessage "io.mehow.laboratory.NoValuesFeature must have at least one value"
     }
 
-    context("for feature with no fallback") {
-      it("uses first value as a fallback") {
+    context("for feature with no default") {
+      it("uses first value as a default") {
         val laboratory = Laboratory(NullStorage)
 
-        laboratory.experiment<NoFallbackFeature>() shouldBe NoFallbackFeature.A
+        laboratory.experiment<NoDefaultFeature>() shouldBe NoDefaultFeature.A
       }
 
-      it("uses first value as a fallback if no match is found") {
+      it("uses first value as a default if no match is found") {
         val laboratory = Laboratory(EmptyStorage)
 
-        laboratory.experiment<NoFallbackFeature>() shouldBe NoFallbackFeature.A
+        laboratory.experiment<NoDefaultFeature>() shouldBe NoDefaultFeature.A
       }
     }
 
-    context("for feature with single fallback") {
-      it("uses declared fallback value") {
+    context("for feature with single default") {
+      it("uses declared default value") {
         val laboratory = Laboratory(NullStorage)
 
-        laboratory.experiment<FallbackFeature>() shouldBe FallbackFeature.B
+        laboratory.experiment<DefaultFeature>() shouldBe DefaultFeature.B
       }
 
-      it("uses declared fallback value if no match is found") {
+      it("uses declared default value if no match is found") {
         val laboratory = Laboratory(EmptyStorage)
 
-        laboratory.experiment<FallbackFeature>() shouldBe FallbackFeature.B
+        laboratory.experiment<DefaultFeature>() shouldBe DefaultFeature.B
       }
     }
 
-    context("for feature with multiple fallbacks") {
-      it("uses first declared fallback value") {
+    context("for feature with multiple defaults") {
+      it("uses first declared default value") {
         val laboratory = Laboratory(NullStorage)
 
-        laboratory.experiment<MultiFallbackFeature>() shouldBe MultiFallbackFeature.B
+        laboratory.experiment<MultiDefaultFeature>() shouldBe MultiDefaultFeature.B
       }
 
-      it("uses first declared fallback value if no match is found") {
+      it("uses first declared default value if no match is found") {
         val laboratory = Laboratory(EmptyStorage)
 
-        laboratory.experiment<MultiFallbackFeature>() shouldBe MultiFallbackFeature.B
+        laboratory.experiment<MultiDefaultFeature>() shouldBe MultiDefaultFeature.B
       }
     }
 
-    val features = listOf(NoFallbackFeature::class, FallbackFeature::class, MultiFallbackFeature::class)
+    val features = listOf(NoDefaultFeature::class, DefaultFeature::class, MultiDefaultFeature::class)
     for (feature in features) {
       verifyFeatureChanges(feature.java)
     }
@@ -73,20 +73,20 @@ class LaboratorySpec : DescribeSpec({
       val laboratory = Laboratory.inMemory()
 
       @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
-      laboratory.observe<NoFallbackFeature>().test {
-        expectItem() shouldBe NoFallbackFeature.A
+      laboratory.observe<NoDefaultFeature>().test {
+        expectItem() shouldBe NoDefaultFeature.A
 
-        laboratory.setFeature(NoFallbackFeature.B)
-        expectItem() shouldBe NoFallbackFeature.B
+        laboratory.setFeature(NoDefaultFeature.B)
+        expectItem() shouldBe NoDefaultFeature.B
 
-        laboratory.setFeature(NoFallbackFeature.A)
-        expectItem() shouldBe NoFallbackFeature.A
+        laboratory.setFeature(NoDefaultFeature.A)
+        expectItem() shouldBe NoDefaultFeature.A
 
-        laboratory.setFeature(NoFallbackFeature.A)
+        laboratory.setFeature(NoDefaultFeature.A)
         expectNoEvents()
 
-        laboratory.setFeature(NoFallbackFeature.C)
-        expectItem() shouldBe NoFallbackFeature.C
+        laboratory.setFeature(NoDefaultFeature.C)
+        expectItem() shouldBe NoDefaultFeature.C
 
         cancel()
       }
@@ -98,13 +98,13 @@ class LaboratorySpec : DescribeSpec({
       val firstLaboratory = Laboratory.inMemory()
       val secondLaboratory = Laboratory.inMemory()
 
-      firstLaboratory.setFeature(NoFallbackFeature.B)
-      firstLaboratory.experiment<NoFallbackFeature>() shouldBe NoFallbackFeature.B
-      secondLaboratory.experiment<NoFallbackFeature>() shouldBe NoFallbackFeature.A
+      firstLaboratory.setFeature(NoDefaultFeature.B)
+      firstLaboratory.experiment<NoDefaultFeature>() shouldBe NoDefaultFeature.B
+      secondLaboratory.experiment<NoDefaultFeature>() shouldBe NoDefaultFeature.A
 
-      secondLaboratory.setFeature(NoFallbackFeature.C)
-      firstLaboratory.experiment<NoFallbackFeature>() shouldBe NoFallbackFeature.B
-      secondLaboratory.experiment<NoFallbackFeature>() shouldBe NoFallbackFeature.C
+      secondLaboratory.setFeature(NoDefaultFeature.C)
+      firstLaboratory.experiment<NoDefaultFeature>() shouldBe NoDefaultFeature.B
+      secondLaboratory.experiment<NoDefaultFeature>() shouldBe NoDefaultFeature.C
     }
   }
 })
@@ -134,23 +134,23 @@ private suspend fun <T : Feature<T>> DescribeScope.verifyFeatureChanges(feature:
   }
 }
 
-private enum class NoFallbackFeature(override val isFallbackValue: Boolean = false) : Feature<NoFallbackFeature> {
+private enum class NoDefaultFeature(override val isDefaultValue: Boolean = false) : Feature<NoDefaultFeature> {
   A,
   B,
   C,
   ;
 }
 
-private enum class FallbackFeature(override val isFallbackValue: Boolean = false) : Feature<FallbackFeature> {
+private enum class DefaultFeature(override val isDefaultValue: Boolean = false) : Feature<DefaultFeature> {
   A,
-  B(isFallbackValue = true),
+  B(isDefaultValue = true),
   ;
 }
 
-private enum class MultiFallbackFeature(override val isFallbackValue: Boolean = false) : Feature<MultiFallbackFeature> {
+private enum class MultiDefaultFeature(override val isDefaultValue: Boolean = false) : Feature<MultiDefaultFeature> {
   A,
-  B(isFallbackValue = true),
-  C(isFallbackValue = true),
+  B(isDefaultValue = true),
+  C(isDefaultValue = true),
   ;
 }
 

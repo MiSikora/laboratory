@@ -19,18 +19,18 @@ import kotlin.reflect.KClass
 internal class FeatureFlagGenerator(
   private val feature: FeatureFlagModel,
 ) {
-  private val isFallbackValueOverride = ParameterSpec
-    .builder(fallbackValuePropertyName, Boolean::class, OVERRIDE)
+  private val isDefaultValueOverride = ParameterSpec
+    .builder(defaultValuePropertyName, Boolean::class, OVERRIDE)
     .defaultValue("%L", false)
     .build()
 
   private val primaryConstructor = FunSpec.constructorBuilder()
-    .addParameter(isFallbackValueOverride)
+    .addParameter(isDefaultValueOverride)
     .build()
 
-  private val isFallbackValueProperty = PropertySpec
-    .builder(fallbackValuePropertyName, Boolean::class)
-    .initializer(fallbackValuePropertyName)
+  private val isDefaultValueProperty = PropertySpec
+    .builder(defaultValuePropertyName, Boolean::class)
+    .initializer(defaultValuePropertyName)
     .build()
 
   private val suppressCast = AnnotationSpec.builder(Suppress::class)
@@ -49,7 +49,7 @@ internal class FeatureFlagGenerator(
     .addModifiers(feature.visibility.modifier)
     .primaryConstructor(primaryConstructor)
     .addSuperinterface(Feature::class(feature.className))
-    .addProperty(isFallbackValueProperty)
+    .addProperty(isDefaultValueProperty)
     .let { feature.values.foldLeft(it) { builder, featureValue -> builder.addEnumConstant(featureValue) } }
     .apply {
       featureSource?.let { (nestedSource, sourceWithOverride) ->
@@ -59,12 +59,12 @@ internal class FeatureFlagGenerator(
     }
     .build()
 
-  private fun TypeSpec.Builder.addEnumConstant(featureValue: FeatureValue) = if (featureValue.isFallbackValue) {
-    val isFallbackValueArgument = CodeBlock.builder()
-      .add("isFallbackValue = %L", true)
+  private fun TypeSpec.Builder.addEnumConstant(featureValue: FeatureValue) = if (featureValue.isDefaultValue) {
+    val isDefaultValueArgument = CodeBlock.builder()
+      .add("isDefaultValue = %L", true)
       .build()
     val overriddenConstructor = TypeSpec.anonymousClassBuilder()
-      .addSuperclassConstructorParameter(isFallbackValueArgument)
+      .addSuperclassConstructorParameter(isDefaultValueArgument)
       .build()
     addEnumConstant(featureValue.name, overriddenConstructor)
   } else addEnumConstant(featureValue.name)
@@ -76,7 +76,7 @@ internal class FeatureFlagGenerator(
   fun generate(output: File) = fileSpec.writeTo(output)
 
   private companion object {
-    const val fallbackValuePropertyName = "isFallbackValue"
+    const val defaultValuePropertyName = "isDefaultValue"
     const val sourcedWithPropertyName = "sourcedWith"
 
     val featureType = Class::class(Feature::class(STAR))

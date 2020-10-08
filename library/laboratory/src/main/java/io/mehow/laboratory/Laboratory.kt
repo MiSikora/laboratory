@@ -37,7 +37,7 @@ class Laboratory(private val storage: FeatureStorage) {
   private fun <T : Feature<T>> extractFeatureMetadata(group: Class<T>): Pair<Array<T>, T> {
     val features = requireNotNull(group.enumConstants) { "${group.name} must be an enum" }
     require(features.isNotEmpty()) { "${group.name} must have at least one value" }
-    val defaultFeature = features.firstOrNull { it.isFallbackValue } ?: features.first()
+    val defaultFeature = features.firstOrNull { it.isDefaultValue } ?: features.first()
     return features to defaultFeature
   }
 

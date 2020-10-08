@@ -11,6 +11,6 @@ laboratory {
   }
 
   feature("RootFeature") {
-    withFallbackValue("First")
+    withDefaultValue("First")
   }
 }

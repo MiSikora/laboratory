@@ -43,9 +43,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     feature.readText() shouldContain """
       |enum class Feature(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |}
@@ -64,9 +64,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     featureA.readText() shouldContain """
       |enum class FeatureA(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : Feature<FeatureA> {
-      |  FirstA(isFallbackValue = true),
+      |  FirstA(isDefaultValue = true),
       |
       |  SecondA;
       |}
@@ -77,9 +77,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     featureB.readText() shouldContain """
       |enum class FeatureB(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : Feature<FeatureB> {
-      |  FirstB(isFallbackValue = true),
+      |  FirstB(isDefaultValue = true),
       |
       |  SecondB;
       |}
@@ -98,9 +98,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     feature.readText() shouldContain """
       |enum class Feature(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |
@@ -109,9 +109,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
       |      Class<io.mehow.laboratory.Feature<*>>
       |
       |  enum class Source(
-      |    override val isFallbackValue: Boolean = false
+      |    override val isDefaultValue: Boolean = false
       |  ) : io.mehow.laboratory.Feature<Source> {
-      |    Local(isFallbackValue = true),
+      |    Local(isDefaultValue = true),
       |
       |    RemoteA,
       |
@@ -133,9 +133,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     feature.readText() shouldContain """
       |internal enum class Feature(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |
@@ -144,9 +144,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
       |      Class<io.mehow.laboratory.Feature<*>>
       |
       |  internal enum class Source(
-      |    override val isFallbackValue: Boolean = false
+      |    override val isDefaultValue: Boolean = false
       |  ) : io.mehow.laboratory.Feature<Source> {
-      |    Local(isFallbackValue = true),
+      |    Local(isDefaultValue = true),
       |
       |    RemoteA,
       |
@@ -169,9 +169,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
     feature.readText() shouldContain """
       |
       |enum class Feature(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |
@@ -180,9 +180,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
       |      Class<io.mehow.laboratory.Feature<*>>
       |
       |  enum class Source(
-      |    override val isFallbackValue: Boolean = false
+      |    override val isDefaultValue: Boolean = false
       |  ) : io.mehow.laboratory.Feature<Source> {
-      |    Local(isFallbackValue = true),
+      |    Local(isDefaultValue = true),
       |
       |    RemoteA,
       |
@@ -204,9 +204,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     featureA.readText() shouldContain """
       |enum class FeatureA(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : Feature<FeatureA> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |
@@ -214,9 +214,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
       |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
       |
       |  enum class Source(
-      |    override val isFallbackValue: Boolean = false
+      |    override val isDefaultValue: Boolean = false
       |  ) : Feature<Source> {
-      |    Local(isFallbackValue = true),
+      |    Local(isDefaultValue = true),
       |
       |    RemoteA,
       |
@@ -230,9 +230,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     featureB.readText() shouldContain """
       |enum class FeatureB(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : Feature<FeatureB> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |}
@@ -243,9 +243,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     featureC.readText() shouldContain """
       |enum class FeatureC(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : Feature<FeatureC> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |
@@ -253,11 +253,11 @@ class GenerateFeaturesTaskSpec : StringSpec({
       |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
       |
       |  enum class Source(
-      |    override val isFallbackValue: Boolean = false
+      |    override val isDefaultValue: Boolean = false
       |  ) : Feature<Source> {
       |    Local,
       |
-      |    RemoteA(isFallbackValue = true),
+      |    RemoteA(isDefaultValue = true),
       |
       |    RemoteC;
       |  }
@@ -379,9 +379,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     featureA.readText() shouldContain """
       |enum class FeatureA(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : Feature<FeatureA> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |}
@@ -392,9 +392,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     featureB.readText() shouldContain """
       |enum class FeatureB(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : Feature<FeatureB> {
-      |  First(isFallbackValue = true),
+      |  First(isDefaultValue = true),
       |
       |  Second;
       |}
@@ -485,9 +485,9 @@ class GenerateFeaturesTaskSpec : StringSpec({
 
     feature.readText() shouldContain """
       |enum class Feature(
-      |  override val isFallbackValue: Boolean = false
+      |  override val isDefaultValue: Boolean = false
       |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isFallbackValue = true);
+      |  First(isDefaultValue = true);
       |}
     """.trimMargin("|")
   }

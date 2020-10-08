@@ -19,21 +19,21 @@ class FeatureFactorySpec : DescribeSpec({
     visibility = Internal,
     packageName = "io.mehow",
     names = listOf("FeatureA"),
-    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
+    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureB = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow",
     names = listOf("FeatureB"),
-    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
+    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureC = FeatureFlagModel.Builder(
     visibility = Internal,
     packageName = "io.mehow.c",
     names = listOf("FeatureA"),
-    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
+    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val factoryBuilder = FeatureFactoryModel.Builder(

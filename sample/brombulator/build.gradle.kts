@@ -7,7 +7,7 @@ laboratory {
   packageName = "io.mehow.laboratory.brombulator"
 
   feature("Brombulation") {
-    withFallbackValue("Enabled")
+    withDefaultValue("Enabled")
     withValue("Disabled")
 
     withSource("Firebase")

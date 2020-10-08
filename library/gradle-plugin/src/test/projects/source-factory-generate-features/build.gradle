@@ -9,7 +9,7 @@ laboratory {
   feature("FeatureA") {
     packageName = "io.mehow.first"
 
-    withFallbackValue("FirstA")
+    withDefaultValue("FirstA")
 
     withSource("Remote")
   }
@@ -17,7 +17,7 @@ laboratory {
   feature("FeatureB") {
     packageName = "io.mehow.second"
 
-    withFallbackValue("FirstB")
+    withDefaultValue("FirstB")
 
     withSource("Remote")
   }

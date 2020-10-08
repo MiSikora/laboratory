@@ -78,7 +78,7 @@ class FeatureFlagModel private constructor(
         .toEither { NoFeatureValues(fqcn) }
         .flatMap { @Kt41142 validateValueNames(it) }
         .flatMap { @Kt41142 validateDuplicates(it) }
-        .flatMap { @Kt41142 validateSingleFallback(it) }
+        .flatMap { @Kt41142 validateSingleDefault(it) }
     }
 
     private fun validateValueNames(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
@@ -97,15 +97,15 @@ class FeatureFlagModel private constructor(
         .mapLeft { FeatureValuesCollision(it, fqcn) }
     }
 
-    private fun validateSingleFallback(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
-      val fallbackProblems = values.toList()
-        .filter { @Kt41142 it.isFallbackValue }
+    private fun validateSingleDefault(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
+      val defaultProblems = values.toList()
+        .filter { @Kt41142 it.isDefaultValue }
         .takeIf { it.size != 1 }
         ?.map { @Kt41142 it.name }
-      return if (fallbackProblems == null) values.right()
-      else Nel.fromList(fallbackProblems)
-        .map { MultipleFeatureFallbackValues(it, fqcn) }
-        .getOrElse { NoFeatureFallbackValue(fqcn) }
+      return if (defaultProblems == null) values.right()
+      else Nel.fromList(defaultProblems)
+        .map { MultipleFeatureDefaultValues(it, fqcn) }
+        .getOrElse { NoFeatureDefaultValue(fqcn) }
         .left()
     }
 
@@ -114,12 +114,12 @@ class FeatureFlagModel private constructor(
         .filterNot { it.name.equals("local", ignoreCase = true) }
         .takeIf { it.isNotEmpty() }
         ?.let { values ->
-          val isFallbackValue = values.none(FeatureValue::isFallbackValue)
+          val isDefaultValue = values.none(FeatureValue::isDefaultValue)
           return@let Builder(
             visibility = visibility,
             packageName = packageName,
             names = names + "Source",
-            values = Nel(FeatureValue("Local", isFallbackValue), values).toList(),
+            values = Nel(FeatureValue("Local", isDefaultValue), values).toList(),
           )
         }?.build()
     }

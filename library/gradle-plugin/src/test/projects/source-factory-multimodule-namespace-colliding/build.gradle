@@ -7,6 +7,6 @@ laboratory {
   featureSourceFactory()
 
   feature("RootFeature") {
-    withFallbackValue("First")
+    withDefaultValue("First")
   }
 }

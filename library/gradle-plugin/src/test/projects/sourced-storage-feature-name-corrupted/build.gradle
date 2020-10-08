@@ -7,6 +7,6 @@ laboratory {
   sourcedStorage()
 
   feature("!!!") {
-    withFallbackValue("First")
+    withDefaultValue("First")
   }
 }

@@ -7,10 +7,10 @@ laboratory {
   packageName = "io.mehow.laboratory.frombulator"
 
   feature("Frombulation") {
-    withFallbackValue("Enabled")
+    withDefaultValue("Enabled")
     withValue("Disabled")
 
-    withFallbackSource("Firebase")
+    withDefaultSource("Firebase")
   }
 }
 

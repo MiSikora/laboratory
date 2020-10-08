@@ -49,7 +49,7 @@ class SharedPreferencesFeaturesStorageTest {
   }
 }
 
-private enum class FeatureA(override val isFallbackValue: Boolean = false) : Feature<FeatureA> {
+private enum class FeatureA(override val isDefaultValue: Boolean = false) : Feature<FeatureA> {
   A,
   B,
   ;

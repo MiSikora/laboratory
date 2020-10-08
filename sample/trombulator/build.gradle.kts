@@ -8,16 +8,16 @@ laboratory {
 
   feature("Trombulation") {
     withValue("LevelOne")
-    withFallbackValue("LevelTwo")
+    withDefaultValue("LevelTwo")
     withValue("LevelThree")
 
     withSource("Firebase")
-    withFallbackSource("Aws")
+    withDefaultSource("Aws")
   }
 
   feature("UnsourcedTrombulation") {
     withValue("HalfPower")
-    withFallbackValue("UnlimitedPower")
+    withDefaultValue("UnlimitedPower")
   }
 }
 

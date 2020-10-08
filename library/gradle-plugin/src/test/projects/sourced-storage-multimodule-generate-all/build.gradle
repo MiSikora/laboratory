@@ -7,7 +7,7 @@ laboratory {
   sourcedStorage()
 
   feature("RootFeature") {
-    withFallbackValue("First")
+    withDefaultValue("First")
 
     withSource("Remote")
   }

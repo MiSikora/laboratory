@@ -10,6 +10,6 @@ android {
 
 laboratory {
   feature("Feature") {
-    withFallbackValue("First")
+    withDefaultValue("First")
   }
 }

@@ -20,7 +20,7 @@ class FeatureFlagSpec : DescribeSpec({
     visibility = Internal,
     packageName = "io.mehow",
     names = listOf("FeatureA"),
-    values = listOf(FeatureValue("First", isFallbackValue = true), FeatureValue("Second")),
+    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   )
 
   describe("feature flag model") {
@@ -144,7 +144,7 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("can have names that have alphanumeric characters or underscores") {
         checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = featureBuilder.copy(values = listOf(name).map { FeatureValue(it, isFallbackValue = true) })
+          val builder = featureBuilder.copy(values = listOf(name).map { FeatureValue(it, isDefaultValue = true) })
 
           val result = builder.build()
 
@@ -200,7 +200,7 @@ class FeatureFlagSpec : DescribeSpec({
       }
     }
 
-    context("fallback") {
+    context("default") {
       it("cannot have no values") {
         checkAll(
           Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
@@ -211,7 +211,7 @@ class FeatureFlagSpec : DescribeSpec({
           )
           val result = builder.build()
 
-          result shouldBeLeft NoFeatureFallbackValue(builder.fqcn)
+          result shouldBeLeft NoFeatureDefaultValue(builder.fqcn)
         }
       }
 
@@ -223,14 +223,14 @@ class FeatureFlagSpec : DescribeSpec({
         ) { first, second, third ->
           val builder = featureBuilder.copy(
             values = listOf(
-              FeatureValue(first, isFallbackValue = true),
+              FeatureValue(first, isDefaultValue = true),
               FeatureValue(second),
-              FeatureValue(third, isFallbackValue = true),
+              FeatureValue(third, isDefaultValue = true),
             )
           )
           val result = builder.build()
 
-          result shouldBeLeft MultipleFeatureFallbackValues(Nel(first, third), builder.fqcn)
+          result shouldBeLeft MultipleFeatureDefaultValues(Nel(first, third), builder.fqcn)
         }
       }
 
@@ -244,7 +244,7 @@ class FeatureFlagSpec : DescribeSpec({
             values = listOf(
               FeatureValue(first),
               FeatureValue(second),
-              FeatureValue(third, isFallbackValue = true),
+              FeatureValue(third, isDefaultValue = true),
             )
           )
           val result = builder.build()
@@ -298,7 +298,7 @@ class FeatureFlagSpec : DescribeSpec({
       }
     }
 
-    context("fallback") {
+    context("default") {
       it("can have no values") {
         checkAll(
           Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
@@ -321,14 +321,14 @@ class FeatureFlagSpec : DescribeSpec({
         ) { first, second, third ->
           val builder = featureBuilder.copy(
             sourceValues = listOf(
-              FeatureValue(first, isFallbackValue = true),
+              FeatureValue(first, isDefaultValue = true),
               FeatureValue(second),
-              FeatureValue(third, isFallbackValue = true),
+              FeatureValue(third, isDefaultValue = true),
             )
           )
           val result = builder.build()
 
-          result shouldBeLeft MultipleFeatureFallbackValues(Nel(first, third), "${builder.fqcn}.Source")
+          result shouldBeLeft MultipleFeatureDefaultValues(Nel(first, third), "${builder.fqcn}.Source")
         }
       }
 
@@ -342,7 +342,7 @@ class FeatureFlagSpec : DescribeSpec({
             sourceValues = listOf(
               FeatureValue(first),
               FeatureValue(second),
-              FeatureValue(third, isFallbackValue = true),
+              FeatureValue(third, isDefaultValue = true),
             )
           )
           val result = builder.build()
@@ -368,9 +368,9 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Boolean
             |
             |internal enum class FeatureA(
-            |  override val isFallbackValue: Boolean = false
+            |  override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
-            |  First(isFallbackValue = true),
+            |  First(isDefaultValue = true),
             |
             |  Second;
             |}
@@ -393,9 +393,9 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Boolean
             |
             |enum class FeatureA(
-            |  override val isFallbackValue: Boolean = false
+            |  override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
-            |  First(isFallbackValue = true),
+            |  First(isDefaultValue = true),
             |
             |  Second;
             |}
@@ -421,9 +421,9 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Suppress
             |
             |internal enum class FeatureA(
-            |  override val isFallbackValue: Boolean = false
+            |  override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
-            |  First(isFallbackValue = true),
+            |  First(isDefaultValue = true),
             |
             |  Second;
             |
@@ -431,9 +431,9 @@ class FeatureFlagSpec : DescribeSpec({
             |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
-            |    override val isFallbackValue: Boolean = false
+            |    override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
-            |    Local(isFallbackValue = true),
+            |    Local(isDefaultValue = true),
             |
             |    Remote;
             |  }
@@ -458,9 +458,9 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Boolean
             |
             |internal enum class FeatureA(
-            |  override val isFallbackValue: Boolean = false
+            |  override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
-            |  First(isFallbackValue = true),
+            |  First(isDefaultValue = true),
             |
             |  Second;
             |}
@@ -495,9 +495,9 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Suppress
             |
             |internal enum class FeatureA(
-            |  override val isFallbackValue: Boolean = false
+            |  override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
-            |  First(isFallbackValue = true),
+            |  First(isDefaultValue = true),
             |
             |  Second;
             |
@@ -505,9 +505,9 @@ class FeatureFlagSpec : DescribeSpec({
             |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
-            |    override val isFallbackValue: Boolean = false
+            |    override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
-            |    Local(isFallbackValue = true),
+            |    Local(isDefaultValue = true),
             |
             |    Remote;
             |  }
@@ -517,11 +517,11 @@ class FeatureFlagSpec : DescribeSpec({
       }
     }
 
-    it("allows to set not Local default fallback for source") {
+    it("allows to set not Local default default for source") {
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(sourceValues = listOf(FeatureValue("Remote", isFallbackValue = true)))
+        .copy(sourceValues = listOf(FeatureValue("Remote", isDefaultValue = true)))
         .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -534,9 +534,9 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Suppress
             |
             |internal enum class FeatureA(
-            |  override val isFallbackValue: Boolean = false
+            |  override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
-            |  First(isFallbackValue = true),
+            |  First(isDefaultValue = true),
             |
             |  Second;
             |
@@ -544,11 +544,11 @@ class FeatureFlagSpec : DescribeSpec({
             |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
-            |    override val isFallbackValue: Boolean = false
+            |    override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
             |    Local,
             |
-            |    Remote(isFallbackValue = true);
+            |    Remote(isDefaultValue = true);
             |  }
             |}
             |
@@ -573,9 +573,9 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Suppress
             |
             |enum class FeatureA(
-            |  override val isFallbackValue: Boolean = false
+            |  override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
-            |  First(isFallbackValue = true),
+            |  First(isDefaultValue = true),
             |
             |  Second;
             |
@@ -583,9 +583,9 @@ class FeatureFlagSpec : DescribeSpec({
             |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  enum class Source(
-            |    override val isFallbackValue: Boolean = false
+            |    override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
-            |    Local(isFallbackValue = true),
+            |    Local(isDefaultValue = true),
             |
             |    Remote;
             |  }

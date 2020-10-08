@@ -7,14 +7,14 @@ laboratory {
   feature("Feature") {
     packageName = "io.mehow.explicit"
 
-    withFallbackValue("First")
+    withDefaultValue("First")
     withValue("Second")
   }
 
   feature("Feature") {
     packageName = "io.mehow.explicit.switch"
 
-    withFallbackValue("First")
+    withDefaultValue("First")
     withValue("Second")
   }
 }

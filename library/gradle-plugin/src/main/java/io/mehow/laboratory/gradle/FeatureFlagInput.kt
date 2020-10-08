@@ -15,16 +15,16 @@ class FeatureFlagInput internal constructor(private val name: String) {
     values += FeatureValue(value)
   }
 
-  fun withFallbackValue(value: String) {
-    values += FeatureValue(value, isFallbackValue = true)
+  fun withDefaultValue(value: String) {
+    values += FeatureValue(value, isDefaultValue = true)
   }
 
   fun withSource(value: String) {
     sources += FeatureValue(value)
   }
 
-  fun withFallbackSource(value: String) {
-    sources += FeatureValue(value, isFallbackValue = true)
+  fun withDefaultSource(value: String) {
+    sources += FeatureValue(value, isDefaultValue = true)
   }
 
   internal fun toBuilder(): FeatureFlagModel.Builder {

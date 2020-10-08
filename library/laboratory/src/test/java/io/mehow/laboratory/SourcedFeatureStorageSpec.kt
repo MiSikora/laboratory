@@ -32,7 +32,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
 
   describe("sourced feature storage") {
     context("with no sources set") {
-      it("takes initial value from a fallback source") {
+      it("takes initial value from a default source") {
         localLaboratory.setFeature(FirstFeature.B)
         sourcedLaboratory.experiment<FirstFeature>() shouldBe FirstFeature.B
 
@@ -193,7 +193,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
   }
 })
 
-private enum class FirstFeature(override val isFallbackValue: Boolean = false) : Feature<FirstFeature> {
+private enum class FirstFeature(override val isDefaultValue: Boolean = false) : Feature<FirstFeature> {
   A,
   B,
   C,
@@ -202,14 +202,14 @@ private enum class FirstFeature(override val isFallbackValue: Boolean = false) :
   @Suppress("UNCHECKED_CAST")
   override val sourcedWith = Source::class.java as Class<Feature<*>>
 
-  enum class Source(override val isFallbackValue: Boolean = false) : Feature<Source> {
+  enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
     Local,
     RemoteA,
     ;
   }
 }
 
-private enum class SecondFeature(override val isFallbackValue: Boolean = false) : Feature<SecondFeature> {
+private enum class SecondFeature(override val isDefaultValue: Boolean = false) : Feature<SecondFeature> {
   A,
   B,
   C,
@@ -218,15 +218,15 @@ private enum class SecondFeature(override val isFallbackValue: Boolean = false) 
   @Suppress("UNCHECKED_CAST")
   override val sourcedWith = Source::class.java as Class<Feature<*>>
 
-  enum class Source(override val isFallbackValue: Boolean = false) : Feature<Source> {
+  enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
     Local,
     RemoteA,
-    RemoteB(isFallbackValue = true),
+    RemoteB(isDefaultValue = true),
     ;
   }
 }
 
-private enum class EmptySourceFeature(override val isFallbackValue: Boolean = false) : Feature<EmptySourceFeature> {
+private enum class EmptySourceFeature(override val isDefaultValue: Boolean = false) : Feature<EmptySourceFeature> {
   A,
   B,
   C,
@@ -238,7 +238,7 @@ private enum class EmptySourceFeature(override val isFallbackValue: Boolean = fa
   private enum class Source : Feature<Source>
 }
 
-private enum class UnsourcedFeature(override val isFallbackValue: Boolean = false) : Feature<UnsourcedFeature> {
+private enum class UnsourcedFeature(override val isDefaultValue: Boolean = false) : Feature<UnsourcedFeature> {
   A,
   B,
   C,

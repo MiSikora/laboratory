@@ -58,19 +58,19 @@ data class FeatureValuesCollision(
     get() = "Found feature values collision for $fqcn: ${collisions.toList()}."
 }
 
-data class NoFeatureFallbackValue(
+data class NoFeatureDefaultValue(
   private val fqcn: String,
 ) : GenerationFailure {
   override val message: String
-    get() = "Feature must have a single fallback value. Found none in $fqcn."
+    get() = "Feature must have a single default value. Found none in $fqcn."
 }
 
-data class MultipleFeatureFallbackValues(
+data class MultipleFeatureDefaultValues(
   private val collisions: Nel<String>,
   private val fqcn: String,
 ) : GenerationFailure {
   override val message: String
-    get() = "Feature must have a single fallback value. Found ${collisions.toList()} in $fqcn."
+    get() = "Feature must have a single default value. Found ${collisions.toList()} in $fqcn."
 }
 
 data class FeaturesCollision(

@@ -9,10 +9,10 @@ laboratory {
   sourcedStorage()
 
   feature("Feature") {
-    withFallbackValue("First")
+    withDefaultValue("First")
   }
 
   feature("Feature") {
-    withFallbackValue("Second")
+    withDefaultValue("Second")
   }
 }

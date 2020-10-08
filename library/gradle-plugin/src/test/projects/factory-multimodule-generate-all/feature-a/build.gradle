@@ -5,6 +5,6 @@ plugins {
 
 laboratory {
   feature("FeatureA") {
-    withFallbackValue("First")
+    withDefaultValue("First")
   }
 }

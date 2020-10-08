@@ -92,14 +92,14 @@ private object AllFeatureFactory : FeatureFactory {
   }
 }
 
-private enum class First(override val isFallbackValue: Boolean = false) : Feature<First> {
+private enum class First(override val isDefaultValue: Boolean = false) : Feature<First> {
   C,
   B,
   A,
   ;
 }
 
-private enum class Second(override val isFallbackValue: Boolean = false) : Feature<Second> {
+private enum class Second(override val isDefaultValue: Boolean = false) : Feature<Second> {
   B,
   C,
   A,
