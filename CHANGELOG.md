@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 0.4.0 *(2020-10-08)*
+----------------------------
+
+* Changed name of generated sourced feature storage function to align it with feature factories.
+
 Version 0.3.0 *(2020-10-08)*
 ----------------------------
 
