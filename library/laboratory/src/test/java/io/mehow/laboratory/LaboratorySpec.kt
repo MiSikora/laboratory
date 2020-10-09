@@ -64,6 +64,20 @@ class LaboratorySpec : DescribeSpec({
       }
     }
 
+    context("checking feature value") {
+      it("returns false for non-default value") {
+        val laboratory = Laboratory(NullStorage)
+
+        laboratory.check(DefaultFeature.A) shouldBe false
+      }
+
+      it("returns true for default value") {
+        val laboratory = Laboratory(NullStorage)
+
+        laboratory.check(DefaultFeature.B) shouldBe true
+      }
+    }
+
     val features = listOf(NoDefaultFeature::class, DefaultFeature::class, MultiDefaultFeature::class)
     for (feature in features) {
       verifyFeatureChanges(feature.java)
