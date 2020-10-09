@@ -29,6 +29,11 @@ class Laboratory(private val storage: FeatureStorage) {
   @BlockingIoCall
   fun <T : Feature<T>> experimentBlocking(featureClass: Class<T>) = runBlocking { experiment(featureClass) }
 
+  suspend fun <T : Feature<T>> check(value: T) = experiment(value::class.java) == value
+
+  @BlockingIoCall
+  fun <T : Feature<T>> checkBlocking(value: T) = runBlocking { check(value) }
+
   suspend fun <T : Feature<*>> setFeature(feature: T) = storage.setFeature(feature)
 
   @BlockingIoCall
