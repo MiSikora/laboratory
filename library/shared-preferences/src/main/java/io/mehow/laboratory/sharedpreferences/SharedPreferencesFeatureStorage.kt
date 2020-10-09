@@ -31,9 +31,11 @@ class SharedPreferencesFeatureStorage(
     null
   }
 
-  override suspend fun <T : Feature<*>> setFeature(feature: T): Boolean {
+  override suspend fun <T : Feature<*>> setFeatures(vararg features: T): Boolean {
     preferences.edit {
-      putString(feature.javaClass.name, feature.name)
+      for (feature in features) {
+        putString(feature.javaClass.name, feature.name)
+      }
     }
     return true
   }

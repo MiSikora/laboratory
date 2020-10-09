@@ -23,7 +23,7 @@ internal class SourcedFeatureStorage(
     return storage.getFeatureName(featureClass)
   }
 
-  override suspend fun <T : Feature<*>> setFeature(feature: T) = localSource.setFeature(feature)
+  override suspend fun <T : Feature<*>> setFeatures(vararg features: T) = localSource.setFeatures(*features)
 
   private fun <T : Feature<*>> Class<T>.observeSource() = validatedSource()
     ?.let { localLaboratory.observe(it) }

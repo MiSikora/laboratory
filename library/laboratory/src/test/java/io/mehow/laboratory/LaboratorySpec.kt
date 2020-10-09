@@ -159,19 +159,19 @@ private enum class NoValuesFeature : Feature<NoValuesFeature>
 private object ThrowingStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = fail()
   override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = fail()
-  override suspend fun <T : Feature<*>> setFeature(feature: T) = fail()
+  override suspend fun <T : Feature<*>> setFeatures(vararg features: T) = fail()
 }
 
 private object NullStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>): Flow<String?> = flowOf(null)
   override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>): String? = null
-  override suspend fun <T : Feature<*>> setFeature(feature: T) = fail()
+  override suspend fun <T : Feature<*>> setFeatures(vararg features: T) = fail()
 }
 
 private object EmptyStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = flowOf("")
   override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = ""
-  override suspend fun <T : Feature<*>> setFeature(feature: T) = fail()
+  override suspend fun <T : Feature<*>> setFeatures(vararg features: T) = fail()
 }
 
 private fun fail(): Nothing = fail("Unexpected call")

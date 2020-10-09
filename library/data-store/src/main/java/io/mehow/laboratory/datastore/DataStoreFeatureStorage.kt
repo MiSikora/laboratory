@@ -40,9 +40,9 @@ class DataStoreFeatureStorage @JvmOverloads constructor(
     null
   }
 
-  override suspend fun <T : Feature<*>> setFeature(feature: T) = try {
+  override suspend fun <T : Feature<*>> setFeatures(vararg features: T) = try {
     dataStore.updateData { flags ->
-      val updatedFeatures = flags.value + (feature.javaClass.name to feature.name)
+      val updatedFeatures = flags.value + features.map { it.javaClass.name to it.name }.toMap()
       return@updateData flags.copy(value = updatedFeatures)
     }
     true

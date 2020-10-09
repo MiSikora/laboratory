@@ -34,6 +34,11 @@ class Laboratory(private val storage: FeatureStorage) {
   @BlockingIoCall
   fun <T : Feature<*>> setFeatureBlocking(feature: T) = runBlocking { storage.setFeature(feature) }
 
+  suspend fun <T : Feature<*>> setFeatures(vararg features: T) = storage.setFeatures(*features)
+
+  @BlockingIoCall
+  fun <T : Feature<*>> setFeaturesBlocking(vararg features: T) = runBlocking { setFeatures(*features) }
+
   private fun <T : Feature<T>> extractFeatureMetadata(group: Class<T>): Pair<Array<T>, T> {
     val features = requireNotNull(group.enumConstants) { "${group.name} must be an enum" }
     require(features.isNotEmpty()) { "${group.name} must have at least one value" }
