@@ -101,6 +101,32 @@ class ViewModelSpec : DescribeSpec({
         cancel()
       }
     }
+
+    it("resets all features to their default values") {
+      val viewModel = FeaturesViewModel(
+        Configuration(
+          FeatureStorage.inMemory(),
+          mapOf(
+            "First" to object : FeatureFactory {
+              @Suppress("UNCHECKED_CAST")
+              override fun create() = setOf(Empty::class.java, First::class.java) as Set<Class<Feature<*>>>
+            },
+            "Second" to object : FeatureFactory {
+              @Suppress("UNCHECKED_CAST")
+              override fun create() = setOf(Second::class.java) as Set<Class<Feature<*>>>
+            },
+          ),
+        )
+      )
+
+      viewModel.selectFeature(First.B)
+      viewModel.selectFeature(Second.C)
+
+      viewModel.resetAllFeatures()
+
+      viewModel.observeSelectedFeatures("First").first() shouldContainExactly listOf(First.C)
+      viewModel.observeSelectedFeatures("Second").first() shouldContainExactly listOf(Second.B)
+    }
   }
 })
 

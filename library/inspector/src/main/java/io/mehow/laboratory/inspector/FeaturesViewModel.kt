@@ -29,6 +29,15 @@ internal class FeaturesViewModel(
       .map { featureGroups -> featureGroups.sortedBy(FeatureGroup::name) }
   }
 
+  suspend fun resetAllFeatures(): Boolean {
+    val defaults = groups.values.flatten()
+      .mapNotNull { featureGroup -> featureGroup.enumConstants }
+      .filter { it.isNotEmpty() }
+      .map { features -> features.firstOrNull { it.isDefaultValue } ?: features.first() }
+      .toTypedArray()
+    return laboratory.setFeatures(*defaults)
+  }
+
   private fun observeFeatureGroup(group: Class<Feature<*>>): Flow<FeatureGroup> {
     return laboratory.observe(group)
       .map(::createFeatureModels)

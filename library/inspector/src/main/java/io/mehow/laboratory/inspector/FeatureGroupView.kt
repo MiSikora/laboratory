@@ -3,7 +3,6 @@ package io.mehow.laboratory.inspector
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.CompoundButton
@@ -34,6 +33,7 @@ internal class FeatureGroupView constructor(
     val chip = findChipForModel(model) ?: return
     chip.setOnCheckedChangeListener(null)
     chip.isChecked = true
+    chip.deselectOtherChips()
     chip.setOnCheckedChangeListener(createListener(model))
   }
 
@@ -48,13 +48,13 @@ internal class FeatureGroupView constructor(
 
   private fun createListener(model: FeatureModel) = CompoundButton.OnCheckedChangeListener { chip, isChecked ->
     if (isChecked) {
-      chip.deselectOtherChips()
+      (chip as Chip).deselectOtherChips()
       onCheckFeatureListener(model.feature)
     }
   }
 
   // ChipGroup.isSingleSelection does not work with initial selection from code.
-  private fun View.deselectOtherChips() {
+  private fun Chip.deselectOtherChips() {
     children.filterIsInstance<Chip>()
       .filter { it !== this }
       .forEach { chip -> chip.isChecked = false }

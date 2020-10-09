@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+      android:id="@+id/io_mehow_laboratory_reset_features_menu_item"
+      android:contentDescription="@string/io_mehow_laboratory_reset_features"
+      android:icon="@drawable/io_mehow_laboratory_reset_features"
+      android:title="@string/io_mehow_laboratory_reset_features"
+      app:showAsAction="ifRoom" />
+
+</menu>
