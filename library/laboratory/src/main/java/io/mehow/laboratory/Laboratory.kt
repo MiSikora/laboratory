@@ -32,7 +32,7 @@ class Laboratory(private val storage: FeatureStorage) {
   suspend fun <T : Feature<*>> setFeature(feature: T) = storage.setFeature(feature)
 
   @BlockingIoCall
-  fun <T : Feature<*>> setFeatureBlocking(feature: T) = runBlocking { storage.setFeature(feature) }
+  fun <T : Feature<*>> setFeatureBlocking(feature: T) = runBlocking { setFeature(feature) }
 
   suspend fun <T : Feature<*>> setFeatures(vararg features: T) = storage.setFeatures(*features)
 
