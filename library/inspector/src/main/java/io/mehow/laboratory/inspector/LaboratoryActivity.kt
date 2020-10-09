@@ -98,10 +98,12 @@ class LaboratoryActivity : AppCompatActivity() {
     fun configure(
       localStorage: FeatureStorage,
       featureFactory: FeatureFactory,
+      externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
+      val filteredFactories = externalFeatureFactories.filter { it.key == "Features" }
       configure(Configuration(
         localStorage,
-        linkedMapOf("Features" to featureFactory)
+        linkedMapOf("Features" to featureFactory) + filteredFactories
       ))
     }
 
@@ -109,10 +111,12 @@ class LaboratoryActivity : AppCompatActivity() {
       localStorage: FeatureStorage,
       featureFactory: FeatureFactory,
       featureSourceFactory: FeatureFactory,
+      externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
+      val filteredFactories = externalFeatureFactories.filter { it.key in listOf("Features", "Sources") }
       configure(Configuration(
         localStorage,
-        linkedMapOf("Features" to featureFactory, "Sources" to featureSourceFactory)
+        linkedMapOf("Features" to featureFactory, "Sources" to featureSourceFactory) + filteredFactories
       ))
     }
 
