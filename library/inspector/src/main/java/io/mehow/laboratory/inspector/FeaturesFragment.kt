@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textview.MaterialTextView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 internal class FeaturesFragment : Fragment() {
@@ -36,16 +39,36 @@ internal class FeaturesFragment : Fragment() {
     val container = view.findViewById<ViewGroup>(R.id.io_mehow_laboratory_container)
     val spacing = resources.getDimensionPixelSize(R.dimen.io_mehow_laboratory_spacing)
     lifecycleScope.launch {
-      for (group in viewModel.getFeatureGroups(groupName)) {
-        val groupLabel = createFeatureGroupLabel(group, spacing)
-        val groupView = FeatureGroupView(requireActivity(), group) { feature ->
-          lifecycleScope.launch { viewModel.selectFeature(feature) }
-        }
-        container.addView(groupLabel)
-        container.addView(groupView)
-      }
+      val featureViews = createInitialViews(groupName, spacing, container)
+      observeFeatures(groupName, featureViews).collect()
     }
   }
+
+  private suspend fun createInitialViews(
+    groupName: String,
+    spacing: Int,
+    container: ViewGroup,
+  ) = viewModel.observeFeatureGroups(groupName).first()
+    .map { group ->
+      val groupLabel = createFeatureGroupLabel(group, spacing)
+      val groupView = FeatureGroupView(requireActivity(), group) { feature ->
+        lifecycleScope.launch { viewModel.selectFeature(feature) }
+      }
+      container.addView(groupLabel)
+      container.addView(groupView)
+      return@map group.fqcn to groupView
+    }.toMap()
+
+  private fun observeFeatures(
+    groupName: String,
+    featureViews: Map<String, FeatureGroupView>,
+  ) = viewModel.observeFeatureGroups(groupName)
+    .onEach { featureGroups ->
+      for (group in featureGroups) {
+        val model = group.models.first(FeatureModel::isSelected)
+        featureViews.getValue(group.fqcn).selectFeature(model)
+      }
+    }
 
   private fun createFeatureGroupLabel(group: FeatureGroup, spacing: Int): TextView {
     return MaterialTextView(requireActivity()).apply {

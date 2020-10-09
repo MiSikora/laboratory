@@ -1,5 +1,6 @@
 package io.mehow.laboratory.inspector
 
+import app.cash.turbine.test
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
@@ -8,6 +9,11 @@ import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlin.time.ExperimentalTime
 
 class ViewModelSpec : DescribeSpec({
   describe("view model") {
@@ -16,7 +22,7 @@ class ViewModelSpec : DescribeSpec({
         Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
-      val featureNames = viewModel.getFeatureGroups("Local").map(FeatureGroup::name)
+      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
 
       featureNames shouldNotContain "Empty"
     }
@@ -26,7 +32,7 @@ class ViewModelSpec : DescribeSpec({
         Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
-      val featureNames = viewModel.getFeatureGroups("Local").map(FeatureGroup::name)
+      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
 
       featureNames shouldContainExactly listOf("First", "Second")
     }
@@ -36,7 +42,7 @@ class ViewModelSpec : DescribeSpec({
         Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
-      val features = viewModel.getFeatureGroups("Local")
+      val features = viewModel.observeFeatureGroups("Local").first()
         .map(FeatureGroup::models)
         .map { models -> models.map(FeatureModel::feature) }
 
@@ -49,7 +55,7 @@ class ViewModelSpec : DescribeSpec({
         Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
-      viewModel.getSelectedFeatures("Local") shouldContainExactly listOf(First.C, Second.B)
+      viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.C, Second.B)
     }
 
     it("marks saved feature as selected") {
@@ -63,7 +69,7 @@ class ViewModelSpec : DescribeSpec({
         Configuration(storage, mapOf("Local" to AllFeatureFactory))
       )
 
-      viewModel.getSelectedFeatures("Local") shouldContainExactly listOf(First.A, Second.C)
+      viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.A, Second.C)
     }
 
     it("selects features") {
@@ -74,15 +80,36 @@ class ViewModelSpec : DescribeSpec({
       viewModel.selectFeature(First.B)
       viewModel.selectFeature(Second.A)
 
-      viewModel.getSelectedFeatures("Local") shouldContainExactly listOf(First.B, Second.A)
+      viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.B, Second.A)
+    }
+
+    it("observes feature changes") {
+      val viewModel = FeaturesViewModel(
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+      )
+
+      @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
+      viewModel.observeSelectedFeatures("Local").test {
+        expectItem() shouldContainExactly listOf(First.C, Second.B)
+
+        viewModel.selectFeature(First.B)
+        expectItem() shouldContainExactly listOf(First.B, Second.B)
+
+        viewModel.selectFeature(Second.C)
+        expectItem() shouldContainExactly listOf(First.B, Second.C)
+
+        cancel()
+      }
     }
   }
 })
 
-internal suspend fun FeaturesViewModel.getSelectedFeatures(groupName: String): List<Feature<*>> {
-  return getFeatureGroups(groupName)
-    .map(FeatureGroup::models)
-    .map { models -> models.single(FeatureModel::isSelected).let(FeatureModel::feature) }
+internal fun FeaturesViewModel.observeSelectedFeatures(groupName: String): Flow<List<Feature<*>>> {
+  return observeFeatureGroups(groupName).map { group ->
+    group
+      .map(FeatureGroup::models)
+      .map { models -> models.single(FeatureModel::isSelected).feature }
+  }
 }
 
 private object AllFeatureFactory : FeatureFactory {

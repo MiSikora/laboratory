@@ -2,7 +2,7 @@ package io.mehow.laboratory.inspector
 
 import io.mehow.laboratory.Feature
 
-internal class FeatureModel(
+internal data class FeatureModel(
   val feature: Feature<*>,
   val isSelected: Boolean,
 ) {
