@@ -5,10 +5,12 @@ import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import io.mehow.laboratory.brombulator.Brombulation
-import io.mehow.laboratory.frombulator.Frombulation
+import io.mehow.laboratory.Feature
+import io.mehow.laboratory.a.AllowScreenshots
+import io.mehow.laboratory.a.Authentication
+import io.mehow.laboratory.b.PowerSource
+import io.mehow.laboratory.c.DistanceAlgorithm
 import io.mehow.laboratory.inspector.LaboratoryActivity
-import io.mehow.laboratory.trombulator.Trombulation
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
@@ -21,25 +23,25 @@ class SampleActivity : Activity() {
   @Suppress("LongMethod", "StringLiteralDuplication")
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
-    val laboratory = SampleApplication.getLaboratory(application)
 
     setContentView(R.layout.io_mehow_laboratory_sample_main)
     findViewById<Button>(R.id.launch_laboratory).setOnClickListener {
       LaboratoryActivity.start(this)
     }
 
-    val brombulation = findViewById<TextView>(R.id.brombulation)
-    val frombulation = findViewById<TextView>(R.id.frombulation)
-    val trombulation = findViewById<TextView>(R.id.trombulation)
+    findViewById<TextView>(R.id.authentication).observeFeature<Authentication>()
+    findViewById<TextView>(R.id.powerSource).observeFeature<PowerSource>()
+    findViewById<TextView>(R.id.distanceAlgorithm).observeFeature<DistanceAlgorithm>()
+    findViewById<TextView>(R.id.logType).observeFeature<LogType>()
+    findViewById<TextView>(R.id.reportRootedDevice).observeFeature<ReportRootedDevice>()
+    findViewById<TextView>(R.id.showAds).observeFeature<ShowAds>()
+    findViewById<TextView>(R.id.allowScreenshots).observeFeature<AllowScreenshots>()
+  }
 
-    laboratory.observe<Brombulation>()
-      .onEach { brombulation.text = "${it.javaClass.simpleName}: $it" }
-      .launchIn(mainScope)
-    laboratory.observe<Frombulation>()
-      .onEach { frombulation.text = "${it.javaClass.simpleName}: $it" }
-      .launchIn(mainScope)
-    laboratory.observe<Trombulation>()
-      .onEach { trombulation.text = "${it.javaClass.simpleName}: $it" }
+  private inline fun <reified T : Feature<T>> TextView.observeFeature() {
+    val laboratory = SampleApplication.getLaboratory(application)
+    laboratory.observe<T>()
+      .onEach { this.text = "${it.javaClass.simpleName}: $it" }
       .launchIn(mainScope)
   }
 

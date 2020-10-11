@@ -23,16 +23,19 @@ class SampleApplication : Application() {
     val awsStorage = SharedPreferencesFeatureStorage(
       getSharedPreferences("awsFeatures", MODE_PRIVATE)
     )
+    val azureStorage = SharedPreferencesFeatureStorage(
+      getSharedPreferences("azureStorage", MODE_PRIVATE)
+    )
     val sourcedStorage = FeatureStorage.sourcedGenerated(
       localSource = localStorage,
       firebaseSource = firebaseStorage,
       awsSource = awsStorage,
+      azureSource = azureStorage,
     )
     laboratory = Laboratory(sourcedStorage)
     LaboratoryActivity.configure(
       localStorage = localStorage,
-      featureFactory = FeatureFactory.featureGenerated(),
-//      featureSourceFactory = FeatureFactory.featureSourceGenerated()
+      featureFactory = FeatureFactory.featureGenerated()
     )
   }
 

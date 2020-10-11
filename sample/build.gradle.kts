@@ -40,7 +40,26 @@ laboratory {
   packageName = "io.mehow.laboratory.sample"
   sourcedStorage()
   featureFactory()
-  featureSourceFactory()
+
+  feature("LogType") {
+    withValue("Verbose")
+    withValue("Debug")
+    withDefaultValue("Info")
+    withValue("Warning")
+    withValue("Error")
+  }
+
+  feature("ReportRootedDevice") {
+    withValue("Enabled")
+    withDefaultValue("Disabled")
+  }
+
+  feature("ShowAds") {
+    withDefaultValue("Enabled")
+    withValue("Disabled")
+
+    withSource("Azure")
+  }
 }
 
 dependencies {
@@ -52,7 +71,7 @@ dependencies {
   implementation("io.mehow.laboratory:laboratory-hyperion-plugin:+")
   @Suppress("GradleDynamicVersion") // We want the latest version as we control it.
   implementation("io.mehow.laboratory:laboratory-shared-preferences:+")
-  implementation(project(":sample:brombulator"))
-  implementation(project(":sample:frombulator"))
-  implementation(project(":sample:trombulator"))
+  implementation(project(":sample:module-a"))
+  implementation(project(":sample:module-b"))
+  implementation(project(":sample:module-c"))
 }

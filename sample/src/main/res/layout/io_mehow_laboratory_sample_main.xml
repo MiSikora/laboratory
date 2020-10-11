@@ -16,7 +16,7 @@
       />
 
   <com.google.android.material.textview.MaterialTextView
-      android:id="@+id/brombulation"
+      android:id="@+id/authentication"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -24,7 +24,7 @@
       />
 
   <com.google.android.material.textview.MaterialTextView
-      android:id="@+id/frombulation"
+      android:id="@+id/powerSource"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -32,7 +32,39 @@
       />
 
   <com.google.android.material.textview.MaterialTextView
-      android:id="@+id/trombulation"
+      android:id="@+id/distanceAlgorithm"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/logType"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/reportRootedDevice"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/showAds"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/allowScreenshots"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
