@@ -4,13 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.dropWhile
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 internal class FeaturesViewModel(
   configuration: Configuration,
@@ -21,14 +26,20 @@ internal class FeaturesViewModel(
 
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setFeature(feature)
 
-  fun observeFeatureGroups(groupName: String) = groups.getValue(groupName)
-      .filterNot { it.enumConstants.isNullOrEmpty() }
-      .map { it.observeFeatureGroup() }
-      .fold(emptyFlow, ::combineFeatureGroups)
+  fun observeFeatureGroups(groupName: String) = flow {
+    val listGroupFlow = withContext(Dispatchers.Default) {
+      groups.getValue(groupName)
+        .filterNot { it.enumConstants.isNullOrEmpty() }
+        .map { it.observeFeatureGroup() }
+        .fold(emptyFlow, ::combineFeatureGroups)
+    }.flowOn(Dispatchers.Default)
       .dropWhile { features -> isAnyFeatureGroupMissing(groupName, features) }
       .map { featureGroups -> featureGroups.sortedBy(FeatureGroup::name) }
+    emitAll(listGroupFlow)
+  }
 
-  suspend fun resetAllFeatures() = groups.values.flatten()
+  suspend fun resetAllFeatures() = withContext(Dispatchers.Default) {
+    groups.values.flatten()
       .flatMap { featureGroup ->
         val featureValues = featureGroup.enumConstants.orEmpty()
         val sourceValues = featureGroup.sourceClass?.enumConstants.orEmpty()
@@ -38,6 +49,7 @@ internal class FeaturesViewModel(
       .map { features -> features.firstOrNull { it.isDefaultValue } ?: features.first() }
       .toTypedArray()
       .let { laboratory.setFeatures(*it) }
+  }
 
   private val Class<Feature<*>>.sourceClass get() = enumConstants?.firstOrNull()?.sourcedWith
 
@@ -52,10 +64,10 @@ internal class FeaturesViewModel(
   private fun Class<Feature<*>>.observeFeatureModels() = laboratory.observe(this).map(::createFeatureModels)
 
   private fun createFeatureModels(selectedFeature: Feature<*>) = selectedFeature.javaClass
-      .enumConstants
-      .orEmpty()
-      .map { feature -> FeatureModel(feature, isSelected = feature == selectedFeature) }
-      .ensureOneModelSelected()
+    .enumConstants
+    .orEmpty()
+    .map { feature -> FeatureModel(feature, isSelected = feature == selectedFeature) }
+    .ensureOneModelSelected()
 
   private val Class<Feature<*>>.simpleReadableName get() = name.substringAfterLast(".").replace('$', '.')
 
