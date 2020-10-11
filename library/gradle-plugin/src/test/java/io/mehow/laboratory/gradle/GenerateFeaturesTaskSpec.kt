@@ -491,4 +491,25 @@ class GenerateFeaturesTaskSpec : StringSpec({
       |}
     """.trimMargin("|")
   }
+
+  "generates feature flag with a description" {
+    val fixture = "feature-generate-description".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |enum class Feature(
+      |  override val isDefaultValue: Boolean = false
+      |) : io.mehow.laboratory.Feature<Feature> {
+      |  First(isDefaultValue = true);
+      |
+      |  override val description: String = "Feature description"
+      |}
+    """.trimMargin("|")
+  }
 })

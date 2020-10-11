@@ -8,6 +8,7 @@ import io.mehow.laboratory.generator.Visibility.Public
 class FeatureFlagInput internal constructor(private val name: String) {
   var isPublic: Boolean = true
   var packageName: String? = null
+  var description: String? = null
   private val values: MutableList<FeatureValue> = mutableListOf()
   private val sources: MutableList<FeatureValue> = mutableListOf()
 
@@ -34,6 +35,7 @@ class FeatureFlagInput internal constructor(private val name: String) {
       names = listOf(name),
       values = values,
       sourceValues = sources,
+      description = description.orEmpty(),
     )
   }
 }
