@@ -45,6 +45,15 @@ internal class FeatureFlagGenerator(
       .build()
   }
 
+  private val description = feature.description
+    .takeIf { @Kt41142 it.isNotBlank() }
+    ?.let { description ->
+      PropertySpec
+        .builder(descriptionPropertyName, String::class, OVERRIDE)
+        .initializer("%S", description)
+        .build()
+    }
+
   private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
     .addModifiers(feature.visibility.modifier)
     .primaryConstructor(primaryConstructor)
@@ -57,6 +66,7 @@ internal class FeatureFlagGenerator(
         addProperty(sourceWithOverride)
       }
     }
+    .apply { description?.let { @Kt41142 addProperty(it) } }
     .build()
 
   private fun TypeSpec.Builder.addEnumConstant(featureValue: FeatureValue) = if (featureValue.isDefaultValue) {
@@ -78,6 +88,7 @@ internal class FeatureFlagGenerator(
   private companion object {
     const val defaultValuePropertyName = "isDefaultValue"
     const val sourcedWithPropertyName = "sourcedWith"
+    const val descriptionPropertyName = "description"
 
     val featureType = Class::class(Feature::class(STAR))
 

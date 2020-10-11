@@ -594,5 +594,34 @@ class FeatureFlagSpec : DescribeSpec({
           """.trimMargin("|")
       }
     }
+
+    it("can have description") {
+      val tempDir = createTempDir()
+
+      val outputFile = featureBuilder
+        .copy(description = "Feature description")
+        .build().map { model -> model.generate(tempDir) }
+
+      outputFile shouldBeRight { file ->
+        file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import kotlin.Boolean
+            |import kotlin.String
+            |
+            |internal enum class FeatureA(
+            |  override val isDefaultValue: Boolean = false
+            |) : Feature<FeatureA> {
+            |  First(isDefaultValue = true),
+            |
+            |  Second;
+            |
+            |  override val description: String = "Feature description"
+            |}
+            |
+          """.trimMargin("|")
+      }
+    }
   }
 })

@@ -14,11 +14,13 @@ import arrow.core.right
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
+@Suppress("LongParameterList") // All properties are required for code generation.
 class FeatureFlagModel private constructor(
   internal val visibility: Visibility,
   internal val className: ClassName,
   internal val values: Nel<FeatureValue>,
   internal val source: FeatureFlagModel?,
+  internal val description: String,
 ) {
   internal val packageName = className.packageName
   internal val name = className.simpleName
@@ -42,6 +44,7 @@ class FeatureFlagModel private constructor(
     internal val names: List<String>,
     internal val values: List<FeatureValue>,
     internal val sourceValues: List<FeatureValue> = emptyList(),
+    internal val description: String = "",
   ) {
     internal val fqcn = ClassName(packageName, names).canonicalName
 
@@ -51,7 +54,13 @@ class FeatureFlagModel private constructor(
         val names = !validateName()
         val values = !validateValues()
         val nestedSource = createNestedSource()?.bind()
-        FeatureFlagModel(visibility, ClassName(packageName, names), values, nestedSource)
+        FeatureFlagModel(
+          visibility = visibility,
+          className = ClassName(packageName, names),
+          values = values,
+          source = nestedSource,
+          description = description,
+        )
       }
     }
 
