@@ -19,7 +19,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
 import io.mehow.laboratory.FeatureFactory
-import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import kotlinx.coroutines.launch
 
@@ -92,11 +91,9 @@ class LaboratoryActivity : AppCompatActivity() {
   }
 
   class Configuration(
-    localStorage: FeatureStorage,
+    internal val laboratory: Laboratory,
     internal val featureFactories: Map<String, FeatureFactory>,
-  ) {
-    internal val laboratory = Laboratory(localStorage)
-  }
+  )
 
   companion object {
     private const val featuresLabel = "Features"
@@ -110,26 +107,26 @@ class LaboratoryActivity : AppCompatActivity() {
       }
 
     fun configure(
-      localStorage: FeatureStorage,
+      laboratory: Laboratory,
       featureFactory: FeatureFactory,
       externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
       val filteredFactories = externalFeatureFactories.filter { it.key == featuresLabel }
       configure(Configuration(
-        localStorage,
+        laboratory,
         linkedMapOf(featuresLabel to featureFactory) + filteredFactories
       ))
     }
 
     fun configure(
-      localStorage: FeatureStorage,
+      laboratory: Laboratory,
       featureFactory: FeatureFactory,
       featureSourceFactory: FeatureFactory,
       externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
       val filteredFactories = externalFeatureFactories.filter { it.key in listOf(featuresLabel, sourcesLabel) }
       configure(Configuration(
-        localStorage,
+        laboratory,
         linkedMapOf(featuresLabel to featureFactory, sourcesLabel to featureSourceFactory) + filteredFactories
       ))
     }

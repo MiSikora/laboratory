@@ -34,8 +34,8 @@ class SampleApplication : Application() {
     )
     laboratory = Laboratory(sourcedStorage)
     LaboratoryActivity.configure(
-      localStorage = localStorage,
-      featureFactory = FeatureFactory.featureGenerated()
+      laboratory = laboratory,
+      featureFactory = FeatureFactory.featureGenerated(),
     )
   }
 

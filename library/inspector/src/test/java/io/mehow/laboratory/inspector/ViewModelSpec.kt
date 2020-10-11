@@ -18,7 +18,7 @@ class ViewModelSpec : DescribeSpec({
   describe("view model") {
     it("filters empty feature groups") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
@@ -28,7 +28,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("orders feature groups by name") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
@@ -38,7 +38,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("does not order feature values") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val features = viewModel.observeFeatureGroups("Local").first()
@@ -51,21 +51,20 @@ class ViewModelSpec : DescribeSpec({
 
     it("marks first feature as selected by default") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.C, Second.B)
     }
 
     it("marks saved feature as selected") {
-      val storage = FeatureStorage.inMemory()
-      Laboratory(storage).apply {
+      val laboratory = Laboratory.inMemory().apply {
         setFeature(First.A)
         setFeature(Second.C)
       }
 
       val viewModel = FeaturesViewModel(
-        Configuration(storage, mapOf("Local" to NoSourceFeatureFactory))
+        Configuration(laboratory, mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.A, Second.C)
@@ -73,7 +72,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("selects features") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.selectFeature(First.B)
@@ -84,7 +83,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("observes feature changes") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
@@ -104,7 +103,7 @@ class ViewModelSpec : DescribeSpec({
     it("resets all features to their default values") {
       val viewModel = FeaturesViewModel(
         Configuration(
-          FeatureStorage.inMemory(),
+          Laboratory.inMemory(),
           mapOf(
             "First" to object : FeatureFactory {
               @Suppress("UNCHECKED_CAST")
@@ -129,7 +128,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("resets feature and sources to their default values") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to SourcedFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to SourcedFeatureFactory))
       )
 
       viewModel.selectFeature(Sourced.B)
@@ -144,7 +143,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("observes source changes") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+        Configuration(Laboratory.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
       @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)

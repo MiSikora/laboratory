@@ -37,6 +37,7 @@ internal class FeatureModelsView @JvmOverloads constructor(
     return chip.apply {
       text = model.feature.name
       isChecked = model.isSelected
+      isActivated = isCurrentSourceLocal
       isEnabled = isCurrentSourceLocal
       setOnCheckedChangeListener(createListener(model))
     }
