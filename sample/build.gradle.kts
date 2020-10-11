@@ -50,6 +50,8 @@ laboratory {
   }
 
   feature("ReportRootedDevice") {
+    description = "Reports during cold start whether device is rooted"
+
     withValue("Enabled")
     withDefaultValue("Disabled")
   }

@@ -17,6 +17,8 @@ laboratory {
   }
 
   feature("AllowScreenshots") {
+    description = "Enables or disables screenshots during a video chat"
+
     withValue("Enabled")
     withDefaultValue("Disabled")
   }

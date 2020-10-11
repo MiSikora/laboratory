@@ -7,6 +7,8 @@ laboratory {
   packageName = "io.mehow.laboratory.c"
 
   feature("DistanceAlgorithm") {
+    description = "Algorithm used for destination distance calculations"
+
     withDefaultValue("Euclidean")
     withValue("Jaccard")
     withValue("Cosine")
