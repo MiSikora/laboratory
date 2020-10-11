@@ -8,6 +8,8 @@ internal data class FeatureGroup(
 ) {
   val hasFeatures = models.isNotEmpty()
 
+  val description = models.firstOrNull()?.feature?.description.orEmpty()
+
   val hasMultipleSources = sources.size > 1
 
   val isCurrentSourceLocal = sources.firstOrNull(FeatureModel::isSelected)
