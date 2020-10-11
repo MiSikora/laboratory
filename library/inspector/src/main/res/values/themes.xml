@@ -4,6 +4,7 @@
   <style name="IoMehowLaboratory.Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     <item name="colorPrimary">#2196f3</item>
     <item name="colorPrimaryDark">#0069c0</item>
+    <item name="io_mehow_laboratory_elevation">8dp</item>
   </style>
 
 </resources>

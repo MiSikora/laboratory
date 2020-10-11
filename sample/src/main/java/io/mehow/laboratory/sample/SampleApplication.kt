@@ -32,7 +32,7 @@ class SampleApplication : Application() {
     LaboratoryActivity.configure(
       localStorage = localStorage,
       featureFactory = FeatureFactory.featureGenerated(),
-      featureSourceFactory = FeatureFactory.featureSourceGenerated()
+//      featureSourceFactory = FeatureFactory.featureSourceGenerated()
     )
   }
 

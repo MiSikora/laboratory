@@ -11,6 +11,6 @@ internal class FeaturesAdapter(
   override fun getItemCount(): Int = groupNames.size
 
   override fun createFragment(position: Int): Fragment {
-    return FeaturesFragment.create(groupNames[position])
+    return FeatureGroupFragment.create(groupNames[position])
   }
 }

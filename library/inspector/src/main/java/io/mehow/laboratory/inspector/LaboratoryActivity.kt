@@ -3,11 +3,14 @@ package io.mehow.laboratory.inspector
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.OVER_SCROLL_NEVER
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -30,7 +33,7 @@ class LaboratoryActivity : AppCompatActivity() {
 
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
-    setContentView(R.layout.io_mehow_laboratory)
+    setContentView(R.layout.io_mehow_laboratory_features)
     resetFeaturesDialog = MaterialAlertDialogBuilder(this)
       .setTitle(R.string.io_mehow_laboratory_reset_title)
       .setMessage(R.string.io_mehow_laboratory_reset_message)
@@ -45,8 +48,11 @@ class LaboratoryActivity : AppCompatActivity() {
     val groupNames = configuration.featureFactories.keys.toList()
     val viewPager = findViewById<ViewPager2>(R.id.io_mehow_laboratory_view_pager).apply {
       adapter = FeaturesAdapter(this@LaboratoryActivity, groupNames)
+      disableScrollEffect()
     }
+    if (groupNames.size <= 1) return
     val tabLayout = findViewById<TabLayout>(R.id.io_mehow_laboratory_tab_layout)
+    tabLayout.isVisible = true
     TabLayoutMediator(tabLayout, viewPager) { tab, position ->
       tab.text = groupNames[position]
     }.attach()
@@ -80,6 +86,11 @@ class LaboratoryActivity : AppCompatActivity() {
     Snackbar.make(root, messageId, Snackbar.LENGTH_SHORT).show()
   }
 
+  // TODO: Set this from XML. https://issuetracker.google.com/issues/134912610
+  private fun ViewPager2.disableScrollEffect() {
+    (getChildAt(0) as? RecyclerView)?.overScrollMode = OVER_SCROLL_NEVER
+  }
+
   class Configuration(
     localStorage: FeatureStorage,
     internal val featureFactories: Map<String, FeatureFactory>,
@@ -88,6 +99,9 @@ class LaboratoryActivity : AppCompatActivity() {
   }
 
   companion object {
+    private const val featuresLabel = "Features"
+    private const val sourcesLabel = "Source"
+
     internal var backingConfiguration: Configuration? = null
       private set
     internal val configuration
@@ -100,10 +114,10 @@ class LaboratoryActivity : AppCompatActivity() {
       featureFactory: FeatureFactory,
       externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
-      val filteredFactories = externalFeatureFactories.filter { it.key == "Features" }
+      val filteredFactories = externalFeatureFactories.filter { it.key == featuresLabel }
       configure(Configuration(
         localStorage,
-        linkedMapOf("Features" to featureFactory) + filteredFactories
+        linkedMapOf(featuresLabel to featureFactory) + filteredFactories
       ))
     }
 
@@ -113,10 +127,10 @@ class LaboratoryActivity : AppCompatActivity() {
       featureSourceFactory: FeatureFactory,
       externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
-      val filteredFactories = externalFeatureFactories.filter { it.key in listOf("Features", "Sources") }
+      val filteredFactories = externalFeatureFactories.filter { it.key in listOf(featuresLabel, sourcesLabel) }
       configure(Configuration(
         localStorage,
-        linkedMapOf("Features" to featureFactory, "Sources" to featureSourceFactory) + filteredFactories
+        linkedMapOf(featuresLabel to featureFactory, sourcesLabel to featureSourceFactory) + filteredFactories
       ))
     }
 

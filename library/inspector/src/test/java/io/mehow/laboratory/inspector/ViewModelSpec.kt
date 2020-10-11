@@ -10,7 +10,6 @@ import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.time.ExperimentalTime
@@ -19,7 +18,7 @@ class ViewModelSpec : DescribeSpec({
   describe("view model") {
     it("filters empty feature groups") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
@@ -29,7 +28,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("orders feature groups by name") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
@@ -39,7 +38,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("does not order feature values") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val features = viewModel.observeFeatureGroups("Local").first()
@@ -52,7 +51,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("marks first feature as selected by default") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.C, Second.B)
@@ -66,7 +65,7 @@ class ViewModelSpec : DescribeSpec({
       }
 
       val viewModel = FeaturesViewModel(
-        Configuration(storage, mapOf("Local" to AllFeatureFactory))
+        Configuration(storage, mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.A, Second.C)
@@ -74,7 +73,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("selects features") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.selectFeature(First.B)
@@ -85,7 +84,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("observes feature changes") {
       val viewModel = FeaturesViewModel(
-        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
@@ -127,21 +126,80 @@ class ViewModelSpec : DescribeSpec({
       viewModel.observeSelectedFeatures("First").first() shouldContainExactly listOf(First.C)
       viewModel.observeSelectedFeatures("Second").first() shouldContainExactly listOf(Second.B)
     }
+
+    it("resets feature and sources to their default values") {
+      val viewModel = FeaturesViewModel(
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to SourcedFeatureFactory))
+      )
+
+      viewModel.selectFeature(Sourced.B)
+      viewModel.selectFeature(Sourced.Source.Remote)
+
+      viewModel.resetAllFeatures()
+
+      viewModel.observeSelectedFeaturesAndSources("Local").first() shouldContainExactly listOf(
+        Sourced.A to Sourced.Source.Local,
+      )
+    }
+
+    it("observes source changes") {
+      val viewModel = FeaturesViewModel(
+        Configuration(FeatureStorage.inMemory(), mapOf("Local" to AllFeatureFactory))
+      )
+
+      @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
+      viewModel.observeSelectedFeaturesAndSources("Local").test {
+        expectItem() shouldContainExactly listOf(
+          First.C to null,
+          Second.B to null,
+          Sourced.A to Sourced.Source.Local
+        )
+
+        viewModel.selectFeature(Sourced.Source.Remote)
+
+        expectItem() shouldContainExactly listOf(
+          First.C to null,
+          Second.B to null,
+          Sourced.A to Sourced.Source.Remote
+        )
+      }
+    }
   }
 })
 
-internal fun FeaturesViewModel.observeSelectedFeatures(groupName: String): Flow<List<Feature<*>>> {
-  return observeFeatureGroups(groupName).map { group ->
-    group
-      .map(FeatureGroup::models)
-      .map { models -> models.single(FeatureModel::isSelected).feature }
+internal fun FeaturesViewModel.observeSelectedFeaturesAndSources(
+  groupName: String,
+) = observeFeatureGroups(groupName).map { groups ->
+  groups.map { group ->
+    val feature = group.models.single(FeatureModel::isSelected).feature
+    val source = group.sources.singleOrNull(FeatureModel::isSelected)?.feature
+    feature to source
+  }
+}
+
+internal fun FeaturesViewModel.observeSelectedFeatures(
+  groupName: String,
+) = observeSelectedFeaturesAndSources(groupName).map { pairs ->
+  pairs.map { (feature, _) -> feature }
+}
+
+private object NoSourceFeatureFactory : FeatureFactory {
+  override fun create(): Set<Class<Feature<*>>> {
+    @Suppress("UNCHECKED_CAST")
+    return setOf(Second::class.java, First::class.java, Empty::class.java) as Set<Class<Feature<*>>>
+  }
+}
+
+private object SourcedFeatureFactory : FeatureFactory {
+  override fun create(): Set<Class<Feature<*>>> {
+    @Suppress("UNCHECKED_CAST")
+    return setOf(Sourced::class.java) as Set<Class<Feature<*>>>
   }
 }
 
 private object AllFeatureFactory : FeatureFactory {
   override fun create(): Set<Class<Feature<*>>> {
-    @Suppress("UNCHECKED_CAST")
-    return setOf(Second::class.java, First::class.java, Empty::class.java) as Set<Class<Feature<*>>>
+    return NoSourceFeatureFactory.create() + SourcedFeatureFactory.create()
   }
 }
 
@@ -160,3 +218,19 @@ private enum class Second(override val isDefaultValue: Boolean = false) : Featur
 }
 
 private enum class Empty : Feature<Empty>
+
+private enum class Sourced(override val isDefaultValue: Boolean = false) : Feature<Sourced> {
+  A,
+  B,
+  C,
+  ;
+
+  @Suppress("UNCHECKED_CAST")
+  override val sourcedWith = Source::class.java as Class<Feature<*>>
+
+  enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
+    Local,
+    Remote,
+    ;
+  }
+}

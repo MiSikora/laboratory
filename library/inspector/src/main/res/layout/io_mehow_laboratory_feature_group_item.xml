@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="?io_mehow_laboratory_elevation"
+    android:layout_margin="@dimen/io_mehow_laboratory_spacing"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/io_mehow_laboratory_feature_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/io_mehow_laboratory_spacing"
+        android:paddingVertical="@dimen/io_mehow_laboratory_spacing"
+        android:textAppearance="?textAppearanceHeadline5"
+        />
+
+    <io.mehow.laboratory.inspector.FeatureSourcesView
+        android:id="@+id/io_mehow_laboratory_feature_sources"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/io_mehow_laboratory_spacing"
+        android:paddingBottom="@dimen/io_mehow_laboratory_spacing"
+        />
+
+    <View
+        android:id="@+id/io_mehow_laboratory_sources_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="@dimen/io_mehow_laboratory_spacing"
+        android:background="?dividerVertical"
+        />
+
+    <io.mehow.laboratory.inspector.FeatureModelsView
+        android:id="@+id/io_mehow_laboratory_feature_values"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/io_mehow_laboratory_spacing"
+        android:paddingVertical="@dimen/io_mehow_laboratory_spacing"
+        />
+
+  </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

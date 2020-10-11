@@ -6,6 +6,6 @@
   <string name="io_mehow_laboratory_reset_message">Are you sure you want to reset feature flags to their default values?</string>
   <string name="io_mehow_laboratory_cancel">Cancel</string>
   <string name="io_mehow_laboratory_reset">Reset</string>
-  <string name="io_mehow_laboratory_reset_success">Feature flags did reset</string>
+  <string name="io_mehow_laboratory_reset_success">Feature flags reset successfully</string>
   <string name="io_mehow_laboratory_reset_failure">Failed to reset feature flags</string>
 </resources>

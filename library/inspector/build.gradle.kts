@@ -18,6 +18,8 @@ dependencies {
   implementation(Libs.AndroidX.AppCompat)
   implementation(Libs.AndroidX.FragmentKtx)
   implementation(Libs.AndroidX.ViewModelKtx)
+  implementation(Libs.AndroidX.RecyclerView)
+  implementation(Libs.AndroidX.ViewPager2)
   implementation(Libs.Material)
   implementation(Libs.Kotlin.Coroutines.Android)
 

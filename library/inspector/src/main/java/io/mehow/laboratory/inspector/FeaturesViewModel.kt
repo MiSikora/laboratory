@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 internal class FeaturesViewModel(
@@ -20,47 +21,51 @@ internal class FeaturesViewModel(
 
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setFeature(feature)
 
-  fun observeFeatureGroups(groupName: String): Flow<List<FeatureGroup>> {
-    return groups.getValue(groupName)
+  fun observeFeatureGroups(groupName: String) = groups.getValue(groupName)
       .filterNot { it.enumConstants.isNullOrEmpty() }
-      .map(::observeFeatureGroup)
+      .map { it.observeFeatureGroup() }
       .fold(emptyFlow, ::combineFeatureGroups)
-      .dropWhile { features -> isAnyFeatureMissing(groupName, features) }
+      .dropWhile { features -> isAnyFeatureGroupMissing(groupName, features) }
       .map { featureGroups -> featureGroups.sortedBy(FeatureGroup::name) }
-  }
 
-  suspend fun resetAllFeatures(): Boolean {
-    val defaults = groups.values.flatten()
-      .mapNotNull { featureGroup -> featureGroup.enumConstants }
+  suspend fun resetAllFeatures() = groups.values.flatten()
+      .flatMap { featureGroup ->
+        val featureValues = featureGroup.enumConstants.orEmpty()
+        val sourceValues = featureGroup.sourceClass?.enumConstants.orEmpty()
+        return@flatMap listOf(featureValues, sourceValues)
+      }
       .filter { it.isNotEmpty() }
       .map { features -> features.firstOrNull { it.isDefaultValue } ?: features.first() }
       .toTypedArray()
-    return laboratory.setFeatures(*defaults)
+      .let { laboratory.setFeatures(*it) }
+
+  private val Class<Feature<*>>.sourceClass get() = enumConstants?.firstOrNull()?.sourcedWith
+
+  private fun Class<Feature<*>>.observeFeatureGroup(): Flow<FeatureGroup> {
+    val sources = sourceClass?.observeFeatureModels() ?: flowOf(emptyList())
+    val features = observeFeatureModels()
+    return combine(features, sources) { features, sources ->
+      FeatureGroup(simpleReadableName, name, features, sources)
+    }.filter { featureGroup -> featureGroup.hasFeatures }
   }
 
-  private fun observeFeatureGroup(group: Class<Feature<*>>): Flow<FeatureGroup> {
-    return laboratory.observe(group)
-      .map(::createFeatureModels)
-      .map { featureModels -> FeatureGroup(group.simpleReadableName, group.name, featureModels) }
-      .filter { featureGroup -> featureGroup.hasFeatures }
-  }
+  private fun Class<Feature<*>>.observeFeatureModels() = laboratory.observe(this).map(::createFeatureModels)
 
-  private fun createFeatureModels(selectedFeature: Feature<*>): List<FeatureModel> {
-    val availableFeatureValues = selectedFeature.javaClass.enumConstants.orEmpty()
-    return availableFeatureValues
+  private fun createFeatureModels(selectedFeature: Feature<*>) = selectedFeature.javaClass
+      .enumConstants
+      .orEmpty()
       .map { feature -> FeatureModel(feature, isSelected = feature == selectedFeature) }
-      .let(::ensureOneModelSelected)
-  }
+      .ensureOneModelSelected()
 
   private val Class<Feature<*>>.simpleReadableName get() = name.substringAfterLast(".").replace('$', '.')
 
-  private fun ensureOneModelSelected(models: List<FeatureModel>): List<FeatureModel> {
-    return if (models.any(FeatureModel::isSelected)) models else models.selectFirst()
+  private fun List<FeatureModel>.ensureOneModelSelected() = if (any(FeatureModel::isSelected)) {
+    this
+  } else {
+    selectFirst()
   }
 
-  private fun List<FeatureModel>.selectFirst(): List<FeatureModel> {
-    return take(1).map(FeatureModel::select) + drop(1)
-  }
+  private fun List<FeatureModel>.selectFirst() = take(1).map(FeatureModel::select) + drop(1)
 
   private fun combineFeatureGroups(
     groups: Flow<List<FeatureGroup>>,
@@ -71,8 +76,9 @@ internal class FeaturesViewModel(
     groups.combine(group) { xs, x -> xs + x }
   }
 
-  private fun isAnyFeatureMissing(groupName: String, features: List<FeatureGroup>): Boolean {
-    return features.size != groups.getValue(groupName).filterNot { it.enumConstants.isNullOrEmpty() }.size
+  private fun isAnyFeatureGroupMissing(groupName: String, features: List<FeatureGroup>): Boolean {
+    val expectedFeatureGroups = groups.getValue(groupName).filterNot { it.enumConstants.isNullOrEmpty() }
+    return features.size != expectedFeatureGroups.size
   }
 
   class Factory(private val configuration: Configuration) : ViewModelProvider.Factory {

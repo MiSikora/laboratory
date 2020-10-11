@@ -44,6 +44,10 @@ object Libs {
 
     const val ViewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 
+    const val ViewPager2 = "androidx.viewpager2:viewpager2:1.0.0"
+
+    const val RecyclerView = "androidx.recyclerview:recyclerview:1.1.0"
+
     object Test {
       const val Version = "1.3.0"
 
