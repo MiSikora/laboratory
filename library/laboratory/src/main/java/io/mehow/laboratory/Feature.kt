@@ -5,4 +5,5 @@ interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
   val name: String
   val isDefaultValue: Boolean
   @JvmDefault val sourcedWith: Class<Feature<*>>? get() = null
+  @JvmDefault val description: String get() = ""
 }
