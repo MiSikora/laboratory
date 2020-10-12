@@ -1,5 +1,7 @@
 package io.mehow.laboratory.sharedpreferences
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
@@ -10,6 +12,16 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 
+@Deprecated(
+  message = "Implementation will be hidden in the next minor release",
+  replaceWith = ReplaceWith(
+    expression = "FeatureStorage.sharedPreferences(preferences)",
+    imports = [
+      "io.mehow.laboratory.FeatureStorage",
+      "io.mehow.laboratory.sharedpreferences.sharedPreferences",
+    ],
+  ),
+)
 class SharedPreferencesFeatureStorage(
   private val preferences: SharedPreferences,
 ) : FeatureStorage {
@@ -39,4 +51,13 @@ class SharedPreferencesFeatureStorage(
     }
     return true
   }
+}
+
+fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
+  return SharedPreferencesFeatureStorage(preferences)
+}
+
+fun FeatureStorage.Companion.sharedPreferences(context: Context, name: String) : FeatureStorage {
+  val preferences = context.getSharedPreferences(name, MODE_PRIVATE)
+  return sharedPreferences(preferences)
 }

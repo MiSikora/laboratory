@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Feature
+import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -16,7 +17,7 @@ class SharedPreferencesFeaturesStorageTest {
   private val preferences = ApplicationProvider
     .getApplicationContext<Context>()
     .getSharedPreferences("laboratory", MODE_PRIVATE)
-  private val storage = SharedPreferencesFeatureStorage(preferences)
+  private val storage = FeatureStorage.sharedPreferences(preferences)
   private val laboratory = Laboratory(storage)
 
   @Test fun storedFeatureIsAvailableAsExperiment() = runBlocking {
