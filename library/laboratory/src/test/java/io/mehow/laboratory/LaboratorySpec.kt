@@ -68,13 +68,13 @@ class LaboratorySpec : DescribeSpec({
       it("returns false for non-default value") {
         val laboratory = Laboratory(NullStorage)
 
-        laboratory.check(DefaultFeature.A) shouldBe false
+        laboratory.experimentIs(DefaultFeature.A) shouldBe false
       }
 
       it("returns true for default value") {
         val laboratory = Laboratory(NullStorage)
 
-        laboratory.check(DefaultFeature.B) shouldBe true
+        laboratory.experimentIs(DefaultFeature.B) shouldBe true
       }
     }
 
