@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+Version 0.6.0 *(2020-10-12)*
+----------------------------
+
+* Features can have descriptions to give them more context.
+* Redesigned `LaboratoryActivity`.
+    * Feature changes are observed reactively.
+    * Feature sources are displayed next to a feature itself as a drop down menu. There is no more need to coordinate sources and features between tabs.
+    * Feature values cannot be changed if source is not local.
+    * Remote feature values are displayed if source is remote.
+    * Features can display descriptions.
+    * Feature flags can be reset to their default values.
+* `LaboratoryActivity` requires now `Laboratory` instance instead of a `FeatureStorage`. Used `Laboratory` should share the same data source as the application.
+* Add `Laboratory.experimentIs()` and `Laboratory.experimentIsBlocking()` to check if a feature has some value.
+
+
 Version 0.5.0 *(2020-10-08)*
 ----------------------------
 
