@@ -32,9 +32,9 @@ internal class FeaturesViewModel(
         .filterNot { it.enumConstants.isNullOrEmpty() }
         .map { it.observeFeatureGroup() }
         .fold(emptyFlow, ::combineFeatureGroups)
-    }.flowOn(Dispatchers.Default)
-      .dropWhile { features -> isAnyFeatureGroupMissing(groupName, features) }
-      .map { featureGroups -> featureGroups.sortedBy(FeatureGroup::name) }
+    }.flowOn(Dispatchers.Default).map { featureGroups ->
+      featureGroups.sortedBy(FeatureGroup::name)
+    }
     emitAll(listGroupFlow)
   }
 
@@ -86,11 +86,6 @@ internal class FeaturesViewModel(
     group.map(::listOf)
   } else {
     groups.combine(group) { xs, x -> xs + x }
-  }
-
-  private fun isAnyFeatureGroupMissing(groupName: String, features: List<FeatureGroup>): Boolean {
-    val expectedFeatureGroups = groups.getValue(groupName).filterNot { it.enumConstants.isNullOrEmpty() }
-    return features.size != expectedFeatureGroups.size
   }
 
   class Factory(private val configuration: Configuration) : ViewModelProvider.Factory {
