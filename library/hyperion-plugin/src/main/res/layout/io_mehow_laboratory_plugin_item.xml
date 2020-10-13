@@ -22,7 +22,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:duplicateParentState="true"
-      android:text="@string/io_mehow_laboratory"
+      android:text="@string/io_mehow_laboratory_plugin_label"
       style="@style/Widget.AppCompat.Button.Colored"
       />
 
