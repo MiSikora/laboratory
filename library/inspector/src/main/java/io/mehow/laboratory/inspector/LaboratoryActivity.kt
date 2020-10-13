@@ -46,16 +46,16 @@ class LaboratoryActivity : AppCompatActivity() {
     .create()
 
   private fun setUpViewPager() {
-    val groupNames = configuration.featureFactories.keys.toList()
+    val sections = configuration.featureFactories.keys.toList()
     val viewPager = findViewById<ViewPager2>(R.id.io_mehow_laboratory_view_pager).apply {
-      adapter = FeaturesAdapter(this@LaboratoryActivity, groupNames)
+      adapter = FeaturesAdapter(this@LaboratoryActivity, sections)
       disableScrollEffect()
     }
-    if (groupNames.size <= 1) return
+    if (sections.size <= 1) return
     val tabLayout = findViewById<TabLayout>(R.id.io_mehow_laboratory_tab_layout)
     tabLayout.isVisible = true
     TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-      tab.text = groupNames[position]
+      tab.text = sections[position]
     }.attach()
   }
 

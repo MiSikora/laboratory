@@ -23,9 +23,9 @@ internal class FeaturesViewModel(
 
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setFeature(feature)
 
-  fun observeFeatureGroups(groupName: String) = flow {
+  fun observeFeatureGroups(section: String) = flow {
     val listGroupFlow = withContext(Dispatchers.Default) {
-      metadataProvider[groupName]
+      metadataProvider[section]
         .map { it.observeGroup(laboratory) }
         .fold(emptyFlow, ::combineFeatureGroups)
     }.flowOn(Dispatchers.Default).map { featureGroups ->

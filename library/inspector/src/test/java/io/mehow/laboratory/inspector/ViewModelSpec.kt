@@ -162,8 +162,8 @@ class ViewModelSpec : DescribeSpec({
 })
 
 internal fun FeaturesViewModel.observeSelectedFeaturesAndSources(
-  groupName: String,
-) = observeFeatureGroups(groupName).map { groups ->
+  section: String,
+) = observeFeatureGroups(section).map { groups ->
   groups.map { group ->
     val feature = group.models.single(FeatureModel::isSelected).feature
     val source = group.sources.singleOrNull(FeatureModel::isSelected)?.feature
@@ -172,8 +172,8 @@ internal fun FeaturesViewModel.observeSelectedFeaturesAndSources(
 }
 
 internal fun FeaturesViewModel.observeSelectedFeatures(
-  groupName: String,
-) = observeSelectedFeaturesAndSources(groupName).map { pairs ->
+  section: String,
+) = observeSelectedFeaturesAndSources(section).map { pairs ->
   pairs.map { (feature, _) -> feature }
 }
 

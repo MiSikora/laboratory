@@ -32,9 +32,9 @@ internal class FeatureMetadata private constructor(private val feature: Class<Fe
   class Provider(
     private val featureFactories: Map<String, FeatureFactory>,
   ) {
-    operator fun get(groupName: String) = featureFactories
+    operator fun get(section: String) = featureFactories
       .mapValues { (_, factory) -> factory.create() }
-      .getValue(groupName)
+      .getValue(section)
       .mapNotNull(FeatureMetadata::create)
 
     fun featuresAndSources() = featureFactories.values

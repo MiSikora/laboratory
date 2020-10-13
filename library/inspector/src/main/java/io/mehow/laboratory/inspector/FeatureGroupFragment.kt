@@ -43,21 +43,21 @@ internal class FeatureGroupFragment : Fragment() {
   }
 
   private fun observeFeatureGroups() {
-    val groupName = requireNotNull(requireArguments().getString(groupNameKey)) {
-      "Missing group name key"
+    val section = requireNotNull(requireArguments().getString(sectionKey)) {
+      "Missing section key"
     }
     viewModel
-      .observeFeatureGroups(groupName)
+      .observeFeatureGroups(section)
       .onEach { adapter.submitList(it) }
       .launchIn(lifecycleScope)
   }
 
   companion object {
-    private const val groupNameKey = "GroupName.Key"
+    private const val sectionKey = "Section.Key"
 
-    fun create(groupName: String): FeatureGroupFragment {
+    fun create(section: String): FeatureGroupFragment {
       return FeatureGroupFragment().apply {
-        arguments = bundleOf(groupNameKey to groupName)
+        arguments = bundleOf(sectionKey to section)
       }
     }
   }
