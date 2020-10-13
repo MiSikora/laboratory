@@ -5,32 +5,19 @@ import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity
-import io.mehow.laboratory.sharedpreferences.SharedPreferencesFeatureStorage
+import io.mehow.laboratory.sharedpreferences.sharedPreferences
 
 class SampleApplication : Application() {
   lateinit var laboratory: Laboratory
     private set
 
-  @Suppress("LongMethod")
   override fun onCreate() {
     super.onCreate()
-    val localStorage = SharedPreferencesFeatureStorage(
-      getSharedPreferences("localFeatures", MODE_PRIVATE)
-    )
-    val firebaseStorage = SharedPreferencesFeatureStorage(
-      getSharedPreferences("firebaseFeatures", MODE_PRIVATE)
-    )
-    val awsStorage = SharedPreferencesFeatureStorage(
-      getSharedPreferences("awsFeatures", MODE_PRIVATE)
-    )
-    val azureStorage = SharedPreferencesFeatureStorage(
-      getSharedPreferences("azureStorage", MODE_PRIVATE)
-    )
     val sourcedStorage = FeatureStorage.sourcedGenerated(
-      localSource = localStorage,
-      firebaseSource = firebaseStorage,
-      awsSource = awsStorage,
-      azureSource = azureStorage,
+      localSource = FeatureStorage.sharedPreferences(this, "localFeatures"),
+      firebaseSource = FeatureStorage.sharedPreferences(this, "firebaseFeatures"),
+      awsSource = FeatureStorage.sharedPreferences(this, "awsFeatures"),
+      azureSource = FeatureStorage.sharedPreferences(this, "azureStorage"),
     )
     laboratory = Laboratory(sourcedStorage)
     LaboratoryActivity.configure(
