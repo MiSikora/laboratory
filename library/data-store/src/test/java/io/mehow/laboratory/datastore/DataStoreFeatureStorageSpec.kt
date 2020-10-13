@@ -5,6 +5,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Feature
+import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okio.ByteString.Companion.decodeHex
@@ -13,7 +14,7 @@ import kotlin.time.ExperimentalTime
 class DataStoreFeatureStorageSpec : StringSpec({
   "stored feature is available as experiment" {
     val tempFile = tempfile()
-    val storage = DataStoreFeatureStorage({ tempFile })
+    val storage = FeatureStorage.dataStore { tempFile }
     val laboratory = Laboratory(storage)
 
     storage.setFeature(FeatureA.B)
@@ -23,7 +24,7 @@ class DataStoreFeatureStorageSpec : StringSpec({
 
   "corrupted file yields default experiment" {
     val tempFile = tempfile()
-    val storage = DataStoreFeatureStorage({ tempFile })
+    val storage = FeatureStorage.dataStore { tempFile }
     val laboratory = Laboratory(storage)
 
     // Represents a map<string, int> with a key of Feature::class.java.name and value of 1.
@@ -37,7 +38,7 @@ class DataStoreFeatureStorageSpec : StringSpec({
 
   "observes feature changes" {
     val tempFile = tempfile()
-    val storage = DataStoreFeatureStorage({ tempFile })
+    val storage = FeatureStorage.dataStore { tempFile }
 
     @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
     storage.observeFeatureName(FeatureA::class.java).test {

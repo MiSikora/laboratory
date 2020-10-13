@@ -1,35 +1,16 @@
 package io.mehow.laboratory.datastore
 
-import androidx.datastore.DataMigration
-import androidx.datastore.DataStoreFactory
-import androidx.datastore.Serializer
-import androidx.datastore.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.DataStore
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import okio.IOException
 import java.io.File
 
-@Suppress("LongParameterList")
-class DataStoreFeatureStorage @JvmOverloads constructor(
-  produceFile: () -> File,
-  serializer: Serializer<FeatureFlags> = FeatureFlagsSerializer,
-  corruptionHandler: ReplaceFileCorruptionHandler<FeatureFlags>? = null,
-  migrations: List<DataMigration<FeatureFlags>> = listOf(),
-  scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
+internal class DataStoreFeatureStorage(
+  private val dataStore: DataStore<FeatureFlags>,
 ) : FeatureStorage {
-  private val dataStore = DataStoreFactory.create(
-    produceFile = produceFile,
-    serializer = serializer,
-    corruptionHandler = corruptionHandler,
-    migrations = migrations,
-    scope = scope,
-  )
-
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = dataStore
     .data
     .map { it.value[featureClass.name] }
@@ -49,4 +30,12 @@ class DataStoreFeatureStorage @JvmOverloads constructor(
   } catch (_: IOException) {
     false
   }
+}
+
+fun FeatureStorage.Companion.dataStore(dataStore: DataStore<FeatureFlags>): FeatureStorage {
+  return DataStoreFeatureStorage(dataStore)
+}
+
+fun FeatureStorage.Companion.dataStore(produceFile: () -> File): FeatureStorage {
+  return dataStoreBuilder(produceFile).build()
 }
