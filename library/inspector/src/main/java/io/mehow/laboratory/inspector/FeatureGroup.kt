@@ -13,7 +13,7 @@ internal data class FeatureGroup(
   val hasMultipleSources = sources.size > 1
 
   val isCurrentSourceLocal = sources.firstOrNull(FeatureModel::isSelected)
-      ?.feature
-      ?.name
-      ?.equals("Local", ignoreCase = true) ?: true
+    ?.feature
+    ?.name
+    ?.equals("Local", ignoreCase = true) ?: true
 }
