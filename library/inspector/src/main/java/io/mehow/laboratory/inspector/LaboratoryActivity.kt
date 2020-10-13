@@ -33,15 +33,17 @@ class LaboratoryActivity : AppCompatActivity() {
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
     setContentView(R.layout.io_mehow_laboratory_features)
-    resetFeaturesDialog = MaterialAlertDialogBuilder(this)
-      .setTitle(R.string.io_mehow_laboratory_reset_title)
-      .setMessage(R.string.io_mehow_laboratory_reset_message)
-      .setNegativeButton(R.string.io_mehow_laboratory_cancel) { _, _ -> }
-      .setPositiveButton(R.string.io_mehow_laboratory_reset) { _, _ -> resetFeatures() }
-      .create()
+    resetFeaturesDialog = createResetFeaturesDialog()
     setUpViewPager()
     setUpToolbar()
   }
+
+  private fun createResetFeaturesDialog() = MaterialAlertDialogBuilder(this)
+    .setTitle(R.string.io_mehow_laboratory_reset_title)
+    .setMessage(R.string.io_mehow_laboratory_reset_message)
+    .setNegativeButton(R.string.io_mehow_laboratory_cancel) { _, _ -> }
+    .setPositiveButton(R.string.io_mehow_laboratory_reset) { _, _ -> resetFeatures() }
+    .create()
 
   private fun setUpViewPager() {
     val groupNames = configuration.featureFactories.keys.toList()
