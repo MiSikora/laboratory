@@ -7,10 +7,8 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.core.spec.style.scopes.DescribeScope
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlin.time.ExperimentalTime
 
 class LaboratorySpec : DescribeSpec({
   describe("laboratory") {
@@ -86,7 +84,6 @@ class LaboratorySpec : DescribeSpec({
     it("observes feature changes") {
       val laboratory = Laboratory.inMemory()
 
-      @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
       laboratory.observe<NoDefaultFeature>().test {
         expectItem() shouldBe NoDefaultFeature.A
 

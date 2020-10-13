@@ -3,10 +3,7 @@ package io.mehow.laboratory
 import app.cash.turbine.test
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class SourcedFeatureStorageSpec : DescribeSpec({
   lateinit var localLaboratory: Laboratory
   lateinit var remoteLaboratoryA: Laboratory

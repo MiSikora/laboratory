@@ -7,9 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okio.ByteString.Companion.decodeHex
-import kotlin.time.ExperimentalTime
 
 class DataStoreFeatureStorageSpec : StringSpec({
   "stored feature is available as experiment" {
@@ -40,7 +38,6 @@ class DataStoreFeatureStorageSpec : StringSpec({
     val tempFile = tempfile()
     val storage = FeatureStorage.dataStore { tempFile }
 
-    @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
     storage.observeFeatureName(FeatureA::class.java).test {
       expectItem() shouldBe null
 

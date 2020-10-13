@@ -7,7 +7,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
@@ -25,7 +24,6 @@ import kotlinx.coroutines.flow.conflate
 class SharedPreferencesFeatureStorage(
   private val preferences: SharedPreferences,
 ) : FeatureStorage {
-  @OptIn(ExperimentalCoroutinesApi::class)
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = callbackFlow {
     val listener = OnSharedPreferenceChangeListener { _, key ->
       if (key == featureClass.name) offer(getStringSafe(key))

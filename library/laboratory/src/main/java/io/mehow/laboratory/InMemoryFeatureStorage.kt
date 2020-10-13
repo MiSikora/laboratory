@@ -1,14 +1,11 @@
 package io.mehow.laboratory
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 internal class InMemoryFeatureStorage : FeatureStorage {
   private var features = emptyMap<Class<*>, String>()
-
-  @OptIn(ExperimentalCoroutinesApi::class)
   private val featureFlow = MutableStateFlow(features)
 
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = featureFlow

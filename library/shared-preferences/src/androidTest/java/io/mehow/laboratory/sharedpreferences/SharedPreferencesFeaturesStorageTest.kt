@@ -8,10 +8,8 @@ import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import kotlin.time.ExperimentalTime
 
 class SharedPreferencesFeaturesStorageTest {
   private val preferences = ApplicationProvider
@@ -34,7 +32,6 @@ class SharedPreferencesFeaturesStorageTest {
   }
 
   @Test fun observesFeatureChanges() = runBlocking {
-    @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
     storage.observeFeatureName(FeatureA::class.java).test {
       expectItem() shouldBe null
 

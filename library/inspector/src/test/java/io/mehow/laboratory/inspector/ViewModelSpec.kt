@@ -6,13 +6,10 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
-import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlin.time.ExperimentalTime
 
 class ViewModelSpec : DescribeSpec({
   describe("view model") {
@@ -86,7 +83,6 @@ class ViewModelSpec : DescribeSpec({
         Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
-      @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
       viewModel.observeSelectedFeatures("Local").test {
         expectItem() shouldContainExactly listOf(First.C, Second.B)
 
@@ -146,7 +142,6 @@ class ViewModelSpec : DescribeSpec({
         Configuration(Laboratory.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
-      @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
       viewModel.observeSelectedFeaturesAndSources("Local").test {
         expectItem() shouldContainExactly listOf(
           First.C to null,
