@@ -1,9 +1,10 @@
 # Laboratory
 
-![Build status](https://github.com/MiSikora/Laboratory/workflows/Verification/badge.svg?branch=master&event=push)
-
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.mehow.laboratory/laboratory/badge.svg)](https://search.maven.org/search?q=g:io.mehow.laboratory)
-[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
+![Quality Check CI](https://github.com/MiSikora/Laboratory/workflows/Quality%20Check/badge.svg?branch=master&event=push)
+![Snapshot CI](https://github.com/MiSikora/Laboratory/workflows/Snapshot/badge.svg?branch=master&event=push)
+[<img src="https://img.shields.io/maven-central/v/io.mehow.laboratory/laboratory.svg?label=latest%20release"/>](https://search.maven.org/search?q=g:io.mehow.laboratory)
+[<img src="https://img.shields.io/nexus/s/https/oss.sonatype.org/io.mehow.laboratory/laboratory.svg?label=latest%20snapshot"/>](https://oss.sonatype.org/content/repositories/snapshots/io/mehow/laboratory/)
+![GitHub License](https://img.shields.io/github/license/MiSikora/Laboratory)
 
 Feature flags for multi-module Kotlin Android projects.
 

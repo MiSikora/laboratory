@@ -1,0 +1,36 @@
+name: Snapshot
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'images/**'
+      - '*.md'
+      - 'LICENSE'
+
+jobs:
+  deploy-snapshot:
+    name: Deploy Snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
+          restore-keys: cache-gradle-
+      - name: Deploy Snapshot
+        env:
+          SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+        run: ./gradlew uploadArchives --no-daemon --no-parallel
+      - name: Stop Gradle
+        run: ./gradlew --stop

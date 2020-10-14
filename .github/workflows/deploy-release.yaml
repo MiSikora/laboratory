@@ -1,0 +1,31 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*.*.*'
+
+jobs:
+  deploy-release:
+    name: Deploy Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
+          restore-keys: cache-gradle-
+      - name: Deploy Release
+        env:
+          SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+          SONATYPE_NEXUS_SIGNING_KEY: ${{ secrets.SONATYPE_NEXUS_SIGNING_KEY }}
+        run: ./gradlew uploadArchives --no-daemon --no-parallel
+      - name: Stop Gradle
+        run: ./gradlew --stop

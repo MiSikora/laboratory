@@ -1,4 +1,4 @@
-name: Verification
+name: Quality Check
 on:
   push:
     branches:
@@ -14,16 +14,7 @@ on:
       - 'LICENSE'
 
 jobs:
-  validate-gradle-wrapper:
-    name: Validate Gradle Wrapper
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v2
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
-
-  android:
+  android-tests:
     name: Android Tests
     runs-on: macos-latest
     steps:
@@ -47,7 +38,7 @@ jobs:
       - name: Stop Gradle
         run: ./gradlew --stop
 
-  test:
+  tests:
     name: JVM Tests
     runs-on: ubuntu-latest
     steps:
