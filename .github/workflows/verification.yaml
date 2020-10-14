@@ -1,5 +1,12 @@
-name: Code verification
+name: Verification
 on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'images/**'
+      - '*.md'
+      - 'LICENSE'
   pull_request:
     paths-ignore:
       - 'images/**'
@@ -7,8 +14,41 @@ on:
       - 'LICENSE'
 
 jobs:
+  validate-gradle-wrapper:
+    name: Validate Gradle Wrapper
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v2
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+  android:
+    name: Android Tests
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
+          restore-keys: cache-gradle-
+      - name: Run Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
+        env:
+          API_LEVEL: 29
+      - name: Stop Gradle
+        run: ./gradlew --stop
+
   test:
-    name: JVM tests
+    name: JVM Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -21,7 +61,7 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
           restore-keys: cache-gradle-
-      - name: Run JVM tests
+      - name: Run Tests
         run: ./gradlew test
       - name: Stop Gradle
         run: ./gradlew --stop
@@ -40,7 +80,7 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
           restore-keys: cache-gradle-
-      - name: Run detekt
+      - name: Run Detekt
         run: ./gradlew detekt
       - name: Stop Gradle
         run: ./gradlew --stop
@@ -59,7 +99,7 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
           restore-keys: cache-gradle-
-      - name: Run detekt
+      - name: Run Lint
         run: ./gradlew lint
       - name: Stop Gradle
         run: ./gradlew --stop
