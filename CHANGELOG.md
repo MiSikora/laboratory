@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 0.6.2 *(2020-10-12)*
+----------------------------
+
+* Deprecate `SharedPreferenceFeatureStorage` and add public extension factory methods. Implementation will be hidden in a next minor release.
+* Hide `DataStoreFeatureStorage` behind public extension builder methods.
+* Allow to order Laboratory Hyperion plugin with a `io_mehow_laboratory_plugin_id` resource.
+
 Version 0.6.1 *(2020-10-12)*
 ----------------------------
 

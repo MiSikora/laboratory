@@ -38,13 +38,13 @@ By default, if a feature is not set, the first enum value that has has `isDefaul
 
 | Artifact                                                          | Description                                                                                                                                     |
 | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `io.mehow.laboratory:laboratory:0.6.1`                            | Core of the library. Defines classes and interfaces that you should interact with. It also provides a `Laboratory.inMemory()` method for tests. |
-| `io.mehow.laboratory:laboratory-shared-preferences:0.6.1`         | Provides implementation of `FeatureStorage` based on `SharedPreferences` and adds R8 rules for features.                                        |
-| `io.mehow.laboratory:laboratory-data-store:0.6.1`                 | Provides implementation of `FeatureStorage` based on Jetpack `DataStore` and adds R8 rules for features.                                        |
-| `io.mehow.laboratory:laboratory-inspector:0.6.1`                  | QA module that allows to preview all features and change them at runtime from one place.                                                        |
-| `io.mehow.laboratory:laboratory-hyperion-plugin:0.6.1`            | QA module that integrates `laboratory-inspector` with the [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).                       |
-| `io.mehow.laboratory:laboratory-gradle-plugin:0.6.1`              | Gradle plugin for feature management. It is highly recommended to be used when `laboratory-inspector` is availalbe in the application.          |
-| `io.mehow.laboratory:laboratory-generator:0.6.1`                  | Generates feature flags and feature flag factory classes.                                                                                       |
+| `io.mehow.laboratory:laboratory:0.6.2`                            | Core of the library. Defines classes and interfaces that you should interact with. It also provides a `Laboratory.inMemory()` method for tests. |
+| `io.mehow.laboratory:laboratory-shared-preferences:0.6.2`         | Provides implementation of `FeatureStorage` based on `SharedPreferences` and adds R8 rules for features.                                        |
+| `io.mehow.laboratory:laboratory-data-store:0.6.2`                 | Provides implementation of `FeatureStorage` based on Jetpack `DataStore` and adds R8 rules for features.                                        |
+| `io.mehow.laboratory:laboratory-inspector:0.6.2`                  | QA module that allows to preview all features and change them at runtime from one place.                                                        |
+| `io.mehow.laboratory:laboratory-hyperion-plugin:0.6.2`            | QA module that integrates `laboratory-inspector` with the [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).                       |
+| `io.mehow.laboratory:laboratory-gradle-plugin:0.6.2`              | Gradle plugin for feature management. It is highly recommended to be used when `laboratory-inspector` is availalbe in the application.          |
+| `io.mehow.laboratory:laboratory-generator:0.6.2`                  | Generates feature flags and feature flag factory classes.                                                                                       |
 
 ## QA support
 
