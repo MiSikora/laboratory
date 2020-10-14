@@ -8,5 +8,5 @@
  6. Update the [`gradle.properties`](gradle.properties) to the next SNAPSHOT version.
  7. `git commit -am "Prepare next development version"`
  8. `git push && git push --tags`
- 9. Wait for [the CI server](https://app.bitrise.io/build/58bb63258d8118db) to upload the artifact.
+ 9. Wait for [the CI server](https://github.com/MiSikora/Laboratory/actions) to upload the artifact.
  10. Visit [Sonatype Nexus](https://oss.sonatype.org) and promote the artifact.
