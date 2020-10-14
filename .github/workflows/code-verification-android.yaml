@@ -1,0 +1,31 @@
+name: Android code verification
+on:
+  pull_request:
+    paths:
+      - 'library/laboratory/**'
+      - 'library/shared-preferences/**'
+      - 'buildSrc/src/main/java/**'
+      - '.github/workflows/**'
+
+jobs:
+  android:
+    name: Check
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
+          restore-keys: cache-gradle-
+      - name: Run Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
+        env:
+          API_LEVEL: 29

@@ -1,0 +1,65 @@
+name: Code verification
+on:
+  pull_request:
+    paths-ignore:
+      - 'images/**'
+      - '*.md'
+      - 'LICENSE'
+
+jobs:
+  test:
+    name: JVM tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
+          restore-keys: cache-gradle-
+      - name: Run JVM tests
+        run: ./gradlew test
+      - name: Stop Gradle
+        run: ./gradlew --stop
+
+  detekt:
+    name: Detekt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
+          restore-keys: cache-gradle-
+      - name: Run detekt
+        run: ./gradlew detekt
+      - name: Stop Gradle
+        run: ./gradlew --stop
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
+          restore-keys: cache-gradle-
+      - name: Run detekt
+        run: ./gradlew lint
+      - name: Stop Gradle
+        run: ./gradlew --stop
