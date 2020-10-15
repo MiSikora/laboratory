@@ -18,14 +18,23 @@ tasks.withType<Test> {
   useJUnitPlatform()
 }
 
+val fixtureClasspath: Configuration by configurations.creating
+
+tasks.withType<PluginUnderTestMetadata> {
+  pluginClasspath.from(fixtureClasspath)
+}
+
 dependencies {
-  api(Libs.Kotlin.StdLibJdk8)
+  implementation(Libs.Kotlin.StdLibJdk8)
   implementation(project(":library:generator"))
-  api(Libs.Kotlin.GradlePlugin)
-  implementation(Libs.AndroidGradlePlugin)
+  implementation(Libs.Kotlin.GradlePlugin)
+  compileOnly(Libs.AndroidGradlePlugin)
 
   testImplementation(Libs.Kotest.RunnerJunit5)
   testImplementation(Libs.Kotest.Assertions)
+
+  fixtureClasspath(Libs.Kotlin.GradlePlugin)
+  fixtureClasspath(Libs.AndroidGradlePlugin)
 }
 
 val versionDir = file("${buildDir}/generated/source/laboratory")

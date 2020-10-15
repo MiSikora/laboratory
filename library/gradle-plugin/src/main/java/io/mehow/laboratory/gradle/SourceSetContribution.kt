@@ -19,7 +19,12 @@ import java.io.File
 
 internal fun TaskProvider<out Task>.contributeToSourceSets(dir: File, project: Project) {
   makeKotlinDependOnTask(project)
-  contribute(dir, project)
+  contributeToKotlin(dir, project)
+}
+
+internal fun TaskProvider<out Task>.contributeToAndroidSourceSets(dir: File, project: Project) {
+  makeKotlinDependOnTask(project)
+  contributeToAndroid(dir, project)
 }
 
 private fun TaskProvider<out Task>.makeKotlinDependOnTask(project: Project) {
@@ -28,13 +33,10 @@ private fun TaskProvider<out Task>.makeKotlinDependOnTask(project: Project) {
   }
 }
 
-private fun TaskProvider<out Task>.contribute(dir: File, project: Project) {
-  if (contributeToAndroid(dir, project)) return
-  contributeToKotlin(dir, project)
-}
-
-private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Project): Boolean {
-  val extension = project.extensions.findByType(BaseExtension::class.java) ?: return false
+private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Project) {
+  val extension = requireNotNull(project.extensions.findByType(BaseExtension::class.java)) {
+    "Did not find BaseExtension in Android project"
+  }
   val sources = extension.sourceSets.associate { set -> set.name to set.kotlin }
   for (variant in extension.variants) {
     val kotlinSourceSet = requireNotNull(sources[variant.name]) {
@@ -44,7 +46,6 @@ private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Proje
     variant.addJavaSourceFoldersToModel(dir)
     project.tasks.named("generate${variant.name.capitalize()}Sources").dependsOn(this)
   }
-  return true
 }
 
 private fun contributeToKotlin(dir: File, project: Project) {
