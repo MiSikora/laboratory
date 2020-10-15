@@ -106,7 +106,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import kotlin.collections.mapOf
             |import kotlin.to
             |
-            |fun FeatureStorage.Companion.sourcedGenerated(
+            |public fun FeatureStorage.Companion.sourcedGenerated(
             |  localSource: FeatureStorage,
             |  firebaseSource: FeatureStorage,
             |  s3Source: FeatureStorage
@@ -138,7 +138,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import kotlin.collections.mapOf
             |import kotlin.to
             |
-            |fun FeatureStorage.Companion.sourcedGenerated(
+            |public fun FeatureStorage.Companion.sourcedGenerated(
             |  localSource: FeatureStorage,
             |  fooSource: FeatureStorage,
             |  barSource: FeatureStorage,
@@ -181,7 +181,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import kotlin.collections.mapOf
             |import kotlin.to
             |
-            |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage,
+            |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage,
             |    fooSource: FeatureStorage): FeatureStorage = sourced(
             |  localSource,
             |  mapOf(
@@ -208,7 +208,7 @@ class SourcedFeatureStorageSpec : DescribeSpec({
             |import io.mehow.laboratory.FeatureStorage.Companion.sourced
             |import kotlin.collections.emptyMap
             |
-            |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage =
+            |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage =
             |    sourced(
             |  localSource,
             |  emptyMap()

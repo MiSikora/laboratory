@@ -46,7 +46,7 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
-      |  override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<Feature<*>>>()
       |}
     """.trimMargin("|")
   }
@@ -67,7 +67,7 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  override fun create() = setOf(
+      |  public override fun create() = setOf(
       |    Class.forName("io.mehow.first.FeatureA${"\${'$'}"}Source"),
       |    Class.forName("io.mehow.second.FeatureB${"\${'$'}"}Source")
       |  ) as Set<Class<Feature<*>>>
@@ -127,12 +127,7 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     val factory = fixture.featureSourceStorageFile("GeneratedFeatureSourceFactory")
     factory.shouldExist()
 
-    // Ensure public by checking a new line before enum declaration.
-    // Change after https://github.com/square/kotlinpoet/pull/933
-    factory.readText() shouldContain """
-      |
-      |fun FeatureFactory.Companion.featureSourceGenerated()
-    """.trimMargin("|")
+    factory.readText() shouldContain "public fun FeatureFactory.Companion.featureSourceGenerated()"
   }
 
   "fails for corrupted factory package name" {
@@ -235,7 +230,7 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  override fun create() = setOf(
+      |  public override fun create() = setOf(
       |    Class.forName("FeatureA${"\${'$'}"}Source"),
       |    Class.forName("FeatureB${"\${'$'}"}Source"),
       |    Class.forName("RootFeature${"\${'$'}"}Source")
@@ -260,7 +255,7 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  override fun create() = setOf(
+      |  public override fun create() = setOf(
       |    Class.forName("FeatureB${"\${'$'}"}Source"),
       |    Class.forName("RootFeature${"\${'$'}"}Source")
       |  ) as Set<Class<Feature<*>>>
@@ -295,7 +290,7 @@ class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
-      |  override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<Feature<*>>>()
       |}
     """.trimMargin("|")
   }

@@ -45,7 +45,7 @@ class GenerateFeatureFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<Feature<*>>>()
       |}
     """.trimMargin("|")
   }
@@ -65,7 +65,7 @@ class GenerateFeatureFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  override fun create() = setOf(
+      |  public override fun create() = setOf(
       |    Class.forName("io.mehow.first.FeatureA"),
       |    Class.forName("io.mehow.second.FeatureB")
       |  ) as Set<Class<Feature<*>>>
@@ -125,12 +125,7 @@ class GenerateFeatureFactoryTaskSpec : StringSpec({
     val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
-    // Ensure public by checking a new line before enum declaration.
-    // Change after https://github.com/square/kotlinpoet/pull/933
-    factory.readText() shouldContain """
-      |
-      |fun FeatureFactory.Companion.featureGenerated()
-    """.trimMargin("|")
+    factory.readText() shouldContain "public fun FeatureFactory.Companion.featureGenerated()"
   }
 
   "fails for corrupted factory package name" {
@@ -232,7 +227,7 @@ class GenerateFeatureFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  override fun create() = setOf(
+      |  public override fun create() = setOf(
       |    Class.forName("FeatureA"),
       |    Class.forName("FeatureB"),
       |    Class.forName("RootFeature")
@@ -256,7 +251,7 @@ class GenerateFeatureFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  override fun create() = setOf(
+      |  public override fun create() = setOf(
       |    Class.forName("FeatureB"),
       |    Class.forName("RootFeature")
       |  ) as Set<Class<Feature<*>>>
@@ -290,7 +285,7 @@ class GenerateFeatureFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<Feature<*>>>()
       |}
     """.trimMargin("|")
   }

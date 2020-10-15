@@ -172,7 +172,7 @@ class FeatureFactorySpec : DescribeSpec({
             |
             |private object GeneratedFeatureFactory : FeatureFactory {
             |  @Suppress("UNCHECKED_CAST")
-            |  override fun create() = setOf(
+            |  public override fun create() = setOf(
             |    Class.forName("io.mehow.FeatureA"),
             |    Class.forName("io.mehow.FeatureB"),
             |    Class.forName("io.mehow.c.FeatureA")
@@ -202,11 +202,11 @@ class FeatureFactorySpec : DescribeSpec({
             |import kotlin.collections.Set
             |import kotlin.collections.setOf
             |
-            |fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+            |public fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
             |
             |private object GeneratedFeatureFactory : FeatureFactory {
             |  @Suppress("UNCHECKED_CAST")
-            |  override fun create() = setOf(
+            |  public override fun create() = setOf(
             |    Class.forName("io.mehow.FeatureA"),
             |    Class.forName("io.mehow.FeatureB"),
             |    Class.forName("io.mehow.c.FeatureA")
@@ -238,7 +238,7 @@ class FeatureFactorySpec : DescribeSpec({
             |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
             |
             |private object GeneratedFeatureFactory : FeatureFactory {
-            |  override fun create() = emptySet<Class<Feature<*>>>()
+            |  public override fun create() = emptySet<Class<Feature<*>>>()
             |}
             |
           """.trimMargin("|")

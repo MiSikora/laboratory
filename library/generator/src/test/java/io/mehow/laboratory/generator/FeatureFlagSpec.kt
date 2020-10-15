@@ -368,11 +368,11 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Boolean
             |
             |internal enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
-            |
-            |  Second;
+            |  Second,
+            |  ;
             |}
             |
           """.trimMargin("|")
@@ -392,12 +392,12 @@ class FeatureFlagSpec : DescribeSpec({
             |import io.mehow.laboratory.Feature
             |import kotlin.Boolean
             |
-            |enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |public enum class FeatureA(
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
-            |
-            |  Second;
+            |  Second,
+            |  ;
             |}
             |
           """.trimMargin("|")
@@ -421,21 +421,21 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Suppress
             |
             |internal enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
-            |
-            |  Second;
+            |  Second,
+            |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
-            |    override val isDefaultValue: Boolean = false
+            |    public override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
             |    Local(isDefaultValue = true),
-            |
-            |    Remote;
+            |    Remote,
+            |    ;
             |  }
             |}
             |
@@ -458,11 +458,11 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Boolean
             |
             |internal enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
-            |
-            |  Second;
+            |  Second,
+            |  ;
             |}
             |
           """.trimMargin("|")
@@ -495,21 +495,21 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Suppress
             |
             |internal enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
-            |
-            |  Second;
+            |  Second,
+            |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
-            |    override val isDefaultValue: Boolean = false
+            |    public override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
             |    Local(isDefaultValue = true),
-            |
-            |    Remote;
+            |    Remote,
+            |    ;
             |  }
             |}
             |
@@ -534,21 +534,21 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Suppress
             |
             |internal enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
-            |
-            |  Second;
+            |  Second,
+            |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
-            |    override val isDefaultValue: Boolean = false
+            |    public override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
             |    Local,
-            |
-            |    Remote(isDefaultValue = true);
+            |    Remote(isDefaultValue = true),
+            |    ;
             |  }
             |}
             |
@@ -572,22 +572,22 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.Boolean
             |import kotlin.Suppress
             |
-            |enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |public enum class FeatureA(
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
-            |
-            |  Second;
+            |  Second,
+            |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
-            |  enum class Source(
-            |    override val isDefaultValue: Boolean = false
+            |  public enum class Source(
+            |    public override val isDefaultValue: Boolean = false
             |  ) : Feature<Source> {
             |    Local(isDefaultValue = true),
-            |
-            |    Remote;
+            |    Remote,
+            |    ;
             |  }
             |}
             |
@@ -611,13 +611,13 @@ class FeatureFlagSpec : DescribeSpec({
             |import kotlin.String
             |
             |internal enum class FeatureA(
-            |  override val isDefaultValue: Boolean = false
+            |  public override val isDefaultValue: Boolean = false
             |) : Feature<FeatureA> {
             |  First(isDefaultValue = true),
+            |  Second,
+            |  ;
             |
-            |  Second;
-            |
-            |  override val description: String = "Feature description"
+            |  public override val description: String = "Feature description"
             |}
             |
           """.trimMargin("|")

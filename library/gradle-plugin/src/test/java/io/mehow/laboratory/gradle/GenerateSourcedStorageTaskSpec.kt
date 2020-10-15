@@ -127,12 +127,7 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
     val factory = fixture.sourcedStorageFile("sourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
-    // Ensure public by checking a new line before enum declaration.
-    // Change after https://github.com/square/kotlinpoet/pull/933
-    factory.readText() shouldContain """
-      |
-      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage)
-    """.trimMargin("|")
+    factory.readText() shouldContain "public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage)"
   }
 
   "fails for corrupted storage package name" {

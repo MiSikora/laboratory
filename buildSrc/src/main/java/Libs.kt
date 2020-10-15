@@ -95,7 +95,7 @@ object Libs {
     const val GradlePlugin = "com.github.ben-manes:gradle-versions-plugin:$Version"
   }
 
-  const val KotlinPoet = "com.squareup:kotlinpoet:1.6.0"
+  const val KotlinPoet = "com.squareup:kotlinpoet:1.7.1"
 
   const val Arrow = "io.arrow-kt:arrow-core:0.10.5"
 
