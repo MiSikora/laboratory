@@ -135,11 +135,6 @@ tasks.withType<Detekt> {
   }
 }
 
-tasks.register("check") {
-  group = "Verification"
-  description = "Allows to attach Detekt to the root project."
-}
-
 tasks.withType<DependencyUpdatesTask> {
   rejectVersionIf {
     isNonStable(candidate.version) && !isNonStable(currentVersion)
