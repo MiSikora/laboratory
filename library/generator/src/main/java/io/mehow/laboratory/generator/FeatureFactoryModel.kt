@@ -36,17 +36,17 @@ class FeatureFactoryModel private constructor(
 
     private fun validatePackageName(fqcn: String): Either<GenerationFailure, String> {
       return Either.cond(
-        test = packageName.isEmpty() || packageName.matches(packageNameRegex),
-        ifTrue = { packageName },
-        ifFalse = { InvalidPackageName(fqcn) }
+          test = packageName.isEmpty() || packageName.matches(packageNameRegex),
+          ifTrue = { packageName },
+          ifFalse = { InvalidPackageName(fqcn) }
       )
     }
 
     private fun validateName(fqcn: String, name: String): Either<GenerationFailure, String> {
       return Either.cond(
-        test = name.matches(nameRegex),
-        ifTrue = { name },
-        ifFalse = { InvalidFactoryName(name, fqcn) }
+          test = name.matches(nameRegex),
+          ifTrue = { name },
+          ifFalse = { InvalidFactoryName(name, fqcn) }
       )
     }
 

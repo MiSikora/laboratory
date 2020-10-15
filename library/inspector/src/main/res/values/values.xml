@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <attr name="io_mehow_laboratory_elevation" format="dimension" />
+  <attr format="dimension" name="io_mehow_laboratory_elevation" />
 </resources>

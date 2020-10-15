@@ -15,11 +15,11 @@ class SourcedFeatureStorageSpec : DescribeSpec({
     val remoteStorageA = FeatureStorage.inMemory()
     val remoteStorageB = FeatureStorage.inMemory()
     val sourcedStorage = SourcedFeatureStorage(
-      localStorage,
-      mapOf(
-        "RemoteA" to remoteStorageA,
-        "RemoteB" to remoteStorageB,
-      ),
+        localStorage,
+        mapOf(
+            "RemoteA" to remoteStorageA,
+            "RemoteB" to remoteStorageB,
+        ),
     )
     localLaboratory = Laboratory(localStorage)
     remoteLaboratoryA = Laboratory(remoteStorageA)

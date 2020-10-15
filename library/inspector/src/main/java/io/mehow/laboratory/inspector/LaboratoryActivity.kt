@@ -39,11 +39,11 @@ class LaboratoryActivity : AppCompatActivity() {
   }
 
   private fun createResetFeaturesDialog() = MaterialAlertDialogBuilder(this)
-    .setTitle(R.string.io_mehow_laboratory_reset_title)
-    .setMessage(R.string.io_mehow_laboratory_reset_message)
-    .setNegativeButton(R.string.io_mehow_laboratory_cancel) { _, _ -> }
-    .setPositiveButton(R.string.io_mehow_laboratory_reset) { _, _ -> resetFeatures() }
-    .create()
+      .setTitle(R.string.io_mehow_laboratory_reset_title)
+      .setMessage(R.string.io_mehow_laboratory_reset_message)
+      .setNegativeButton(R.string.io_mehow_laboratory_cancel) { _, _ -> }
+      .setPositiveButton(R.string.io_mehow_laboratory_reset) { _, _ -> resetFeatures() }
+      .create()
 
   private fun setUpViewPager() {
     val sections = configuration.featureFactories.keys.toList()
@@ -115,8 +115,8 @@ class LaboratoryActivity : AppCompatActivity() {
     ) {
       val filteredFactories = externalFeatureFactories.filter { it.key == featuresLabel }
       configure(Configuration(
-        laboratory,
-        linkedMapOf(featuresLabel to featureFactory) + filteredFactories
+          laboratory,
+          linkedMapOf(featuresLabel to featureFactory) + filteredFactories
       ))
     }
 
@@ -128,8 +128,8 @@ class LaboratoryActivity : AppCompatActivity() {
     ) {
       val filteredFactories = externalFeatureFactories.filter { it.key in listOf(featuresLabel, sourcesLabel) }
       configure(Configuration(
-        laboratory,
-        linkedMapOf(featuresLabel to featureFactory, sourcesLabel to featureSourceFactory) + filteredFactories
+          laboratory,
+          linkedMapOf(featuresLabel to featureFactory, sourcesLabel to featureSourceFactory) + filteredFactories
       ))
     }
 

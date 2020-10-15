@@ -21,9 +21,9 @@ class FeatureFactoryInput internal constructor() {
 
   internal fun toBuilder(features: List<FeatureFlagModel>): FeatureFactoryModel.Builder {
     return FeatureFactoryModel.Builder(
-      visibility = if (isPublic) Public else Internal,
-      packageName = packageName ?: "",
-      features = features,
+        visibility = if (isPublic) Public else Internal,
+        packageName = packageName ?: "",
+        features = features,
     )
   }
 }

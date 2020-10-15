@@ -19,8 +19,8 @@ open class FeatureFactoryTask : DefaultTask() {
 
   @TaskAction fun generateFeatureFactory() {
     val featureModels = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
-      ifLeft = { failure -> error(failure.message) },
-      ifRight = ::identity
+        ifLeft = { failure -> error(failure.message) },
+        ifRight = ::identity
     ).let(featureModelsMapper)
 
     when (val buildIntent = factory.toBuilder(featureModels).build(factoryClassName)) {

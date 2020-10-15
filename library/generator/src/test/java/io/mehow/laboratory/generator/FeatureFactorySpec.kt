@@ -16,30 +16,30 @@ import io.mehow.laboratory.generator.Visibility.Public
 
 class FeatureFactorySpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(
-    visibility = Internal,
-    packageName = "io.mehow",
-    names = listOf("FeatureA"),
-    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
+      visibility = Internal,
+      packageName = "io.mehow",
+      names = listOf("FeatureA"),
+      values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureB = FeatureFlagModel.Builder(
-    visibility = Internal,
-    packageName = "io.mehow",
-    names = listOf("FeatureB"),
-    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
+      visibility = Internal,
+      packageName = "io.mehow",
+      names = listOf("FeatureB"),
+      values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val featureC = FeatureFlagModel.Builder(
-    visibility = Internal,
-    packageName = "io.mehow.c",
-    names = listOf("FeatureA"),
-    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
+      visibility = Internal,
+      packageName = "io.mehow.c",
+      names = listOf("FeatureA"),
+      values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   ).build().getOrElse { error("Should be right") }
 
   val factoryBuilder = FeatureFactoryModel.Builder(
-    visibility = Internal,
-    packageName = "io.mehow",
-    features = listOf(featureA, featureB, featureC),
+      visibility = Internal,
+      packageName = "io.mehow",
+      features = listOf(featureA, featureB, featureC),
   )
 
   describe("feature factory model") {
@@ -123,19 +123,19 @@ class FeatureFactorySpec : DescribeSpec({
 
       it("cannot have duplicates") {
         val builderA = factoryBuilder.copy(
-          features = listOf(featureA, featureA, featureB, featureC)
+            features = listOf(featureA, featureA, featureB, featureC)
         )
         val resultA = builderA.build("GeneratedFeatureFactory")
         resultA shouldBeLeft FeaturesCollision(featureA.reflectionName.nel())
 
         val builderB = factoryBuilder.copy(
-          features = listOf(featureA, featureB, featureB, featureC)
+            features = listOf(featureA, featureB, featureB, featureC)
         )
         val resultB = builderB.build("GeneratedFeatureFactory")
         resultB shouldBeLeft FeaturesCollision(featureB.reflectionName.nel())
 
         val builderC = factoryBuilder.copy(
-          features = listOf(featureA, featureB, featureC, featureC)
+            features = listOf(featureA, featureB, featureC, featureC)
         )
         val resultC = builderC.build("GeneratedFeatureFactory")
         resultC shouldBeLeft FeaturesCollision(featureC.reflectionName.nel())
@@ -154,8 +154,8 @@ class FeatureFactorySpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = factoryBuilder
-        .build("GeneratedFeatureFactory")
-        .map { model -> model.generate("generated", tempDir) }
+          .build("GeneratedFeatureFactory")
+          .map { model -> model.generate("generated", tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -188,8 +188,8 @@ class FeatureFactorySpec : DescribeSpec({
       val builder = factoryBuilder.copy(visibility = Public)
 
       val outputFile = builder
-        .build("GeneratedFeatureFactory")
-        .map { model -> model.generate("generated", tempDir) }
+          .build("GeneratedFeatureFactory")
+          .map { model -> model.generate("generated", tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -223,8 +223,8 @@ class FeatureFactorySpec : DescribeSpec({
       val builder = factoryBuilder.copy(features = emptyList())
 
       val outputFile = builder
-        .build("GeneratedFeatureFactory")
-        .map { model -> model.generate("generated", tempDir) }
+          .build("GeneratedFeatureFactory")
+          .map { model -> model.generate("generated", tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """

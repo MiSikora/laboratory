@@ -24,46 +24,46 @@ internal class FeatureFactoryGenerator(
   functionName: String,
 ) {
   private val featureClasses = factory.features
-    .map(FeatureFlagModel::reflectionName)
-    .sorted()
-    .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
-    .joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
+      .map(FeatureFlagModel::reflectionName)
+      .sorted()
+      .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
+      .joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
 
   private val suppressCast = AnnotationSpec.builder(Suppress::class)
-    .addMember("%S", "UNCHECKED_CAST")
-    .build()
+      .addMember("%S", "UNCHECKED_CAST")
+      .build()
 
   private val setOf = MemberName("kotlin.collections", "setOf")
 
   private val emptySet = MemberName("kotlin.collections", "emptySet")
 
   private val discoveryFunctionOverride = FunSpec.builder("create")
-    .addModifiers(OVERRIDE)
-    .apply {
-      if (factory.features.isNotEmpty()) {
-        addAnnotation(suppressCast)
-        addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
-      } else addStatement("return %M<%T>()", emptySet, featureType)
-    }
-    .build()
+      .addModifiers(OVERRIDE)
+      .apply {
+        if (factory.features.isNotEmpty()) {
+          addAnnotation(suppressCast)
+          addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
+        } else addStatement("return %M<%T>()", emptySet, featureType)
+      }
+      .build()
 
   private val factoryType = TypeSpec.objectBuilder(factory.className)
-    .addModifiers(PRIVATE)
-    .addSuperinterface(FeatureFactory::class)
-    .addFunction(discoveryFunctionOverride)
-    .build()
+      .addModifiers(PRIVATE)
+      .addSuperinterface(FeatureFactory::class)
+      .addFunction(discoveryFunctionOverride)
+      .build()
 
   private val factoryExtension = FunSpec.builder(functionName)
-    .addModifiers(factory.visibility.modifier)
-    .receiver(FeatureFactory.Companion::class)
-    .returns(FeatureFactory::class)
-    .addStatement("return %N", factoryType)
-    .build()
+      .addModifiers(factory.visibility.modifier)
+      .receiver(FeatureFactory.Companion::class)
+      .returns(FeatureFactory::class)
+      .addStatement("return %N", factoryType)
+      .build()
 
   private val factoryFile = FileSpec.builder(factory.packageName, factory.name)
-    .addFunction(factoryExtension)
-    .addType(factoryType)
-    .build()
+      .addFunction(factoryExtension)
+      .addType(factoryType)
+      .build()
 
   fun generate(file: File) = factoryFile.writeTo(file)
 

@@ -16,8 +16,8 @@ open class SourcedFeatureStorageTask : DefaultTask() {
 
   @TaskAction fun generateSourcedFeatureStorage() {
     val sourceNames = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
-      ifLeft = { failure -> error(failure.message) },
-      ifRight = ::identity
+        ifLeft = { failure -> error(failure.message) },
+        ifRight = ::identity
     ).sourceNames().distinct()
 
     when (val buildIntent = storage.toBuilder(sourceNames).build()) {

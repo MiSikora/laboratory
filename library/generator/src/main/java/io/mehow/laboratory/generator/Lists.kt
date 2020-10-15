@@ -13,7 +13,7 @@ internal fun <T> List<T>.checkForDuplicates(
 ): Either<GenerationFailure, List<T>> {
   val duplicates = findDuplicates()
   return Nel.fromList(duplicates.toList())
-    .toEither { this }
-    .swap()
-    .mapLeft(failureProvider)
+      .toEither { this }
+      .swap()
+      .mapLeft(failureProvider)
 }

@@ -17,10 +17,10 @@ import java.util.Locale
 
 class FeatureFlagSpec : DescribeSpec({
   val featureBuilder = FeatureFlagModel.Builder(
-    visibility = Internal,
-    packageName = "io.mehow",
-    names = listOf("FeatureA"),
-    values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
+      visibility = Internal,
+      packageName = "io.mehow",
+      names = listOf("FeatureA"),
+      values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
   )
 
   describe("feature flag model") {
@@ -203,11 +203,11 @@ class FeatureFlagSpec : DescribeSpec({
     context("default") {
       it("cannot have no values") {
         checkAll(
-          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
         ) { first, second ->
           val builder = featureBuilder.copy(
-            values = listOf(FeatureValue(first), FeatureValue(second))
+              values = listOf(FeatureValue(first), FeatureValue(second))
           )
           val result = builder.build()
 
@@ -217,16 +217,16 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("cannot have multiple values") {
         checkAll(
-          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-            values = listOf(
-              FeatureValue(first, isDefaultValue = true),
-              FeatureValue(second),
-              FeatureValue(third, isDefaultValue = true),
-            )
+              values = listOf(
+                  FeatureValue(first, isDefaultValue = true),
+                  FeatureValue(second),
+                  FeatureValue(third, isDefaultValue = true),
+              )
           )
           val result = builder.build()
 
@@ -236,16 +236,16 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("can have one value") {
         checkAll(
-          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-            values = listOf(
-              FeatureValue(first),
-              FeatureValue(second),
-              FeatureValue(third, isDefaultValue = true),
-            )
+              values = listOf(
+                  FeatureValue(first),
+                  FeatureValue(second),
+                  FeatureValue(third, isDefaultValue = true),
+              )
           )
           val result = builder.build()
 
@@ -301,11 +301,11 @@ class FeatureFlagSpec : DescribeSpec({
     context("default") {
       it("can have no values") {
         checkAll(
-          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
         ) { first, second ->
           val builder = featureBuilder.copy(
-            sourceValues = listOf(FeatureValue(first), FeatureValue(second))
+              sourceValues = listOf(FeatureValue(first), FeatureValue(second))
           )
           val result = builder.build()
 
@@ -315,16 +315,16 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("cannot have multiple values") {
         checkAll(
-          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-            sourceValues = listOf(
-              FeatureValue(first, isDefaultValue = true),
-              FeatureValue(second),
-              FeatureValue(third, isDefaultValue = true),
-            )
+              sourceValues = listOf(
+                  FeatureValue(first, isDefaultValue = true),
+                  FeatureValue(second),
+                  FeatureValue(third, isDefaultValue = true),
+              )
           )
           val result = builder.build()
 
@@ -334,16 +334,16 @@ class FeatureFlagSpec : DescribeSpec({
 
       it("can have one value") {
         checkAll(
-          Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
-          Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-            sourceValues = listOf(
-              FeatureValue(first),
-              FeatureValue(second),
-              FeatureValue(third, isDefaultValue = true),
-            )
+              sourceValues = listOf(
+                  FeatureValue(first),
+                  FeatureValue(second),
+                  FeatureValue(third, isDefaultValue = true),
+              )
           )
           val result = builder.build()
 
@@ -408,8 +408,8 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(sourceValues = listOf(FeatureValue("Remote")))
-        .build().map { model -> model.generate(tempDir) }
+          .copy(sourceValues = listOf(FeatureValue("Remote")))
+          .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -447,8 +447,8 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(sourceValues = listOf(FeatureValue("Local")))
-        .build().map { model -> model.generate(tempDir) }
+          .copy(sourceValues = listOf(FeatureValue("Local")))
+          .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -474,16 +474,16 @@ class FeatureFlagSpec : DescribeSpec({
 
       val localPermutations = (0b00000..0b11111).map {
         listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
-          .map { mask -> mask != 0 }
-          .mapIndexed { index, mask ->
-            val char = "local"[index].toString()
-            if(mask) char else char.capitalize(Locale.ROOT)
-          }.joinToString(separator = "")
+            .map { mask -> mask != 0 }
+            .mapIndexed { index, mask ->
+              val char = "local"[index].toString()
+              if (mask) char else char.capitalize(Locale.ROOT)
+            }.joinToString(separator = "")
       }
 
       val outputFile = featureBuilder
-        .copy(sourceValues = (localPermutations + "Remote").map(::FeatureValue))
-        .build().map { model -> model.generate(tempDir) }
+          .copy(sourceValues = (localPermutations + "Remote").map(::FeatureValue))
+          .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -521,8 +521,8 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(sourceValues = listOf(FeatureValue("Remote", isDefaultValue = true)))
-        .build().map { model -> model.generate(tempDir) }
+          .copy(sourceValues = listOf(FeatureValue("Remote", isDefaultValue = true)))
+          .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -560,8 +560,8 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(visibility = Public, sourceValues = listOf(FeatureValue("Remote")))
-        .build().map { model -> model.generate(tempDir) }
+          .copy(visibility = Public, sourceValues = listOf(FeatureValue("Remote")))
+          .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -599,8 +599,8 @@ class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-        .copy(description = "Feature description")
-        .build().map { model -> model.generate(tempDir) }
+          .copy(description = "Feature description")
+          .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """

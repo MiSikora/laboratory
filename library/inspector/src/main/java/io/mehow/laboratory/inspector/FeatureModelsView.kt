@@ -53,8 +53,8 @@ internal class FeatureModelsView @JvmOverloads constructor(
   // ChipGroup.isSingleSelection does not work with initial selection from code.
   private fun Chip.deselectOtherChips() {
     children.filterIsInstance<Chip>()
-      .filter { it !== this }
-      .forEach { chip -> chip.isChecked = false }
+        .filter { it !== this }
+        .forEach { chip -> chip.isChecked = false }
   }
 
   private fun removeOnCheckedChangeListener(chip: Chip) = chip.setOnCheckedChangeListener(null)

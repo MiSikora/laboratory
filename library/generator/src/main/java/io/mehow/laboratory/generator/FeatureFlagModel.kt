@@ -55,82 +55,82 @@ class FeatureFlagModel private constructor(
         val values = !validateValues()
         val nestedSource = createNestedSource()?.bind()
         FeatureFlagModel(
-          visibility = visibility,
-          className = ClassName(packageName, names),
-          values = values,
-          source = nestedSource,
-          description = description,
+            visibility = visibility,
+            className = ClassName(packageName, names),
+            values = values,
+            source = nestedSource,
+            description = description,
         )
       }
     }
 
     private fun validatePackageName(): Either<GenerationFailure, String> {
       return Either.cond(
-        test = packageName.isEmpty() || packageName.matches(packageNameRegex),
-        ifTrue = { packageName },
-        ifFalse = { InvalidPackageName(fqcn) }
+          test = packageName.isEmpty() || packageName.matches(packageNameRegex),
+          ifTrue = { packageName },
+          ifFalse = { InvalidPackageName(fqcn) }
       )
     }
 
     private fun validateName(): Either<GenerationFailure, List<String>> {
       return names.traverse(Either.applicative()) { name ->
         Either.cond(
-          test = name.matches(nameRegex),
-          ifTrue = { name },
-          ifFalse = { InvalidFeatureName(name, fqcn) }
+            test = name.matches(nameRegex),
+            ifTrue = { name },
+            ifFalse = { InvalidFeatureName(name, fqcn) }
         )
       }.map { listKind -> listKind.fix() }
     }
 
     private fun validateValues(): Either<GenerationFailure, Nel<FeatureValue>> {
       return Nel.fromList(values)
-        .toEither { NoFeatureValues(fqcn) }
-        .flatMap { @Kt41142 validateValueNames(it) }
-        .flatMap { @Kt41142 validateDuplicates(it) }
-        .flatMap { @Kt41142 validateSingleDefault(it) }
+          .toEither { NoFeatureValues(fqcn) }
+          .flatMap { @Kt41142 validateValueNames(it) }
+          .flatMap { @Kt41142 validateDuplicates(it) }
+          .flatMap { @Kt41142 validateSingleDefault(it) }
     }
 
     private fun validateValueNames(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
       val invalidNames = values.toList().map { @Kt41142 it.name }.filterNot(valueRegex::matches)
       return Nel.fromList(invalidNames)
-        .toEither { values }
-        .swap()
-        .mapLeft { InvalidFeatureValues(it, fqcn) }
+          .toEither { values }
+          .swap()
+          .mapLeft { InvalidFeatureValues(it, fqcn) }
     }
 
     private fun validateDuplicates(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
       val duplicates = values.toList().map { @Kt41142 it.name }.findDuplicates()
       return Nel.fromList(duplicates.toList())
-        .toEither { values }
-        .swap()
-        .mapLeft { FeatureValuesCollision(it, fqcn) }
+          .toEither { values }
+          .swap()
+          .mapLeft { FeatureValuesCollision(it, fqcn) }
     }
 
     private fun validateSingleDefault(values: Nel<FeatureValue>): Either<GenerationFailure, Nel<FeatureValue>> {
       val defaultProblems = values.toList()
-        .filter { @Kt41142 it.isDefaultValue }
-        .takeIf { it.size != 1 }
-        ?.map { @Kt41142 it.name }
+          .filter { @Kt41142 it.isDefaultValue }
+          .takeIf { it.size != 1 }
+          ?.map { @Kt41142 it.name }
       return if (defaultProblems == null) values.right()
       else Nel.fromList(defaultProblems)
-        .map { MultipleFeatureDefaultValues(it, fqcn) }
-        .getOrElse { NoFeatureDefaultValue(fqcn) }
-        .left()
+          .map { MultipleFeatureDefaultValues(it, fqcn) }
+          .getOrElse { NoFeatureDefaultValue(fqcn) }
+          .left()
     }
 
     private fun createNestedSource(): Either<GenerationFailure, FeatureFlagModel>? {
       return sourceValues
-        .filterNot { it.name.equals("local", ignoreCase = true) }
-        .takeIf { it.isNotEmpty() }
-        ?.let { values ->
-          val isDefaultValue = values.none(FeatureValue::isDefaultValue)
-          return@let Builder(
-            visibility = visibility,
-            packageName = packageName,
-            names = names + "Source",
-            values = Nel(FeatureValue("Local", isDefaultValue), values).toList(),
-          )
-        }?.build()
+          .filterNot { it.name.equals("local", ignoreCase = true) }
+          .takeIf { it.isNotEmpty() }
+          ?.let { values ->
+            val isDefaultValue = values.none(FeatureValue::isDefaultValue)
+            return@let Builder(
+                visibility = visibility,
+                packageName = packageName,
+                names = names + "Source",
+                values = Nel(FeatureValue("Local", isDefaultValue), values).toList(),
+            )
+          }?.build()
     }
 
     private companion object {
@@ -143,13 +143,13 @@ class FeatureFlagModel private constructor(
 
 fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
   return traverse(Either.applicative()) { @Kt41142 it.build() }
-    .map { listKind -> listKind.fix() }
-    .flatMap { models -> models.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) } }
+      .map { listKind -> listKind.fix() }
+      .flatMap { models -> models.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) } }
 }
 
 fun List<FeatureFlagModel>.sourceNames() = mapNotNull { @Kt41142 it.source }
-  .map { @Kt41142 it.values }
-  .flatMap { it.toList() }
-  .map { @Kt41142 it.name }
+    .map { @Kt41142 it.values }
+    .flatMap { it.toList() }
+    .map { @Kt41142 it.name }
 
 fun List<FeatureFlagModel>.sourceModels() = mapNotNull { @Kt41142 it.source }

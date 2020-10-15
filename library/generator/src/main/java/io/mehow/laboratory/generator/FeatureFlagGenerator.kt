@@ -20,68 +20,68 @@ internal class FeatureFlagGenerator(
   private val feature: FeatureFlagModel,
 ) {
   private val isDefaultValueOverride = ParameterSpec
-    .builder(defaultValuePropertyName, Boolean::class, OVERRIDE)
-    .defaultValue("%L", false)
-    .build()
+      .builder(defaultValuePropertyName, Boolean::class, OVERRIDE)
+      .defaultValue("%L", false)
+      .build()
 
   private val primaryConstructor = FunSpec.constructorBuilder()
-    .addParameter(isDefaultValueOverride)
-    .build()
+      .addParameter(isDefaultValueOverride)
+      .build()
 
   private val isDefaultValueProperty = PropertySpec
-    .builder(defaultValuePropertyName, Boolean::class)
-    .initializer(defaultValuePropertyName)
-    .build()
+      .builder(defaultValuePropertyName, Boolean::class)
+      .initializer(defaultValuePropertyName)
+      .build()
 
   private val suppressCast = AnnotationSpec.builder(Suppress::class)
-    .addMember("%S", "UNCHECKED_CAST")
-    .build()
+      .addMember("%S", "UNCHECKED_CAST")
+      .build()
 
   private val featureSource = feature.source?.let { nestedSource ->
     nestedSource to PropertySpec
-      .builder(sourcedWithPropertyName, featureType, OVERRIDE)
-      .addAnnotation(suppressCast)
-      .initializer("%T::class.java as %T", nestedSource.className, featureType)
-      .build()
+        .builder(sourcedWithPropertyName, featureType, OVERRIDE)
+        .addAnnotation(suppressCast)
+        .initializer("%T::class.java as %T", nestedSource.className, featureType)
+        .build()
   }
 
   private val description = feature.description
-    .takeIf { @Kt41142 it.isNotBlank() }
-    ?.let { description ->
-      PropertySpec
-        .builder(descriptionPropertyName, String::class, OVERRIDE)
-        .initializer("%S", description)
-        .build()
-    }
+      .takeIf { @Kt41142 it.isNotBlank() }
+      ?.let { description ->
+        PropertySpec
+            .builder(descriptionPropertyName, String::class, OVERRIDE)
+            .initializer("%S", description)
+            .build()
+      }
 
   private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
-    .addModifiers(feature.visibility.modifier)
-    .primaryConstructor(primaryConstructor)
-    .addSuperinterface(Feature::class(feature.className))
-    .addProperty(isDefaultValueProperty)
-    .let { feature.values.foldLeft(it) { builder, featureValue -> builder.addEnumConstant(featureValue) } }
-    .apply {
-      featureSource?.let { (nestedSource, sourceWithOverride) ->
-        addType(FeatureFlagGenerator(nestedSource).typeSpec)
-        addProperty(sourceWithOverride)
+      .addModifiers(feature.visibility.modifier)
+      .primaryConstructor(primaryConstructor)
+      .addSuperinterface(Feature::class(feature.className))
+      .addProperty(isDefaultValueProperty)
+      .let { feature.values.foldLeft(it) { builder, featureValue -> builder.addEnumConstant(featureValue) } }
+      .apply {
+        featureSource?.let { (nestedSource, sourceWithOverride) ->
+          addType(FeatureFlagGenerator(nestedSource).typeSpec)
+          addProperty(sourceWithOverride)
+        }
       }
-    }
-    .apply { description?.let { @Kt41142 addProperty(it) } }
-    .build()
+      .apply { description?.let { @Kt41142 addProperty(it) } }
+      .build()
 
   private fun TypeSpec.Builder.addEnumConstant(featureValue: FeatureValue) = if (featureValue.isDefaultValue) {
     val isDefaultValueArgument = CodeBlock.builder()
-      .add("isDefaultValue = %L", true)
-      .build()
+        .add("isDefaultValue = %L", true)
+        .build()
     val overriddenConstructor = TypeSpec.anonymousClassBuilder()
-      .addSuperclassConstructorParameter(isDefaultValueArgument)
-      .build()
+        .addSuperclassConstructorParameter(isDefaultValueArgument)
+        .build()
     addEnumConstant(featureValue.name, overriddenConstructor)
   } else addEnumConstant(featureValue.name)
 
   private val fileSpec = FileSpec.builder(feature.packageName, feature.name)
-    .addType(typeSpec)
-    .build()
+      .addType(typeSpec)
+      .build()
 
   fun generate(output: File) = fileSpec.writeTo(output)
 

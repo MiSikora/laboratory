@@ -41,8 +41,8 @@ class SampleActivity : Activity() {
   private inline fun <reified T : Feature<T>> TextView.observeFeature() {
     val laboratory = SampleApplication.getLaboratory(application)
     laboratory.observe<T>()
-      .onEach { this.text = "${it.javaClass.simpleName}: $it" }
-      .launchIn(mainScope)
+        .onEach { this.text = "${it.javaClass.simpleName}: $it" }
+        .launchIn(mainScope)
   }
 
   override fun onDestroy() {

@@ -22,8 +22,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-kotlin-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .buildAndFail()
+        .withArguments("generateFeatureFlags", "--stacktrace")
+        .buildAndFail()
 
     result.task(":generateFeatureFlags").shouldBeNull()
     result.output shouldContain "Laboratory Gradle plugin requires Kotlin plugin."
@@ -33,8 +33,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-kotlin-present".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .build()
+        .withArguments("generateFeatureFlags", "--stacktrace")
+        .build()
 
     result.task(":generateFeatureFlags").shouldNotBeNull()
   }
@@ -43,8 +43,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-kotlin-android-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .buildAndFail()
+        .withArguments("generateFeatureFlags", "--stacktrace")
+        .buildAndFail()
 
     result.task(":generateFeatureFlags").shouldBeNull()
     result.output shouldContain "Laboratory Gradle plugin requires Kotlin plugin."
@@ -54,8 +54,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-kotlin-android-present".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .build()
+        .withArguments("generateFeatureFlags", "--stacktrace")
+        .build()
 
     result.task(":generateFeatureFlags").shouldNotBeNull()
   }
@@ -64,8 +64,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-factory-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("--stacktrace")
-      .build()
+        .withArguments("--stacktrace")
+        .build()
 
     result.task(":generateFeatureFactory").shouldBeNull()
   }
@@ -74,8 +74,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-factory-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFactory", "--stacktrace")
-      .buildAndFail()
+        .withArguments("generateFeatureFactory", "--stacktrace")
+        .buildAndFail()
 
     result.task(":generateFeatureFactory").shouldBeNull()
   }
@@ -84,8 +84,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-factory-present".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFactory", "--stacktrace")
-      .build()
+        .withArguments("generateFeatureFactory", "--stacktrace")
+        .build()
 
     result.task(":generateFeatureFactory").shouldNotBeNull()
   }
@@ -94,8 +94,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-sourced-storage-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("--stacktrace")
-      .build()
+        .withArguments("--stacktrace")
+        .build()
 
     result.task(":generateSourcedFeatureStorage").shouldBeNull()
   }
@@ -104,8 +104,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-sourced-storage-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
-      .buildAndFail()
+        .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+        .buildAndFail()
 
     result.task(":generateSourcedFeatureStorage").shouldBeNull()
   }
@@ -114,8 +114,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-sourced-storage-present".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
-      .build()
+        .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+        .build()
 
     result.task(":generateSourcedFeatureStorage").shouldNotBeNull()
   }
@@ -124,8 +124,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-source-factory-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("--stacktrace")
-      .build()
+        .withArguments("--stacktrace")
+        .build()
 
     result.task(":generateFeatureSourceFactory").shouldBeNull()
   }
@@ -134,8 +134,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-source-factory-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureSourceFactory", "--stacktrace")
-      .buildAndFail()
+        .withArguments("generateFeatureSourceFactory", "--stacktrace")
+        .buildAndFail()
 
     result.task(":generateFeatureSourceFactory").shouldBeNull()
   }
@@ -144,8 +144,8 @@ class LaboratoryPluginSpec : StringSpec({
     val fixture = "plugin-source-factory-present".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureSourceFactory", "--stacktrace")
-      .build()
+        .withArguments("generateFeatureSourceFactory", "--stacktrace")
+        .build()
 
     result.task(":generateFeatureSourceFactory").shouldNotBeNull()
   }

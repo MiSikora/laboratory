@@ -14,15 +14,15 @@ class SampleApplication : Application() {
   override fun onCreate() {
     super.onCreate()
     val sourcedStorage = FeatureStorage.sourcedGenerated(
-      localSource = FeatureStorage.sharedPreferences(this, "localFeatures"),
-      firebaseSource = FeatureStorage.sharedPreferences(this, "firebaseFeatures"),
-      awsSource = FeatureStorage.sharedPreferences(this, "awsFeatures"),
-      azureSource = FeatureStorage.sharedPreferences(this, "azureStorage"),
+        localSource = FeatureStorage.sharedPreferences(this, "localFeatures"),
+        firebaseSource = FeatureStorage.sharedPreferences(this, "firebaseFeatures"),
+        awsSource = FeatureStorage.sharedPreferences(this, "awsFeatures"),
+        azureSource = FeatureStorage.sharedPreferences(this, "azureStorage"),
     )
     laboratory = Laboratory(sourcedStorage)
     LaboratoryActivity.configure(
-      laboratory = laboratory,
-      featureFactory = FeatureFactory.featureGenerated(),
+        laboratory = laboratory,
+        featureFactory = FeatureFactory.featureGenerated(),
     )
   }
 

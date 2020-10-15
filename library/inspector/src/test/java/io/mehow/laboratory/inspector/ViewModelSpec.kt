@@ -15,7 +15,7 @@ class ViewModelSpec : DescribeSpec({
   describe("view model") {
     it("filters empty feature groups") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
@@ -25,7 +25,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("orders feature groups by name") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
@@ -35,12 +35,12 @@ class ViewModelSpec : DescribeSpec({
 
     it("does not order feature values") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val features = viewModel.observeFeatureGroups("Local").first()
-        .map(FeatureGroup::models)
-        .map { models -> models.map(FeatureModel::feature) }
+          .map(FeatureGroup::models)
+          .map { models -> models.map(FeatureModel::feature) }
 
       features[0] shouldContainExactly listOf(First.C, First.B, First.A)
       features[1] shouldContainExactly listOf(Second.B, Second.C, Second.A)
@@ -48,7 +48,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("marks first feature as selected by default") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.C, Second.B)
@@ -61,7 +61,7 @@ class ViewModelSpec : DescribeSpec({
       }
 
       val viewModel = FeaturesViewModel(
-        Configuration(laboratory, mapOf("Local" to NoSourceFeatureFactory))
+          Configuration(laboratory, mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.A, Second.C)
@@ -69,7 +69,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("selects features") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.selectFeature(First.B)
@@ -80,7 +80,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("observes feature changes") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").test {
@@ -98,19 +98,19 @@ class ViewModelSpec : DescribeSpec({
 
     it("resets all features to their default values") {
       val viewModel = FeaturesViewModel(
-        Configuration(
-          Laboratory.inMemory(),
-          mapOf(
-            "First" to object : FeatureFactory {
-              @Suppress("UNCHECKED_CAST")
-              override fun create() = setOf(Empty::class.java, First::class.java) as Set<Class<Feature<*>>>
-            },
-            "Second" to object : FeatureFactory {
-              @Suppress("UNCHECKED_CAST")
-              override fun create() = setOf(Second::class.java) as Set<Class<Feature<*>>>
-            },
-          ),
-        )
+          Configuration(
+              Laboratory.inMemory(),
+              mapOf(
+                  "First" to object : FeatureFactory {
+                    @Suppress("UNCHECKED_CAST")
+                    override fun create() = setOf(Empty::class.java, First::class.java) as Set<Class<Feature<*>>>
+                  },
+                  "Second" to object : FeatureFactory {
+                    @Suppress("UNCHECKED_CAST")
+                    override fun create() = setOf(Second::class.java) as Set<Class<Feature<*>>>
+                  },
+              ),
+          )
       )
 
       viewModel.selectFeature(First.B)
@@ -124,7 +124,7 @@ class ViewModelSpec : DescribeSpec({
 
     it("resets feature and sources to their default values") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to SourcedFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to SourcedFeatureFactory))
       )
 
       viewModel.selectFeature(Sourced.B)
@@ -133,28 +133,28 @@ class ViewModelSpec : DescribeSpec({
       viewModel.resetAllFeatures()
 
       viewModel.observeSelectedFeaturesAndSources("Local").first() shouldContainExactly listOf(
-        Sourced.A to Sourced.Source.Local,
+          Sourced.A to Sourced.Source.Local,
       )
     }
 
     it("observes source changes") {
       val viewModel = FeaturesViewModel(
-        Configuration(Laboratory.inMemory(), mapOf("Local" to AllFeatureFactory))
+          Configuration(Laboratory.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
       viewModel.observeSelectedFeaturesAndSources("Local").test {
         expectItem() shouldContainExactly listOf(
-          First.C to null,
-          Second.B to null,
-          Sourced.A to Sourced.Source.Local
+            First.C to null,
+            Second.B to null,
+            Sourced.A to Sourced.Source.Local
         )
 
         viewModel.selectFeature(Sourced.Source.Remote)
 
         expectItem() shouldContainExactly listOf(
-          First.C to null,
-          Second.B to null,
-          Sourced.A to Sourced.Source.Remote
+            First.C to null,
+            Second.B to null,
+            Sourced.A to Sourced.Source.Remote
         )
       }
     }

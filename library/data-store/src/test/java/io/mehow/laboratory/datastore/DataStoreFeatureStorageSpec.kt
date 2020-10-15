@@ -27,8 +27,8 @@ class DataStoreFeatureStorageSpec : StringSpec({
 
     // Represents a map<string, int> with a key of Feature::class.java.name and value of 1.
     val corruptedBytes = "0a290a25696f2e6d65686f772e6c61626f7261746f72792e6461746173746f72652e466561747572651001"
-      .decodeHex()
-      .toByteArray()
+        .decodeHex()
+        .toByteArray()
     tempFile.writeBytes(corruptedBytes)
 
     laboratory.experiment<FeatureA>() shouldBe FeatureA.A

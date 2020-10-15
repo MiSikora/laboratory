@@ -1,6 +1,8 @@
 # IDEA
 *.iml
 /.idea/
+!/.idea/codeStyles/
+!/.idea/codeStyles/*
 
 # Gradle
 .gradle/

@@ -14,9 +14,9 @@ internal class SourcedFeatureStorage(
 
   @ExperimentalCoroutinesApi
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = featureClass.observeSource()
-    .map { source -> remoteSources[source.name] ?: localSource }
-    .onEmpty { emit(localSource) }
-    .flatMapLatest { storage -> storage.observeFeatureName(featureClass) }
+      .map { source -> remoteSources[source.name] ?: localSource }
+      .onEmpty { emit(localSource) }
+      .flatMapLatest { storage -> storage.observeFeatureName(featureClass) }
 
   override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>): String? {
     val storage = featureClass.getSource()?.let { remoteSources[it.name] } ?: localSource
@@ -26,14 +26,14 @@ internal class SourcedFeatureStorage(
   override suspend fun <T : Feature<*>> setFeatures(vararg features: T) = localSource.setFeatures(*features)
 
   private fun <T : Feature<*>> Class<T>.observeSource() = validatedSource()
-    ?.let { localLaboratory.observe(it) }
-    ?: emptyFlow()
+      ?.let { localLaboratory.observe(it) }
+      ?: emptyFlow()
 
   private suspend fun <T : Feature<*>> Class<T>.getSource() = validatedSource()
-    ?.let { localLaboratory.experiment(it) }
+      ?.let { localLaboratory.experiment(it) }
 
   private fun <T : Feature<*>> Class<T>.validatedSource() = enumConstants
-    ?.firstOrNull()
-    ?.sourcedWith
-    ?.takeUnless { it.enumConstants.isNullOrEmpty() }
+      ?.firstOrNull()
+      ?.sourcedWith
+      ?.takeUnless { it.enumConstants.isNullOrEmpty() }
 }

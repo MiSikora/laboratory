@@ -15,9 +15,9 @@ import java.util.Locale
 
 class SourcedFeatureStorageSpec : DescribeSpec({
   val storageBuilder = SourcedFeatureStorageModel.Builder(
-    visibility = Public,
-    packageName = "io.mehow",
-    sourceNames = listOf("Firebase", "S3"),
+      visibility = Public,
+      packageName = "io.mehow",
+      sourceNames = listOf("Firebase", "S3"),
   )
 
   describe("sourced feature storage model") {
@@ -62,8 +62,8 @@ class SourcedFeatureStorageSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = storageBuilder.copy(visibility = Internal)
-        .build()
-        .map { model -> model.generate(tempDir) }
+          .build()
+          .map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -94,8 +94,8 @@ class SourcedFeatureStorageSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = storageBuilder.copy(visibility = Public)
-        .build()
-        .map { model -> model.generate(tempDir) }
+          .build()
+          .map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -126,8 +126,8 @@ class SourcedFeatureStorageSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = storageBuilder.copy(sourceNames = listOf("Foo", "Bar", "Baz", "Foo", "Baz", "Foo"))
-        .build()
-        .map { model -> model.generate(tempDir) }
+          .build()
+          .map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -161,16 +161,16 @@ class SourcedFeatureStorageSpec : DescribeSpec({
 
       val localPermutations = (0b00000..0b11111).map {
         listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
-          .map { mask -> mask != 0 }
-          .mapIndexed { index, mask ->
-            val char = "local"[index].toString()
-            if(mask) char else char.capitalize(Locale.ROOT)
-          }.joinToString(separator = "")
+            .map { mask -> mask != 0 }
+            .mapIndexed { index, mask ->
+              val char = "local"[index].toString()
+              if (mask) char else char.capitalize(Locale.ROOT)
+            }.joinToString(separator = "")
       }
 
       val outputFile = storageBuilder.copy(sourceNames = localPermutations + "Foo")
-        .build()
-        .map { model -> model.generate(tempDir) }
+          .build()
+          .map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """
@@ -197,8 +197,8 @@ class SourcedFeatureStorageSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = storageBuilder.copy(sourceNames = emptyList())
-        .build()
-        .map { model -> model.generate(tempDir) }
+          .build()
+          .map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
         file.readText() shouldBe """

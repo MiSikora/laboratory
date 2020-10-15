@@ -40,11 +40,11 @@ class Builder internal constructor(
 
   fun build(): FeatureStorage {
     val dataStore = DataStoreFactory.create(
-      produceFile = produceFile,
-      serializer = serializer,
-      corruptionHandler = corruptionHandler,
-      migrations = migrations,
-      scope = coroutineScope,
+        produceFile = produceFile,
+        serializer = serializer,
+        corruptionHandler = corruptionHandler,
+        migrations = migrations,
+        scope = coroutineScope,
     )
     return DataStoreFeatureStorage(dataStore)
   }

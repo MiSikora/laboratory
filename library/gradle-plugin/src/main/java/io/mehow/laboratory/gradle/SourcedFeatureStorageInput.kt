@@ -21,9 +21,9 @@ class SourcedFeatureStorageInput internal constructor() {
 
   internal fun toBuilder(sourceNames: List<String>): SourcedFeatureStorageModel.Builder {
     return SourcedFeatureStorageModel.Builder(
-      visibility = if (isPublic) Public else Internal,
-      packageName = packageName ?: "",
-      sourceNames = sourceNames,
+        visibility = if (isPublic) Public else Internal,
+        packageName = packageName ?: "",
+        sourceNames = sourceNames,
     )
   }
 }

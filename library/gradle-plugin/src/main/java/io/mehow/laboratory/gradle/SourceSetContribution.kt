@@ -67,8 +67,8 @@ private val Any.kotlin: SourceDirectorySet?
   get() {
     val convention = getConvention(KOTLIN_DSL_NAME) ?: return null
     val sourceSetInterface = convention.javaClass
-      .interfaces
-      .find { it.name == KotlinSourceSet::class.qualifiedName }
+        .interfaces
+        .find { it.name == KotlinSourceSet::class.qualifiedName }
     val getKotlin = sourceSetInterface?.methods?.find { it.name == "getKotlin" } ?: return null
     return getKotlin(convention) as? SourceDirectorySet
   }

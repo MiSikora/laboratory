@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <public name="io_mehow_laboratory_plugin_id" type="string"/>
+  <public name="io_mehow_laboratory_plugin_id" type="string" />
 </resources>

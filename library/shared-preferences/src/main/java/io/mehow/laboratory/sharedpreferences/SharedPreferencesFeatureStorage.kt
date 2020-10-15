@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 
 @Deprecated(
-  message = "Implementation will be hidden in the next minor release",
-  replaceWith = ReplaceWith(
-    expression = "FeatureStorage.sharedPreferences(preferences)",
-    imports = [
-      "io.mehow.laboratory.FeatureStorage",
-      "io.mehow.laboratory.sharedpreferences.sharedPreferences",
-    ],
-  ),
+    message = "Implementation will be hidden in the next minor release",
+    replaceWith = ReplaceWith(
+        expression = "FeatureStorage.sharedPreferences(preferences)",
+        imports = [
+          "io.mehow.laboratory.FeatureStorage",
+          "io.mehow.laboratory.sharedpreferences.sharedPreferences",
+        ],
+    ),
 )
 class SharedPreferencesFeatureStorage(
   private val preferences: SharedPreferences,

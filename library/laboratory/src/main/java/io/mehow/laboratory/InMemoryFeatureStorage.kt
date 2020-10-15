@@ -9,8 +9,8 @@ internal class InMemoryFeatureStorage : FeatureStorage {
   private val featureFlow = MutableStateFlow(features)
 
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = featureFlow
-    .map { it[featureClass] }
-    .distinctUntilChanged()
+      .map { it[featureClass] }
+      .distinctUntilChanged()
 
   override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = features[featureClass]
 

@@ -47,9 +47,9 @@ internal class FeatureGroupFragment : Fragment() {
       "Missing section key"
     }
     viewModel
-      .observeFeatureGroups(section)
-      .onEach { adapter.submitList(it) }
-      .launchIn(lifecycleScope)
+        .observeFeatureGroups(section)
+        .onEach { adapter.submitList(it) }
+        .launchIn(lifecycleScope)
   }
 
   companion object {

@@ -30,12 +30,12 @@ class FeatureFlagInput internal constructor(private val name: String) {
 
   internal fun toBuilder(): FeatureFlagModel.Builder {
     return FeatureFlagModel.Builder(
-      visibility = if (isPublic) Public else Internal,
-      packageName = packageName ?: "",
-      names = listOf(name),
-      values = values,
-      sourceValues = sources,
-      description = description.orEmpty(),
+        visibility = if (isPublic) Public else Internal,
+        packageName = packageName ?: "",
+        names = listOf(name),
+        values = values,
+        sourceValues = sources,
+        description = description.orEmpty(),
     )
   }
 }

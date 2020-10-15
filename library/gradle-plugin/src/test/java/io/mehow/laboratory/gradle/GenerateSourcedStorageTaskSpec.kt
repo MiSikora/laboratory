@@ -23,8 +23,8 @@ class GenerateSourcedStorageTaskSpec : StringSpec({
 
   beforeTest {
     gradleRunner = GradleRunner.create()
-      .withPluginClasspath()
-      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+            .withPluginClasspath()
+            .withArguments("generateSourcedFeatureStorage", "--stacktrace")
   }
 
   afterTest {

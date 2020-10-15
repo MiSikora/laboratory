@@ -23,8 +23,8 @@ class GenerateFeatureFactoryTaskSpec : StringSpec({
 
   beforeTest {
     gradleRunner = GradleRunner.create()
-      .withPluginClasspath()
-      .withArguments("generateFeatureFactory", "--stacktrace")
+        .withPluginClasspath()
+        .withArguments("generateFeatureFactory", "--stacktrace")
   }
 
   afterTest {

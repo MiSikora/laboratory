@@ -12,8 +12,8 @@ internal class DataStoreFeatureStorage(
   private val dataStore: DataStore<FeatureFlags>,
 ) : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = dataStore
-    .data
-    .map { it.value[featureClass.name] }
+      .data
+      .map { it.value[featureClass.name] }
 
   override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = try {
     dataStore.data.first().value[featureClass.name]

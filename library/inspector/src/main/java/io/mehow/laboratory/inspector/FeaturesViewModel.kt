@@ -26,8 +26,8 @@ internal class FeaturesViewModel(
   fun observeFeatureGroups(section: String) = flow {
     val listGroupFlow = withContext(Dispatchers.Default) {
       metadataProvider[section]
-        .map { it.observeGroup(laboratory) }
-        .fold(emptyFlow, ::combineFeatureGroups)
+          .map { it.observeGroup(laboratory) }
+          .fold(emptyFlow, ::combineFeatureGroups)
     }.flowOn(Dispatchers.Default).map { featureGroups ->
       featureGroups.sortedBy(FeatureGroup::name)
     }
@@ -36,8 +36,8 @@ internal class FeaturesViewModel(
 
   suspend fun resetAllFeatures() = withContext(Dispatchers.Default) {
     val defaultValues = metadataProvider.featuresAndSources()
-      .map(FeatureMetadata::defaultValue)
-      .toTypedArray()
+        .map(FeatureMetadata::defaultValue)
+        .toTypedArray()
     laboratory.setFeatures(*defaultValues)
   }
 

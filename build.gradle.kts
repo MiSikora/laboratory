@@ -58,11 +58,11 @@ allprojects {
     kotlinOptions {
       jvmTarget = "1.8"
       freeCompilerArgs = listOf(
-        "-progressive",
-        "-Xjvm-default=enable",
-        "-Xopt-in=kotlin.RequiresOptIn",
-        "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-        "-Xopt-in=kotlin.time.ExperimentalTime"
+          "-progressive",
+          "-Xjvm-default=enable",
+          "-Xopt-in=kotlin.RequiresOptIn",
+          "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+          "-Xopt-in=kotlin.time.ExperimentalTime"
       )
     }
   }

@@ -13,8 +13,8 @@ import org.junit.Test
 
 class SharedPreferencesFeaturesStorageTest {
   private val preferences = ApplicationProvider
-    .getApplicationContext<Context>()
-    .getSharedPreferences("laboratory", MODE_PRIVATE)
+      .getApplicationContext<Context>()
+      .getSharedPreferences("laboratory", MODE_PRIVATE)
   private val storage = FeatureStorage.sharedPreferences(preferences)
   private val laboratory = Laboratory(storage)
 

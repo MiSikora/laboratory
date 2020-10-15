@@ -19,8 +19,8 @@ data class InvalidFeatureName(
 ) : GenerationFailure {
   override val message
     get() = "" +
-      "Feature name must contain only alphanumeric characters or underscores " +
-      "and must start with a letter. Found $name in $fqcn."
+        "Feature name must contain only alphanumeric characters or underscores " +
+        "and must start with a letter. Found $name in $fqcn."
 }
 
 data class InvalidFactoryName(
@@ -29,8 +29,8 @@ data class InvalidFactoryName(
 ) : GenerationFailure {
   override val message
     get() = "" +
-      "Factory name must contain only alphanumeric characters or underscores " +
-      "and must start with a letter. Found $name in $fqcn."
+        "Factory name must contain only alphanumeric characters or underscores " +
+        "and must start with a letter. Found $name in $fqcn."
 }
 
 data class NoFeatureValues(
@@ -46,8 +46,8 @@ data class InvalidFeatureValues(
 ) : GenerationFailure {
   override val message
     get() = "" +
-      "Feature values must contain only alphanumeric characters or underscores " +
-      "and must start with a letter. Found ${invalidValues.toList()} in $fqcn."
+        "Feature values must contain only alphanumeric characters or underscores " +
+        "and must start with a letter. Found ${invalidValues.toList()} in $fqcn."
 }
 
 data class FeatureValuesCollision(

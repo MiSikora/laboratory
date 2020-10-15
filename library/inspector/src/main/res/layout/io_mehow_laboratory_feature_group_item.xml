@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="?io_mehow_laboratory_elevation"
     android:layout_margin="@dimen/io_mehow_laboratory_spacing"
+    app:cardElevation="?io_mehow_laboratory_elevation"
     >
 
   <LinearLayout

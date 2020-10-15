@@ -36,9 +36,9 @@ class SourcedFeatureStorageModel private constructor(
 
     private fun validatePackageName(): Either<GenerationFailure, String> {
       return Either.cond(
-        test = packageName.isEmpty() || packageName.matches(packageNameRegex),
-        ifTrue = { packageName },
-        ifFalse = { InvalidPackageName(fqcn) }
+          test = packageName.isEmpty() || packageName.matches(packageNameRegex),
+          ifTrue = { packageName },
+          ifFalse = { InvalidPackageName(fqcn) }
       )
     }
 

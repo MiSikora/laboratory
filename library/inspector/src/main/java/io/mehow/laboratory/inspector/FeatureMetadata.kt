@@ -33,20 +33,20 @@ internal class FeatureMetadata private constructor(private val feature: Class<Fe
     private val featureFactories: Map<String, FeatureFactory>,
   ) {
     operator fun get(section: String) = featureFactories
-      .mapValues { (_, factory) -> factory.create() }
-      .getValue(section)
-      .mapNotNull(FeatureMetadata::create)
+        .mapValues { (_, factory) -> factory.create() }
+        .getValue(section)
+        .mapNotNull(FeatureMetadata::create)
 
     fun featuresAndSources() = featureFactories.values
-      .map(FeatureFactory::create)
-      .flatten()
-      .mapNotNull(FeatureMetadata::create)
-      .flatMap { metadata -> listOfNotNull(metadata, metadata.sourceMetadata) }
+        .map(FeatureFactory::create)
+        .flatten()
+        .mapNotNull(FeatureMetadata::create)
+        .flatMap { metadata -> listOfNotNull(metadata, metadata.sourceMetadata) }
   }
 
   companion object {
     fun create(feature: Class<Feature<*>>) = feature
-      .takeUnless { it.enumConstants.isNullOrEmpty() }
-      ?.let(::FeatureMetadata)
+        .takeUnless { it.enumConstants.isNullOrEmpty() }
+        ?.let(::FeatureMetadata)
   }
 }
