@@ -86,7 +86,7 @@ allprojects {
 
       defaultConfig {
         minSdkVersion(Build.MinSdk)
-        targetSdkVersion(Build.CompileSdk)
+        targetSdkVersion(Build.TargetSdk)
 
         vectorDrawables.useSupportLibrary = true
       }
