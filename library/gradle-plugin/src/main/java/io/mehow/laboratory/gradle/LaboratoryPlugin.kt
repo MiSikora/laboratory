@@ -12,12 +12,14 @@ import java.util.concurrent.atomic.AtomicBoolean
 private const val pluginName = "laboratory"
 
 class LaboratoryPlugin : Plugin<Project> {
+  private val hasAndroid = AtomicBoolean(false)
   private val hasKotlin = AtomicBoolean(false)
   private lateinit var extension: LaboratoryExtension
 
   override fun apply(project: Project) {
     extension = project.extensions.create(pluginName, LaboratoryExtension::class.java)
     project.requireKotlinPlugin()
+    project.checkIfHasAndroid()
 
     project.registerFeaturesTask()
     project.registerFeatureFactoryTask()
@@ -36,6 +38,15 @@ class LaboratoryPlugin : Plugin<Project> {
     }
   }
 
+  private fun Project.checkIfHasAndroid() {
+    val androidPluginHandler = { _: Plugin<*> -> hasAndroid.set(true) }
+    plugins.withId("com.android.application", androidPluginHandler)
+    plugins.withId("com.android.library", androidPluginHandler)
+    plugins.withId("com.android.instantapp", androidPluginHandler)
+    plugins.withId("com.android.feature", androidPluginHandler)
+    plugins.withId("com.android.dynamic-feature", androidPluginHandler)
+  }
+
   private fun Project.registerFeaturesTask() = afterEvaluate {
     val codeGenDir = File("$buildDir/generated/laboratory/code/feature-flags")
     val featuresTask = registerTask<FeatureFlagsTask>("generateFeatureFlags") { task ->
@@ -44,7 +55,7 @@ class LaboratoryPlugin : Plugin<Project> {
       task.features = extension.featureInputs
       task.codeGenDir = codeGenDir
     }
-    featuresTask.contributeToSourceSets(codeGenDir, this)
+    addSourceSets(featuresTask, codeGenDir)
   }
 
   private fun Project.registerFeatureFactoryTask() = afterEvaluate {
@@ -63,7 +74,7 @@ class LaboratoryPlugin : Plugin<Project> {
       task.featureModelsMapper = { it }
     }
     findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
-    factoryTask.contributeToSourceSets(codeGenDir, this)
+    addSourceSets(factoryTask, codeGenDir)
   }
 
   private fun Project.registerSourcedFeatureStorageTask() = afterEvaluate {
@@ -79,7 +90,7 @@ class LaboratoryPlugin : Plugin<Project> {
       task.codeGenDir = codeGenDir
     }
     findAllFeatures(storageInput.projectFilter) { featureInputs.addAll(it) }
-    storageTask.contributeToSourceSets(codeGenDir, this)
+    addSourceSets(storageTask, codeGenDir)
   }
 
   private fun Project.registerFeatureSourcesFactoryTask() = afterEvaluate {
@@ -98,7 +109,7 @@ class LaboratoryPlugin : Plugin<Project> {
       task.featureModelsMapper = { it.sourceModels() }
     }
     findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
-    factoryTask.contributeToSourceSets(codeGenDir, this)
+    addSourceSets(factoryTask, codeGenDir)
   }
 
   private fun Project.findAllFeatures(
@@ -127,5 +138,13 @@ class LaboratoryPlugin : Plugin<Project> {
     crossinline action: (T) -> Unit,
   ): TaskProvider<out T> {
     return tasks.register(name, T::class.java) { action(it) }
+  }
+
+  private fun Project.addSourceSets(task: TaskProvider<out Task>, dir: File) {
+    if (hasAndroid.get()) {
+      task.contributeToAndroidSourceSets(dir, this)
+    } else {
+      task.contributeToSourceSets(dir, this)
+    }
   }
 }
