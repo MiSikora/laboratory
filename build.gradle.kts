@@ -75,7 +75,7 @@ allprojects {
     }
   }
 
-  plugins.withType<BasePlugin> {
+  plugins.withType<BasePlugin<*, *>> {
     extension.compileOptions {
       sourceCompatibility = JavaVersion.VERSION_1_8
       targetCompatibility = JavaVersion.VERSION_1_8
