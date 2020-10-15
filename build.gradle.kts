@@ -83,7 +83,6 @@ allprojects {
 
     extensions.findByType<BaseExtension>()?.apply {
       compileSdkVersion(Build.CompileSdk)
-      buildToolsVersion(Build.BuildToolsVersion)
 
       defaultConfig {
         minSdkVersion(Build.MinSdk)
