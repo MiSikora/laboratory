@@ -38,7 +38,7 @@ object Libs {
 
     const val AppCompat = "androidx.appcompat:appcompat:1.2.0"
 
-    const val DataStore = "androidx.datastore:datastore-core:1.0.0-alpha01"
+    const val DataStore = "androidx.datastore:datastore-core:1.0.0-alpha02"
 
     const val FragmentKtx = "androidx.fragment:fragment-ktx:1.2.5"
 
