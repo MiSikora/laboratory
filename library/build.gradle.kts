@@ -16,7 +16,6 @@ buildscript {
     mavenCentral()
     gradlePluginPortal()
     google()
-    mavenLocal() // Used for sample snapshot testing.
   }
 
   dependencies {
@@ -27,8 +26,6 @@ buildscript {
     classpath(Libs.Detekt.GradlePlugin)
     classpath(Libs.GradleVersions.GradlePlugin)
     classpath(Libs.Wire.GradlePlugin)
-    @Suppress("GradleDynamicVersion") // We want the latest version as we control it.
-    classpath("io.mehow.laboratory:laboratory-gradle-plugin:+")
   }
 }
 
@@ -37,7 +34,6 @@ allprojects {
     mavenCentral()
     google()
     jcenter()
-    mavenLocal() // Used for sample snapshot testing.
   }
 
   group = properties["GROUP"]!!
