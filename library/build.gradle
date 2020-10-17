@@ -1,0 +1,136 @@
+buildscript {
+  apply from: "$rootDir/gradle/dependencies.gradle"
+
+  repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    google()
+  }
+
+  dependencies {
+    classpath libs.android.gradlePlugin
+    classpath libs.kotlin.gradlePlugin
+    classpath libs.mavenPublishGradlePlugin
+    classpath libs.kotlin.dokkaGradlePlugin
+    classpath libs.detekt.gradlePlugin
+    classpath libs.gradleVersions.gradlePlugin
+    classpath libs.wire.gradlePlugin
+  }
+}
+
+allprojects {
+  repositories {
+    mavenCentral()
+    google()
+    jcenter()
+  }
+
+  group GROUP
+  version VERSION_NAME
+
+  tasks.withType(Test) {
+    testLogging {
+      events "skipped", "failed", "passed"
+    }
+  }
+
+  tasks.withType(JavaCompile) {
+    sourceCompatibility "1.8"
+    targetCompatibility "1.8"
+  }
+
+  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+      jvmTarget = "1.8"
+      freeCompilerArgs += [
+          "-progressive",
+          "-Xjvm-default=enable",
+          "-Xopt-in=kotlin.RequiresOptIn",
+          "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+          "-Xopt-in=kotlin.time.ExperimentalTime",
+      ]
+    }
+  }
+
+  plugins.withType(com.android.build.gradle.LibraryPlugin) {
+    android.variantFilter {
+      setIgnore it.name != "release"
+    }
+  }
+
+  pluginManager.withPlugin("com.android.library") {
+    android {
+      compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+      }
+
+      compileSdkVersion versions.androidBuild.compileSdk
+
+      defaultConfig {
+        minSdkVersion versions.androidBuild.minSdk
+        targetSdkVersion versions.androidBuild.targetSdk
+
+        vectorDrawables.useSupportLibrary true
+      }
+
+      lintOptions {
+        lintConfig rootProject.file("lint.xml")
+
+        htmlReport !isCi()
+        xmlReport isCi()
+        xmlOutput file("build/reports/lint/lint-results.xml")
+
+        textReport true
+        textOutput "stdout"
+        explainIssues false
+
+        checkDependencies false
+        checkGeneratedSources true
+        checkTestSources false
+        checkReleaseBuilds false
+      }
+    }
+  }
+}
+
+apply plugin: libs.detekt.gradlePluginId
+
+dependencies {
+  detekt libs.detekt.formatting
+  detekt libs.detekt.cli
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt) {
+  parallel true
+  config.setFrom(rootProject.files("detekt-config.yml"))
+  setSource(files(projectDir))
+  exclude "**/test/**", "**/androidTest/**"
+  exclude subprojects.collect { "${rootDir.toPath().relativize(it.buildDir.toPath())}/" }
+  reports {
+    xml {
+      enabled = isCi()
+      destination = file("build/reports/detekt/detekt-results.xml")
+    }
+    html.enabled = !isCi()
+    txt.enabled = false
+  }
+}
+
+apply plugin: libs.gradleVersions.gradlePluginId
+
+dependencyUpdates {
+  rejectVersionIf {
+    isNonStable(it.candidate.version) && !isNonStable(it.currentVersion)
+  }
+}
+
+private static def isNonStable(String version) {
+  def regex = /^[0-9,.v-]+(-r)?$/
+  return !(version ==~ regex)
+}
+
+private static def isCi() {
+  // noinspection GroovyPointlessBoolean
+  return System.getenv("CI")?.toBoolean() == true
+}

@@ -1,0 +1,27 @@
+plugins {
+  id "com.android.library"
+  id "org.jetbrains.kotlin.android"
+}
+
+android {
+  resourcePrefix "io_mehow_laboratory_"
+}
+
+dependencies {
+  api project(":laboratory")
+  implementation libs.hyperion.plugin
+  implementation libs.android.x.coreKtx
+  implementation libs.android.x.appCompat
+  implementation libs.android.x.fragmentKtx
+  implementation libs.android.x.viewModelKtx
+  implementation libs.android.x.recyclerView
+  implementation libs.android.x.viewPager2
+  implementation libs.android.material
+  implementation libs.kotlin.x.coroutinesAndroid
+
+  testImplementation libs.kotest.runnerJunit5
+  testImplementation libs.kotest.assertions
+  testImplementation libs.turbine
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

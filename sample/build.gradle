@@ -1,0 +1,83 @@
+plugins {
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "io.mehow.laboratory"
+}
+
+android {
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  compileSdkVersion versions.androidBuild.compileSdk
+
+  signingConfigs {
+    config {
+      keyAlias "mehow-io"
+      keyPassword "mehow-io"
+      storeFile file("mehow-io.keystore")
+      storePassword "mehow-io"
+    }
+  }
+
+  defaultConfig {
+    applicationId "io.mehow.laboratory.sample"
+
+    minSdkVersion versions.androidBuild.minSdk
+    targetSdkVersion versions.androidBuild.targetSdk
+
+    versionCode 1
+    versionName "1.0.0"
+
+    vectorDrawables.useSupportLibrary true
+
+    signingConfig signingConfigs.config
+  }
+
+  buildTypes.debug.setMatchingFallbacks "release"
+
+  variantFilter {
+    setIgnore it.name != "debug"
+  }
+}
+
+laboratory {
+  packageName = "io.mehow.laboratory.sample"
+  sourcedStorage()
+  featureFactory()
+
+  feature("LogType") {
+    withValue("Verbose")
+    withValue("Debug")
+    withDefaultValue("Info")
+    withValue("Warning")
+    withValue("Error")
+  }
+
+  feature("ReportRootedDevice") {
+    description = "Reports during cold start whether device is rooted"
+
+    withValue("Enabled")
+    withDefaultValue("Disabled")
+  }
+
+  feature("ShowAds") {
+    withDefaultValue("Enabled")
+    withValue("Disabled")
+
+    withSource("Azure")
+  }
+}
+
+dependencies {
+  implementation libs.kotlin.stdLibJdk7
+  implementation libs.kotlin.x.coroutinesAndroid
+  implementation libs.android.material
+  implementation libs.hyperion.core
+  implementation libs.laboratory.sharedPreferences
+  implementation libs.laboratory.hyperionPlugin
+  implementation project(":sample:module-a")
+  implementation project(":sample:module-b")
+  implementation project(":sample:module-c")
+}

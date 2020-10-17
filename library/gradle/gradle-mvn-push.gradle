@@ -3,6 +3,6 @@ apply plugin: "com.vanniktech.maven.publish"
 signing {
   def signingKey = findProperty("SONATYPE_NEXUS_SIGNING_KEY") ?: ""
   if (!signingKey.isEmpty()) {
-    useInMemoryPgpKeys(signingKey, "")
+    useInMemoryPgpKeys signingKey, ""
   }
 }

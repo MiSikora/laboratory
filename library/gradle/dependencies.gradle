@@ -1,0 +1,75 @@
+ext.versions = [
+    "kotlin": "1.4.10",
+    "coroutines": "1.3.9",
+    "kotest": "4.3.0",
+    "androidxTest": "1.3.0",
+    "hyperion": "0.9.30",
+    "detekt": "1.14.1",
+    "wire": "3.4.0",
+    "androidBuild": [
+        "minSdk": 21,
+        "compileSdk": 30,
+        "targetSdk": 30,
+    ],
+]
+
+ext.libs = [
+    "android": [
+        "gradlePlugin": "com.android.tools.build:gradle:4.1.0",
+        "x": [
+            "coreKtx": "androidx.core:core-ktx:1.3.2",
+            "appCompat": "androidx.appcompat:appcompat:1.2.0",
+            "dataStore": "androidx.datastore:datastore-core:1.0.0-alpha02",
+            "fragmentKtx": "androidx.fragment:fragment-ktx:1.2.5",
+            "viewModelKtx": "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0",
+            "viewPager2": "androidx.viewpager2:viewpager2:1.0.0",
+            "recyclerView": "androidx.recyclerview:recyclerview:1.1.0",
+            "test": [
+                "coreKtx": "androidx.test:core-ktx:${versions.androidxTest}",
+                "orchestrator": "androidx.test:orchestrator:${versions.androidxTest}",
+                "runner": "androidx.test:runner:${versions.androidxTest}",
+            ],
+            "testExtJunitKtx": "androidx.test.ext:junit-ktx:1.1.2",
+        ],
+        "material": "com.google.android.material:material:1.2.1",
+    ],
+    "kotlin": [
+        "gradlePlugin": "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
+        "stdLibJdk7": "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
+        "stdLibJdk8": "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
+        "dokkaGradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:${versions.kotlin}",
+        "x": [
+            "coroutinesCore": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+            "coroutinesAndroid": "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}",
+        ],
+    ],
+    "kotest": [
+        "runnerJunit5": "io.kotest:kotest-runner-junit5-jvm:${versions.kotest}",
+        "assertions": "io.kotest:kotest-assertions-core-jvm:${versions.kotest}",
+        "assertionsArrow": "io.kotest:kotest-assertions-arrow:${versions.kotest}",
+        "property": "io.kotest:kotest-property-jvm:${versions.kotest}",
+    ],
+    "hyperion": [
+        "core": "com.willowtreeapps.hyperion:hyperion-core:${versions.hyperion}",
+        "plugin": "com.willowtreeapps.hyperion:hyperion-plugin:${versions.hyperion}"
+    ],
+    "autoService": "com.google.auto.service:auto-service:1.0-rc7",
+    "mavenPublishGradlePlugin": "com.vanniktech:gradle-maven-publish-plugin:0.13.0",
+    "detekt": [
+        "gradlePluginId": "io.gitlab.arturbosch.detekt",
+        "gradlePlugin": "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}",
+        "formatting": "io.gitlab.arturbosch.detekt:detekt-formatting:${versions.detekt}",
+        "cli": "io.gitlab.arturbosch.detekt:detekt-cli:${versions.detekt}",
+    ],
+    "gradleVersions": [
+        "gradlePlugin": "com.github.ben-manes:gradle-versions-plugin:0.33.0",
+        "gradlePluginId": "com.github.ben-manes.versions",
+    ],
+    "kotlinPoet": "com.squareup:kotlinpoet:1.7.1",
+    "arrow": "io.arrow-kt:arrow-core:0.10.5",
+    "wire": [
+        "gradlePlugin": "com.squareup.wire:wire-gradle-plugin:${versions.wire}",
+        "runtime": "com.squareup.wire:wire-runtime:${versions.wire}",
+    ],
+    "turbine": "app.cash.turbine:turbine:0.2.1",
+]
