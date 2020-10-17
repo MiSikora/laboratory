@@ -23,7 +23,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
-  api(project(":library:laboratory"))
+  api(project(":laboratory"))
   api(Libs.AndroidX.DataStore)
   api(Libs.Wire.Runtime)
 

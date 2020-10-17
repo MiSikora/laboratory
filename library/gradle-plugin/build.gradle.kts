@@ -26,7 +26,7 @@ tasks.withType<PluginUnderTestMetadata> {
 
 dependencies {
   implementation(Libs.Kotlin.StdLibJdk8)
-  implementation(project(":library:generator"))
+  implementation(project(":generator"))
   implementation(Libs.Kotlin.GradlePlugin)
   compileOnly(Libs.AndroidGradlePlugin)
 

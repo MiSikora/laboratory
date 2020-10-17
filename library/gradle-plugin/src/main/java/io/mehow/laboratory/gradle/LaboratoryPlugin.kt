@@ -18,33 +18,46 @@ class LaboratoryPlugin : Plugin<Project> {
 
   override fun apply(project: Project) {
     extension = project.extensions.create(pluginName, LaboratoryExtension::class.java)
-    project.requireKotlinPlugin()
-    project.checkIfHasAndroid()
-
-    project.registerFeaturesTask()
-    project.registerFeatureFactoryTask()
-    project.registerSourcedFeatureStorageTask()
-    project.registerFeatureSourcesFactoryTask()
+    project.setUpKotlinProject()
+    project.setUpAndroidProject()
   }
 
-  private fun Project.requireKotlinPlugin() {
+  private fun Project.setUpKotlinProject() {
     val kotlinPluginHandler = { _: Plugin<*> -> hasKotlin.set(true) }
     plugins.withId("org.jetbrains.kotlin.android", kotlinPluginHandler)
     plugins.withId("org.jetbrains.kotlin.jvm", kotlinPluginHandler)
 
     afterEvaluate {
-      check(hasKotlin.get()) { "Laboratory Gradle plugin requires Kotlin plugin." }
-      addLaboratoryDependency()
+      registerLaboratoryTasks(afterAndroid = false)
     }
   }
 
-  private fun Project.checkIfHasAndroid() {
-    val androidPluginHandler = { _: Plugin<*> -> hasAndroid.set(true) }
+  private fun Project.setUpAndroidProject() {
+    val androidPluginHandler = { _: Plugin<*> ->
+      hasAndroid.set(true)
+      afterEvaluate {
+        registerLaboratoryTasks(afterAndroid = true)
+      }
+    }
     plugins.withId("com.android.application", androidPluginHandler)
     plugins.withId("com.android.library", androidPluginHandler)
     plugins.withId("com.android.instantapp", androidPluginHandler)
     plugins.withId("com.android.feature", androidPluginHandler)
     plugins.withId("com.android.dynamic-feature", androidPluginHandler)
+  }
+
+  private fun Project.registerLaboratoryTasks(afterAndroid: Boolean) {
+    if (hasAndroid.get() && !afterAndroid) return
+
+    check(hasKotlin.get()) {
+      "Laboratory Gradle plugin requires Kotlin plugin."
+    }
+
+    addLaboratoryDependency()
+    registerFeaturesTask()
+    registerFeatureFactoryTask()
+    registerSourcedFeatureStorageTask()
+    registerFeatureSourcesFactoryTask()
   }
 
   private fun Project.registerFeaturesTask() = afterEvaluate {

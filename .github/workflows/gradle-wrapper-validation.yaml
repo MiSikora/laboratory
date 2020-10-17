@@ -6,9 +6,21 @@ on:
   pull_request:
 
 jobs:
-  validate-gradle-wrapper:
-    name: Validate Gradle Wrapper
+  validate-project-gradle-wrapper:
+    name: Validate Project
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v2
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+  validate-library-gradle-wrapper:
+    name: Validate Library
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: library
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v2

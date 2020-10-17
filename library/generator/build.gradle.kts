@@ -9,7 +9,7 @@ tasks.withType<Test> {
 dependencies {
   api(Libs.Arrow)
   api(Libs.Kotlin.StdLibJdk8)
-  implementation(project(":library:laboratory"))
+  implementation(project(":laboratory"))
   api(Libs.KotlinPoet)
 
   testImplementation(Libs.Kotest.RunnerJunit5)

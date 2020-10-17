@@ -4,6 +4,10 @@ on:
     tags:
       - '*.*.*'
 
+defaults:
+  run:
+    working-directory: library
+
 jobs:
   deploy-release:
     name: Deploy Release

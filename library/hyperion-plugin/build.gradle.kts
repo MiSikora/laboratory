@@ -9,7 +9,7 @@ android {
 }
 
 dependencies {
-  api(project(":library:inspector"))
+  api(project(":inspector"))
   api(Libs.Hyperion.Plugin)
   implementation(Libs.AndroidX.AppCompat)
   kapt(Libs.AutoService)
