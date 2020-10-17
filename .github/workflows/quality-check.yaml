@@ -36,7 +36,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck
+          script: ./gradlew connectedCheck --stacktrace
         env:
           API_LEVEL: 29
       - name: Stop Gradle
@@ -57,7 +57,7 @@ jobs:
           key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
           restore-keys: cache-gradle-
       - name: Run Tests
-        run: ./gradlew test
+        run: ./gradlew test --stacktrace
       - name: Stop Gradle
         run: ./gradlew --stop
 
@@ -76,7 +76,7 @@ jobs:
           key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
           restore-keys: cache-gradle-
       - name: Run Detekt
-        run: ./gradlew detekt
+        run: ./gradlew detekt --stacktrace
       - name: Stop Gradle
         run: ./gradlew --stop
 
@@ -95,6 +95,6 @@ jobs:
           key: cache-gradle-${{ hashFiles('**/build.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties', 'buildSrc/src/main/java/Libs.kt') }}
           restore-keys: cache-gradle-
       - name: Run Lint
-        run: ./gradlew lint
+        run: ./gradlew lint --stacktrace
       - name: Stop Gradle
         run: ./gradlew --stop
