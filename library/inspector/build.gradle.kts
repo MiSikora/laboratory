@@ -12,7 +12,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
-  api(project(":library:laboratory"))
+  api(project(":laboratory"))
   implementation(Libs.Hyperion.Plugin)
   implementation(Libs.AndroidX.CoreKtx)
   implementation(Libs.AndroidX.AppCompat)

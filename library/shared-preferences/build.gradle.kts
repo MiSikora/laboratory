@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-  api(project(":library:laboratory"))
+  api(project(":laboratory"))
   implementation(Libs.AndroidX.CoreKtx)
 
   androidTestUtil(Libs.AndroidX.Test.Orchestrator)

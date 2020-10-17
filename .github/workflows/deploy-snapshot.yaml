@@ -8,6 +8,10 @@ on:
       - '*.md'
       - 'LICENSE'
 
+defaults:
+  run:
+    working-directory: library
+
 jobs:
   deploy-snapshot:
     name: Deploy Snapshot

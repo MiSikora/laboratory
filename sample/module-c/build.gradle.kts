@@ -21,5 +21,5 @@ laboratory {
 }
 
 dependencies {
-  api(Libs.Kotlin.StdLibJdk7)
+  api("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
 }

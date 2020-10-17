@@ -65,14 +65,12 @@ laboratory {
 }
 
 dependencies {
-  api(Libs.Kotlin.StdLibJdk7)
-  implementation(Libs.Kotlin.Coroutines.Android)
-  implementation(Libs.Material)
-  implementation(Libs.Hyperion.Core)
-  @Suppress("GradleDynamicVersion") // We want the latest version as we control it.
-  implementation("io.mehow.laboratory:laboratory-hyperion-plugin:+")
-  @Suppress("GradleDynamicVersion") // We want the latest version as we control it.
-  implementation("io.mehow.laboratory:laboratory-shared-preferences:+")
+  api("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+  implementation("com.google.android.material:material:1.2.1")
+  implementation("com.willowtreeapps.hyperion:hyperion-core:0.9.30")
+  implementation("io.mehow.laboratory:hyperion-plugin")
+  implementation("io.mehow.laboratory:shared-preferences")
   implementation(project(":sample:module-a"))
   implementation(project(":sample:module-b"))
   implementation(project(":sample:module-c"))

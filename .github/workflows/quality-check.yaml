@@ -13,6 +13,10 @@ on:
       - '*.md'
       - 'LICENSE'
 
+defaults:
+  run:
+    working-directory: library
+
 jobs:
   android-tests:
     name: Android Tests
