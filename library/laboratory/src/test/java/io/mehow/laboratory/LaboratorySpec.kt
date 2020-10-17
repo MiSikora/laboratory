@@ -121,7 +121,7 @@ class LaboratorySpec : DescribeSpec({
 })
 
 private suspend fun <T : Feature<T>> DescribeScope.verifyFeatureChanges(feature: Class<T>) {
-  context("for ${feature.simpleName!!}") {
+  context("for ${feature.simpleName}") {
     it("uses value saved in a storage") {
       val storage = FeatureStorage.inMemory()
       val laboratory = Laboratory(storage)
