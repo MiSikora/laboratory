@@ -9,10 +9,6 @@ wire {
 }
 
 android {
-  defaultConfig {
-    consumerProguardFile "laboratory-shrinking.pro"
-  }
-
   sourceSets {
     getByName("main").java.srcDirs += "$buildDir/generated/source/wire/"
   }
