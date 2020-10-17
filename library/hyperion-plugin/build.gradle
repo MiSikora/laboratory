@@ -1,0 +1,18 @@
+plugins {
+  id "com.android.library"
+  id "org.jetbrains.kotlin.android"
+  id "org.jetbrains.kotlin.kapt"
+}
+
+android {
+  resourcePrefix "io_mehow_laboratory_"
+}
+
+dependencies {
+  api project(":inspector")
+  api libs.hyperion.plugin
+  implementation libs.android.x.appCompat
+  kapt libs.autoService
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

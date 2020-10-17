@@ -1,6 +1,6 @@
 plugins {
-  kotlin("jvm")
-  id("io.mehow.laboratory")
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
 }
 
 laboratory {
@@ -25,5 +25,5 @@ laboratory {
 }
 
 dependencies {
-  api("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10")
+  api libs.kotlin.stdLibJdk7
 }

@@ -1,0 +1,57 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "java-gradle-plugin"
+}
+
+gradlePlugin {
+  plugins {
+    laboratory {
+      id = "io.mehow.laboratory"
+      implementationClass = "io.mehow.laboratory.gradle.LaboratoryPlugin"
+    }
+  }
+}
+
+test.useJUnitPlatform()
+
+configurations {
+  fixtureClasspath
+}
+
+tasks.getByName("pluginUnderTestMetadata").getPluginClasspath().from(configurations.fixtureClasspath)
+
+dependencies {
+  implementation libs.kotlin.stdLibJdk8
+  implementation project(":generator")
+  implementation libs.kotlin.gradlePlugin
+  compileOnly libs.android.gradlePlugin
+
+  testImplementation libs.kotest.runnerJunit5
+  testImplementation libs.kotest.assertions
+
+  fixtureClasspath libs.kotlin.gradlePlugin
+  fixtureClasspath libs.android.gradlePlugin
+}
+
+def versionDir = "${buildDir}/generated/source/laboratory"
+sourceSets.main.java.srcDirs += versionDir
+
+def generateVersion = tasks.register("pluginVersion") {
+  inputs.property "version", version
+  outputs.dir file(versionDir)
+
+  doLast {
+    def outputFile = file("$versionDir/io/mehow/laboratory/Config.kt")
+    outputFile.parentFile.mkdirs()
+    outputFile.text = """package io.mehow.laboratory
+
+internal const val laboratoryVersion = "$version"
+"""
+  }
+}
+
+tasks.named("compileKotlin").configure {
+  it.dependsOn(generateVersion)
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

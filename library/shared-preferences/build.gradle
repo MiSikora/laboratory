@@ -1,0 +1,43 @@
+plugins {
+  id "com.android.library"
+  id "org.jetbrains.kotlin.android"
+}
+
+android {
+  defaultConfig {
+    consumerProguardFile "laboratory-shrinking.pro"
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunnerArgument "clearPackageData", "true"
+  }
+
+  testOptions.execution "ANDROIDX_TEST_ORCHESTRATOR"
+  testBuildType "release"
+
+  buildTypes {
+    release {
+      // Since we test release build it has to be signed.
+      signingConfig signingConfigs.getByName("debug")
+    }
+  }
+
+  packagingOptions {
+    exclude "META-INF/AL2.0"
+    exclude "META-INF/LGPL2.1"
+  }
+}
+
+dependencies {
+  api project(":laboratory")
+  api libs.android.x.coreKtx
+  api libs.wire.runtime
+
+  androidTestUtil libs.android.x.test.orchestrator
+  androidTestImplementation libs.android.x.testExtJunitKtx
+  androidTestImplementation libs.android.x.test.coreKtx
+  androidTestImplementation libs.android.x.test.runner
+  androidTestImplementation libs.kotest.assertions
+  androidTestImplementation libs.turbine
+}
+
+apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
