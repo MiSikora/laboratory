@@ -45,7 +45,7 @@ fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): 
   return SharedPreferencesFeatureStorage(preferences)
 }
 
-fun FeatureStorage.Companion.sharedPreferences(context: Context, name: String): FeatureStorage {
-  val preferences = context.getSharedPreferences(name, MODE_PRIVATE)
+fun FeatureStorage.Companion.sharedPreferences(context: Context, fileName: String): FeatureStorage {
+  val preferences = context.getSharedPreferences(fileName, MODE_PRIVATE)
   return sharedPreferences(preferences)
 }
