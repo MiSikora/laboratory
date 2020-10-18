@@ -21,14 +21,12 @@ import java.io.File
 class GenerateFeatureFactoryTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
+  cleanBuildDirs()
+
   beforeTest {
     gradleRunner = GradleRunner.create()
         .withPluginClasspath()
         .withArguments("generateFeatureFactory", "--stacktrace")
-  }
-
-  afterTest {
-    File("src/test/projects").getOutputDirs().forEach(File::cleanUpDir)
   }
 
   "generates factory without any features" {

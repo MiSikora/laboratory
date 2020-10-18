@@ -3,6 +3,7 @@ package io.mehow.laboratory.gradle
 import arrow.core.NonEmptyList
 import arrow.core.nel
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.shouldBe
@@ -21,14 +22,12 @@ import java.io.File
 class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
+  cleanBuildDirs()
+
   beforeTest {
     gradleRunner = GradleRunner.create()
         .withPluginClasspath()
         .withArguments("generateFeatureSourceFactory", "--stacktrace")
-  }
-
-  afterTest {
-    File("src/test/projects").getOutputDirs().forEach(File::cleanUpDir)
   }
 
   "generates factory without any features" {

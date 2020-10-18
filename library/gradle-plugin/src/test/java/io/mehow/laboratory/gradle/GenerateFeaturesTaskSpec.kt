@@ -21,14 +21,12 @@ import java.io.File
 class GenerateFeaturesTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
+  cleanBuildDirs()
+
   beforeTest {
     gradleRunner = GradleRunner.create()
             .withPluginClasspath()
             .withArguments("generateFeatureFlags", "--stacktrace")
-  }
-
-  afterTest {
-    File("src/test/projects").getOutputDirs().forEach(File::cleanUpDir)
   }
 
   "generates single feature flag" {

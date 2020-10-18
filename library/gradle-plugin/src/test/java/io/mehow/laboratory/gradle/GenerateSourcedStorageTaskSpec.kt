@@ -21,14 +21,12 @@ import java.io.File
 class GenerateSourcedStorageTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
+  cleanBuildDirs()
+
   beforeTest {
     gradleRunner = GradleRunner.create()
             .withPluginClasspath()
             .withArguments("generateSourcedFeatureStorage", "--stacktrace")
-  }
-
-  afterTest {
-    File("src/test/projects").getOutputDirs().forEach(File::cleanUpDir)
   }
 
   "generates storage with only local source" {

@@ -10,12 +10,10 @@ import java.io.File
 class LaboratoryPluginSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
+  cleanBuildDirs()
+
   beforeTest {
     gradleRunner = GradleRunner.create().withPluginClasspath()
-  }
-
-  afterTest {
-    File("src/test/projects").getOutputDirs().forEach(File::cleanUpDir)
   }
 
   "fails for project without Kotlin plugin" {
