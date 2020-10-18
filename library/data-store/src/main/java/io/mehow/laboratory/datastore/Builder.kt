@@ -1,5 +1,6 @@
 package io.mehow.laboratory.datastore
 
+import android.content.Context
 import androidx.datastore.DataMigration
 import androidx.datastore.DataStoreFactory
 import androidx.datastore.Serializer
@@ -11,12 +12,12 @@ import kotlinx.coroutines.SupervisorJob
 import java.io.File
 
 class Builder internal constructor(
-  private val produceFile: () -> File,
+  private val fileProvider: () -> File,
 ) {
   private var serializer: Serializer<FeatureFlags> = FeatureFlagsSerializer
   private var corruptionHandler: ReplaceFileCorruptionHandler<FeatureFlags>? = null
   private var migrations: List<DataMigration<FeatureFlags>> = emptyList()
-  private var coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+  private var coroutineScope: CoroutineScope? = null
 
   fun featureSerializer(serializer: Serializer<FeatureFlags>) = apply {
     this.serializer = serializer
@@ -40,16 +41,20 @@ class Builder internal constructor(
 
   fun build(): FeatureStorage {
     val dataStore = DataStoreFactory.create(
-        produceFile = produceFile,
+        produceFile = fileProvider,
         serializer = serializer,
         corruptionHandler = corruptionHandler,
         migrations = migrations,
-        scope = coroutineScope,
+        scope = coroutineScope ?: CoroutineScope(SupervisorJob() + Dispatchers.IO),
     )
     return DataStoreFeatureStorage(dataStore)
   }
 }
 
-fun FeatureStorage.Companion.dataStoreBuilder(produceFile: () -> File): Builder {
-  return Builder(produceFile)
+fun FeatureStorage.Companion.dataStoreBuilder(fileProvider: () -> File): Builder {
+  return Builder(fileProvider)
+}
+
+fun FeatureStorage.Companion.dataStoreBuilder(context: Context, fileName: String): Builder {
+  return dataStoreBuilder { File(context.filesDir, "datastore/$fileName") }
 }

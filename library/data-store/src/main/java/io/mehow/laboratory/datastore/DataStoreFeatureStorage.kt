@@ -1,5 +1,6 @@
 package io.mehow.laboratory.datastore
 
+import android.content.Context
 import androidx.datastore.DataStore
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
@@ -36,6 +37,10 @@ fun FeatureStorage.Companion.dataStore(dataStore: DataStore<FeatureFlags>): Feat
   return DataStoreFeatureStorage(dataStore)
 }
 
-fun FeatureStorage.Companion.dataStore(produceFile: () -> File): FeatureStorage {
-  return dataStoreBuilder(produceFile).build()
+fun FeatureStorage.Companion.dataStore(fileProvider: () -> File): FeatureStorage {
+  return dataStoreBuilder(fileProvider).build()
+}
+
+fun FeatureStorage.Companion.dataStore(context: Context, fileName: String): FeatureStorage {
+  return dataStoreBuilder(context, fileName).build()
 }
