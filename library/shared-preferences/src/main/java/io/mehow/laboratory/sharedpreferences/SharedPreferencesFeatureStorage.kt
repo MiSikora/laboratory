@@ -11,17 +11,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 
-@Deprecated(
-    message = "Implementation will be hidden in the next minor release",
-    replaceWith = ReplaceWith(
-        expression = "FeatureStorage.sharedPreferences(preferences)",
-        imports = [
-          "io.mehow.laboratory.FeatureStorage",
-          "io.mehow.laboratory.sharedpreferences.sharedPreferences",
-        ],
-    ),
-)
-class SharedPreferencesFeatureStorage(
+internal class SharedPreferencesFeatureStorage(
   private val preferences: SharedPreferences,
 ) : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = callbackFlow {
