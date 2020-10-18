@@ -28,9 +28,9 @@ class FeatureFactoryModel private constructor(
       val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
       return Either.fx {
         val packageName = !validatePackageName(fqcn)
-        val name = !validateName(fqcn, name)
+        val simpleName = !validateName(fqcn, name)
         val features = !features.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) }
-        FeatureFactoryModel(visibility, ClassName(packageName, name), features)
+        FeatureFactoryModel(visibility, ClassName(packageName, simpleName), features)
       }
     }
 
