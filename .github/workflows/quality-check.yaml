@@ -24,6 +24,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Cache Gradle Dirs
         uses: actions/cache@v2
         with:
@@ -32,6 +33,7 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: cache-gradle-
+
       - name: Run Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -39,6 +41,7 @@ jobs:
           script: ./gradlew connectedCheck --stacktrace
         env:
           API_LEVEL: 29
+
       - name: Stop Gradle
         run: ./gradlew --stop
 
@@ -48,6 +51,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+
       - name: Cache Gradle Dirs
         uses: actions/cache@v2
         with:
@@ -56,8 +60,10 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: cache-gradle-
+
       - name: Run Tests
         run: ./gradlew test --stacktrace
+
       - name: Stop Gradle
         run: ./gradlew --stop
 
@@ -67,6 +73,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+
       - name: Cache Gradle Dirs
         uses: actions/cache@v2
         with:
@@ -75,8 +82,10 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: cache-gradle-
+
       - name: Run Detekt
         run: ./gradlew detekt --stacktrace
+
       - name: Stop Gradle
         run: ./gradlew --stop
 
@@ -86,6 +95,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+
       - name: Cache Gradle Dirs
         uses: actions/cache@v2
         with:
@@ -94,7 +104,9 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: cache-gradle-
+
       - name: Run Lint
         run: ./gradlew lint --stacktrace
+
       - name: Stop Gradle
         run: ./gradlew --stop

@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+
       - name: Cache Gradle Dirs
         uses: actions/cache@v2
         with:
@@ -23,12 +24,14 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: cache-gradle-
+
       - name: Deploy Release
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_SIGNING_KEY: ${{ secrets.SONATYPE_NEXUS_SIGNING_KEY }}
         run: ./gradlew uploadArchives --no-daemon --no-parallel --stacktrace
+
       - name: Stop Gradle
         run: ./gradlew --stop
 
@@ -39,9 +42,11 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+
       - name: Extract Release Notes
         id: release-notes
         uses: ffurrer2/extract-release-notes@v1
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
