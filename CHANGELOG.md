@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.7.0] - 2020-10-21
 ### Changed
 - Change log format follows now [Keep a Changelog](https://keepachangelog.com/) format. Format is applied retroactively to this file.
 - R8 rules are now a part of `META-INF` of `laboratory` artifact.
