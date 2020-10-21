@@ -1,18 +1,26 @@
-name: Release
+name: Snapshot
 on:
   push:
-    tags:
-      - '*.*.*'
+    branches:
+      - master
+    paths-ignore:
+      - 'images/**'
+      - '*.md'
+      - 'LICENSE'
 
 defaults:
   run:
     working-directory: library
 
 jobs:
-  deploy-release:
-    name: Deploy Release
+  publish-snapshot:
+    name: Publish Snapshot
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Cache Gradle Dirs
@@ -23,11 +31,10 @@ jobs:
             ~/.gradle/wrapper/
           key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: cache-gradle-
-      - name: Deploy Release
+      - name: Deploy Snapshot
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_SIGNING_KEY: ${{ secrets.SONATYPE_NEXUS_SIGNING_KEY }}
         run: ./gradlew uploadArchives --no-daemon --no-parallel --stacktrace
       - name: Stop Gradle
         run: ./gradlew --stop
