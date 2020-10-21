@@ -52,12 +52,6 @@ allprojects {
     }
   }
 
-  plugins.withType(com.android.build.gradle.LibraryPlugin) {
-    android.variantFilter {
-      setIgnore it.name != "release"
-    }
-  }
-
   pluginManager.withPlugin("com.android.library") {
     android {
       compileOptions {
@@ -72,6 +66,16 @@ allprojects {
         targetSdkVersion versions.androidBuild.targetSdk
 
         vectorDrawables.useSupportLibrary true
+      }
+
+      variantFilter { variant ->
+        setIgnore variant.name != "release"
+      }
+
+      libraryVariants.all { variant ->
+        variant.outputs.all {
+          outputFileName = "${archivesBaseName}-${version}.aar"
+        }
       }
 
       lintOptions {
