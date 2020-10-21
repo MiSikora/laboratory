@@ -31,3 +31,23 @@ jobs:
         run: ./gradlew uploadArchives --no-daemon --no-parallel --stacktrace
       - name: Stop Gradle
         run: ./gradlew --stop
+
+  github-release:
+    name: Github Release
+    runs-on: ubuntu-latest
+    needs: publish-release
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Extract Release Notes
+        id: release-notes
+        uses: ffurrer2/extract-release-notes@v1
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.release-notes.outputs.release-notes }}
+          files: |
+            /*/build/**/*.aar
+            /*/build/**/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
