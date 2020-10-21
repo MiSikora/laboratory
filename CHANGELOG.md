@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.7.0] - 2020-10-21
 ### Changed
-- Change log format follows now [Keep a Changelog](https://keepachangelog.com/) format. Format is applied retroactively to this file.
+- Changelog format follows now [Keep a Changelog](https://keepachangelog.com/) format. Format is applied retroactively to this file.
 - R8 rules are now a part of `META-INF` of `laboratory` artifact.
 - `SharedPreferencesFeatureStorage` is now `internal`.
 - Gradle plugin no longer has a runtime dependency on Android Gradle Plugin.
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set compile SDK to `30`.
 - Upgrade to KotlinPoet `1.7.2`.
 - Upgrade to Hyperion `0.9.30`.
-- Upgrade to DataStore `1.0.0-alpha02`
+- Upgrade to DataStore `1.0.0-alpha02`.
 
 ## [0.6.2] - 2020-10-12
 ### Added
