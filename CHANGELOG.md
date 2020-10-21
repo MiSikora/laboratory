@@ -1,73 +1,120 @@
-Change Log
-==========
+# Changelog
+All notable changes to this project will be documented in this file.
 
-Version 0.6.2 *(2020-10-12)*
-----------------------------
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-* Deprecate `SharedPreferenceFeatureStorage` and add public extension factory methods. Implementation will be hidden in a next minor release.
-* Hide `DataStoreFeatureStorage` behind public extension builder methods.
-* Allow to order Laboratory Hyperion plugin with a `io_mehow_laboratory_plugin_id` resource.
+## [Unreleased]
+### Changed
+- Change log format follows now [Keep a Changelog](https://keepachangelog.com/) format. Format is applied retroactively to this file.
+- R8 rules are now a part of `META-INF` of `laboratory` artifact.
+- `SharedPreferencesFeatureStorage` is now `internal`.
+- Gradle plugin no longer has a runtime dependency on Android Gradle Plugin.
+- `laboratory-generator` generates source code compatible with the [explicit API mode](https://kotlinlang.org/docs/reference/whatsnew14.html#explicit-api-mode-for-library-authors).
+- Set compile SDK to `30`.
+- Upgrade to KotlinPoet `1.7.2`.
+- Upgrade to Hyperion `0.9.30`.
+- Upgrade to DataStore `1.0.0-alpha02`
 
-Version 0.6.1 *(2020-10-12)*
-----------------------------
+## [0.6.2] - 2020-10-12
+### Added
+- `FeatureStorage` extensions for creation of [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) based `FeatureStorage`.
+- `FeatureStorage` extensions for creation of [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) based `FeatureStorage`.
+- [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) plugin can be order in the debug menu by overriding `io_mehow_laboratory_plugin_id` resource.
 
-* Fix Hyperion plugin layout.
+### Deprecated
+- `SharedPreferenceFeatureStorage` soon will become `internal`.
 
-Version 0.6.0 *(2020-10-12)*
-----------------------------
+### Changed
+- `DataStoreFeatureStorage` is now `internal`. It is not considered a breaking change as [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) is in alpha stage.
 
-* Features can have descriptions to give them more context.
-* Redesigned `LaboratoryActivity`.
-    * Feature changes are observed reactively.
-    * Feature sources are displayed next to a feature itself as a drop down menu. There is no more need to coordinate sources and features between tabs.
-    * Feature values cannot be changed if source is not local.
-    * Remote feature values are displayed if source is remote.
-    * Features can display descriptions.
-    * Feature flags can be reset to their default values.
-* `LaboratoryActivity` requires now `Laboratory` instance instead of a `FeatureStorage`. Used `Laboratory` should share the same data source as the application.
-* Add `Laboratory.experimentIs()` and `Laboratory.experimentIsBlocking()` to check if a feature has some value.
+## [0.6.1] - 2020-10-12
+### Fixed
+- [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) plugin layout where button was on the wrong side of the debug menu.
+
+## [0.6.0] - 2020-10-12
+### Added
+- `Feature` can have now description. It can be used to add more contextual data to feature flags.
+- `LaboratoryActivity` observes changes to feature flags instead of loading them every time the screen is opened.
+- `LaboratoryActivity` displays feature flag sources next to them and allows to select a source from a drop down menu.
+- Remote feature flag values are displayed in `LaboratoryActivity` if a source is not local.
+- When a remote source is used for feature flag a value cannot be changed from `LaboratoryActivity`.
+- `LaboratoryActivity` displays feature flag descriptions if they are present.
+- `LaboratoryActivity` can reset feature flag values to their default state from an item in action bar.
+- `Laboratory.experimentIs()` and `Laboratory.experimentIsBlocking()` functions that allow to check if a feature flag has particular value.
+- ViewPager2 `1.0.0` dependency to `laboratory-inspector`.
+- RecyclerView `1.1.0` dependency to `laboratory-inspector`.
+
+### Changed
+- `LaboratoryActivity` requires now `Laboratory` for initialization. This `Laboratory` should share `FeatureStorage` with instances of `Laboratory` used in the application.
+
+## [0.5.0] - 2020-10-08
+### Changed
+- `fallback` nomenclature to `default`. This affects Gradle plugin `withFallbackValue()` and `withFallbackSources()` functions as well as `isFallbackValue` property on the `Feature` interface.
+
+## [0.4.0] - 2020-10-08
+### Changed
+- Name of the generated sourced `FeatureStorage` extension function is now `sourcedGenerated()` in order to align it with the generated feature factory extension function name.
+
+## [0.3.0] - 2020-10-08
+### Added
+- Feature flags can have now multiple sources. Source is also a feature flag and is optional. If no source is available it is assumed that only a local source is controlled.
+- `FeatureStorage` that connects feature flags with their sources. It is available via `FeatureStorage.sourced()` extension function. Feature flag sources are uniquely identified only by their value names.
+- Feature flag sources can be set from the Gradle plugin with `withSource("Name")` and `withFallbackSource("Name")` functions in `feature()` blocks. Any source that has name "Local" (or variant of it) is filtered out.
+- Gradle plugin has a new `sourcedStorage()` function. It is responsible for generating a customized `FeatureStorage` that is aware of all available feature flag sources.
+- Gradle plugin has a new `featureSourceFactory()` function. It works similarly to `featureFactory()` function with a difference that it collects only feature flag sources.
+- `LaboratoryActivity` is now configurable with the `configure() function`.
+- `LaboratoryActivity` can display different sets of feature flags on separate tabs.
+- FragmentKtx `1.2.5` dependency to `laboratory-inspector`.
+- ViewModelKtx `2.2.0` dependency to `laboratory-inspector`.
+
+### Changed
+- `LaboratoryActivity.initialize()` function is renamed to `configure()`.
+- Gradle plugin `factory()` function is renamed to `featureFactory()`.
+
+## [0.2.1] - 2020-10-02
+### Added
+- `Laboratory` exposes blocking way of reading and writing feature flags. It requires an [opt-in](https://kotlinlang.org/docs/reference/opt-in-requirements.html) `BlockingIoCall` annotation.
+
+### Changed
+- `laboratory-android` artifact is now `laboratory-shared-preferences artifact`.
+- `laboratory-shared-preferences` artifact (old `laboratory-android)` is no longer automatically applied by Gradle plugin in Android modules.
+- Upgrade to Kotlin `1.4.10`.
+- Upgrade to CoreKtx `1.3.2`.
+- Upgrade to Wire `3.4.0`.
+- Upgrade to KotlinPoet `1.6.0`.
+
+## [0.2.0] - 2020-09-05
+### Added
+- `Laboratory.observe()` function to observe feature flag changes via [`Flow`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/).
+- Support for [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) with `laboratory-date-store` artifact.
+- `Laboratory` and `FeatureStorage` returns a boolean information whether writes are successful.
+- `Feature` interface that is used to define feature flags.
+- Wire `3.2.2` dependency to `laboratory-data-store`.
+
+### Changed
+- Kotlin standard library is now part of public API.
+- `Laboratory` and `FeatureStorage` expose their API via `suspend` functions.
+- Gradle plugin requires exactly one feature flag value to be added with `withFallbackValue("Name")` function.
+- Upgrade to Kotlin `1.4.0`.
+- Upgrade to Material `1.2.1`.
+- Upgrade to Hyperion `0.9.29`.
 
 
-Version 0.5.0 *(2020-10-08)*
-----------------------------
+### Removed
+- `@Feature` annotation. Feature flags should implement now `Feature` interface.
 
-* Change 'fallback' nomenclature to 'default'. This affects Gradle plugin `withFallbackValue()` and `withFallbackSource` extensions as well as `isFallbackValue` property on `Feature` interface.
+## [0.1.0] - 2020-08-03
 
-Version 0.4.0 *(2020-10-08)*
-----------------------------
+- Initial release.
 
-* Changed name of generated sourced feature storage function to align it with feature factories.
-
-Version 0.3.0 *(2020-10-08)*
-----------------------------
-
-* `factory()` extension is renamed to `featureFactory()`
-* Feature flags can have different sources that can be toggled at runtime.
-* `feature()` extension enabled setting feature sources with `withSource()` and `withFallbackSource()` functions.
-* Gradle plugin has a new `sourcedStorage()` extension. It is responsible for generating a customized `FeatureStorage` based on all available feature sources.
-* Gradle plugin has a new `featureSourceFactory()` extension. It works similarly to `featureFactory()` extension except that it collects only feature sources.
-* `LaboratoryActivity` is now configured with `configure()` function instead of `initialize()`.
-* `LaboratoryActivity` displays features on tabs. This allows to display i.e. features and feature sources separately.
-
-Version 0.2.1 *(2020-10-02)*
-----------------------------
-
-* Enable to read and write features with Laboratory in an opt in, blocking way.
-* Renamed `laboratory-android` artifact to `laboratory-shared-preferences` artifact.
-* `laboratory-shared-preferences` artifact (old `laboratory-android`) is no longer applied by Gradle automatically.
-
-Version 0.2.0 *(2020-09-05)*
-----------------------------
-
-* Kotlin standard library is now part of public API.
-* `Laboatory` and `FeatureStorage` use now `suspending` functions.
-* Added support for observing features via `Flow`.
-* Added support for Jetpack DataStore in `laboratory-date-store` artifact.
-* `Laboratory` and `FeatureStorage` inform now of failures when setting features. This currently works only with DataStore module.
-* `@Feature` annotation is removed. Instead, enums should implement `Feature` interface which allows to define a fallback value. If no fallback is defined first enum is used. If multiple fallbacks are defined the first one in order is used.
-* Gradle plugin requires exactly one feature value to be added with `withFallbackValue("name")` function.
-
-Version 0.1.0 *(2020-06-12)*
-----------------------------
-
-* Initial release.
+[Unreleased]: https://github.com/MiSikora/Laboratory/compare/0.6.2...HEAD
+[0.6.2]: https://github.com/MiSikora/Laboratory/tag/0.6.2
+[0.6.1]: https://github.com/MiSikora/Laboratory/tag/0.6.1
+[0.6.0]: https://github.com/MiSikora/Laboratory/tag/0.6.0
+[0.5.0]: https://github.com/MiSikora/Laboratory/tag/0.5.0
+[0.4.0]: https://github.com/MiSikora/Laboratory/tag/0.4.0
+[0.3.0]: https://github.com/MiSikora/Laboratory/tag/0.3.0
+[0.2.1]: https://github.com/MiSikora/Laboratory/tag/0.2.1
+[0.2.0]: https://github.com/MiSikora/Laboratory/tag/0.2.0
+[0.1.0]: https://github.com/MiSikora/Laboratory/tag/0.1.0
