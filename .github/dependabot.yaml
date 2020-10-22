@@ -4,9 +4,12 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    labels:
+      - "Dependencies"
+
   - package-ecosystem: gradle
     directory: "library/"
     schedule:
       interval: daily
-    open-pull-requests-limit: 99
-    rebase-strategy: disabled
+    labels:
+      - "Dependencies"
