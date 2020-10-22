@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.7.0] - 2020-10-21
+## [0.7.0] - 2020-10-22
 ### Changed
 - Changelog format follows now [Keep a Changelog](https://keepachangelog.com/) format. Format is applied retroactively to this file.
 - R8 rules are now a part of `META-INF` of `laboratory` artifact.
@@ -111,12 +111,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release.
 
 [Unreleased]: https://github.com/MiSikora/Laboratory/compare/0.6.2...HEAD
-[0.6.2]: https://github.com/MiSikora/Laboratory/tag/0.6.2
-[0.6.1]: https://github.com/MiSikora/Laboratory/tag/0.6.1
-[0.6.0]: https://github.com/MiSikora/Laboratory/tag/0.6.0
-[0.5.0]: https://github.com/MiSikora/Laboratory/tag/0.5.0
-[0.4.0]: https://github.com/MiSikora/Laboratory/tag/0.4.0
-[0.3.0]: https://github.com/MiSikora/Laboratory/tag/0.3.0
-[0.2.1]: https://github.com/MiSikora/Laboratory/tag/0.2.1
-[0.2.0]: https://github.com/MiSikora/Laboratory/tag/0.2.0
-[0.1.0]: https://github.com/MiSikora/Laboratory/tag/0.1.0
+[0.6.2]: https://github.com/MiSikora/Laboratory/releases/tag/0.7.0
+[0.6.2]: https://github.com/MiSikora/Laboratory/releases/tag/0.6.2
+[0.6.1]: https://github.com/MiSikora/Laboratory/releases/tag/0.6.1
+[0.6.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.6.0
+[0.5.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.5.0
+[0.4.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.4.0
+[0.3.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.3.0
+[0.2.1]: https://github.com/MiSikora/Laboratory/releases/tag/0.2.1
+[0.2.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.2.0
+[0.1.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.1.0
