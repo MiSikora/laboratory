@@ -111,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release.
 
 [Unreleased]: https://github.com/MiSikora/Laboratory/compare/0.6.2...HEAD
-[0.6.2]: https://github.com/MiSikora/Laboratory/releases/tag/0.7.0
+[0.7.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.7.0
 [0.6.2]: https://github.com/MiSikora/Laboratory/releases/tag/0.6.2
 [0.6.1]: https://github.com/MiSikora/Laboratory/releases/tag/0.6.1
 [0.6.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.6.0
