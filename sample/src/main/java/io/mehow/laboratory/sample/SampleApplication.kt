@@ -17,12 +17,12 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class SampleApplication : Application() {
-  lateinit var laboratory: Laboratory
-    private set
   private lateinit var localStorage: FeatureStorage
   private lateinit var firebaseStorage: FeatureStorage
   private lateinit var awsStorage: FeatureStorage
   private lateinit var azureStorage: FeatureStorage
+  lateinit var laboratory: Laboratory
+    private set
 
   override fun onCreate() {
     super.onCreate()
@@ -34,7 +34,7 @@ class SampleApplication : Application() {
         localSource = localStorage,
         firebaseSource = firebaseStorage,
         awsSource = awsStorage,
-        azureSource = azureStorage
+        azureSource = azureStorage,
     )
     laboratory = Laboratory(sourcedStorage)
     LaboratoryActivity.configure(
