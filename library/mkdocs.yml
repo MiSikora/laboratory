@@ -1,0 +1,42 @@
+site_name: Laboratory
+site_description: A feature flags library for multi-module Kotlin Android projects
+site_author: Michał Sikora
+site_url: https://misikora.github.io/Laboratory/
+repo_name: Laboratory
+repo_url: https://github.com/MiSikora/Laboratory/
+remote_branch: gh-pages
+
+copyright: Copyright &copy; 2020 Michał Sikora
+
+extra_css:
+  - css/site.css
+
+theme:
+  name: material
+  logo: images/laboratory_logo_menu.svg
+  favicon: images/laboratory_logo.ico
+  palette:
+    primary: blue
+    accent: light blue
+
+markdown_extensions:
+  - admonition
+  - smarty
+  - codehilite:
+      guess_lang: false
+      linenums: True
+  - footnotes
+  - toc:
+      permalink: true
+  - tables
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+nav:
+  - 'Overview': index.md
+  - 'Changelog': changelog.md
+  - 'Releasing': releasing.md
+

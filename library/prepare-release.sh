@@ -55,15 +55,15 @@ propertiesFile="./gradle.properties"
 versionNameKey="VERSION_NAME"
 sed -i "" "s/.*$versionNameKey.*/$versionNameKey=$newVersion/g" $propertiesFile
 
-# Replace current version in CHANGELOG.md and update hyperlinks
-changelogFile="./CHANGELOG.md"
+# Replace current version in changelog.md and update hyperlinks
+changelogFile="./docs/changelog.md"
 sed -i "" "s/## \[Unreleased\]/## \[Unreleased\]"$'\\\n\\\n'"## \[$newVersion\]/g" $changelogFile
 newVersionTag="[$newVersion]: https:\/\/github.com\/MiSikora\/Laboratory\/releases\/tag\/$newVersion"
 sed -i "" "s/$currentVersion...HEAD/$newVersion...HEAD"$'\\\n'"$newVersionTag""/g" $changelogFile
 
-# Replace current version in README.md
-readmeFile="./README.md"
-sed -i "" "s/$currentVersion/$newVersion/g" $readmeFile
+# Replace current version in index.md
+indexFile="./docs/index.md"
+sed -i "" "s/$currentVersion/$newVersion/g" $indexFile
 
 git reset &> /dev/null
 git commit -am "Prepare for release $newVersion" &> /dev/null
