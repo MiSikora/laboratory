@@ -38,6 +38,8 @@ jobs:
       - name: Extract Release Notes
         id: release-notes
         uses: ffurrer2/extract-release-notes@v1
+        with:
+          changelog_file: ./library/CHANGELOG.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

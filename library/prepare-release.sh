@@ -51,7 +51,7 @@ else
 fi
 
 # Replace current version in ./library/gradle.properties
-propertiesFile="./library/gradle.properties"
+propertiesFile="./gradle.properties"
 versionNameKey="VERSION_NAME"
 sed -i "" "s/.*$versionNameKey.*/$versionNameKey=$newVersion/g" $propertiesFile
 
