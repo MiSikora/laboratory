@@ -57,7 +57,8 @@ sed -i "" "s/.*$versionNameKey.*/$versionNameKey=$newVersion/g" $propertiesFile
 
 # Replace current version in changelog.md and update hyperlinks
 changelogFile="./docs/changelog.md"
-sed -i "" "s/## \[Unreleased\]/## \[Unreleased\]"$'\\\n\\\n'"## \[$newVersion\]/g" $changelogFile
+today=$(date +%F)
+sed -i "" "s/## \[Unreleased\]/## \[Unreleased\]"$'\\\n\\\n'"## \[$newVersion\] - $today/g" $changelogFile
 newVersionTag="[$newVersion]: https:\/\/github.com\/MiSikora\/Laboratory\/releases\/tag\/$newVersion"
 sed -i "" "s/$currentVersion...HEAD/$newVersion...HEAD"$'\\\n'"$newVersionTag""/g" $changelogFile
 
