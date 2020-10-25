@@ -12,14 +12,15 @@ open class LaboratoryExtension {
    */
   var packageName: String = ""
 
-  internal var featureInputs = emptyList<FeatureFlagInput>()
-    private set
+  private val mutableFeatureInputs = mutableListOf<FeatureFlagInput>()
+
+  internal val featureInputs: List<FeatureFlagInput> = mutableFeatureInputs
 
   /**
    * Generates a new feature in this module.
    */
   fun feature(name: String, action: Action<FeatureFlagInput>) {
-    featureInputs += FeatureFlagInput(name).let { input ->
+    mutableFeatureInputs += FeatureFlagInput(name).let { input ->
       action.execute(input)
       input.packageName = input.packageName ?: packageName
       return@let input
