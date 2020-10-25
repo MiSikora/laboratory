@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew --stop
 
       - name: Deploy Docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@v1
+        uses: mhausenblas/mkdocs-deploy-gh-pages@1.15
         env:
           CONFIG_FILE: ./library/mkdocs.yml
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
