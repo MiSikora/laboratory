@@ -1,6 +1,5 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.Either
 import arrow.core.identity
 import io.mehow.laboratory.generator.buildAll
 import io.mehow.laboratory.generator.sourceNames
@@ -20,12 +19,12 @@ open class SourcedFeatureStorageTask : DefaultTask() {
         ifRight = ::identity
     ).sourceNames().distinct()
 
-    when (val buildIntent = storage.toBuilder(sourceNames).build()) {
-      is Either.Left -> error(buildIntent.a.message)
-      is Either.Right -> {
-        codeGenDir.deleteRecursively()
-        buildIntent.b.generate(codeGenDir)
-      }
-    }
+    storage.toBuilder(sourceNames).build().fold(
+        ifLeft = { failure -> error(failure.message) },
+        ifRight = { sourcedFeatureStorageModel ->
+          codeGenDir.deleteRecursively()
+          sourcedFeatureStorageModel.generate(codeGenDir)
+        }
+    )
   }
 }
