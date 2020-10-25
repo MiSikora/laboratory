@@ -14,8 +14,8 @@ internal class InMemoryFeatureStorage : FeatureStorage {
 
   override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = features[featureClass]
 
-  override suspend fun <T : Feature<*>> setFeatures(vararg features: T): Boolean {
-    for (feature in features) {
+  override suspend fun <T : Feature<*>> setFeatures(vararg values: T): Boolean {
+    for (feature in values) {
       this.features += feature.javaClass to feature.name
     }
     featureFlow.value = this.features

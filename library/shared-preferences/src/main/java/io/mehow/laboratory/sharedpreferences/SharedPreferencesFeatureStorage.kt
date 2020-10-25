@@ -31,9 +31,9 @@ internal class SharedPreferencesFeatureStorage(
     null
   }
 
-  override suspend fun <T : Feature<*>> setFeatures(vararg features: T): Boolean {
+  override suspend fun <T : Feature<*>> setFeatures(vararg values: T): Boolean {
     preferences.edit {
-      for (feature in features) {
+      for (feature in values) {
         putString(feature.javaClass.name, feature.name)
       }
     }
@@ -41,10 +41,16 @@ internal class SharedPreferencesFeatureStorage(
   }
 }
 
+/**
+ * Creates a [FeatureStorage] that is backed by [SharedPreferences].
+ */
 fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
   return SharedPreferencesFeatureStorage(preferences)
 }
 
+/**
+ * Creates a [FeatureStorage] that is backed by [SharedPreferences] with a [fileName] in [private mode][MODE_PRIVATE].
+ */
 fun FeatureStorage.Companion.sharedPreferences(context: Context, fileName: String): FeatureStorage {
   val preferences = context.getSharedPreferences(fileName, MODE_PRIVATE)
   return sharedPreferences(preferences)

@@ -5,25 +5,59 @@ import io.mehow.laboratory.generator.FeatureValue
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 
-class FeatureFlagInput internal constructor(private val name: String) {
+/**
+ * Representation of a generate feature flag. It must have at least one value and exactly one default value.
+ */
+class FeatureFlagInput internal constructor(
+  private val name: String,
+) {
+  /**
+   * Sets whether the generated feature flag should be public or internal.
+   */
   var isPublic: Boolean = true
+
+  /**
+   * Sets package name of the generated feature flag. Overwrites any previously set values.
+   */
   var packageName: String? = null
+
+  /**
+   * Sets description of the generated feature flag. Overwrites any previously set values.
+   */
   var description: String? = null
+
   private val values: MutableList<FeatureValue> = mutableListOf()
+
   private val sources: MutableList<FeatureValue> = mutableListOf()
 
+  /**
+   * Adds a feature value.
+   */
   fun withValue(value: String) {
     values += FeatureValue(value)
   }
 
+  /**
+   * Adds a feature value that will be used as a default value.
+   * Exactly one value must be set with this method.
+   */
   fun withDefaultValue(value: String) {
     values += FeatureValue(value, isDefaultValue = true)
   }
 
+  /**
+   * Adds a feature flag source. Any sources that are named "Local", or any variation of this word,
+   * will be filtered out.
+   */
   fun withSource(value: String) {
     sources += FeatureValue(value)
   }
 
+  /**
+   * Adds a feature flag source that will be used a default source. Any sources that are named "Local",
+   * or any variation of this word, will be filtered out.
+   * At most one value can be set with this method.
+   */
   fun withDefaultSource(value: String) {
     sources += FeatureValue(value, isDefaultValue = true)
   }

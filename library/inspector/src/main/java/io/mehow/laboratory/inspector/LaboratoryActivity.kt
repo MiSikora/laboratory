@@ -22,6 +22,9 @@ import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
 import kotlinx.coroutines.launch
 
+/**
+ * Entry point for QA module that allows to interact with feature flags.
+ */
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
 class LaboratoryActivity : AppCompatActivity() {
   private val viewModel by viewModels<FeaturesViewModel> {
@@ -92,6 +95,14 @@ class LaboratoryActivity : AppCompatActivity() {
     (getChildAt(0) as? RecyclerView)?.overScrollMode = OVER_SCROLL_NEVER
   }
 
+  /**
+   * Initialisation data for QA module.
+   *
+   * @param laboratory [Laboratory] instance that should share [FeatureStorage][io.mehow.laboratory.FeatureStorage]
+   * instance with your application.
+   * @param featureFactories Each entry in this map will result in a separate tab in the QA module. Key is used
+   * as a tab name, and each tab displays all feature flags provided by [FeatureFactory] from value.
+   */
   class Configuration(
     internal val laboratory: Laboratory,
     internal val featureFactories: Map<String, FeatureFactory>,
@@ -99,7 +110,7 @@ class LaboratoryActivity : AppCompatActivity() {
 
   companion object {
     private const val featuresLabel = "Features"
-    private const val sourcesLabel = "Source"
+    private const val sourcesLabel = "Sources"
 
     internal var backingConfiguration: Configuration? = null
       private set
@@ -108,6 +119,10 @@ class LaboratoryActivity : AppCompatActivity() {
         "LaboratoryActivity must be initialized before using it."
       }
 
+    /**
+     * Configures [LaboratoryActivity] with a default "Features" tab, where feature flags are taken from the
+     * [featureFactory]. Any additional tabs can be added in [externalFeatureFactories].
+     */
     fun configure(
       laboratory: Laboratory,
       featureFactory: FeatureFactory,
@@ -120,6 +135,11 @@ class LaboratoryActivity : AppCompatActivity() {
       ))
     }
 
+    /**
+     * Configures [LaboratoryActivity] with a default "Features" and "Sources" tabs, where feature flags are taken
+     * from the [featureFactory] and [featureSourceFactory] respectively.
+     * Any additional tabs can be added in [externalFeatureFactories].
+     */
     fun configure(
       laboratory: Laboratory,
       featureFactory: FeatureFactory,
@@ -133,10 +153,16 @@ class LaboratoryActivity : AppCompatActivity() {
       ))
     }
 
+    /**
+     * Configures [LaboratoryActivity] with an input [configuration].
+     */
     fun configure(configuration: Configuration) {
       backingConfiguration = configuration
     }
 
+    /**
+     * Opens QA module. [Configure][configure] needs to be called before you interact with [LaboratoryActivity].
+     */
     fun start(context: Context) {
       context.startActivity(Intent(context, LaboratoryActivity::class.java))
     }
