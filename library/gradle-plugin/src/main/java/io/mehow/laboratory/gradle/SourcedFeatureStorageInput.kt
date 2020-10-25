@@ -20,7 +20,6 @@ class SourcedFeatureStorageInput internal constructor() {
 
   internal var projectFilter = ProjectFilter { false }
     private set
-  var generateFactory: Boolean = false
 
   /**
    * Sets which Gradle projects should be excluded from contributing

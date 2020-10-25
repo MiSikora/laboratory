@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Renamed `feature`/`features` argument in `setFeature()` and `setFeatures()` methods to `value`/`values` respectively.
 
+### Removed
+- `generateFactory` property from `sourcedFeatureStorage()` method in Gradle plugin. It was added to the public API by a mistake and wasn't responsible for anything.
+
 ## [0.7.0] - 2020-10-22
 ### Changed
 - Changelog format follows now [Keep a Changelog](https://keepachangelog.com/) format. Format is applied retroactively to this file.
