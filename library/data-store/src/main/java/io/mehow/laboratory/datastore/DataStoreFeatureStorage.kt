@@ -22,9 +22,9 @@ internal class DataStoreFeatureStorage(
     null
   }
 
-  override suspend fun <T : Feature<*>> setFeatures(vararg features: T) = try {
+  override suspend fun <T : Feature<*>> setFeatures(vararg values: T) = try {
     dataStore.updateData { flags ->
-      val updatedFeatures = flags.value + features.map { it.javaClass.name to it.name }.toMap()
+      val updatedFeatures = flags.value + values.map { it.javaClass.name to it.name }.toMap()
       return@updateData flags.copy(value = updatedFeatures)
     }
     true
@@ -33,14 +33,23 @@ internal class DataStoreFeatureStorage(
   }
 }
 
+/**
+ * Creates a [FeatureStorage] that is backed by [DataStore].
+ */
 fun FeatureStorage.Companion.dataStore(dataStore: DataStore<FeatureFlags>): FeatureStorage {
   return DataStoreFeatureStorage(dataStore)
 }
 
+/**
+ * Creates a [FeatureStorage] that is backed by [DataStore] with a file taken from [fileProvider].
+ */
 fun FeatureStorage.Companion.dataStore(fileProvider: () -> File): FeatureStorage {
   return dataStoreBuilder(fileProvider).build()
 }
 
+/**
+ * Creates a [FeatureStorage] that is backed by [DataStore] with a file in an apps default directory.
+ */
 fun FeatureStorage.Companion.dataStore(context: Context, fileName: String): FeatureStorage {
   return dataStoreBuilder(context, fileName).build()
 }

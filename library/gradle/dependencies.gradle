@@ -37,12 +37,12 @@ ext.libs = [
         "gradlePlugin": "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
         "stdLibJdk7": "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}",
         "stdLibJdk8": "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
-        "dokkaGradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:${versions.kotlin}",
         "x": [
             "coroutinesCore": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
             "coroutinesAndroid": "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}",
         ],
     ],
+    "dokkaGradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:1.4.10.2",
     "kotest": [
         "runnerJunit5": "io.kotest:kotest-runner-junit5-jvm:${versions.kotest}",
         "assertions": "io.kotest:kotest-assertions-core-jvm:${versions.kotest}",
