@@ -1,6 +1,5 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.Either
 import arrow.core.identity
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.buildAll
@@ -23,12 +22,12 @@ open class FeatureFactoryTask : DefaultTask() {
         ifRight = ::identity
     ).let(featureModelsMapper)
 
-    when (val buildIntent = factory.toBuilder(featureModels).build(factoryClassName)) {
-      is Either.Left -> error(buildIntent.a.message)
-      is Either.Right -> {
-        codeGenDir.deleteRecursively()
-        buildIntent.b.generate(factoryFunctionName, codeGenDir)
-      }
-    }
+    factory.toBuilder(featureModels).build(factoryClassName).fold(
+        ifLeft = { failure -> error(failure.message) },
+        ifRight = { featureFactoryModel ->
+          codeGenDir.deleteRecursively()
+          featureFactoryModel.generate(factoryFunctionName, codeGenDir)
+        }
+    )
   }
 }
