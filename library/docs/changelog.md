@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Renamed `feature`/`features` argument in `setFeature()` and `setFeatures()` methods to `value`/`values` respectively.
+- Elevation is no longer an attribute in the `IoMehowLaboratory.Theme` and a regular resource is used instead. This makes sure that when an Activity theme is overridden externally it won't crash for an unknown attribute.
 
 ### Removed
 - `generateFactory` property from `sourcedFeatureStorage()` method in Gradle plugin. It was added to the public API by a mistake and wasn't responsible for anything.
