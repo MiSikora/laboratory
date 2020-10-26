@@ -4,12 +4,12 @@ on:
     branches:
       - master
     paths-ignore:
-      - './library/images/**'
+      - './library/docs/**'
       - '*.md'
       - '.github/CODEOWNERS'
   pull_request:
     paths-ignore:
-      - './library/images/**'
+      - './library/docs/**'
       - '*.md'
       - '.github/CODEOWNERS'
 
