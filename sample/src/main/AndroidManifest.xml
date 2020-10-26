@@ -16,6 +16,13 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <activity
+        android:name="io.mehow.laboratory.inspector.LaboratoryActivity"
+        android:exported="false"
+        android:launchMode="singleInstance"
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+        tools:node="replace" />
   </application>
 
 </manifest>

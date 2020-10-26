@@ -18,17 +18,16 @@ theme:
   palette:
     primary: blue
     accent: light blue
+  custom_dir: pages-theme-overrides
 
 markdown_extensions:
-  - admonition
   - smarty
+  - attr_list
+  - admonition
   - codehilite:
       guess_lang: false
-      linenums: True
-  - footnotes
   - toc:
       permalink: true
-  - tables
 
 plugins:
   - search
@@ -36,7 +35,10 @@ plugins:
       minify_html: true
 
 nav:
-  - 'Overview': index.md
+  - 'Quick start': index.md
+  - 'User guide': user-guide.md
+  - 'QA module': qa-module.md
+  - 'Gradle plugin': gradle-plugin.md
+  - 'API': api.md
   - 'Changelog': changelog.md
   - 'Releasing': releasing.md
-
