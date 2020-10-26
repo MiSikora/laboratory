@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.7.0] - 2020-10-22
 ### Changed
 - Changelog format follows now [Keep a Changelog](https://keepachangelog.com/) format. Format is applied retroactively to this file.
-- R8 rules are now a part of `META-INF` of `laboratory` artifact.
+- R8 rules are now a part of `META-INF` of the `laboratory` artifact.
 - `SharedPreferencesFeatureStorage` is now `internal`.
 - Gradle plugin no longer has a runtime dependency on Android Gradle Plugin.
 - `laboratory-generator` generates source code compatible with the [explicit API mode](https://kotlinlang.org/docs/reference/whatsnew14.html#explicit-api-mode-for-library-authors).
@@ -30,13 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `FeatureStorage` extensions for creation of [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences) based `FeatureStorage`.
 - `FeatureStorage` extensions for creation of [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) based `FeatureStorage`.
-- [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) plugin can be order in the debug menu by overriding `io_mehow_laboratory_plugin_id` resource.
+- [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) plugin can be ordered in the debug menu by overriding `io_mehow_laboratory_plugin_id` resource.
 
 ### Deprecated
 - `SharedPreferenceFeatureStorage` soon will become `internal`.
 
 ### Changed
-- `DataStoreFeatureStorage` is now `internal`. It is not considered a breaking change as [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) is in alpha stage.
+- `DataStoreFeatureStorage` is now `internal`. It is not considered a breaking change as [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) is in the alpha stage.
 
 ## [0.6.1] - 2020-10-12
 ### Fixed
@@ -46,17 +46,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `Feature` can have now description. It can be used to add more contextual data to feature flags.
 - `LaboratoryActivity` observes changes to feature flags instead of loading them every time the screen is opened.
-- `LaboratoryActivity` displays feature flag sources next to them and allows to select a source from a drop down menu.
+- `LaboratoryActivity` displays feature flag sources next to them and allows users to select a source from a drop down menu.
 - Remote feature flag values are displayed in `LaboratoryActivity` if a source is not local.
-- When a remote source is used for feature flag a value cannot be changed from `LaboratoryActivity`.
+- When a remote source is used for a feature flag a value cannot be changed from `LaboratoryActivity`.
 - `LaboratoryActivity` displays feature flag descriptions if they are present.
-- `LaboratoryActivity` can reset feature flag values to their default state from an item in action bar.
+- `LaboratoryActivity` can reset feature flag values to their default state from an item in the action bar.
 - `Laboratory.experimentIs()` and `Laboratory.experimentIsBlocking()` functions that allow to check if a feature flag has particular value.
 - ViewPager2 `1.0.0` dependency to `laboratory-inspector`.
 - RecyclerView `1.1.0` dependency to `laboratory-inspector`.
 
 ### Changed
-- `LaboratoryActivity` requires now `Laboratory` for initialization. This `Laboratory` should share `FeatureStorage` with instances of `Laboratory` used in the application.
+- `LaboratoryActivity` requires now a `Laboratory` instance for initialization. This `Laboratory` should share `FeatureStorage` with instances of `Laboratory` used in the application.
 
 ## [0.5.0] - 2020-10-08
 ### Changed
@@ -68,9 +68,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2020-10-08
 ### Added
-- Feature flags can have now multiple sources. Source is also a feature flag and is optional. If no source is available it is assumed that only a local source is controlled.
+- Feature flags can have multiple sources. Source is also a feature flag and is optional. If no source is available it is assumed that only a local source is controlled.
 - `FeatureStorage` that connects feature flags with their sources. It is available via `FeatureStorage.sourced()` extension function. Feature flag sources are uniquely identified only by their value names.
-- Feature flag sources can be set from the Gradle plugin with `withSource("Name")` and `withFallbackSource("Name")` functions in `feature()` blocks. Any source that has name "Local" (or variant of it) is filtered out.
+- Feature flag sources can be set from the Gradle plugin with `withSource("Name")` and `withFallbackSource("Name")` functions in `feature()` blocks. Any source that has the name "Local" (or a variant of it) is filtered out.
 - Gradle plugin has a new `sourcedStorage()` function. It is responsible for generating a customized `FeatureStorage` that is aware of all available feature flag sources.
 - Gradle plugin has a new `featureSourceFactory()` function. It works similarly to `featureFactory()` function with a difference that it collects only feature flag sources.
 - `LaboratoryActivity` is now configurable with the `configure() function`.
@@ -84,7 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.1] - 2020-10-02
 ### Added
-- `Laboratory` exposes blocking way of reading and writing feature flags. It requires an [opt-in](https://kotlinlang.org/docs/reference/opt-in-requirements.html) `BlockingIoCall` annotation.
+- `Laboratory` exposes a blocking way of reading and writing feature flags. It requires an [opt-in](https://kotlinlang.org/docs/reference/opt-in-requirements.html) `BlockingIoCall` annotation.
 
 ### Changed
 - `laboratory-android` artifact is now `laboratory-shared-preferences artifact`.
@@ -97,13 +97,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2020-09-05
 ### Added
 - `Laboratory.observe()` function to observe feature flag changes via [`Flow`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/).
-- Support for [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) with `laboratory-date-store` artifact.
+- Support for [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) with the `laboratory-date-store` artifact.
 - `Laboratory` and `FeatureStorage` returns a boolean information whether writes are successful.
 - `Feature` interface that is used to define feature flags.
 - Wire `3.2.2` dependency to `laboratory-data-store`.
 
 ### Changed
-- Kotlin standard library is now part of public API.
+- Kotlin standard library is now part of the public API.
 - `Laboratory` and `FeatureStorage` expose their API via `suspend` functions.
 - Gradle plugin requires exactly one feature flag value to be added with `withFallbackValue("Name")` function.
 - Upgrade to Kotlin `1.4.0`.
@@ -112,7 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Removed
-- `@Feature` annotation. Feature flags should implement now `Feature` interface.
+- `@Feature` annotation. Feature flags should implement the `Feature` interface.
 
 ## [0.1.0] - 2020-08-03
 
