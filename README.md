@@ -8,7 +8,45 @@
 
 Feature flags for multi-module Kotlin Android projects.
 
-Please visit [project website](https://misikora.github.io/Laboratory/) for the documentation.
+Please visit [project website](https://misikora.github.io/Laboratory/) for the full documentation and the [changelog](https://misikora.github.io/Laboratory/changelog/).
+
+## TLDR
+
+First you need to define your feature flags.
+
+```kotlin
+enum class AuthType(
+  override val isDefaultValue: Boolean = false,
+) : Feature<AuthType> {
+  None(isDefaultValue = true),
+  Fingerprint,
+  Retina,
+  Face
+}
+```
+
+Once you have your feature flags defined you can start using them in the application.
+
+```kotlin
+suspend fun main() {
+  // A high-level API for interaction with feature flags
+  val laboratory = Laboratory.inMemory()
+
+  // Set AuthType value to Fingerprint
+  val success = laboratory.setFeature(AuthType.Fingerprint)
+
+  // Check what is the current value of AuthType
+  val currentAuthType = laboratory.experiment<AuthType>()
+
+  // Check if the current value of AuthType is equal to Face
+  val isFaceAuth = laboratory.experimentIs(AuthType.Face)
+
+  // Observe changes to the AuthType feature flag
+  laboratory.observe<AuthType>()
+      .onEach { value -> println("AuthType: $value") }
+      .launchIn(GlobalScope)
+}
+```
 
 ## License
 
