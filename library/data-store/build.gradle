@@ -21,7 +21,6 @@ android {
 dependencies {
   api project(":laboratory")
   api libs.android.x.dataStore
-  api libs.wire.runtime
 
   testImplementation libs.kotest.runnerJunit5
   testImplementation libs.kotest.assertions

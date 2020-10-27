@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - `generateFactory` property from `sourcedFeatureStorage()` method in Gradle plugin. It was added to the public API by a mistake and wasn't responsible for anything.
+- Wire dependency from the `library-shared-preferences` artifact. It was added by a mistake.
 
 ## [0.7.0] - 2020-10-22
 ### Changed
