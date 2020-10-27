@@ -4,6 +4,7 @@ site_author: Michał Sikora
 site_url: https://misikora.github.io/Laboratory/
 repo_name: Laboratory
 repo_url: https://github.com/MiSikora/Laboratory/
+edit_uri: edit/master/library/docs
 remote_branch: gh-pages
 
 copyright: Copyright &copy; 2020 Michał Sikora
