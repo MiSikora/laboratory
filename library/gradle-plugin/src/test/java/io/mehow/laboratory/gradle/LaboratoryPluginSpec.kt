@@ -7,7 +7,7 @@ import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.GradleRunner
 import java.io.File
 
-class LaboratoryPluginSpec : StringSpec({
+internal class LaboratoryPluginSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
   cleanBuildDirs()

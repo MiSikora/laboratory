@@ -1,6 +1,6 @@
 package io.mehow.laboratory.generator
 
-data class FeatureValue(
-  val name: String,
-  val isDefaultValue: Boolean = false,
+public data class FeatureValue(
+  public val name: String,
+  public val isDefaultValue: Boolean = false,
 )

@@ -14,4 +14,4 @@ import kotlin.annotation.AnnotationTarget.FUNCTION
 )
 @Retention(BINARY)
 @Target(CLASS, FUNCTION)
-annotation class BlockingIoCall
+public annotation class BlockingIoCall

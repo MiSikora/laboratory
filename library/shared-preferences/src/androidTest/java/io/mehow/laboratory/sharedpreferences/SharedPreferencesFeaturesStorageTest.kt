@@ -11,7 +11,7 @@ import io.mehow.laboratory.Laboratory
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
-class SharedPreferencesFeaturesStorageTest {
+internal class SharedPreferencesFeaturesStorageTest {
   private val preferences = ApplicationProvider
       .getApplicationContext<Context>()
       .getSharedPreferences("laboratory", MODE_PRIVATE)

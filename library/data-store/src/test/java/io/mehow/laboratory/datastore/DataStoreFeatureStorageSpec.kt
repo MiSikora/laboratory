@@ -9,7 +9,7 @@ import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import okio.ByteString.Companion.decodeHex
 
-class DataStoreFeatureStorageSpec : StringSpec({
+internal class DataStoreFeatureStorageSpec : StringSpec({
   "stored feature is available as experiment" {
     val tempFile = tempfile()
     val storage = FeatureStorage.dataStore { tempFile }

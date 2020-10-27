@@ -8,12 +8,12 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-open class SourcedFeatureStorageTask : DefaultTask() {
+public open class SourcedFeatureStorageTask : DefaultTask() {
   @get:Internal internal lateinit var storage: SourcedFeatureStorageInput
   @get:Internal internal lateinit var features: List<FeatureFlagInput>
   @get:Internal internal lateinit var codeGenDir: File
 
-  @TaskAction fun generateSourcedFeatureStorage() {
+  @TaskAction public fun generateSourcedFeatureStorage() {
     val sourceNames = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
         ifLeft = { failure -> error(failure.message) },
         ifRight = ::identity

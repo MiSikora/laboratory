@@ -5,7 +5,7 @@ import arrow.core.extensions.fx
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
-class FeatureFactoryModel private constructor(
+public class FeatureFactoryModel private constructor(
   internal val visibility: Visibility,
   internal val className: ClassName,
   internal val features: List<FeatureFlagModel>,
@@ -13,18 +13,18 @@ class FeatureFactoryModel private constructor(
   internal val packageName = className.packageName
   internal val name = className.simpleName
 
-  fun generate(functionName: String, file: File): File {
+  public fun generate(functionName: String, file: File): File {
     FeatureFactoryGenerator(this, functionName).generate(file)
     val outputDir = file.toPath().resolve(packageName.replace(".", "/")).toFile()
     return File(outputDir, "$name.kt")
   }
 
-  data class Builder(
+  public data class Builder(
     internal val visibility: Visibility,
     internal val packageName: String,
     internal val features: List<FeatureFlagModel>,
   ) {
-    fun build(name: String): Either<GenerationFailure, FeatureFactoryModel> {
+    public fun build(name: String): Either<GenerationFailure, FeatureFactoryModel> {
       val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
       return Either.fx {
         val packageName = !validatePackageName(fqcn)

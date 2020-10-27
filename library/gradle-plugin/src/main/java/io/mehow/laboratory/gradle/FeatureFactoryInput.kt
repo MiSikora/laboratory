@@ -8,16 +8,16 @@ import io.mehow.laboratory.generator.Visibility.Public
 /**
  * Representation of a generated feature factory class.
  */
-class FeatureFactoryInput internal constructor() {
+public class FeatureFactoryInput internal constructor() {
   /**
    * Sets whether the generated feature factory should be public or internal.
    */
-  var isPublic: Boolean = false
+  public var isPublic: Boolean = false
 
   /**
    * Sets package name of the generated feature factory. Overwrites any previously set values.
    */
-  var packageName: String? = null
+  public var packageName: String? = null
 
   internal var projectFilter = ProjectFilter { false }
     private set
@@ -26,7 +26,7 @@ class FeatureFactoryInput internal constructor() {
    * Sets which Gradle projects should be excluded from contributing
    * their feature flags to the generated feature factory.
    */
-  fun excludeProjects(filter: ProjectFilter) {
+  public fun excludeProjects(filter: ProjectFilter) {
     projectFilter = filter
   }
 

@@ -11,7 +11,7 @@ import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class ViewModelSpec : DescribeSpec({
+internal class ViewModelSpec : DescribeSpec({
   describe("view model") {
     it("filters empty feature groups") {
       val viewModel = FeaturesViewModel(

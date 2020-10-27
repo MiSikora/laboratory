@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 private const val pluginName = "laboratory"
 
-class LaboratoryPlugin : Plugin<Project> {
+public class LaboratoryPlugin : Plugin<Project> {
   private val hasAndroid = AtomicBoolean(false)
   private val hasKotlin = AtomicBoolean(false)
   private lateinit var extension: LaboratoryExtension

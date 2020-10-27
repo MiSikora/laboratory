@@ -14,7 +14,7 @@ import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 
-class FeatureFactorySpec : DescribeSpec({
+internal class FeatureFactorySpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(
       visibility = Internal,
       packageName = "io.mehow",

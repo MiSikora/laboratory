@@ -8,23 +8,23 @@ import io.mehow.laboratory.generator.Visibility.Public
 /**
  * Representation of a generate feature flag. It must have at least one value and exactly one default value.
  */
-class FeatureFlagInput internal constructor(
+public class FeatureFlagInput internal constructor(
   private val name: String,
 ) {
   /**
    * Sets whether the generated feature flag should be public or internal.
    */
-  var isPublic: Boolean = true
+  public var isPublic: Boolean = true
 
   /**
    * Sets package name of the generated feature flag. Overwrites any previously set values.
    */
-  var packageName: String? = null
+  public var packageName: String? = null
 
   /**
    * Sets description of the generated feature flag. Overwrites any previously set values.
    */
-  var description: String? = null
+  public var description: String? = null
 
   private val values: MutableList<FeatureValue> = mutableListOf()
 
@@ -33,7 +33,7 @@ class FeatureFlagInput internal constructor(
   /**
    * Adds a feature value.
    */
-  fun withValue(value: String) {
+  public fun withValue(value: String) {
     values += FeatureValue(value)
   }
 
@@ -41,7 +41,7 @@ class FeatureFlagInput internal constructor(
    * Adds a feature value that will be used as a default value.
    * Exactly one value must be set with this method.
    */
-  fun withDefaultValue(value: String) {
+  public fun withDefaultValue(value: String) {
     values += FeatureValue(value, isDefaultValue = true)
   }
 
@@ -49,7 +49,7 @@ class FeatureFlagInput internal constructor(
    * Adds a feature flag source. Any sources that are named "Local", or any variation of this word,
    * will be filtered out.
    */
-  fun withSource(value: String) {
+  public fun withSource(value: String) {
     sources += FeatureValue(value)
   }
 
@@ -58,7 +58,7 @@ class FeatureFlagInput internal constructor(
    * or any variation of this word, will be filtered out.
    * At most one value can be set with this method.
    */
-  fun withDefaultSource(value: String) {
+  public fun withDefaultSource(value: String) {
     sources += FeatureValue(value, isDefaultValue = true)
   }
 
