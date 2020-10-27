@@ -45,7 +45,7 @@ suspend fun main() {
   val isFaceAuth = laboratory.experimentIs(AuthType.Face)
 
   // Observe changes to the AuthType feature flag
-  laboratory.observe<AuthType>
+  laboratory.observe<AuthType>()
       .onEach { value -> println("AuthType: $value") }
       .launchIn(GlobalScope)
 }
