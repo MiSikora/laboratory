@@ -12,7 +12,7 @@ internal class PluginModule : HyperionPluginModule() {
 
   override fun createPluginView(layoutInflater: LayoutInflater, parent: ViewGroup): View {
     return layoutInflater.inflate(R.layout.io_mehow_laboratory_plugin_item, parent, false).apply {
-      findViewById<View>(R.id.io_mehow_open_laboratory_button).setOnClickListener {
+      setOnClickListener {
         context.startActivity(Intent(context, LaboratoryActivity::class.java))
       }
     }
