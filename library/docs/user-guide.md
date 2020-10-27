@@ -167,7 +167,7 @@ val powerTypeFirebaseValue = laboratory.experiment<PowerType>()
 val themeLocalValue = laboratory.experiment<Theme>()
 
 // Set source of Theme source to Azure (PowerType is still unaffected and uses Firebase)
-laboratory.setFeature(Theme.Source.Azure)
+val success = laboratory.setFeature(Theme.Source.Azure)
 
 // Check value of Theme in Azure FeatureStorage
 val themeAzureValue laboratory.experiment<Theme>()
