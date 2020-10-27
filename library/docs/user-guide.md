@@ -53,7 +53,7 @@ enum class ReportRootedDevice(
 Because `FeatureStorage` is an interface that is meant to be used with I/O operations it exposes only `suspend` functions. `Laboratory`, on the other hand, allows you to opt-into blocking equivalents of read and write functions. You can do this either selectively by applying the `@BlockingIoCall` annotation, or globally by adding a compiler flag.
 
 ```groovy
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+android {
   kotlinOptions {
     freeCompilerArgs += "-Xopt-in=io.mehow.laboratory.BlockingIoCall"
   }
