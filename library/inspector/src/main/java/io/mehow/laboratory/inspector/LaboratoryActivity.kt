@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
  * Entry point for QA module that allows to interact with feature flags.
  */
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
-class LaboratoryActivity : AppCompatActivity() {
+public class LaboratoryActivity : AppCompatActivity() {
   private val viewModel by viewModels<FeaturesViewModel> {
     FeaturesViewModel.Factory(configuration)
   }
@@ -103,12 +103,12 @@ class LaboratoryActivity : AppCompatActivity() {
    * @param featureFactories Each entry in this map will result in a separate tab in the QA module. Key is used
    * as a tab name, and each tab displays all feature flags provided by [FeatureFactory] from value.
    */
-  class Configuration(
+  public class Configuration(
     internal val laboratory: Laboratory,
     internal val featureFactories: Map<String, FeatureFactory>,
   )
 
-  companion object {
+  public companion object {
     private const val featuresLabel = "Features"
     private const val sourcesLabel = "Sources"
 
@@ -123,7 +123,7 @@ class LaboratoryActivity : AppCompatActivity() {
      * Configures [LaboratoryActivity] with a default "Features" tab, where feature flags are taken from the
      * [featureFactory]. Any additional tabs can be added in [externalFeatureFactories].
      */
-    fun configure(
+    public fun configure(
       laboratory: Laboratory,
       featureFactory: FeatureFactory,
       externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
@@ -140,7 +140,7 @@ class LaboratoryActivity : AppCompatActivity() {
      * from the [featureFactory] and [featureSourceFactory] respectively.
      * Any additional tabs can be added in [externalFeatureFactories].
      */
-    fun configure(
+    public fun configure(
       laboratory: Laboratory,
       featureFactory: FeatureFactory,
       featureSourceFactory: FeatureFactory,
@@ -156,14 +156,14 @@ class LaboratoryActivity : AppCompatActivity() {
     /**
      * Configures [LaboratoryActivity] with an input [configuration].
      */
-    fun configure(configuration: Configuration) {
+    public fun configure(configuration: Configuration) {
       backingConfiguration = configuration
     }
 
     /**
      * Opens QA module. [Configure][configure] needs to be called before you interact with [LaboratoryActivity].
      */
-    fun start(context: Context) {
+    public fun start(context: Context) {
       context.startActivity(Intent(context, LaboratoryActivity::class.java))
     }
   }

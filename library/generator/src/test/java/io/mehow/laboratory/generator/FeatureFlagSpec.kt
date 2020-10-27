@@ -15,7 +15,7 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import java.util.Locale
 
-class FeatureFlagSpec : DescribeSpec({
+internal class FeatureFlagSpec : DescribeSpec({
   val featureBuilder = FeatureFlagModel.Builder(
       visibility = Internal,
       packageName = "io.mehow",

@@ -246,7 +246,7 @@ style:
   ProtectedMemberInFinalClass:
     active: true
   RedundantVisibilityModifierRule:
-    active: true
+    active: false
   SafeCast:
     active: true
   SerialVersionUIDInSerializableClass:

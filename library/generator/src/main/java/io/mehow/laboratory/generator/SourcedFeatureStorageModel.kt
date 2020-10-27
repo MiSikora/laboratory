@@ -5,21 +5,21 @@ import arrow.core.extensions.fx
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
-class SourcedFeatureStorageModel private constructor(
+public class SourcedFeatureStorageModel private constructor(
   internal val visibility: Visibility,
-  internal val className: ClassName,
+  className: ClassName,
   internal val sourceNames: List<String>,
 ) {
   internal val packageName = className.packageName
   internal val name = className.simpleName
 
-  fun generate(file: File): File {
+  public fun generate(file: File): File {
     SourcedFeatureStorageGenerator(this).generate(file)
     val outputDir = file.toPath().resolve(packageName.replace(".", "/")).toFile()
     return File(outputDir, "$name.kt")
   }
 
-  data class Builder(
+  public data class Builder(
     internal val visibility: Visibility,
     internal val packageName: String,
     internal val sourceNames: List<String>,
@@ -27,7 +27,7 @@ class SourcedFeatureStorageModel private constructor(
     internal val name = "sourcedGeneratedFeatureStorage"
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
-    fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> {
+    public fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> {
       return Either.fx {
         val packageName = !validatePackageName()
         SourcedFeatureStorageModel(visibility, ClassName(packageName, name), sourceNames)

@@ -50,6 +50,8 @@ allprojects {
           "-Xopt-in=kotlin.RequiresOptIn",
           "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
           "-Xopt-in=kotlin.time.ExperimentalTime",
+          // TODO: Remove API in tests https://youtrack.jetbrains.com/issue/KT-42718
+          "-Xexplicit-api=strict",
       ]
     }
   }

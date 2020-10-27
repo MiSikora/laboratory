@@ -8,7 +8,7 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-open class FeatureFactoryTask : DefaultTask() {
+public open class FeatureFactoryTask : DefaultTask() {
   @get:Internal internal lateinit var factory: FeatureFactoryInput
   @get:Internal internal lateinit var features: List<FeatureFlagInput>
   @get:Internal internal lateinit var codeGenDir: File
@@ -16,7 +16,7 @@ open class FeatureFactoryTask : DefaultTask() {
   @get:Internal internal lateinit var factoryFunctionName: String
   @get:Internal internal lateinit var featureModelsMapper: (List<FeatureFlagModel>) -> List<FeatureFlagModel>
 
-  @TaskAction fun generateFeatureFactory() {
+  @TaskAction public fun generateFeatureFactory() {
     val featureModels = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
         ifLeft = { failure -> error(failure.message) },
         ifRight = ::identity

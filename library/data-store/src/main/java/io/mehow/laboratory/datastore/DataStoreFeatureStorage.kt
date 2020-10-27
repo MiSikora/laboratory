@@ -36,20 +36,20 @@ internal class DataStoreFeatureStorage(
 /**
  * Creates a [FeatureStorage] that is backed by [DataStore].
  */
-fun FeatureStorage.Companion.dataStore(dataStore: DataStore<FeatureFlags>): FeatureStorage {
+public fun FeatureStorage.Companion.dataStore(dataStore: DataStore<FeatureFlags>): FeatureStorage {
   return DataStoreFeatureStorage(dataStore)
 }
 
 /**
  * Creates a [FeatureStorage] that is backed by [DataStore] with a file taken from [fileProvider].
  */
-fun FeatureStorage.Companion.dataStore(fileProvider: () -> File): FeatureStorage {
+public fun FeatureStorage.Companion.dataStore(fileProvider: () -> File): FeatureStorage {
   return dataStoreBuilder(fileProvider).build()
 }
 
 /**
  * Creates a [FeatureStorage] that is backed by [DataStore] with a file in an apps default directory.
  */
-fun FeatureStorage.Companion.dataStore(context: Context, fileName: String): FeatureStorage {
+public fun FeatureStorage.Companion.dataStore(context: Context, fileName: String): FeatureStorage {
   return dataStoreBuilder(context, fileName).build()
 }

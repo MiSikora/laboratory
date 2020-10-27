@@ -19,7 +19,7 @@ import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import java.io.File
 
-class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
+internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
   cleanBuildDirs()

@@ -13,7 +13,7 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import java.util.Locale
 
-class SourcedFeatureStorageSpec : DescribeSpec({
+internal class SourcedFeatureStorageSpec : DescribeSpec({
   val storageBuilder = SourcedFeatureStorageModel.Builder(
       visibility = Public,
       packageName = "io.mehow",

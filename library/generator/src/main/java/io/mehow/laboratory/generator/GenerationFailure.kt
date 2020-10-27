@@ -2,55 +2,55 @@ package io.mehow.laboratory.generator
 
 import arrow.core.Nel
 
-interface GenerationFailure {
-  val message: String
+public interface GenerationFailure {
+  public val message: String
 }
 
-data class InvalidPackageName(
+public data class InvalidPackageName(
   private val fqcn: String,
 ) : GenerationFailure {
-  override val message
+  override val message: String
     get() = "Invalid package name for $fqcn."
 }
 
-data class InvalidFeatureName(
+public data class InvalidFeatureName(
   private val name: String,
   private val fqcn: String,
 ) : GenerationFailure {
-  override val message
+  override val message: String
     get() = "" +
         "Feature name must contain only alphanumeric characters or underscores " +
         "and must start with a letter. Found $name in $fqcn."
 }
 
-data class InvalidFactoryName(
+public data class InvalidFactoryName(
   private val name: String,
   private val fqcn: String,
 ) : GenerationFailure {
-  override val message
+  override val message: String
     get() = "" +
         "Factory name must contain only alphanumeric characters or underscores " +
         "and must start with a letter. Found $name in $fqcn."
 }
 
-data class NoFeatureValues(
+public data class NoFeatureValues(
   private val fqcn: String,
 ) : GenerationFailure {
-  override val message
+  override val message: String
     get() = "$fqcn feature must have at least one value."
 }
 
-data class InvalidFeatureValues(
+public data class InvalidFeatureValues(
   private val invalidValues: Nel<String>,
   private val fqcn: String,
 ) : GenerationFailure {
-  override val message
+  override val message: String
     get() = "" +
         "Feature values must contain only alphanumeric characters or underscores " +
         "and must start with a letter. Found ${invalidValues.toList()} in $fqcn."
 }
 
-data class FeatureValuesCollision(
+public data class FeatureValuesCollision(
   private val collisions: Nel<String>,
   private val fqcn: String,
 ) : GenerationFailure {
@@ -58,14 +58,14 @@ data class FeatureValuesCollision(
     get() = "Found feature values collision for $fqcn: ${collisions.toList()}."
 }
 
-data class NoFeatureDefaultValue(
+public data class NoFeatureDefaultValue(
   private val fqcn: String,
 ) : GenerationFailure {
   override val message: String
     get() = "Feature must have a single default value. Found none in $fqcn."
 }
 
-data class MultipleFeatureDefaultValues(
+public data class MultipleFeatureDefaultValues(
   private val collisions: Nel<String>,
   private val fqcn: String,
 ) : GenerationFailure {
@@ -73,14 +73,14 @@ data class MultipleFeatureDefaultValues(
     get() = "Feature must have a single default value. Found ${collisions.toList()} in $fqcn."
 }
 
-data class FeaturesCollision(
+public data class FeaturesCollision(
   private val collisions: Nel<String>,
 ) : GenerationFailure {
   override val message: String
     get() = "Found feature collisions: ${collisions.toList()}."
 
-  companion object {
-    fun fromFeatures(models: Nel<FeatureFlagModel>): FeaturesCollision {
+  public companion object {
+    public fun fromFeatures(models: Nel<FeatureFlagModel>): FeaturesCollision {
       return FeaturesCollision(models.map { @Kt41142 it.reflectionName })
     }
   }

@@ -15,7 +15,7 @@ import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
 @Suppress("LongParameterList") // All properties are required for code generation.
-class FeatureFlagModel private constructor(
+public class FeatureFlagModel private constructor(
   internal val visibility: Visibility,
   internal val className: ClassName,
   internal val values: Nel<FeatureValue>,
@@ -26,19 +26,19 @@ class FeatureFlagModel private constructor(
   internal val name = className.simpleName
   internal val reflectionName = className.reflectionName()
 
-  fun generate(file: File): File {
+  public fun generate(file: File): File {
     FeatureFlagGenerator(this).generate(file)
     val outputDir = file.toPath().resolve(packageName.replace(".", "/")).toFile()
     return File(outputDir, "$name.kt")
   }
 
-  override fun equals(other: Any?) = other is FeatureFlagModel && reflectionName == other.reflectionName
+  override fun equals(other: Any?): Boolean = other is FeatureFlagModel && reflectionName == other.reflectionName
 
-  override fun hashCode() = reflectionName.hashCode()
+  override fun hashCode(): Int = reflectionName.hashCode()
 
-  override fun toString() = reflectionName
+  override fun toString(): String = reflectionName
 
-  data class Builder(
+  public data class Builder(
     internal val visibility: Visibility,
     internal val packageName: String,
     internal val names: List<String>,
@@ -48,7 +48,7 @@ class FeatureFlagModel private constructor(
   ) {
     internal val fqcn = ClassName(packageName, names).canonicalName
 
-    fun build(): Either<GenerationFailure, FeatureFlagModel> {
+    public fun build(): Either<GenerationFailure, FeatureFlagModel> {
       return Either.fx {
         val packageName = !validatePackageName()
         val names = !validateName()
@@ -141,15 +141,15 @@ class FeatureFlagModel private constructor(
   }
 }
 
-fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
+public fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
   return traverse(Either.applicative()) { @Kt41142 it.build() }
       .map { listKind -> listKind.fix() }
       .flatMap { models -> models.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) } }
 }
 
-fun List<FeatureFlagModel>.sourceNames() = mapNotNull { @Kt41142 it.source }
+public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull { @Kt41142 it.source }
     .map { @Kt41142 it.values }
     .flatMap { it.toList() }
     .map { @Kt41142 it.name }
 
-fun List<FeatureFlagModel>.sourceModels() = mapNotNull { @Kt41142 it.source }
+public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> = mapNotNull { @Kt41142 it.source }

@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
-class SourcedFeatureStorageSpec : DescribeSpec({
+internal class SourcedFeatureStorageSpec : DescribeSpec({
   lateinit var localLaboratory: Laboratory
   lateinit var remoteLaboratoryA: Laboratory
   lateinit var remoteLaboratoryB: Laboratory

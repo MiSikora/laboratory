@@ -6,11 +6,11 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-open class FeatureFlagsTask : DefaultTask() {
+public open class FeatureFlagsTask : DefaultTask() {
   @get:Internal internal lateinit var features: List<FeatureFlagInput>
   @get:Internal internal lateinit var codeGenDir: File
 
-  @TaskAction fun generateFeatureFlags() {
+  @TaskAction public fun generateFeatureFlags() {
     features.map(FeatureFlagInput::toBuilder).buildAll().fold(
         ifLeft = { failure -> error(failure.message) },
         ifRight = { featureFlagModels ->

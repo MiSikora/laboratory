@@ -44,14 +44,14 @@ internal class SharedPreferencesFeatureStorage(
 /**
  * Creates a [FeatureStorage] that is backed by [SharedPreferences].
  */
-fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
+public fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
   return SharedPreferencesFeatureStorage(preferences)
 }
 
 /**
  * Creates a [FeatureStorage] that is backed by [SharedPreferences] with a [fileName] in [private mode][MODE_PRIVATE].
  */
-fun FeatureStorage.Companion.sharedPreferences(context: Context, fileName: String): FeatureStorage {
+public fun FeatureStorage.Companion.sharedPreferences(context: Context, fileName: String): FeatureStorage {
   val preferences = context.getSharedPreferences(fileName, MODE_PRIVATE)
   return sharedPreferences(preferences)
 }

@@ -15,7 +15,7 @@ import java.io.File
 /**
  * Builder for a [FeatureStorage] backed by [DataStore].
  */
-class Builder internal constructor(
+public class Builder internal constructor(
   private val fileProvider: () -> File,
 ) {
   private var serializer: Serializer<FeatureFlags> = FeatureFlagsSerializer
@@ -26,35 +26,35 @@ class Builder internal constructor(
   /**
    * Sets serializer that will be used by backing [DataStore].
    */
-  fun featureSerializer(serializer: Serializer<FeatureFlags>) = apply {
+  public fun featureSerializer(serializer: Serializer<FeatureFlags>): Builder = apply {
     this.serializer = serializer
   }
 
   /**
    * Sets corruption handler that will be used by backing [DataStore].
    */
-  fun corruptionHandler(handler: ReplaceFileCorruptionHandler<FeatureFlags>) = apply {
+  public fun corruptionHandler(handler: ReplaceFileCorruptionHandler<FeatureFlags>): Builder = apply {
     this.corruptionHandler = handler
   }
 
   /**
    * Sets migrations that will be used by backing [DataStore].
    */
-  fun migrations(migrations: Iterable<DataMigration<FeatureFlags>>) = apply {
+  public fun migrations(migrations: Iterable<DataMigration<FeatureFlags>>): Builder = apply {
     this.migrations = migrations.toList()
   }
 
   /**
    * Sets migrations that will be used by backing [DataStore].
    */
-  fun migrations(vararg migrations: DataMigration<FeatureFlags>) = apply {
+  public fun migrations(vararg migrations: DataMigration<FeatureFlags>): Builder = apply {
     this.migrations = migrations.toList()
   }
 
   /**
    * Sets coroutine scope that will be used by backing [DataStore].
    */
-  fun coroutineScope(scope: CoroutineScope) = apply {
+  public fun coroutineScope(scope: CoroutineScope): Builder = apply {
     this.coroutineScope = scope
   }
 
@@ -62,7 +62,7 @@ class Builder internal constructor(
    * Creates a new instances of [FeatureStorage] backed by [DataStore] that uses parameters
    * defined in this builder.
    */
-  fun build(): FeatureStorage {
+  public fun build(): FeatureStorage {
     val dataStore = DataStoreFactory.create(
         produceFile = fileProvider,
         serializer = serializer,
@@ -77,13 +77,13 @@ class Builder internal constructor(
 /**
  * Creates a [FeatureStorage builder][Builder] with a file taken from [fileProvider].
  */
-fun FeatureStorage.Companion.dataStoreBuilder(fileProvider: () -> File): Builder {
+public fun FeatureStorage.Companion.dataStoreBuilder(fileProvider: () -> File): Builder {
   return Builder(fileProvider)
 }
 
 /**
  * Creates a [FeatureStorage builder][Builder] with a file in an apps default directory.
  */
-fun FeatureStorage.Companion.dataStoreBuilder(context: Context, fileName: String): Builder {
+public fun FeatureStorage.Companion.dataStoreBuilder(context: Context, fileName: String): Builder {
   return dataStoreBuilder { File(context.filesDir, "datastore/$fileName") }
 }

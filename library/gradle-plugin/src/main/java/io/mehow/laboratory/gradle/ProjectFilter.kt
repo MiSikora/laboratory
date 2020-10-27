@@ -8,9 +8,9 @@ import org.gradle.api.Project
  * in a merging module.
  */
 @HasImplicitReceiver
-fun interface ProjectFilter {
+public fun interface ProjectFilter {
   /**
    * A predicate that excludes [project] from code generation contribution if it returns `true`.
    */
-  fun reject(project: Project): Boolean
+  public fun reject(project: Project): Boolean
 }

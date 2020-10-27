@@ -10,7 +10,7 @@ import io.kotest.matchers.throwable.shouldHaveMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class LaboratorySpec : DescribeSpec({
+internal class LaboratorySpec : DescribeSpec({
   describe("laboratory") {
     it("cannot use features with no values") {
       val laboratory = Laboratory(ThrowingStorage)

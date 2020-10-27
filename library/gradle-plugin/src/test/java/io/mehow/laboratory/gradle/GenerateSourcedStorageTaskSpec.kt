@@ -18,7 +18,7 @@ import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import java.io.File
 
-class GenerateSourcedStorageTaskSpec : StringSpec({
+internal class GenerateSourcedStorageTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
   cleanBuildDirs()
