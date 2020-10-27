@@ -50,7 +50,7 @@ else
   echo "Yes"
 fi
 
-# Replace current version in ./library/gradle.properties
+# Replace current version in gradle.properties
 propertiesFile="./gradle.properties"
 versionNameKey="VERSION_NAME"
 sed -i "" "s/.*$versionNameKey.*/$versionNameKey=$newVersion/g" $propertiesFile
@@ -65,6 +65,10 @@ sed -i "" "s/$currentVersion...HEAD/$newVersion...HEAD"$'\\\n'"$newVersionTag""/
 # Replace current version in index.md
 indexFile="./docs/index.md"
 sed -i "" "s/$currentVersion/$newVersion/g" $indexFile
+
+# Replace current version in README.md
+readmeFile="../README.md"
+sed -i "" "s/$currentVersion/$newVersion/g" $readmeFile
 
 git reset &> /dev/null
 git commit -am "Prepare for release $newVersion" &> /dev/null

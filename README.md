@@ -12,7 +12,35 @@ Please visit [project website](https://misikora.github.io/Laboratory/) for the f
 
 ## TLDR
 
-First you need to define your feature flags.
+Add Laboratory dependency to your project.
+
+```groovy
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation "io.mehow.laboratory:laboratory:0.7.0"
+}
+```
+
+Enable Java 8 support.
+
+```groovy
+android {
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  kotlinOptions {
+    jvmTarget = "1.8"
+    freeCompilerArgs += "-Xjvm-default=enable"
+  }
+}
+```
+
+Define your feature flags.
 
 ```kotlin
 enum class AuthType(
@@ -25,7 +53,7 @@ enum class AuthType(
 }
 ```
 
-Once you have your feature flags defined you can start using them in the application.
+Start using them in the application.
 
 ```kotlin
 suspend fun main() {
