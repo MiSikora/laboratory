@@ -6,7 +6,7 @@ It is very often desirable to have an option of configuring feature flag values 
 
 Feature flags inspection is available through the `laboratory-inspector` artifact. `LaboratoryActivity` is an [Activity](https://developer.android.com/reference/android/app/Activity) that enables inspection and modifications of feature flags.
 
-![Inspector](images/inspector_screenshot.jpg){: .center }
+![Inspector](images/inspector_screenshot.jpg){: style="width:480px" .center }
 
 Inspector displays feature flags as cards and their values on chips. Active values of feature flags are marked with a highlight colour. A local value of a feature flag can be changed by tapping on a chip. Chips that do not use `Local` sources cannot have their values changed. If a feature flag has multiple sources available they can be switched from a drop down menu.
 
@@ -137,7 +137,7 @@ enum class PowerSource(
 
 If you use [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) you can easily integrate Laboratory by adding the `laboratory-hyperion-plugin` artifact to your dependencies. This will put an item in Hyperion's debug menu.
 
-![Hyperion](images/hyperion_screenshot.jpg){: .center }
+![Hyperion](images/hyperion_screenshot.jpg){: style="width:480px" .center }
 
 If you'd like to position the Laboratory menu item in a different place on the menu you can override the string id resource.
 
