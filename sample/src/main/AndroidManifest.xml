@@ -17,6 +17,7 @@
       </intent-filter>
     </activity>
 
+    <!-- This is not needed. It shows how you can customize LaboratoryActivity theme. -->
     <activity
         android:name="io.mehow.laboratory.inspector.LaboratoryActivity"
         android:exported="false"
