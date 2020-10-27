@@ -21,7 +21,6 @@ configurations {
 tasks.getByName("pluginUnderTestMetadata").getPluginClasspath().from(configurations.fixtureClasspath)
 
 dependencies {
-  implementation libs.kotlin.stdLibJdk8
   implementation project(":generator")
   implementation libs.kotlin.gradlePlugin
   compileOnly libs.android.gradlePlugin

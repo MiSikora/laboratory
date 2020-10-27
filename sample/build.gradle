@@ -71,7 +71,6 @@ laboratory {
 }
 
 dependencies {
-  implementation libs.kotlin.stdLibJdk7
   implementation libs.kotlin.x.coroutinesAndroid
   implementation libs.android.material
   implementation libs.hyperion.core

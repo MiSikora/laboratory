@@ -5,7 +5,6 @@ plugins {
 test.useJUnitPlatform()
 
 dependencies {
-  api libs.kotlin.stdLibJdk7
   api libs.kotlin.x.coroutinesCore
 
   testImplementation libs.kotest.runnerJunit5

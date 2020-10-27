@@ -23,7 +23,3 @@ laboratory {
     withDefaultValue("Disabled")
   }
 }
-
-dependencies {
-  api libs.kotlin.stdLibJdk7
-}

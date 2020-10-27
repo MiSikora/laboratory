@@ -19,7 +19,3 @@ laboratory {
     withDefaultSource("Azure")
   }
 }
-
-dependencies {
-  api libs.kotlin.stdLibJdk7
-}
