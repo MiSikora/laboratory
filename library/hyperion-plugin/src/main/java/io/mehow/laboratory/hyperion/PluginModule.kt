@@ -1,6 +1,5 @@
 package io.mehow.laboratory.hyperion
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,7 @@ internal class PluginModule : HyperionPluginModule() {
 
   override fun createPluginView(layoutInflater: LayoutInflater, parent: ViewGroup): View {
     return layoutInflater.inflate(R.layout.io_mehow_laboratory_plugin_item, parent, false).apply {
-      setOnClickListener {
-        context.startActivity(Intent(context, LaboratoryActivity::class.java))
-      }
+      setOnClickListener { LaboratoryActivity.start(context) }
     }
   }
 }
