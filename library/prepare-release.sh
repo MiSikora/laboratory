@@ -7,9 +7,9 @@ if [[ $(git rev-parse --abbrev-ref HEAD) != master ]]; then
 fi
 
 currentVersion=$(git describe --abbrev=0)
-currentMajor=$(echo $currentVersion | cut -d. -f1)
-currentMinor=$(echo $currentVersion | cut -d. -f2)
-currentPatch=$(echo $currentVersion | cut -d. -f3)
+currentMajor=$(echo "$currentVersion" | cut -d. -f1)
+currentMinor=$(echo "$currentVersion" | cut -d. -f2)
+currentPatch=$(echo "$currentVersion" | cut -d. -f3)
 
 echo "Laboratory $currentVersion:"
 
@@ -72,7 +72,7 @@ sed -i "" "s/$currentVersion/$newVersion/g" $readmeFile
 
 git reset &> /dev/null
 git commit -am "Prepare for release $newVersion" &> /dev/null
-git tag -a $newVersion -m "Version $newVersion" &> /dev/null
+git tag -a "$newVersion" -m "Version $newVersion" &> /dev/null
 
 # Update current version to a snapshot one
 newMajor="$(cut -d"." -f1 <<<"$newVersion")"
