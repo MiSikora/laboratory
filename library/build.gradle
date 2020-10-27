@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
   apply from: "gradle/dependencies.gradle"
 
@@ -39,7 +41,7 @@ allprojects {
     targetCompatibility "1.8"
   }
 
-  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+  tasks.withType(KotlinCompile) {
     kotlinOptions {
       jvmTarget = "1.8"
       freeCompilerArgs += [
