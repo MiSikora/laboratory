@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:minHeight="131dp"
     android:orientation="horizontal"
@@ -18,13 +19,14 @@
       app:srcCompat="@drawable/io_mehow_laboratory_icon"
       />
 
-  <androidx.appcompat.widget.AppCompatButton
-      android:id="@+id/io_mehow_open_laboratory_button"
+  <androidx.appcompat.widget.AppCompatTextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
       android:duplicateParentState="true"
+      android:textSize="16sp"
       android:text="@string/io_mehow_laboratory_plugin_label"
-      style="@style/Widget.AppCompat.Button.Colored"
+      android:textColor="@color/hype_plugin_color_selector"
       />
 
 </LinearLayout>
