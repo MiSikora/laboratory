@@ -14,7 +14,7 @@ enum class SomeFeature : Feature<SomeFeature>
 The default value of a feature flag is used whenever `Laboratory` does not find any value saved or when a saved value is unknown. Default value is resolved with the following algorithm.
 
 - If there is only one enum with `isDefaultValue` property set to `true` it is used as a default value.
-- If more than one enum has `isDefaultValue` property set to `true` the first one in listing order is used as a default value.
+- If more than one enum has `isDefaultValue` property set to `true` the first one in listing order with this property set to `true` is used as a default value.
 - If all enums have `isDefaultValue` property set to `false` the first one in listing order is used as a default value.
 
 ```kotlin
