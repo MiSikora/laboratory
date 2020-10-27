@@ -13,10 +13,6 @@ on:
       - '**.md'
       - '.github/CODEOWNERS'
 
-defaults:
-  run:
-    working-directory: library
-
 jobs:
   android-tests:
     name: Android Tests
@@ -38,7 +34,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck --stacktrace
+          script: ./gradlew -p library connectedCheck --stacktrace
         env:
           API_LEVEL: 29
 
@@ -62,7 +58,7 @@ jobs:
           restore-keys: cache-gradle-
 
       - name: Run Tests
-        run: ./gradlew test --stacktrace
+        run: ./gradlew -p library test --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop
@@ -84,7 +80,7 @@ jobs:
           restore-keys: cache-gradle-
 
       - name: Run Detekt
-        run: ./gradlew detekt --stacktrace
+        run: ./gradlew -p library detekt --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop
@@ -106,7 +102,7 @@ jobs:
           restore-keys: cache-gradle-
 
       - name: Run Lint
-        run: ./gradlew lint --stacktrace
+        run: ./gradlew -p library lint --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop

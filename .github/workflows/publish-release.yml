@@ -4,10 +4,6 @@ on:
     tags:
       - '*.*.*'
 
-defaults:
-  run:
-    working-directory: library
-
 jobs:
   publish-release:
     name: Publish Release
@@ -30,7 +26,7 @@ jobs:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_SIGNING_KEY: ${{ secrets.SONATYPE_NEXUS_SIGNING_KEY }}
-        run: ./gradlew uploadArchives --no-daemon --no-parallel --stacktrace
+        run: ./gradlew -p library uploadArchives --no-daemon --no-parallel --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop

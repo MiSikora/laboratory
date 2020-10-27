@@ -4,10 +4,6 @@ on:
     branches:
       - master
 
-defaults:
-  run:
-    working-directory: library
-
 jobs:
   publish-snapshot:
     name: Publish Snapshot
@@ -34,7 +30,7 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
-        run: ./gradlew uploadArchives --no-daemon --no-parallel --stacktrace
+        run: ./gradlew -p library uploadArchives --no-daemon --no-parallel --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop
