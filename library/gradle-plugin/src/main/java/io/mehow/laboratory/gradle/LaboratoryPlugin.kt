@@ -97,7 +97,7 @@ public class LaboratoryPlugin : Plugin<Project> {
     val featureInputs = mutableListOf<FeatureFlagInput>()
     val storageTask = registerTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage") { task ->
       task.group = pluginName
-      task.group = "Generate Laboratory sourced feature storage."
+      task.description = "Generate Laboratory sourced feature storage."
       task.storage = storageInput
       task.features = featureInputs
       task.codeGenDir = codeGenDir
