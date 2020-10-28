@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Elevation is no longer an attribute in the `IoMehowLaboratory.Theme` and a regular resource is used instead. This makes sure that when an Activity theme is overridden externally it won't crash for an unknown attribute.
 - Flatten Hyperion button to visually match other items.
 - Upgrade to Coroutines `1.4.0`.
+- Upgrade to Wire `3.5.0`.
 
 ### Removed
 - `generateFactory` property from `sourcedFeatureStorage()` method in Gradle plugin. It was added to the public API by a mistake and wasn't responsible for anything.
