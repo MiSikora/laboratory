@@ -15,6 +15,7 @@ on:
 
 jobs:
   android-tests:
+    if: ${{ github.repository == 'MiSikora/Laboratory' }}
     name: Android Tests
     runs-on: macos-latest
     steps:
@@ -42,6 +43,7 @@ jobs:
         run: ./gradlew --stop
 
   tests:
+    if: ${{ github.repository == 'MiSikora/Laboratory' }}
     name: JVM Tests
     runs-on: ubuntu-latest
     steps:
@@ -64,6 +66,7 @@ jobs:
         run: ./gradlew --stop
 
   detekt:
+    if: ${{ github.repository == 'MiSikora/Laboratory' }}
     name: Detekt
     runs-on: ubuntu-latest
     steps:
@@ -86,6 +89,7 @@ jobs:
         run: ./gradlew --stop
 
   lint:
+    if: ${{ github.repository == 'MiSikora/Laboratory' }}
     name: Lint
     runs-on: ubuntu-latest
     steps:
