@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- Moved 'generateSourcedFeatureStorage' task to a correct tasks group.
+- Moved `generateSourcedFeatureStorage` task to a correct tasks group.
+
+### Removed
+- `ProjectFilter` from `laboratory-gradle-plugin` in favour of `java.util.function.Predicate`.
 
 ## [0.8.0] - 2020-10-28
 ### Added

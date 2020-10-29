@@ -8,6 +8,7 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.TaskProvider
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.function.Predicate
 
 private const val pluginName = "laboratory"
 
@@ -126,11 +127,11 @@ public class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.findAllFeatures(
-    projectFilter: ProjectFilter,
+    projectFilter: Predicate<Project>,
     onFeatureInputsFound: (List<FeatureFlagInput>) -> Unit,
   ) {
     rootProject.allprojects { project ->
-      if (!projectFilter.reject(project)) {
+      if (!projectFilter.test(project)) {
         project.plugins.withType(LaboratoryPlugin::class.java) { labPlugin ->
           val pluginFeatures = labPlugin.extension.featureInputs
           onFeatureInputsFound(pluginFeatures)

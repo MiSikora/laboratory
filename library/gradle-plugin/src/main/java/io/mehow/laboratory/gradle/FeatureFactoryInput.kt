@@ -4,6 +4,8 @@ import io.mehow.laboratory.generator.FeatureFactoryModel
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import org.gradle.api.Project
+import java.util.function.Predicate
 
 /**
  * Representation of a generated feature factory class.
@@ -19,14 +21,14 @@ public class FeatureFactoryInput internal constructor() {
    */
   public var packageName: String? = null
 
-  internal var projectFilter = ProjectFilter { false }
+  internal var projectFilter = Predicate { _: Project -> false }
     private set
 
   /**
    * Sets which Gradle projects should be excluded from contributing
    * their feature flags to the generated feature factory.
    */
-  public fun excludeProjects(filter: ProjectFilter) {
+  public fun excludeProjects(filter: Predicate<Project>) {
     projectFilter = filter
   }
 

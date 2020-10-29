@@ -3,6 +3,8 @@ package io.mehow.laboratory.gradle
 import io.mehow.laboratory.generator.SourcedFeatureStorageModel
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import org.gradle.api.Project
+import java.util.function.Predicate
 
 /**
  * Representation of a generated feature storage that is aware of feature flags sources.
@@ -18,14 +20,14 @@ public class SourcedFeatureStorageInput internal constructor() {
    */
   public var packageName: String? = null
 
-  internal var projectFilter = ProjectFilter { false }
+  internal var projectFilter = Predicate { _: Project -> false }
     private set
 
   /**
    * Sets which Gradle projects should be excluded from contributing
    * their feature flag sources to the generated feature storage.
    */
-  public fun excludeProjects(filter: ProjectFilter) {
+  public fun excludeProjects(filter: Predicate<Project>) {
     projectFilter = filter
   }
 
