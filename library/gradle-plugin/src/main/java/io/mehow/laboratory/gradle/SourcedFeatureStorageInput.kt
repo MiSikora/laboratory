@@ -20,14 +20,14 @@ public class SourcedFeatureStorageInput internal constructor() {
    */
   public var packageName: String? = null
 
-  internal var projectFilter = Predicate { _: Project -> false }
+  internal var projectFilter = Predicate<Project> { true }
     private set
 
   /**
-   * Sets which Gradle projects should be excluded from contributing
+   * Sets which Gradle projects should be included to contributing
    * their feature flag sources to the generated feature storage.
    */
-  public fun excludeProjects(filter: Predicate<Project>) {
+  public fun projectFilter(filter: Predicate<Project>) {
     projectFilter = filter
   }
 

@@ -5,8 +5,8 @@ plugins {
 
 laboratory {
   featureFactory {
-    excludeProjects { project ->
-      project.name == "feature-a"
+    projectFilter { project ->
+      project.name != "feature-a"
     }
   }
 

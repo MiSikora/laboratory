@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- 'excludeProjects' plugin functions are now called 'projectFilter' and the condition is reversed. Previously they removed projects that matched a condition. Now they allow projects that match it.
+
 ### Fixed
 - Moved `generateSourcedFeatureStorage` task to a correct tasks group.
 

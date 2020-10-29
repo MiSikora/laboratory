@@ -131,7 +131,7 @@ public class LaboratoryPlugin : Plugin<Project> {
     onFeatureInputsFound: (List<FeatureFlagInput>) -> Unit,
   ) {
     rootProject.allprojects { project ->
-      if (!projectFilter.test(project)) {
+      if (projectFilter.test(project)) {
         project.plugins.withType(LaboratoryPlugin::class.java) { labPlugin ->
           val pluginFeatures = labPlugin.extension.featureInputs
           onFeatureInputsFound(pluginFeatures)

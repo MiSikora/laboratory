@@ -373,11 +373,11 @@ apply plugin: "io.mehow.laboratory"
 
 laboratory {
   featureFactory {
-    excludeProjects { project -> project.name == "module-a" }
+    projectFilter { project -> project.name != "module-a" }
   }
 
   sourcedStorage {
-    excludeProjects { project -> project.name == "module-a" }
+    projectFilter { project -> project.name != "module-a" }
   }
 }
 ```
@@ -430,8 +430,8 @@ laboratory {
     // Sets visibility of a storage extension function to be either 'public' or 'internal'. 'false' by default.
     isPublic = true
 
-    // Excludes projects from contributing sources to this storage. Includes all projects by default.
-    excludeProjects { project -> true }
+    // Contributes sources to this storage only if they match the condition. Includes all projects by default.
+    projectFilter { project -> false }
   }
 
   // Configures feature flags factory useful for the QA module configuration.
@@ -442,8 +442,8 @@ laboratory {
     // Sets visibility of a factory extension function to be either 'public' or 'internal'. 'false' by default.
     isPublic = true
 
-    // Excludes projects from contributing features to this factory. Includes all projects by default.
-    excludeProjects { project -> true }
+    // Contributes features to this factory only if they match the condition. Includes all projects by default.
+    projectFilter { project -> false }
   }
 
   // Configures feature flag sources factory.
@@ -454,8 +454,8 @@ laboratory {
     // Sets visibility of a factory extension function to be either 'public' or 'internal'. 'false' by default.
     isPublic = true
 
-    // Excludes projects from contributing features to this factory. Includes all projects by default.
-    excludeProjects { project -> true }
+    // Contributes features to this factory only if they match the condition. Includes all projects by default.
+    projectFilter { project -> false }
   }
 }
 ```

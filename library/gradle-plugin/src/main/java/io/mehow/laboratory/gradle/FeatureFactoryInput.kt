@@ -21,14 +21,14 @@ public class FeatureFactoryInput internal constructor() {
    */
   public var packageName: String? = null
 
-  internal var projectFilter = Predicate { _: Project -> false }
+  internal var projectFilter = Predicate<Project> { true }
     private set
 
   /**
-   * Sets which Gradle projects should be excluded from contributing
+   * Sets which Gradle projects should be included to contributing
    * their feature flags to the generated feature factory.
    */
-  public fun excludeProjects(filter: Predicate<Project>) {
+  public fun projectFilter(filter: Predicate<Project>) {
     projectFilter = filter
   }
 
