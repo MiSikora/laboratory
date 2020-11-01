@@ -1,0 +1,16 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  Feature {
+    packageName = "io.mehow.example"
+    description = "Feature description"
+
+    withDefaultValue("First")
+    withValue("Second")
+
+    withSource("Remote")
+  }
+}

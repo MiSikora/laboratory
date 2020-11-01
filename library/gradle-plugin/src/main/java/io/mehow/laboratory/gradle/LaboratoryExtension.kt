@@ -1,6 +1,8 @@
 package io.mehow.laboratory.gradle
 
+import groovy.lang.Closure
 import org.gradle.api.Action
+import org.gradle.util.ConfigureUtil
 
 /**
  * An entry point for configuration of feature flags code generation.
@@ -25,6 +27,26 @@ public open class LaboratoryExtension {
       input.packageName = input.packageName ?: packageName
       return@let input
     }
+  }
+
+  /**
+   * Generates a new feature in this module.
+   *
+   * This is a trick from Groovy – https://groovy-lang.org/metaprogramming.html#_methodmissing.
+   */
+  public fun methodMissing(name: String, args: Any) {
+    val closure = (args as? Array<*>)?.getOrNull(0) as? Closure<*>
+        ?: error("""
+          |Expected a closure for a feature flag:
+          |
+          |laboratory {
+          |  $name {
+          |    withDefaultValue("SampleValue")
+          |  }
+          |}
+        """.trimMargin())
+
+    feature(name) { input -> ConfigureUtil.configure(closure, input) }
   }
 
   internal var factoryInput: FeatureFactoryInput? = null

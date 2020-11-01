@@ -6,7 +6,8 @@ plugins {
 laboratory {
   packageName = "io.mehow.laboratory.c"
 
-  feature("DistanceAlgorithm") {
+  // You can use Groovy syntax for adding features.
+  DistanceAlgorithm {
     description = "Algorithm used for destination distance calculations"
 
     withDefaultValue("Euclidean")
