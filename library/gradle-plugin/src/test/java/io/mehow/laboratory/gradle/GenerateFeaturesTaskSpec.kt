@@ -501,4 +501,47 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
       |}
     """.trimMargin("|")
   }
+
+  "generates feature flag from Groovy DSL" {
+    val fixture = "feature-generate-groovy-dsl".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("io.mehow.example.Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldBe """
+      |package io.mehow.example
+      |
+      |import java.lang.Class
+      |import kotlin.Boolean
+      |import kotlin.String
+      |import kotlin.Suppress
+      |
+      |public enum class Feature(
+      |  public override val isDefaultValue: Boolean = false
+      |) : io.mehow.laboratory.Feature<Feature> {
+      |  First(isDefaultValue = true),
+      |  Second,
+      |  ;
+      |
+      |  @Suppress("UNCHECKED_CAST")
+      |  public override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |      Class<io.mehow.laboratory.Feature<*>>
+      |
+      |  public override val description: String = "Feature description"
+      |
+      |  public enum class Source(
+      |    public override val isDefaultValue: Boolean = false
+      |  ) : io.mehow.laboratory.Feature<Source> {
+      |    Local(isDefaultValue = true),
+      |    Remote,
+      |    ;
+      |  }
+      |}
+      |
+    """.trimMargin("|")
+  }
 })

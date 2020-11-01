@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Groovy DSL for adding feature flags via Gradle plugin. This is equivalent to `feature("SomeFeatureFlag")` function.
+
+    ```groovy
+    laboratory {
+      SomeFeatureFlag {
+        withDefaultValue("Enabled")
+        withValue("Disabled")
+      }
+    }
+    ```
+
 ### Changed
 - `excludeProjects` plugin functions are now called `projectFilter` and the condition is reversed. Previously they removed projects that matched a condition. Now they allow projects that match it.
 
