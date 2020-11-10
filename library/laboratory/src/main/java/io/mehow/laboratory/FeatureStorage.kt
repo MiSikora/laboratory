@@ -58,7 +58,7 @@ public interface FeatureStorage {
      * If you use Gradle plugin, you should not use this method as a more specialised factory method
      * will be generated for you, that will make sure that all remote sources are configured.
      *
-     * @see [Feature.sourcedWith]
+     * @see [Feature.source]
      */
     public fun sourced(
       localSource: FeatureStorage,

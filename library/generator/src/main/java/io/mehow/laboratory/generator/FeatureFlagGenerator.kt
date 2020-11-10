@@ -39,7 +39,7 @@ internal class FeatureFlagGenerator(
 
   private val featureSource = feature.source?.let { nestedSource ->
     nestedSource to PropertySpec
-        .builder(sourcedWithPropertyName, featureType, OVERRIDE)
+        .builder(sourcePropertyName, featureType, OVERRIDE)
         .addAnnotation(suppressCast)
         .initializer("%T::class.java as %T", nestedSource.className, featureType)
         .build()
@@ -87,7 +87,7 @@ internal class FeatureFlagGenerator(
 
   private companion object {
     const val defaultValuePropertyName = "isDefaultValue"
-    const val sourcedWithPropertyName = "sourcedWith"
+    const val sourcePropertyName = "source"
     const val descriptionPropertyName = "description"
 
     val featureType = Class::class(Feature::class(STAR))

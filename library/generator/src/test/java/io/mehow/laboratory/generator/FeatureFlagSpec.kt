@@ -404,7 +404,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       }
     }
 
-    it("can have sourcedWith parameter") {
+    it("can have source parameter") {
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
@@ -428,7 +428,7 @@ internal class FeatureFlagSpec : DescribeSpec({
             |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
             |    public override val isDefaultValue: Boolean = false
@@ -443,7 +443,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       }
     }
 
-    it("does not have sourcedWith parameter if only source is Local") {
+    it("does not have source parameter if only source is Local") {
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
@@ -502,7 +502,7 @@ internal class FeatureFlagSpec : DescribeSpec({
             |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
             |    public override val isDefaultValue: Boolean = false
@@ -541,7 +541,7 @@ internal class FeatureFlagSpec : DescribeSpec({
             |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  internal enum class Source(
             |    public override val isDefaultValue: Boolean = false
@@ -580,7 +580,7 @@ internal class FeatureFlagSpec : DescribeSpec({
             |  ;
             |
             |  @Suppress("UNCHECKED_CAST")
-            |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
             |  public enum class Source(
             |    public override val isDefaultValue: Boolean = false
