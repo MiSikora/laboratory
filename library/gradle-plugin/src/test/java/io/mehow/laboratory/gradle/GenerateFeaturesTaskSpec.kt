@@ -103,7 +103,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
       |  ;
       |
       |  @Suppress("UNCHECKED_CAST")
-      |  public override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
       |      Class<io.mehow.laboratory.Feature<*>>
       |
       |  public enum class Source(
@@ -137,7 +137,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
       |  ;
       |
       |  @Suppress("UNCHECKED_CAST")
-      |  public override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
       |      Class<io.mehow.laboratory.Feature<*>>
       |
       |  internal enum class Source(
@@ -171,7 +171,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
       |  ;
       |
       |  @Suppress("UNCHECKED_CAST")
-      |  public override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
       |      Class<io.mehow.laboratory.Feature<*>>
       |
       |  public enum class Source(
@@ -205,7 +205,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
       |  ;
       |
       |  @Suppress("UNCHECKED_CAST")
-      |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+      |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
       |
       |  public enum class Source(
       |    public override val isDefaultValue: Boolean = false
@@ -243,7 +243,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
       |  ;
       |
       |  @Suppress("UNCHECKED_CAST")
-      |  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+      |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
       |
       |  public enum class Source(
       |    public override val isDefaultValue: Boolean = false
@@ -528,7 +528,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
       |  ;
       |
       |  @Suppress("UNCHECKED_CAST")
-      |  public override val sourcedWith: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
+      |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
       |      Class<io.mehow.laboratory.Feature<*>>
       |
       |  public override val description: String = "Feature description"

@@ -197,7 +197,7 @@ private enum class FirstFeature(override val isDefaultValue: Boolean = false) : 
   ;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
     Local,
@@ -213,7 +213,7 @@ private enum class SecondFeature(override val isDefaultValue: Boolean = false) :
   ;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
     Local,
@@ -230,7 +230,7 @@ private enum class EmptySourceFeature(override val isDefaultValue: Boolean = fal
   ;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   private enum class Source : Feature<Source>
 }

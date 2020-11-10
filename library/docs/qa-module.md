@@ -68,7 +68,7 @@ enum class Authentication(
   Face;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+  override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
   enum class Source(
     override val isDefaultValue: Boolean = false
@@ -89,7 +89,7 @@ enum class DistanceAlgorithm(
   Hamming;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+  override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
   override val description: String = "Algorithm used for destination distance calculations"
 
@@ -122,7 +122,7 @@ enum class PowerSource(
   ColdFusion;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+  override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
   enum class Source(
     public override val isDefaultValue: Boolean = false

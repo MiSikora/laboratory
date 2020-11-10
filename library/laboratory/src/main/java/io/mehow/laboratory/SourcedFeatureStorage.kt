@@ -34,6 +34,6 @@ internal class SourcedFeatureStorage(
 
   private fun <T : Feature<*>> Class<T>.validatedSource() = enumConstants
       ?.firstOrNull()
-      ?.sourcedWith
+      ?.source
       ?.takeUnless { it.enumConstants.isNullOrEmpty() }
 }

@@ -220,7 +220,7 @@ private enum class Sourced(override val isDefaultValue: Boolean = false) : Featu
   ;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
     Local,

@@ -31,7 +31,7 @@ public interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
    *   ;
    *
    *   @Suppress("UNCHECKED_CAST")
-   *   override val sourcedWith = Source::class.java as Class<Feature<*>>
+   *   override val source = Source::class.java as Class<Feature<*>>
    *
    *   enum class Source(
    *     override val isDefaultValue: Boolean = false
@@ -46,7 +46,7 @@ public interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
    *
    * It should have the same value for all feature values. If sources differ between values the first one is used.
    */
-  @JvmDefault public val sourcedWith: Class<Feature<*>>? get() = null
+  @JvmDefault public val source: Class<Feature<*>>? get() = null
 
   /**
    * Description of the feature flag that can be used for more contextual information. It should have the same value

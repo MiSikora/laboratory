@@ -83,7 +83,7 @@ internal enum class LocationTracking(
   ;
 
   @Suppress("UNCHECKED_CAST")
-  public override val sourcedWith: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
   internal enum class Source(
     public override val isDefaultValue: Boolean = false

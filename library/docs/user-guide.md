@@ -80,7 +80,7 @@ enum class PowerType(
   Solar(isDefaultValue = true);
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source(
     override val isDefaultValue: Boolean = false,
@@ -124,7 +124,7 @@ enum class PowerType(
   Solar(isDefaultValue = true);
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source(
     override val isDefaultValue: Boolean = false,
@@ -143,7 +143,7 @@ enum class Theme(
   Christmas;
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source(
     override val isDefaultValue: Boolean = false,
@@ -186,7 +186,7 @@ enum class ShowAds(
   Disabled(isDefaultValue = true);
 
   @Suppress("UNCHECKED_CAST")
-  override val sourcedWith = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source(
     override val isDefaultValue: Boolean = false,

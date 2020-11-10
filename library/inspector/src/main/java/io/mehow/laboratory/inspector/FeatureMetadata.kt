@@ -13,7 +13,7 @@ internal class FeatureMetadata private constructor(private val feature: Class<Fe
 
   val values = feature.enumConstants?.toList<Feature<*>>().orEmpty()
 
-  val sourceMetadata = values.firstOrNull()?.sourcedWith?.let(FeatureMetadata::create)
+  val sourceMetadata = values.firstOrNull()?.source?.let(FeatureMetadata::create)
 
   val defaultValue = values.firstOrNull { it.isDefaultValue } ?: values.first()
 
