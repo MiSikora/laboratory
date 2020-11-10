@@ -54,3 +54,8 @@ public interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
    */
   @JvmDefault public val description: String get() = ""
 }
+
+/**
+ * All available options of a feature flag.
+ */
+public val <T : Feature<T>> Class<T>.options: Array<T> get() = enumConstants
