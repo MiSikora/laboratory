@@ -56,8 +56,8 @@ internal class ViewModelSpec : DescribeSpec({
 
     it("marks saved feature flag options as selected") {
       val laboratory = Laboratory.inMemory().apply {
-        setFeature(First.A)
-        setFeature(Second.C)
+        setOption(First.A)
+        setOption(Second.C)
       }
 
       val viewModel = GroupViewModel(

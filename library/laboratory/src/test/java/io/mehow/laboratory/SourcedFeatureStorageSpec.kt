@@ -30,10 +30,10 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
   describe("sourced feature storage") {
     context("with no sources set") {
       it("takes initial value from a default source") {
-        localLaboratory.setFeature(FirstFeature.B)
+        localLaboratory.setOption(FirstFeature.B)
         sourcedLaboratory.experiment<FirstFeature>() shouldBe FirstFeature.B
 
-        remoteLaboratoryB.setFeature(SecondFeature.C)
+        remoteLaboratoryB.setOption(SecondFeature.C)
         sourcedLaboratory.experiment<SecondFeature>() shouldBe SecondFeature.C
       }
 
@@ -41,10 +41,10 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
         sourcedLaboratory.observe<SecondFeature>().test {
           expectItem() shouldBe SecondFeature.A
 
-          remoteLaboratoryB.setFeature(SecondFeature.B)
+          remoteLaboratoryB.setOption(SecondFeature.B)
           expectItem() shouldBe SecondFeature.B
 
-          remoteLaboratoryB.setFeature(SecondFeature.C)
+          remoteLaboratoryB.setOption(SecondFeature.C)
           expectItem() shouldBe SecondFeature.C
 
           cancel()
@@ -53,36 +53,36 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     }
 
     it("allows to change a feature source") {
-      sourcedLaboratory.setFeature(FirstFeature.Source.RemoteA)
+      sourcedLaboratory.setOption(FirstFeature.Source.RemoteA)
 
-      remoteLaboratoryA.setFeature(FirstFeature.C)
+      remoteLaboratoryA.setOption(FirstFeature.C)
       sourcedLaboratory.experiment<FirstFeature>() shouldBe FirstFeature.C
     }
 
     it("observes changes of a feature source") {
-      localLaboratory.setFeature(SecondFeature.A)
-      remoteLaboratoryA.setFeature(SecondFeature.B)
-      remoteLaboratoryB.setFeature(SecondFeature.C)
+      localLaboratory.setOption(SecondFeature.A)
+      remoteLaboratoryA.setOption(SecondFeature.B)
+      remoteLaboratoryB.setOption(SecondFeature.C)
 
       sourcedLaboratory.observe<SecondFeature>().test {
         expectItem() shouldBe SecondFeature.C
 
-        sourcedLaboratory.setFeature(SecondFeature.Source.Local)
+        sourcedLaboratory.setOption(SecondFeature.Source.Local)
         expectItem() shouldBe SecondFeature.A
 
-        localLaboratory.setFeature(SecondFeature.C)
+        localLaboratory.setOption(SecondFeature.C)
         expectItem() shouldBe SecondFeature.C
 
-        sourcedLaboratory.setFeature(SecondFeature.Source.RemoteA)
+        sourcedLaboratory.setOption(SecondFeature.Source.RemoteA)
         expectItem() shouldBe SecondFeature.B
 
-        remoteLaboratoryA.setFeature(SecondFeature.A)
+        remoteLaboratoryA.setOption(SecondFeature.A)
         expectItem() shouldBe SecondFeature.A
 
-        sourcedLaboratory.setFeature(SecondFeature.Source.RemoteB)
+        sourcedLaboratory.setOption(SecondFeature.Source.RemoteB)
         expectItem() shouldBe SecondFeature.C
 
-        remoteLaboratoryB.setFeature(SecondFeature.B)
+        remoteLaboratoryB.setOption(SecondFeature.B)
         expectItem() shouldBe SecondFeature.B
 
         cancel()
@@ -90,16 +90,16 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     }
 
     it("does not observe changes of different feature source") {
-      localLaboratory.setFeature(SecondFeature.B)
-      remoteLaboratoryA.setFeature(SecondFeature.C)
+      localLaboratory.setOption(SecondFeature.B)
+      remoteLaboratoryA.setOption(SecondFeature.C)
 
       sourcedLaboratory.observe<SecondFeature>().test {
         expectItem() shouldBe SecondFeature.A
 
-        sourcedLaboratory.setFeature(FirstFeature.Source.Local)
+        sourcedLaboratory.setOption(FirstFeature.Source.Local)
         expectNoEvents()
 
-        sourcedLaboratory.setFeature(FirstFeature.Source.RemoteA)
+        sourcedLaboratory.setOption(FirstFeature.Source.RemoteA)
         expectNoEvents()
 
         cancel()
@@ -111,7 +111,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
         sourcedLaboratory.observe<EmptySourceFeature>().test {
           expectItem() shouldBe EmptySourceFeature.A
 
-          localLaboratory.setFeature(EmptySourceFeature.B)
+          localLaboratory.setOption(EmptySourceFeature.B)
           expectItem() shouldBe EmptySourceFeature.B
 
           cancel()
@@ -121,7 +121,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       it("falls backs to experimenting with a local storage") {
         sourcedLaboratory.experiment<EmptySourceFeature>() shouldBe EmptySourceFeature.A
 
-        localLaboratory.setFeature(EmptySourceFeature.C)
+        localLaboratory.setOption(EmptySourceFeature.C)
         sourcedLaboratory.experiment<EmptySourceFeature>() shouldBe EmptySourceFeature.C
       }
     }
@@ -136,7 +136,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
         sourcedLaboratory.observe<FirstFeature>().test {
           expectItem() shouldBe FirstFeature.A
 
-          localLaboratory.setFeature(FirstFeature.B)
+          localLaboratory.setOption(FirstFeature.B)
           expectItem() shouldBe FirstFeature.B
 
           cancel()
@@ -151,7 +151,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
 
         sourcedLaboratory.experiment<FirstFeature>() shouldBe FirstFeature.A
 
-        localLaboratory.setFeature(FirstFeature.C)
+        localLaboratory.setOption(FirstFeature.C)
         sourcedLaboratory.experiment<FirstFeature>() shouldBe FirstFeature.C
       }
     }
@@ -161,7 +161,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
         sourcedLaboratory.observe<UnsourcedFeature>().test {
           expectItem() shouldBe UnsourcedFeature.A
 
-          localLaboratory.setFeature(UnsourcedFeature.B)
+          localLaboratory.setOption(UnsourcedFeature.B)
           expectItem() shouldBe UnsourcedFeature.B
 
           cancel()
@@ -171,7 +171,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       it("falls backs to experimenting with a local storage") {
         sourcedLaboratory.experiment<UnsourcedFeature>() shouldBe UnsourcedFeature.A
 
-        localLaboratory.setFeature(UnsourcedFeature.C)
+        localLaboratory.setOption(UnsourcedFeature.C)
         sourcedLaboratory.experiment<UnsourcedFeature>() shouldBe UnsourcedFeature.C
       }
     }
@@ -180,10 +180,10 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       sourcedLaboratory.observe<FirstFeature>().test {
         expectItem() shouldBe FirstFeature.A
 
-        sourcedLaboratory.setFeature(FirstFeature.B)
+        sourcedLaboratory.setOption(FirstFeature.B)
         expectItem() shouldBe FirstFeature.B
 
-        sourcedLaboratory.setFeature(FirstFeature.C)
+        sourcedLaboratory.setOption(FirstFeature.C)
         expectItem() shouldBe FirstFeature.C
       }
     }

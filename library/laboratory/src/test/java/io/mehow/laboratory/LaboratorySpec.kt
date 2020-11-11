@@ -55,7 +55,7 @@ internal class LaboratorySpec : DescribeSpec({
         val laboratory = Laboratory(storage)
 
         for (value in feature.enumConstants) {
-          storage.setFeature(value)
+          storage.setOption(value)
 
           laboratory.experiment(feature) shouldBe value
         }
@@ -65,7 +65,7 @@ internal class LaboratorySpec : DescribeSpec({
         val laboratory = Laboratory.inMemory()
 
         for (value in feature.enumConstants) {
-          laboratory.setFeature(value)
+          laboratory.setOption(value)
 
           laboratory.experiment(feature) shouldBe value
         }
@@ -78,16 +78,16 @@ internal class LaboratorySpec : DescribeSpec({
       laboratory.observe<SomeFeature>().test {
         expectItem() shouldBe SomeFeature.B
 
-        laboratory.setFeature(SomeFeature.A)
+        laboratory.setOption(SomeFeature.A)
         expectItem() shouldBe SomeFeature.A
 
-        laboratory.setFeature(SomeFeature.C)
+        laboratory.setOption(SomeFeature.C)
         expectItem() shouldBe SomeFeature.C
 
-        laboratory.setFeature(SomeFeature.C)
+        laboratory.setOption(SomeFeature.C)
         expectNoEvents()
 
-        laboratory.setFeature(SomeFeature.B)
+        laboratory.setOption(SomeFeature.B)
         expectItem() shouldBe SomeFeature.B
 
         cancel()
@@ -100,11 +100,11 @@ internal class LaboratorySpec : DescribeSpec({
       val firstLaboratory = Laboratory.inMemory()
       val secondLaboratory = Laboratory.inMemory()
 
-      firstLaboratory.setFeature(SomeFeature.A)
+      firstLaboratory.setOption(SomeFeature.A)
       firstLaboratory.experiment<SomeFeature>() shouldBe SomeFeature.A
       secondLaboratory.experiment<SomeFeature>() shouldBe SomeFeature.B
 
-      secondLaboratory.setFeature(SomeFeature.C)
+      secondLaboratory.setOption(SomeFeature.C)
       firstLaboratory.experiment<SomeFeature>() shouldBe SomeFeature.A
       secondLaboratory.experiment<SomeFeature>() shouldBe SomeFeature.C
     }
@@ -125,17 +125,17 @@ private enum class NoValuesFeature : Feature<NoValuesFeature>
 private object ThrowingStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = fail("Unexpected call")
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = fail("Unexpected call")
-  override suspend fun <T : Feature<*>> setFeatures(vararg options: T) = fail("Unexpected call")
+  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
 }
 
 private object NullStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>): Flow<String?> = flowOf(null)
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String? = null
-  override suspend fun <T : Feature<*>> setFeatures(vararg options: T) = fail("Unexpected call")
+  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
 }
 
 private object EmptyStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = flowOf("")
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = ""
-  override suspend fun <T : Feature<*>> setFeatures(vararg options: T) = fail("Unexpected call")
+  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
 }

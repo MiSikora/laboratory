@@ -78,7 +78,13 @@ public class Laboratory(
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = storage.setFeature(option)
+  public suspend fun <T : Feature<*>> setOption(option: T): Boolean = storage.setOption(option)
+
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'setOption()' instead.",
+      replaceWith = ReplaceWith("setOption(option)"),
+  )
+  public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = setOption(option)
 
   /**
    * Sets a [Feature] to have the input [option]. Warning – this call can block the calling thread.
@@ -87,7 +93,14 @@ public class Laboratory(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<*>> setFeatureBlocking(option: T): Boolean = runBlocking { setFeature(option) }
+  public fun <T : Feature<*>> setOptionBlocking(option: T): Boolean = runBlocking { setOption(option) }
+
+  @BlockingIoCall
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'setOptionBlocking()' instead.",
+      replaceWith = ReplaceWith("setOptionBlocking(option)"),
+  )
+  public fun <T : Feature<*>> setFeatureBlocking(option: T): Boolean = setOptionBlocking(option)
 
   /**
    * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
@@ -95,7 +108,13 @@ public class Laboratory(
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean = storage.setFeatures(*options)
+  public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean = storage.setOptions(*options)
+
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'setOptions()' instead.",
+      replaceWith = ReplaceWith("setOptions(*options)"),
+  )
+  public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean = setOptions(*options)
 
   /**
    * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
@@ -105,7 +124,14 @@ public class Laboratory(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<*>> setFeaturesBlocking(vararg options: T): Boolean = runBlocking { setFeatures(*options) }
+  public fun <T : Feature<*>> setOptionsBlocking(vararg options: T): Boolean = runBlocking { setOptions(*options) }
+
+  @BlockingIoCall
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'setOptionsBlocking()' instead.",
+      replaceWith = ReplaceWith("setOptionsBlocking(*options)"),
+  )
+  public fun <T : Feature<*>> setFeaturesBlocking(vararg options: T): Boolean = setOptionsBlocking(*options)
 
   public companion object {
     /**

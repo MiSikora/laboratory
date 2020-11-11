@@ -15,7 +15,7 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
     val storage = FeatureStorage.dataStore { tempFile }
     val laboratory = Laboratory(storage)
 
-    storage.setFeature(FeatureA.B)
+    storage.setOption(FeatureA.B)
 
     laboratory.experiment<FeatureA>() shouldBe FeatureA.B
   }
@@ -41,13 +41,13 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
     storage.observeFeatureName(FeatureA::class.java).test {
       expectItem() shouldBe null
 
-      storage.setFeature(FeatureA.B)
+      storage.setOption(FeatureA.B)
       expectItem() shouldBe FeatureA.B.name
 
-      storage.setFeature(FeatureA.B)
+      storage.setOption(FeatureA.B)
       expectNoEvents()
 
-      storage.setFeature(FeatureA.A)
+      storage.setOption(FeatureA.A)
       expectItem() shouldBe FeatureA.A.name
 
       cancel()

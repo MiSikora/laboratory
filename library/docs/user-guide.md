@@ -135,7 +135,7 @@ val powerTypeFirebaseValue = laboratory.experiment<PowerType>()
 val themeLocalValue = laboratory.experiment<Theme>()
 
 // Set source of Theme source to Azure (PowerType is still unaffected and uses Firebase)
-val success = laboratory.setFeature(Theme.Source.Azure)
+val success = laboratory.setOption(Theme.Source.Azure)
 
 // Check option of Theme in Azure FeatureStorage
 val themeAzureValue laboratory.experiment<Theme>()
@@ -176,7 +176,7 @@ remoteService.observeShowAdsFlag()
     // Some custom mapping between a service option and a feature flag
     .map { showAds: Boolean ->
       val showAdsFlag = if (showAds) ShowAds.Enabled else ShowAds.Disabled
-      laboratory.setFeature(showAdsFlag)
+      laboratory.setOption(showAdsFlag)
     }
     // Scope should last for the lifetime of an application
     .launchIn(GlobalScope)

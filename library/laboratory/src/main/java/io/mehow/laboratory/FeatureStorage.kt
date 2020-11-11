@@ -24,14 +24,27 @@ public interface FeatureStorage {
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean
+  public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean
+
+  @JvmDefault
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'setOptions()' instead.",
+      replaceWith = ReplaceWith("setOptions(*options)"),
+  )
+  public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean = setOptions(*options)
 
   /**
    * Sets a [Feature] to have the input [option].
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  @JvmDefault public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = setFeatures(option)
+  @JvmDefault public suspend fun <T : Feature<*>> setOption(option: T): Boolean = setOptions(option)
+
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'setOption()' instead.",
+      replaceWith = ReplaceWith("setOption(option)"),
+  )
+  @JvmDefault public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = setOption(option)
 
   public companion object {
     /**
