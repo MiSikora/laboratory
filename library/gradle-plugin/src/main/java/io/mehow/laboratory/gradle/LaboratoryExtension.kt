@@ -41,7 +41,7 @@ public open class LaboratoryExtension {
           |
           |laboratory {
           |  $name {
-          |    withDefaultValue("SampleValue")
+          |    withDefaultOption("SampleValue")
           |  }
           |}
         """.trimMargin())

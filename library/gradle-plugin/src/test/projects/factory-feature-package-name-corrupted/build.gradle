@@ -8,6 +8,6 @@ laboratory {
 
   feature("Feature") {
     packageName = "!!!"
-    withValue("First")
+    withOption("First")
   }
 }

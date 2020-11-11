@@ -20,7 +20,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       visibility = Internal,
       packageName = "io.mehow",
       names = listOf("FeatureA"),
-      values = listOf(FeatureValue("First", isDefaultValue = true), FeatureValue("Second")),
+      options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
   )
 
   describe("feature flag model") {
@@ -103,7 +103,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
     context("values") {
       it("cannot be empty") {
-        val builder = featureBuilder.copy(values = emptyList())
+        val builder = featureBuilder.copy(options = emptyList())
 
         val result = builder.build()
 
@@ -114,7 +114,7 @@ internal class FeatureFlagSpec : DescribeSpec({
         val blanks = Arb.stringPattern("([ ]{0,10})")
         checkAll(blanks, blanks, blanks) { valueA, valueB, valueC ->
           val blankNames = Nel(valueA, valueB, valueC)
-          val builder = featureBuilder.copy(values = blankNames.toList().map(::FeatureValue))
+          val builder = featureBuilder.copy(options = blankNames.toList().map(::FeatureFlagOption))
 
           val result = builder.build()
 
@@ -124,7 +124,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       it("cannot have names that start with an underscore") {
         checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = featureBuilder.copy(values = listOf(name).map(::FeatureValue))
+          val builder = featureBuilder.copy(options = listOf(name).map(::FeatureFlagOption))
 
           val result = builder.build()
 
@@ -134,7 +134,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       it("cannot have names that are not alphanumeric characters or underscores") {
         checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-          val builder = featureBuilder.copy(values = listOf(name).map(::FeatureValue))
+          val builder = featureBuilder.copy(options = listOf(name).map(::FeatureFlagOption))
 
           val result = builder.build()
 
@@ -144,7 +144,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       it("can have names that have alphanumeric characters or underscores") {
         checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = featureBuilder.copy(values = listOf(name).map { FeatureValue(it, isDefaultValue = true) })
+          val builder = featureBuilder.copy(options = listOf(name).map { FeatureFlagOption(it, isDefault = true) })
 
           val result = builder.build()
 
@@ -158,7 +158,7 @@ internal class FeatureFlagSpec : DescribeSpec({
           val nameB = name + "B"
           val nameC = name + "C"
           val names = listOf(name, name, nameA, nameB, nameC, nameC, nameC)
-          val builder = featureBuilder.copy(values = names.toList().map(::FeatureValue))
+          val builder = featureBuilder.copy(options = names.toList().map(::FeatureFlagOption))
 
           val result = builder.build()
 
@@ -207,7 +207,7 @@ internal class FeatureFlagSpec : DescribeSpec({
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
         ) { first, second ->
           val builder = featureBuilder.copy(
-              values = listOf(FeatureValue(first), FeatureValue(second))
+              options = listOf(FeatureFlagOption(first), FeatureFlagOption(second))
           )
           val result = builder.build()
 
@@ -222,10 +222,10 @@ internal class FeatureFlagSpec : DescribeSpec({
             Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-              values = listOf(
-                  FeatureValue(first, isDefaultValue = true),
-                  FeatureValue(second),
-                  FeatureValue(third, isDefaultValue = true),
+              options = listOf(
+                  FeatureFlagOption(first, isDefault = true),
+                  FeatureFlagOption(second),
+                  FeatureFlagOption(third, isDefault = true),
               )
           )
           val result = builder.build()
@@ -241,10 +241,10 @@ internal class FeatureFlagSpec : DescribeSpec({
             Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-              values = listOf(
-                  FeatureValue(first),
-                  FeatureValue(second),
-                  FeatureValue(third, isDefaultValue = true),
+              options = listOf(
+                  FeatureFlagOption(first),
+                  FeatureFlagOption(second),
+                  FeatureFlagOption(third, isDefault = true),
               )
           )
           val result = builder.build()
@@ -259,7 +259,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     context("name") {
       it("cannot be blank") {
         checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
-          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+          val builder = featureBuilder.copy(sourceOptions = listOf(FeatureFlagOption(name)))
 
           val result = builder.build()
 
@@ -269,7 +269,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       it("cannot start with an underscore") {
         checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+          val builder = featureBuilder.copy(sourceOptions = listOf(FeatureFlagOption(name)))
 
           val result = builder.build()
 
@@ -279,7 +279,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       it("cannot contain characters that are not alphanumeric or underscores") {
         checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+          val builder = featureBuilder.copy(sourceOptions = listOf(FeatureFlagOption(name)))
 
           val result = builder.build()
 
@@ -289,7 +289,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       it("can contain alphanumeric characters or underscores") {
         checkAll(Arb.stringPattern("[a-zA-Z][0-9]([a-zA-Z0-9_]{0,10})")) { name ->
-          val builder = featureBuilder.copy(sourceValues = listOf(FeatureValue(name)))
+          val builder = featureBuilder.copy(sourceOptions = listOf(FeatureFlagOption(name)))
 
           val result = builder.build()
 
@@ -305,7 +305,7 @@ internal class FeatureFlagSpec : DescribeSpec({
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
         ) { first, second ->
           val builder = featureBuilder.copy(
-              sourceValues = listOf(FeatureValue(first), FeatureValue(second))
+              sourceOptions = listOf(FeatureFlagOption(first), FeatureFlagOption(second))
           )
           val result = builder.build()
 
@@ -320,10 +320,10 @@ internal class FeatureFlagSpec : DescribeSpec({
             Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-              sourceValues = listOf(
-                  FeatureValue(first, isDefaultValue = true),
-                  FeatureValue(second),
-                  FeatureValue(third, isDefaultValue = true),
+              sourceOptions = listOf(
+                  FeatureFlagOption(first, isDefault = true),
+                  FeatureFlagOption(second),
+                  FeatureFlagOption(third, isDefault = true),
               )
           )
           val result = builder.build()
@@ -339,10 +339,10 @@ internal class FeatureFlagSpec : DescribeSpec({
             Arb.stringPattern("[a-zA-Z](2)([a-zA-Z0-9_]{0,10})"),
         ) { first, second, third ->
           val builder = featureBuilder.copy(
-              sourceValues = listOf(
-                  FeatureValue(first),
-                  FeatureValue(second),
-                  FeatureValue(third, isDefaultValue = true),
+              sourceOptions = listOf(
+                  FeatureFlagOption(first),
+                  FeatureFlagOption(second),
+                  FeatureFlagOption(third, isDefault = true),
               )
           )
           val result = builder.build()
@@ -408,7 +408,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-          .copy(sourceValues = listOf(FeatureValue("Remote")))
+          .copy(sourceOptions = listOf(FeatureFlagOption("Remote")))
           .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -447,7 +447,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-          .copy(sourceValues = listOf(FeatureValue("Local")))
+          .copy(sourceOptions = listOf(FeatureFlagOption("Local")))
           .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -482,7 +482,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       }
 
       val outputFile = featureBuilder
-          .copy(sourceValues = (localPermutations + "Remote").map(::FeatureValue))
+          .copy(sourceOptions = (localPermutations + "Remote").map(::FeatureFlagOption))
           .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -521,7 +521,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-          .copy(sourceValues = listOf(FeatureValue("Remote", isDefaultValue = true)))
+          .copy(sourceOptions = listOf(FeatureFlagOption("Remote", isDefault = true)))
           .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->
@@ -560,7 +560,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       val tempDir = createTempDir()
 
       val outputFile = featureBuilder
-          .copy(visibility = Public, sourceValues = listOf(FeatureValue("Remote")))
+          .copy(visibility = Public, sourceOptions = listOf(FeatureFlagOption("Remote")))
           .build().map { model -> model.generate(tempDir) }
 
       outputFile shouldBeRight { file ->

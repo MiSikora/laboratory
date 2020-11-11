@@ -10,11 +10,11 @@ laboratory {
   DistanceAlgorithm {
     description = "Algorithm used for destination distance calculations"
 
-    withDefaultValue("Euclidean")
-    withValue("Jaccard")
-    withValue("Cosine")
-    withValue("Edit")
-    withValue("Hamming")
+    withDefaultOption("Euclidean")
+    withOption("Jaccard")
+    withOption("Cosine")
+    withOption("Edit")
+    withOption("Hamming")
 
     withSource("Firebase")
     withDefaultSource("Azure")

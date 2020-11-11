@@ -7,14 +7,14 @@ laboratory {
   packageName = "io.mehow.implicit"
 
   feature("FeatureA") {
-    withDefaultValue("FirstA")
-    withValue("SecondA")
+    withDefaultOption("FirstA")
+    withOption("SecondA")
   }
 
   packageName = "io.mehow.implicit.switch"
 
   feature("FeatureB") {
-    withDefaultValue("FirstB")
-    withValue("SecondB")
+    withDefaultOption("FirstB")
+    withOption("SecondB")
   }
 }

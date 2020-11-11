@@ -69,15 +69,15 @@ internal class FeatureFlagGenerator(
       .apply { description?.let { @Kt41142 addProperty(it) } }
       .build()
 
-  private fun TypeSpec.Builder.addEnumConstant(featureValue: FeatureValue) = if (featureValue.isDefaultValue) {
+  private fun TypeSpec.Builder.addEnumConstant(option: FeatureFlagOption) = if (option.isDefault) {
     val isDefaultValueArgument = CodeBlock.builder()
         .add("isDefaultValue = %L", true)
         .build()
     val overriddenConstructor = TypeSpec.anonymousClassBuilder()
         .addSuperclassConstructorParameter(isDefaultValueArgument)
         .build()
-    addEnumConstant(featureValue.name, overriddenConstructor)
-  } else addEnumConstant(featureValue.name)
+    addEnumConstant(option.name, overriddenConstructor)
+  } else addEnumConstant(option.name)
 
   private val fileSpec = FileSpec.builder(feature.packageName, feature.name)
       .addType(typeSpec)

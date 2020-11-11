@@ -7,6 +7,6 @@ laboratory {
   featureSourceFactory()
 
   feature("!!!") {
-    withDefaultValue("First")
+    withDefaultOption("First")
   }
 }

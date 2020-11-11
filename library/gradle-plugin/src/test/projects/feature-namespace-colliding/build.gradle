@@ -7,10 +7,10 @@ laboratory {
   packageName = "io.mehow"
 
   feature("Feature") {
-    withDefaultValue("First")
+    withDefaultOption("First")
   }
 
   feature("Feature") {
-    withDefaultValue("Second")
+    withDefaultOption("Second")
   }
 }

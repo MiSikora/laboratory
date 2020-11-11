@@ -7,8 +7,8 @@ laboratory {
   featureFactory()
 
   feature("Feature") {
-    withValue("First")
-    withValue("!!!")
-    withValue("???")
+    withOption("First")
+    withOption("!!!")
+    withOption("???")
   }
 }

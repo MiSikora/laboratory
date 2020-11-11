@@ -7,6 +7,6 @@ laboratory {
   sourcedStorage()
 
   feature("!!!") {
-    withDefaultValue("First")
+    withDefaultOption("First")
   }
 }

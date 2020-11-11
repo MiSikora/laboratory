@@ -7,11 +7,11 @@ laboratory {
   packageName = "io.mehow.laboratory.b"
 
   feature("PowerSource") {
-    withValue("Coal")
-    withValue("Wind")
-    withDefaultValue("Solar")
-    withValue("Nuclear")
-    withValue("ColdFusion")
+    withOption("Coal")
+    withOption("Wind")
+    withDefaultOption("Solar")
+    withOption("Nuclear")
+    withOption("ColdFusion")
 
     withDefaultSource("Firebase")
   }

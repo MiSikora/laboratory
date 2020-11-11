@@ -7,7 +7,7 @@ laboratory {
   featureSourceFactory()
 
   feature("RootFeature") {
-    withDefaultValue("First")
+    withDefaultOption("First")
 
     withSource("Remote")
   }
