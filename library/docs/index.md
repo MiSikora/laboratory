@@ -7,11 +7,11 @@ A feature flags management library for multi-module Kotlin Android projects. Lab
 - **Encapsulation**: Different feature flags can freely live in separate Gradle modules without being exposed outside.
 - **Type safety**: Feature flags are represented with concrete types instead of booleans or grouped enums.
 - **A/B/C testing**: Feature flags don't have to be constrained to provide only a binary choice. They can have as many states as you'd like.
-- **Multiple sources**: Feature flags can have different sources used for their current values. For example, you can have a feature flag that takes its value either from a local source or from any number of remote sources like i.e. Firebase or Azure.
+- **Multiple sources**: Feature flags can have different sources used for their current options. For example, you can have a feature flag that takes its option either from a local source or from any number of remote sources like i.e. Firebase or Azure.
 - **QA integration**: Laboratory offers great [QA capabilities](qa-module.md) and easy integration with popular tools. It comes with an out-of-the-box [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) plugin.
 - **Persistence ignorance**: Laboratory does not care how you want to store your feature flags. It provides implementations for most common scenarios but you can always use an implementation for your custom storage mechanism.
 - **Testing support**: The in-memory implementation can be used as a drop-in substitute of Laboratory instances in tests.
-- **Coroutines support**: Changes to feature flags can be observed via [`Flow`](https://kotlinlang.org/docs/reference/coroutines/flow.html). Single value reads and writes are made with `suspend` functions, but you can always opt-in to a blocking equivalent of I/O functions.
+- **Coroutines support**: Changes to feature flags can be observed via [`Flow`](https://kotlinlang.org/docs/reference/coroutines/flow.html). Option reads and writes are made with `suspend` functions, but you can always opt-in to a blocking equivalent of I/O functions.
 
 ## TLDR
 
@@ -35,18 +35,18 @@ suspend fun main() {
   // A high-level API for interaction with feature flags
   val laboratory = Laboratory.inMemory()
 
-  // Set AuthType value to Fingerprint
+  // Set AuthType option to Fingerprint
   val success = laboratory.setFeature(AuthType.Fingerprint)
 
-  // Check what is the current value of AuthType
+  // Check what is the current option of AuthType
   val currentAuthType = laboratory.experiment<AuthType>()
 
-  // Check if the current value of AuthType is equal to Face
+  // Check if the current option of AuthType is equal to Face
   val isFaceAuth = laboratory.experimentIs(AuthType.Face)
 
   // Observe changes to the AuthType feature flag
   laboratory.observe<AuthType>()
-      .onEach { value -> println("AuthType: $value") }
+      .onEach { option -> println("AuthType: $option") }
       .launchIn(GlobalScope)
 }
 ```

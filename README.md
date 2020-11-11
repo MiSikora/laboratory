@@ -60,18 +60,18 @@ suspend fun main() {
   // A high-level API for interaction with feature flags
   val laboratory = Laboratory.inMemory()
 
-  // Set AuthType value to Fingerprint
+  // Set AuthType option to Fingerprint
   val success = laboratory.setFeature(AuthType.Fingerprint)
 
-  // Check what is the current value of AuthType
+  // Check what is the current option of AuthType
   val currentAuthType = laboratory.experiment<AuthType>()
 
-  // Check if the current value of AuthType is equal to Face
+  // Check if the current option of AuthType is equal to Face
   val isFaceAuth = laboratory.experimentIs(AuthType.Face)
 
   // Observe changes to the AuthType feature flag
   laboratory.observe<AuthType>()
-      .onEach { value -> println("AuthType: $value") }
+      .onEach { option -> println("AuthType: $option") }
       .launchIn(GlobalScope)
 }
 ```
