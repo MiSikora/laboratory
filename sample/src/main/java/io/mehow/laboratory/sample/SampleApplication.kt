@@ -39,7 +39,7 @@ class SampleApplication : Application() {
     laboratory = Laboratory(sourcedStorage)
     LaboratoryActivity.configure(
         laboratory = laboratory,
-        featureFactory = FeatureFactory.featureGenerated(),
+        mainFactory = FeatureFactory.featureGenerated(),
     )
     observeRemoteFeatures()
   }

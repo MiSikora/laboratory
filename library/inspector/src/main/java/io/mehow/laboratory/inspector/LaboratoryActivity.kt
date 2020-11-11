@@ -120,17 +120,17 @@ public class LaboratoryActivity : AppCompatActivity() {
 
     /**
      * Configures [LaboratoryActivity] with a default "Features" tab, where feature flags are taken from the
-     * [featureFactory]. Any additional tabs can be added in [externalFeatureFactories].
+     * [mainFactory]. Any additional tabs can be added in [externalFactories].Rename
      */
     public fun configure(
       laboratory: Laboratory,
-      featureFactory: FeatureFactory,
-      externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
+      mainFactory: FeatureFactory,
+      externalFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
-      val filteredFactories = externalFeatureFactories.filter { it.key == featuresLabel }
+      val filteredFactories = externalFactories.filter { it.key == featuresLabel }
       configure(Configuration(
           laboratory,
-          linkedMapOf(featuresLabel to featureFactory) + filteredFactories
+          linkedMapOf(featuresLabel to mainFactory) + filteredFactories
       ))
     }
 
