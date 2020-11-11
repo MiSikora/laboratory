@@ -110,7 +110,6 @@ public class LaboratoryActivity : AppCompatActivity() {
 
   public companion object {
     private const val featuresLabel = "Features"
-    private const val sourcesLabel = "Sources"
 
     internal var backingConfiguration: Configuration? = null
       private set
@@ -132,24 +131,6 @@ public class LaboratoryActivity : AppCompatActivity() {
       configure(Configuration(
           laboratory,
           linkedMapOf(featuresLabel to featureFactory) + filteredFactories
-      ))
-    }
-
-    /**
-     * Configures [LaboratoryActivity] with a default "Features" and "Sources" tabs, where feature flags are taken
-     * from the [featureFactory] and [featureSourceFactory] respectively.
-     * Any additional tabs can be added in [externalFeatureFactories].
-     */
-    public fun configure(
-      laboratory: Laboratory,
-      featureFactory: FeatureFactory,
-      featureSourceFactory: FeatureFactory,
-      externalFeatureFactories: Map<String, FeatureFactory> = emptyMap(),
-    ) {
-      val filteredFactories = externalFeatureFactories.filter { it.key in listOf(featuresLabel, sourcesLabel) }
-      configure(Configuration(
-          laboratory,
-          linkedMapOf(featuresLabel to featureFactory, sourcesLabel to featureSourceFactory) + filteredFactories
       ))
     }
 
