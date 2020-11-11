@@ -59,7 +59,7 @@ internal class FeatureFlagGenerator(
       .primaryConstructor(primaryConstructor)
       .addSuperinterface(Feature::class(feature.className))
       .addProperty(isDefaultValueProperty)
-      .let { feature.values.foldLeft(it) { builder, featureValue -> builder.addEnumConstant(featureValue) } }
+      .let { feature.options.foldLeft(it) { builder, featureValue -> builder.addEnumConstant(featureValue) } }
       .apply {
         featureSource?.let { (nestedSource, sourceWithOverride) ->
           addType(FeatureFlagGenerator(nestedSource).typeSpec)
