@@ -19,7 +19,7 @@ public data class InvalidFeatureName(
 ) : GenerationFailure {
   override val message: String
     get() = "" +
-        "Feature name must contain only alphanumeric characters or underscores " +
+        "Feature flag name must contain only alphanumeric characters or underscores " +
         "and must start with a letter. Found $name in $fqcn."
 }
 
@@ -37,7 +37,7 @@ public data class NoFeatureValues(
   private val fqcn: String,
 ) : GenerationFailure {
   override val message: String
-    get() = "$fqcn feature must have at least one value."
+    get() = "$fqcn feature flag must have at least one option."
 }
 
 public data class InvalidFeatureValues(
@@ -46,7 +46,7 @@ public data class InvalidFeatureValues(
 ) : GenerationFailure {
   override val message: String
     get() = "" +
-        "Feature values must contain only alphanumeric characters or underscores " +
+        "Feature flag options must contain only alphanumeric characters or underscores " +
         "and must start with a letter. Found ${invalidValues.toList()} in $fqcn."
 }
 
@@ -55,14 +55,14 @@ public data class FeatureValuesCollision(
   private val fqcn: String,
 ) : GenerationFailure {
   override val message: String
-    get() = "Found feature values collision for $fqcn: ${collisions.toList()}."
+    get() = "Found feature flag options collision for $fqcn: ${collisions.toList()}."
 }
 
 public data class NoFeatureDefaultValue(
   private val fqcn: String,
 ) : GenerationFailure {
   override val message: String
-    get() = "Feature must have a single default value. Found none in $fqcn."
+    get() = "Feature flag must have a single default option. Found none in $fqcn."
 }
 
 public data class MultipleFeatureDefaultValues(
@@ -70,14 +70,14 @@ public data class MultipleFeatureDefaultValues(
   private val fqcn: String,
 ) : GenerationFailure {
   override val message: String
-    get() = "Feature must have a single default value. Found ${collisions.toList()} in $fqcn."
+    get() = "Feature flag must have a single default option. Found ${collisions.toList()} in $fqcn."
 }
 
 public data class FeaturesCollision(
   private val collisions: Nel<String>,
 ) : GenerationFailure {
   override val message: String
-    get() = "Found feature collisions: ${collisions.toList()}."
+    get() = "Found feature flag collisions: ${collisions.toList()}."
 
   public companion object {
     public fun fromFeatures(models: Nel<FeatureFlagModel>): FeaturesCollision {

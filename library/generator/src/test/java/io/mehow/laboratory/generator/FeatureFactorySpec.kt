@@ -112,7 +112,7 @@ internal class FeatureFactorySpec : DescribeSpec({
       }
     }
 
-    context("values") {
+    context("options") {
       it("can be empty") {
         val builder = factoryBuilder.copy(features = emptyList())
 

@@ -18,7 +18,7 @@ import java.io.File
 public class FeatureFlagModel private constructor(
   internal val visibility: Visibility,
   internal val className: ClassName,
-  internal val values: Nel<FeatureFlagOption>,
+  internal val options: Nel<FeatureFlagOption>,
   internal val source: FeatureFlagModel?,
   internal val description: String,
 ) {
@@ -52,12 +52,12 @@ public class FeatureFlagModel private constructor(
       return Either.fx {
         val packageName = !validatePackageName()
         val names = !validateName()
-        val values = !validateValues()
+        val options = !validateOptions()
         val nestedSource = createNestedSource()?.bind()
         FeatureFlagModel(
             visibility = visibility,
             className = ClassName(packageName, names),
-            values = values,
+            options = options,
             source = nestedSource,
             description = description,
         )
@@ -82,38 +82,42 @@ public class FeatureFlagModel private constructor(
       }.map { listKind -> listKind.fix() }
     }
 
-    private fun validateValues(): Either<GenerationFailure, Nel<FeatureFlagOption>> {
+    private fun validateOptions(): Either<GenerationFailure, Nel<FeatureFlagOption>> {
       return Nel.fromList(options)
           .toEither { NoFeatureValues(fqcn) }
-          .flatMap { @Kt41142 validateValueNames(it) }
+          .flatMap { @Kt41142 validateOptionNames(it) }
           .flatMap { @Kt41142 validateDuplicates(it) }
           .flatMap { @Kt41142 validateSingleDefault(it) }
     }
 
-    private fun validateValueNames(values: Nel<FeatureFlagOption>): Either<GenerationFailure, Nel<FeatureFlagOption>> {
-      val invalidNames = values.toList().map { @Kt41142 it.name }.filterNot(valueRegex::matches)
-      return Nel.fromList(invalidNames)
-          .toEither { values }
+    private fun validateOptionNames(
+      options: Nel<FeatureFlagOption>,
+    ): Either<GenerationFailure, Nel<FeatureFlagOption>> {
+      val invalidOptions = options.toList().map { @Kt41142 it.name }.filterNot(optionRegex::matches)
+      return Nel.fromList(invalidOptions)
+          .toEither { options }
           .swap()
           .mapLeft { InvalidFeatureValues(it, fqcn) }
     }
 
-    private fun validateDuplicates(values: Nel<FeatureFlagOption>): Either<GenerationFailure, Nel<FeatureFlagOption>> {
-      val duplicates = values.toList().map { @Kt41142 it.name }.findDuplicates()
+    private fun validateDuplicates(
+      options: Nel<FeatureFlagOption>,
+    ): Either<GenerationFailure, Nel<FeatureFlagOption>> {
+      val duplicates = options.toList().map { @Kt41142 it.name }.findDuplicates()
       return Nel.fromList(duplicates.toList())
-          .toEither { values }
+          .toEither { options }
           .swap()
           .mapLeft { FeatureValuesCollision(it, fqcn) }
     }
 
     private fun validateSingleDefault(
-      values: Nel<FeatureFlagOption>,
+      options: Nel<FeatureFlagOption>,
     ): Either<GenerationFailure, Nel<FeatureFlagOption>> {
-      val defaultProblems = values.toList()
+      val defaultProblems = options.toList()
           .filter { @Kt41142 it.isDefault }
           .takeIf { it.size != 1 }
           ?.map { @Kt41142 it.name }
-      return if (defaultProblems == null) values.right()
+      return if (defaultProblems == null) options.right()
       else Nel.fromList(defaultProblems)
           .map { MultipleFeatureDefaultValues(it, fqcn) }
           .getOrElse { NoFeatureDefaultValue(fqcn) }
@@ -124,13 +128,13 @@ public class FeatureFlagModel private constructor(
       return sourceOptions
           .filterNot { it.name.equals("local", ignoreCase = true) }
           .takeIf { it.isNotEmpty() }
-          ?.let { values ->
-            val isDefaultValue = values.none(FeatureFlagOption::isDefault)
+          ?.let { options ->
+            val isDefaultValue = options.none(FeatureFlagOption::isDefault)
             return@let Builder(
                 visibility = visibility,
                 packageName = packageName,
                 names = names + "Source",
-                options = Nel(FeatureFlagOption("Local", isDefaultValue), values).toList(),
+                options = Nel(FeatureFlagOption("Local", isDefaultValue), options).toList(),
             )
           }?.build()
     }
@@ -138,7 +142,7 @@ public class FeatureFlagModel private constructor(
     private companion object {
       val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
       val nameRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
-      val valueRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
+      val optionRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
     }
   }
 }
@@ -150,7 +154,7 @@ public fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, 
 }
 
 public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull { @Kt41142 it.source }
-    .map { @Kt41142 it.values }
+    .map { @Kt41142 it.options }
     .flatMap { it.toList() }
     .map { @Kt41142 it.name }
 

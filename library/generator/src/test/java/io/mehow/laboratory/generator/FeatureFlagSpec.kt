@@ -101,7 +101,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       }
     }
 
-    context("values") {
+    context("options") {
       it("cannot be empty") {
         val builder = featureBuilder.copy(options = emptyList())
 
@@ -112,8 +112,8 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       it("cannot have blank names") {
         val blanks = Arb.stringPattern("([ ]{0,10})")
-        checkAll(blanks, blanks, blanks) { valueA, valueB, valueC ->
-          val blankNames = Nel(valueA, valueB, valueC)
+        checkAll(blanks, blanks, blanks) { optionA, optionB, optionC ->
+          val blankNames = Nel(optionA, optionB, optionC)
           val builder = featureBuilder.copy(options = blankNames.toList().map(::FeatureFlagOption))
 
           val result = builder.build()
@@ -201,7 +201,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     context("default") {
-      it("cannot have no values") {
+      it("cannot have no options") {
         checkAll(
             Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
@@ -215,7 +215,7 @@ internal class FeatureFlagSpec : DescribeSpec({
         }
       }
 
-      it("cannot have multiple values") {
+      it("cannot have multiple options") {
         checkAll(
             Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
@@ -234,7 +234,7 @@ internal class FeatureFlagSpec : DescribeSpec({
         }
       }
 
-      it("can have one value") {
+      it("can have one option") {
         checkAll(
             Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
@@ -299,7 +299,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     context("default") {
-      it("can have no values") {
+      it("can have no options") {
         checkAll(
             Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
@@ -313,7 +313,7 @@ internal class FeatureFlagSpec : DescribeSpec({
         }
       }
 
-      it("cannot have multiple values") {
+      it("cannot have multiple options") {
         checkAll(
             Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
@@ -332,7 +332,7 @@ internal class FeatureFlagSpec : DescribeSpec({
         }
       }
 
-      it("can have one value") {
+      it("can have one option") {
         checkAll(
             Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
             Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
