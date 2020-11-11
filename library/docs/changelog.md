@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2020-11-11
+
 ### Added
 - Groovy DSL for adding feature flags via Gradle plugin. This is equivalent to `feature("SomeFeatureFlag")` function.
     ```groovy
@@ -158,7 +160,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/Laboratory/compare/0.8.0...HEAD
+[Unreleased]: https://github.com/MiSikora/Laboratory/compare/0.9.0...HEAD
+[0.9.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.9.0
 [0.8.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.8.0
 [0.7.0]: https://github.com/MiSikora/Laboratory/releases/tag/0.7.0
 [0.6.2]: https://github.com/MiSikora/Laboratory/releases/tag/0.6.2
