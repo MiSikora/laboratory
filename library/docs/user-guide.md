@@ -11,38 +11,6 @@ Feature flags are nothing more than enums that implement the `Feature` interface
 enum class SomeFeature : Feature<SomeFeature>
 ```
 
-The default value of a feature flag is used whenever `Laboratory` does not find any value saved or when a saved value is unknown. Default value is resolved with the following algorithm.
-
-- If there is only one enum with `isDefaultValue` property set to `true` it is used as a default value.
-- If more than one enum has `isDefaultValue` property set to `true` the first one in listing order with this property set to `true` is used as a default value.
-- If all enums have `isDefaultValue` property set to `false` the first one in listing order is used as a default value.
-
-```kotlin
-enum class ShowAds(
-  override val isDefaultValue: Boolean = false,
-) : Feature<ShowAds> {
-  Enabled,
-  Disabled(isDefaultValue = true) // Will be used as a default value
-}
-
-enum class LogType(
-  override val isDefaultValue: Boolean = false,
-) : Feature<LogType> {
-  Verbose,
-  Debug(isDefaultValue = true), // Will be used as a default value
-  Info(isDefaultValue = true),
-  Warning,
-  Error(isDefaultValue = true)
-}
-
-enum class ReportRootedDevice(
-  override val isDefaultValue: Boolean = false,
-) : Feature<ReportRootedDevice> {
-  Enabled, // Will be used as a default value
-  Disabled
-}
-```
-
 ## I/O
 
 `Laboratory` is nothing more than a high-level API over the `FeatureStorage` interface that is responsible for persisting feature flags. All implementations that are provided by this library rely on a feature flag package name and on an enum name.
@@ -72,22 +40,22 @@ Let's say that you want to have a feature flag that has three sources. One local
     Notice that a feature flag source is also a feature flag. This allows to change feature flag sources via `Laboratory` as well.
 
 ```kotlin
-enum class PowerType(
-  override val isDefaultValue: Boolean = false,
-) : Feature<PowerType> {
+enum class PowerType : Feature<PowerType> {
   Coal,
   Wind,
-  Solar(isDefaultValue = true);
+  Solar;
+
+  public override val defaultOption get() = Solar
 
   @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
-  enum class Source(
-    override val isDefaultValue: Boolean = false,
-  ) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
-    Firebase(isDefaultValue = true),
-    Azure
+    Firebase,
+    Azure;
+
+    public override val defaultOption get() = Firebase
   }
 }
 ```
@@ -116,40 +84,40 @@ One thing that is error-prone is the fact that `sourcedFeatureStorage` relies on
     Using [Gradle plugin](gradle-plugin.md) allows you to avoid this issue with generation of a custom `FeatureStorage` that is always up-to-date.
 
 ```kotlin
-enum class PowerType(
-  override val isDefaultValue: Boolean = false,
-) : Feature<PowerType> {
+enum class PowerType : Feature<PowerType> {
   Coal,
   Wind,
-  Solar(isDefaultValue = true);
+  Solar;
+
+  public override val defaultOption get() = Solar
 
   @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
-  enum class Source(
-    override val isDefaultValue: Boolean = false,
-  ) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
-    Firebase(isDefaultValue = true),
-    Azure
+    Firebase,
+    Azure;
+
+    public override val defaultOption get() = Firebase
   }
 }
 
-enum class Theme(
-  override val isDefaultValue: Boolean = false,
-) : Feature<PowerType> {
-  Night(isDefaultValue = true),
+enum class Theme : Feature<PowerType> {
+  Night,
   Day,
   Christmas;
+
+  public override val defaultOption get() = Night
 
   @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
-  enum class Source(
-    override val isDefaultValue: Boolean = false,
-  ) : Feature<Source> {
-    Local(isDefaultValue = true),
-    Azure
+  enum class Source : Feature<Source> {
+    Local,
+    Azure;
+
+    public override val defaultOption get() = Local
   }
 }
 ```
@@ -179,20 +147,20 @@ val themeAzureValue laboratory.experiment<Theme>()
 In order to propagate remote feature flag values on updates they need to be connected to a remote source.
 
 ```kotlin
-enum class ShowAds(
-  override val isDefaultValue: Boolean = false,
-) : Feature<ShowAds> {
+enum class ShowAds : Feature<ShowAds> {
   Enabled,
-  Disabled(isDefaultValue = true);
+  Disabled;
+
+  public override val defaultOption get() = Disabled
 
   @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
-  enum class Source(
-    override val isDefaultValue: Boolean = false,
-  ) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
-    Remote(isDefaultValue = true)
+    Remote;
+
+    public override val defaultOption get() = Remote
   }
 }
 

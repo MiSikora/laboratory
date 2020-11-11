@@ -14,16 +14,16 @@ import kotlinx.coroutines.flow.conflate
 internal class SharedPreferencesFeatureStorage(
   private val preferences: SharedPreferences,
 ) : FeatureStorage {
-  override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = callbackFlow {
+  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = callbackFlow {
     val listener = OnSharedPreferenceChangeListener { _, key ->
-      if (key == featureClass.name) offer(getStringSafe(key))
+      if (key == feature.name) offer(getStringSafe(key))
     }
-    offer(getStringSafe(featureClass.name))
+    offer(getStringSafe(feature.name))
     preferences.registerOnSharedPreferenceChangeListener(listener)
     awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
   }.conflate()
 
-  override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = getStringSafe(featureClass.name)
+  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = getStringSafe(feature.name)
 
   private fun getStringSafe(key: String) = try {
     preferences.getString(key, null)
@@ -31,9 +31,9 @@ internal class SharedPreferencesFeatureStorage(
     null
   }
 
-  override suspend fun <T : Feature<*>> setFeatures(vararg values: T): Boolean {
+  override suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean {
     preferences.edit {
-      for (feature in values) {
+      for (feature in options) {
         putString(feature.javaClass.name, feature.name)
       }
     }

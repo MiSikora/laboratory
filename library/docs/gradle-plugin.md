@@ -55,13 +55,13 @@ import io.mehow.laboratory.Feature
 import kotlin.Boolean
 import kotlin.String
 
-public enum class Authentication(
-  public override val isDefaultValue: Boolean = false
-) : Feature<Authentication> {
+public enum class Authentication : Feature<Authentication> {
   Password,
   Fingerprint,
-  Retina(isDefaultValue = true),
+  Retina,
   ;
+
+  public override val defaultOption get() = Retina
 
   public override val description: String = "Type of authentication when opening the app"
 }
@@ -75,23 +75,23 @@ import java.lang.Class
 import kotlin.Boolean
 import kotlin.Suppress
 
-internal enum class LocationTracking(
-  public override val isDefaultValue: Boolean = false
-) : LocationTracking<Authentication> {
+internal enum class LocationTracking : LocationTracking<Authentication> {
   Enabled,
-  Disabled(isDefaultValue = true),
+  Disabled,
   ;
+
+  public override val defaultOption get() = Disabled
 
   @Suppress("UNCHECKED_CAST")
   public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
-  internal enum class Source(
-    public override val isDefaultValue: Boolean = false
-  ) : Feature<Source> {
+  internal enum class Source : Feature<Source> {
     Local,
-    Firebase(isDefaultValue = true),
+    Firebase,
     Aws,
     ;
+
+    public override val defaultOption get() = Firebase
   }
 }
 ```

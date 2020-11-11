@@ -12,19 +12,19 @@ import java.io.File
 internal class DataStoreFeatureStorage(
   private val dataStore: DataStore<FeatureFlags>,
 ) : FeatureStorage {
-  override fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>) = dataStore
+  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = dataStore
       .data
-      .map { it.value[featureClass.name] }
+      .map { it.value[feature.name] }
 
-  override suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>) = try {
-    dataStore.data.first().value[featureClass.name]
+  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = try {
+    dataStore.data.first().value[feature.name]
   } catch (_: IOException) {
     null
   }
 
-  override suspend fun <T : Feature<*>> setFeatures(vararg values: T) = try {
+  override suspend fun <T : Feature<*>> setFeatures(vararg options: T) = try {
     dataStore.updateData { flags ->
-      val updatedFeatures = flags.value + values.map { it.javaClass.name to it.name }.toMap()
+      val updatedFeatures = flags.value + options.map { it.javaClass.name to it.name }.toMap()
       return@updateData flags.copy(value = updatedFeatures)
     }
     true

@@ -55,8 +55,10 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
   }
 })
 
-private enum class FeatureA(override val isDefaultValue: Boolean = false) : Feature<FeatureA> {
+private enum class FeatureA : Feature<FeatureA> {
   A,
   B,
   ;
+
+  override val defaultOption get() = A
 }

@@ -18,13 +18,13 @@ A feature flags management library for multi-module Kotlin Android projects. Lab
 First you need to define your feature flags.
 
 ```kotlin
-enum class AuthType(
-  override val isDefaultValue: Boolean = false,
-) : Feature<AuthType> {
-  None(isDefaultValue = true),
+enum class AuthType : Feature<AuthType> {
+  None,
   Fingerprint,
   Retina,
-  Face
+  Face;
+
+  public override val defaultOption get() = Fingerprint
 }
 ```
 

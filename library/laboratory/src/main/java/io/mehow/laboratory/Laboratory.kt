@@ -20,11 +20,12 @@ public class Laboratory(
   /**
    * Observes any changes to the input [Feature].
    */
-  public fun <T : Feature<T>> observe(featureClass: Class<T>): Flow<T> {
-    val (features, defaultFeature) = extractFeatureMetadata(featureClass)
-    return storage.observeFeatureName(featureClass).map { featureName ->
-      val expectedName = featureName ?: defaultFeature.name
-      features.firstOrNull { it.name == expectedName } ?: defaultFeature
+  public fun <T : Feature<T>> observe(feature: Class<T>): Flow<T> {
+    val options = feature.options
+    val defaultOption = feature.defaultOption
+    return storage.observeFeatureName(feature).map { featureName ->
+      val expectedName = featureName ?: defaultOption.name
+      options.firstOrNull { it.name == expectedName } ?: defaultOption
     }
   }
 
@@ -44,10 +45,11 @@ public class Laboratory(
   /**
    * Returns the current value of the input [Feature].
    */
-  public suspend fun <T : Feature<T>> experiment(featureClass: Class<T>): T {
-    val (features, defaultFeature) = extractFeatureMetadata(featureClass)
-    val expectedName = storage.getFeatureName(defaultFeature.javaClass) ?: defaultFeature.name
-    return features.firstOrNull { it.name == expectedName } ?: defaultFeature
+  public suspend fun <T : Feature<T>> experiment(feature: Class<T>): T {
+    val options = feature.options
+    val defaultOption = feature.defaultOption
+    val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
+    return options.firstOrNull { it.name == expectedName } ?: defaultOption
   }
 
   /**
@@ -56,61 +58,54 @@ public class Laboratory(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<T>> experimentBlocking(featureClass: Class<T>): T = runBlocking { experiment(featureClass) }
+  public fun <T : Feature<T>> experimentBlocking(feature: Class<T>): T = runBlocking { experiment(feature) }
 
   /**
-   * Checks if a [Feature] is set to the input [value].
+   * Checks if a [Feature] is set to the input [option].
    */
-  public suspend fun <T : Feature<T>> experimentIs(value: T): Boolean = experiment(value::class.java) == value
+  public suspend fun <T : Feature<T>> experimentIs(option: T): Boolean = experiment(option::class.java) == option
 
   /**
-   * Checks if a [Feature] is set to the input [value]. Warning – this call can block the calling thread.
+   * Checks if a [Feature] is set to the input [option]. Warning – this call can block the calling thread.
    *
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<T>> experimentIsBlocking(value: T): Boolean = runBlocking { experimentIs(value) }
+  public fun <T : Feature<T>> experimentIsBlocking(option: T): Boolean = runBlocking { experimentIs(option) }
 
   /**
-   * Sets a [Feature] to have the input [value].
+   * Sets a [Feature] to have the input [option].
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setFeature(value: T): Boolean = storage.setFeature(value)
+  public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = storage.setFeature(option)
 
   /**
-   * Sets a [Feature] to have the input [value]. Warning – this call can block the calling thread.
+   * Sets a [Feature] to have the input [option]. Warning – this call can block the calling thread.
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<*>> setFeatureBlocking(value: T): Boolean = runBlocking { setFeature(value) }
+  public fun <T : Feature<*>> setFeatureBlocking(option: T): Boolean = runBlocking { setFeature(option) }
 
   /**
-   * Sets [Features][Feature] to have the input [values]. If [values] contains more than one value
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
    * for the same feature flag, the last one should be applied.
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setFeatures(vararg values: T): Boolean = storage.setFeatures(*values)
+  public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean = storage.setFeatures(*options)
 
   /**
-   * Sets [Features][Feature] to have the input [values]. If [values] contains more than one value
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
    * for the same feature flag, the last one should be applied. Warning – this call can block the calling thread.
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<*>> setFeaturesBlocking(vararg values: T): Boolean = runBlocking { setFeatures(*values) }
-
-  private fun <T : Feature<T>> extractFeatureMetadata(group: Class<T>): Pair<Array<T>, T> {
-    val features = requireNotNull(group.enumConstants) { "${group.name} must be an enum" }
-    require(features.isNotEmpty()) { "${group.name} must have at least one value" }
-    val defaultFeature = features.firstOrNull { it.isDefaultValue } ?: features.first()
-    return features to defaultFeature
-  }
+  public fun <T : Feature<*>> setFeaturesBlocking(vararg options: T): Boolean = runBlocking { setFeatures(*options) }
 
   public companion object {
     /**

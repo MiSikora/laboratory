@@ -50,85 +50,85 @@ object CustomFeatureFactory : FeatureFactory {
   ) as Set<Class<Feature<*>>>
 }
 
-enum class AllowScreenshots(
-  override val isDefaultValue: Boolean = false
-) : Feature<AllowScreenshots> {
+enum class AllowScreenshots : Feature<AllowScreenshots> {
   Enabled,
-  Disabled(isDefaultValue = true);
+  Disabled;
+
+  public override val defaultOption get() = Disabled
 
   override val description: String = "Enables or disables screenshots during a video chat"
 }
 
-enum class Authentication(
-  override val isDefaultValue: Boolean = false
-) : Feature<Authentication> {
-  Password(isDefaultValue = true),
+enum class Authentication : Feature<Authentication> {
+  Password,
   Fingerprint,
   Retina,
   Face;
 
+  public override val defaultOption get() = Password
+
   @Suppress("UNCHECKED_CAST")
   override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
-  enum class Source(
-    override val isDefaultValue: Boolean = false
-  ) : Feature<Source> {
-    Local(isDefaultValue = true),
+  enum class Source : Feature<Source> {
+    Local,
     Firebase,
-    Aws
+    Aws;
+
+    public override val defaultOption get() = Local
   }
 }
 
-enum class DistanceAlgorithm(
-  override val isDefaultValue: Boolean = false
-) : Feature<DistanceAlgorithm> {
-  Euclidean(isDefaultValue = true),
+enum class DistanceAlgorithm : Feature<DistanceAlgorithm> {
+  Euclidean,
   Jaccard,
   Cosine,
   Edit,
   Hamming;
+
+  public override val defaultOption get() = Euclidean
 
   @Suppress("UNCHECKED_CAST")
   override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
   override val description: String = "Algorithm used for destination distance calculations"
 
-  enum class Source(
-    override val isDefaultValue: Boolean = false
-  ) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
     Firebase,
-    Azure(isDefaultValue = true)
+    Azure;
+
+    public override val defaultOption get() = Azure
   }
 }
 
-enum class LogType(
-  override val isDefaultValue: Boolean = false
-) : Feature<LogType> {
+enum class LogType : Feature<LogType> {
   Verbose,
   Debug,
-  Info(isDefaultValue = true),
+  Info,
   Warning,
-  Error
+  Error;
+
+  public override val defaultOption get() = Info
 }
 
-enum class PowerSource(
-  override val isDefaultValue: Boolean = false
-) : Feature<PowerSource> {
+enum class PowerSource : Feature<PowerSource> {
   Coal,
   Wind,
-  Solar(isDefaultValue = true),
+  Solar,
   Nuclear,
   ColdFusion;
+
+  public override val defaultOption get() = Solar
 
   @Suppress("UNCHECKED_CAST")
   override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
 
-  enum class Source(
-    public override val isDefaultValue: Boolean = false
-  ) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
-    Firebase(isDefaultValue = true)
+    Firebase;
+
+    public override val defaultOption get() = Firebase
   }
 }
 ```

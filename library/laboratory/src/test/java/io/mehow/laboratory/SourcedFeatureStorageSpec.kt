@@ -190,44 +190,54 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
   }
 })
 
-private enum class FirstFeature(override val isDefaultValue: Boolean = false) : Feature<FirstFeature> {
+private enum class FirstFeature : Feature<FirstFeature> {
   A,
   B,
   C,
   ;
 
-  @Suppress("UNCHECKED_CAST")
+  override val defaultOption get() = A
+
+    @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
-  enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
     RemoteA,
     ;
+
+    override val defaultOption get() = Local
   }
 }
 
-private enum class SecondFeature(override val isDefaultValue: Boolean = false) : Feature<SecondFeature> {
+private enum class SecondFeature : Feature<SecondFeature> {
   A,
   B,
   C,
   ;
 
-  @Suppress("UNCHECKED_CAST")
+  override val defaultOption get() = A
+
+    @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
-  enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
     RemoteA,
-    RemoteB(isDefaultValue = true),
+    RemoteB,
     ;
+
+    override val defaultOption get() = RemoteB
   }
 }
 
-private enum class EmptySourceFeature(override val isDefaultValue: Boolean = false) : Feature<EmptySourceFeature> {
+private enum class EmptySourceFeature : Feature<EmptySourceFeature> {
   A,
   B,
   C,
   ;
+
+  override val defaultOption get() = A
 
   @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
@@ -235,10 +245,12 @@ private enum class EmptySourceFeature(override val isDefaultValue: Boolean = fal
   private enum class Source : Feature<Source>
 }
 
-private enum class UnsourcedFeature(override val isDefaultValue: Boolean = false) : Feature<UnsourcedFeature> {
+private enum class UnsourcedFeature : Feature<UnsourcedFeature> {
   A,
   B,
   C,
   ;
+
+  override val defaultOption get() = A
 }
 
