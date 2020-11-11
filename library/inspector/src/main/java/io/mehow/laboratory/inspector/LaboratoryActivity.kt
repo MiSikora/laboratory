@@ -27,15 +27,15 @@ import kotlinx.coroutines.launch
  */
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
 public class LaboratoryActivity : AppCompatActivity() {
-  private val viewModel by viewModels<FeaturesViewModel> {
-    FeaturesViewModel.Factory(configuration)
+  private val viewModel by viewModels<GroupViewModel> {
+    GroupViewModel.Factory(configuration)
   }
 
   private lateinit var resetFeaturesDialog: AlertDialog
 
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
-    setContentView(R.layout.io_mehow_laboratory_features)
+    setContentView(R.layout.io_mehow_laboratory_inspector)
     resetFeaturesDialog = createResetFeaturesDialog()
     setUpViewPager()
     setUpToolbar()
@@ -51,7 +51,7 @@ public class LaboratoryActivity : AppCompatActivity() {
   private fun setUpViewPager() {
     val sections = configuration.featureFactories.keys.toList()
     val viewPager = findViewById<ViewPager2>(R.id.io_mehow_laboratory_view_pager).apply {
-      adapter = FeaturesAdapter(this@LaboratoryActivity, sections)
+      adapter = GroupAdapter(this@LaboratoryActivity, sections)
       disableScrollEffect()
     }
     if (sections.size <= 1) return

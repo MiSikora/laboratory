@@ -15,11 +15,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-internal class FeatureGroupFragment : Fragment() {
-  internal val viewModel by activityViewModels<FeaturesViewModel> {
-    FeaturesViewModel.Factory(LaboratoryActivity.configuration)
+internal class GroupFragment : Fragment() {
+  internal val viewModel by activityViewModels<GroupViewModel> {
+    GroupViewModel.Factory(LaboratoryActivity.configuration)
   }
-  private val adapter = FeatureGroupAdapter(object : FeatureGroupAdapter.Listener {
+  private val adapter = FeatureAdapter(object : FeatureAdapter.Listener {
     override fun onSelectFeature(feature: Feature<*>) {
       lifecycleScope.launch { viewModel.selectFeature(feature) }
     }
@@ -36,7 +36,7 @@ internal class FeatureGroupFragment : Fragment() {
   ): View = inflater.inflate(R.layout.io_mehow_laboratory_feature_group, container, false)
 
   override fun onViewCreated(view: View, inState: Bundle?) {
-    val features = view.findViewById<RecyclerView>(R.id.io_mehow_laboratory_features)
+    val features = view.findViewById<RecyclerView>(R.id.io_mehow_laboratory_feature_group)
     features.layoutManager = LinearLayoutManager(requireActivity())
     features.adapter = adapter
     observeFeatureGroups()
@@ -55,8 +55,8 @@ internal class FeatureGroupFragment : Fragment() {
   companion object {
     private const val sectionKey = "Section.Key"
 
-    fun create(section: String): FeatureGroupFragment {
-      return FeatureGroupFragment().apply {
+    fun create(section: String): GroupFragment {
+      return GroupFragment().apply {
         arguments = bundleOf(sectionKey to section)
       }
     }

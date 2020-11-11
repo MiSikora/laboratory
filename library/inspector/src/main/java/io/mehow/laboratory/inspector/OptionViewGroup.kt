@@ -10,7 +10,7 @@ import com.google.android.material.chip.ChipGroup
 import io.mehow.laboratory.Feature
 import com.google.android.material.R as MaterialR
 
-internal class FeatureModelsView @JvmOverloads constructor(
+internal class OptionViewGroup @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet,
   defStyle: Int = MaterialR.attr.chipGroupStyle,
@@ -26,16 +26,16 @@ internal class FeatureModelsView @JvmOverloads constructor(
     this.listener = listener
   }
 
-  fun render(models: List<FeatureModel>, isCurrentSourceLocal: Boolean) {
+  fun render(models: List<OptionUiModel>, isCurrentSourceLocal: Boolean) {
     children.filterIsInstance<Chip>().forEach(::removeOnCheckedChangeListener)
     removeAllViews()
     models.map { createChip(it, isCurrentSourceLocal) }.forEach(::addView)
   }
 
-  private fun createChip(model: FeatureModel, isCurrentSourceLocal: Boolean): Chip {
-    val chip = inflater.inflate(R.layout.io_mehow_laboratory_feature_chip, this, false) as Chip
+  private fun createChip(model: OptionUiModel, isCurrentSourceLocal: Boolean): Chip {
+    val chip = inflater.inflate(R.layout.io_mehow_laboratory_feature_option_chip, this, false) as Chip
     return chip.apply {
-      text = model.feature.name
+      text = model.option.name
       isChecked = model.isSelected
       isActivated = isCurrentSourceLocal
       isEnabled = isCurrentSourceLocal
@@ -43,10 +43,10 @@ internal class FeatureModelsView @JvmOverloads constructor(
     }
   }
 
-  private fun createListener(model: FeatureModel) = CompoundButton.OnCheckedChangeListener { chip, isChecked ->
+  private fun createListener(model: OptionUiModel) = CompoundButton.OnCheckedChangeListener { chip, isChecked ->
     if (isChecked) {
       (chip as Chip).deselectOtherChips()
-      listener?.onSelectFeature(model.feature)
+      listener?.onSelectFeature(model.option)
     }
   }
 
