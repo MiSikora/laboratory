@@ -82,6 +82,10 @@ allprojects {
         }
       }
 
+      testOptions.unitTests.all {
+        useJUnitPlatform()
+      }
+
       lintOptions {
         lintConfig rootProject.file("lint.xml")
 

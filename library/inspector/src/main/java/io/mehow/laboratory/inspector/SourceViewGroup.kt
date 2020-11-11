@@ -8,23 +8,23 @@ import androidx.appcompat.widget.AppCompatSpinner
 import io.mehow.laboratory.Feature
 import androidx.appcompat.R as AppCompatR
 
-internal class FeatureSourcesView @JvmOverloads constructor(
+internal class SourceViewGroup @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet,
   defStyle: Int = AppCompatR.attr.spinnerStyle,
 ) : AppCompatSpinner(context, attrs, defStyle) {
   internal var listener: OnSelectSourceListener? = null
 
-  override fun getAdapter() = super.getAdapter() as? FeatureSourceAdapter
+  override fun getAdapter() = super.getAdapter() as? SourceAdapter
 
   fun setOnSelectSourceListener(listener: OnSelectSourceListener?) {
     this.listener = listener
   }
 
-  fun render(models: List<FeatureModel>) {
-    val features = models.map(FeatureModel::feature)
-    val selectedFeature = models.firstOrNull(FeatureModel::isSelected)?.feature ?: return
-    val newAdapter = FeatureSourceAdapter(features)
+  fun render(models: List<OptionUiModel>) {
+    val features = models.map(OptionUiModel::option)
+    val selectedFeature = models.firstOrNull(OptionUiModel::isSelected)?.option ?: return
+    val newAdapter = SourceAdapter(features)
     onItemSelectedListener = createListener()
     adapter = newAdapter
     val position = newAdapter.positionOf(selectedFeature)

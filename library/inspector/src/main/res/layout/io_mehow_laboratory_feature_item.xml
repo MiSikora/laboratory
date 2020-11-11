@@ -32,7 +32,7 @@
         android:textAppearance="?textAppearanceCaption"
         />
 
-    <io.mehow.laboratory.inspector.FeatureSourcesView
+    <io.mehow.laboratory.inspector.SourceViewGroup
         android:id="@+id/io_mehow_laboratory_feature_sources"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,8 +48,8 @@
         android:background="?dividerVertical"
         />
 
-    <io.mehow.laboratory.inspector.FeatureModelsView
-        android:id="@+id/io_mehow_laboratory_feature_values"
+    <io.mehow.laboratory.inspector.OptionViewGroup
+        android:id="@+id/io_mehow_laboratory_feature_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/io_mehow_laboratory_spacing"

@@ -12,10 +12,6 @@ android {
   sourceSets {
     getByName("main").java.srcDirs += "$buildDir/generated/source/wire/"
   }
-
-  testOptions.unitTests.all {
-    useJUnitPlatform()
-  }
 }
 
 dependencies {

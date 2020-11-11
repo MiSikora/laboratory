@@ -13,62 +13,62 @@ import kotlinx.coroutines.flow.map
 
 internal class ViewModelSpec : DescribeSpec({
   describe("view model") {
-    it("filters empty feature groups") {
-      val viewModel = FeaturesViewModel(
+    it("filters empty feature flag groups") {
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
-      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
+      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureUiModel::name)
 
       featureNames shouldNotContain "Empty"
     }
 
-    it("orders feature groups by name") {
-      val viewModel = FeaturesViewModel(
+    it("orders feature flag groups by name") {
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
-      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureGroup::name)
+      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureUiModel::name)
 
       featureNames shouldContainExactly listOf("First", "Second")
     }
 
-    it("does not order feature values") {
-      val viewModel = FeaturesViewModel(
+    it("does not order feature flag options") {
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       val features = viewModel.observeFeatureGroups("Local").first()
-          .map(FeatureGroup::models)
-          .map { models -> models.map(FeatureModel::feature) }
+          .map(FeatureUiModel::models)
+          .map { models -> models.map(OptionUiModel::option) }
 
       features[0] shouldContainExactly listOf(First.C, First.B, First.A)
       features[1] shouldContainExactly listOf(Second.B, Second.C, Second.A)
     }
 
-    it("marks first feature as selected by default") {
-      val viewModel = FeaturesViewModel(
+    it("marks first feature flag option as selected by default") {
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.C, Second.B)
     }
 
-    it("marks saved feature as selected") {
+    it("marks saved feature flag options as selected") {
       val laboratory = Laboratory.inMemory().apply {
         setFeature(First.A)
         setFeature(Second.C)
       }
 
-      val viewModel = FeaturesViewModel(
+      val viewModel = GroupViewModel(
           Configuration(laboratory, mapOf("Local" to NoSourceFeatureFactory))
       )
 
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.A, Second.C)
     }
 
-    it("selects features") {
-      val viewModel = FeaturesViewModel(
+    it("selects feature flag options") {
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
@@ -78,8 +78,8 @@ internal class ViewModelSpec : DescribeSpec({
       viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.B, Second.A)
     }
 
-    it("observes feature changes") {
-      val viewModel = FeaturesViewModel(
+    it("observes feature flag changes") {
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
       )
 
@@ -96,8 +96,8 @@ internal class ViewModelSpec : DescribeSpec({
       }
     }
 
-    it("resets all features to their default values") {
-      val viewModel = FeaturesViewModel(
+    it("resets all feature flags to their default options") {
+      val viewModel = GroupViewModel(
           Configuration(
               Laboratory.inMemory(),
               mapOf(
@@ -122,8 +122,8 @@ internal class ViewModelSpec : DescribeSpec({
       viewModel.observeSelectedFeatures("Second").first() shouldContainExactly listOf(Second.B)
     }
 
-    it("resets feature and sources to their default values") {
-      val viewModel = FeaturesViewModel(
+    it("resets feature flags and sources to their default options") {
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to SourcedFeatureFactory))
       )
 
@@ -138,7 +138,7 @@ internal class ViewModelSpec : DescribeSpec({
     }
 
     it("observes source changes") {
-      val viewModel = FeaturesViewModel(
+      val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to AllFeatureFactory))
       )
 
@@ -161,17 +161,17 @@ internal class ViewModelSpec : DescribeSpec({
   }
 })
 
-internal fun FeaturesViewModel.observeSelectedFeaturesAndSources(
+internal fun GroupViewModel.observeSelectedFeaturesAndSources(
   section: String,
 ) = observeFeatureGroups(section).map { groups ->
   groups.map { group ->
-    val feature = group.models.single(FeatureModel::isSelected).feature
-    val source = group.sources.singleOrNull(FeatureModel::isSelected)?.feature
-    feature to source
+    val option = group.models.single(OptionUiModel::isSelected).option
+    val source = group.sources.singleOrNull(OptionUiModel::isSelected)?.option
+    option to source
   }
 }
 
-internal fun FeaturesViewModel.observeSelectedFeatures(
+internal fun GroupViewModel.observeSelectedFeatures(
   section: String,
 ) = observeSelectedFeaturesAndSources(section).map { pairs ->
   pairs.map { (feature, _) -> feature }
