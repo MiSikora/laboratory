@@ -197,34 +197,42 @@ private object AllFeatureFactory : FeatureFactory {
   }
 }
 
-private enum class First(override val isDefaultValue: Boolean = false) : Feature<First> {
+private enum class First : Feature<First> {
   C,
   B,
   A,
   ;
+
+  override val defaultOption get() = C
 }
 
-private enum class Second(override val isDefaultValue: Boolean = false) : Feature<Second> {
+private enum class Second : Feature<Second> {
   B,
   C,
   A,
   ;
+
+  override val defaultOption get() = B
 }
 
 private enum class Empty : Feature<Empty>
 
-private enum class Sourced(override val isDefaultValue: Boolean = false) : Feature<Sourced> {
+private enum class Sourced : Feature<Sourced> {
   A,
   B,
   C,
   ;
 
-  @Suppress("UNCHECKED_CAST")
+  override val defaultOption get() = A
+
+    @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
-  enum class Source(override val isDefaultValue: Boolean = false) : Feature<Source> {
+  enum class Source : Feature<Source> {
     Local,
     Remote,
     ;
+
+    override val defaultOption get() = Local
   }
 }

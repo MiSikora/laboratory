@@ -365,14 +365,14 @@ internal class FeatureFlagSpec : DescribeSpec({
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
-            |import kotlin.Boolean
             |
-            |internal enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |}
             |
           """.trimMargin("|")
@@ -390,14 +390,14 @@ internal class FeatureFlagSpec : DescribeSpec({
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
-            |import kotlin.Boolean
             |
-            |public enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |public enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |}
             |
           """.trimMargin("|")
@@ -417,25 +417,26 @@ internal class FeatureFlagSpec : DescribeSpec({
             |
             |import io.mehow.laboratory.Feature
             |import java.lang.Class
-            |import kotlin.Boolean
             |import kotlin.Suppress
             |
-            |internal enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |
             |  @Suppress("UNCHECKED_CAST")
             |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
-            |  internal enum class Source(
-            |    public override val isDefaultValue: Boolean = false
-            |  ) : Feature<Source> {
-            |    Local(isDefaultValue = true),
+            |  internal enum class Source : Feature<Source> {
+            |    Local,
             |    Remote,
             |    ;
+            |
+            |    public override val defaultOption: Source
+            |      get() = Local
             |  }
             |}
             |
@@ -455,14 +456,14 @@ internal class FeatureFlagSpec : DescribeSpec({
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
-            |import kotlin.Boolean
             |
-            |internal enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |}
             |
           """.trimMargin("|")
@@ -491,25 +492,26 @@ internal class FeatureFlagSpec : DescribeSpec({
             |
             |import io.mehow.laboratory.Feature
             |import java.lang.Class
-            |import kotlin.Boolean
             |import kotlin.Suppress
             |
-            |internal enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |
             |  @Suppress("UNCHECKED_CAST")
             |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
-            |  internal enum class Source(
-            |    public override val isDefaultValue: Boolean = false
-            |  ) : Feature<Source> {
-            |    Local(isDefaultValue = true),
+            |  internal enum class Source : Feature<Source> {
+            |    Local,
             |    Remote,
             |    ;
+            |
+            |    public override val defaultOption: Source
+            |      get() = Local
             |  }
             |}
             |
@@ -530,25 +532,26 @@ internal class FeatureFlagSpec : DescribeSpec({
             |
             |import io.mehow.laboratory.Feature
             |import java.lang.Class
-            |import kotlin.Boolean
             |import kotlin.Suppress
             |
-            |internal enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |
             |  @Suppress("UNCHECKED_CAST")
             |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
-            |  internal enum class Source(
-            |    public override val isDefaultValue: Boolean = false
-            |  ) : Feature<Source> {
+            |  internal enum class Source : Feature<Source> {
             |    Local,
-            |    Remote(isDefaultValue = true),
+            |    Remote,
             |    ;
+            |
+            |    public override val defaultOption: Source
+            |      get() = Remote
             |  }
             |}
             |
@@ -569,25 +572,26 @@ internal class FeatureFlagSpec : DescribeSpec({
             |
             |import io.mehow.laboratory.Feature
             |import java.lang.Class
-            |import kotlin.Boolean
             |import kotlin.Suppress
             |
-            |public enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |public enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |
             |  @Suppress("UNCHECKED_CAST")
             |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
             |
-            |  public enum class Source(
-            |    public override val isDefaultValue: Boolean = false
-            |  ) : Feature<Source> {
-            |    Local(isDefaultValue = true),
+            |  public enum class Source : Feature<Source> {
+            |    Local,
             |    Remote,
             |    ;
+            |
+            |    public override val defaultOption: Source
+            |      get() = Local
             |  }
             |}
             |
@@ -607,15 +611,15 @@ internal class FeatureFlagSpec : DescribeSpec({
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
-            |import kotlin.Boolean
             |import kotlin.String
             |
-            |internal enum class FeatureA(
-            |  public override val isDefaultValue: Boolean = false
-            |) : Feature<FeatureA> {
-            |  First(isDefaultValue = true),
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
             |  Second,
             |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
             |
             |  public override val description: String = "Feature description"
             |}

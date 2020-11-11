@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     ```
 - `options` extension to `Class<Feature<T>>` that returns all available feature flag options.
 - `withOption()` and `withDefaultOption()` to Gradle plugin for adding options to feature flags.
+- `defaultOption` property to `Feature` interface
 
 ### Changed
 - `excludeProjects` plugin functions are now called `projectFilter` and the condition is reversed. Previously they removed projects that matched a condition. Now they allow projects that match it.
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - `ProjectFilter` from `laboratory-gradle-plugin` in favour of `java.util.function.Predicate`.
 - `configure()` overload which accepts sources factory as a separate argument.
+- `isDefaultValue` from `Feature` interface. `defaultOption` should be used instead.
 
 ### Fixed
 - Moved `generateSourcedFeatureStorage` task to a correct tasks group.

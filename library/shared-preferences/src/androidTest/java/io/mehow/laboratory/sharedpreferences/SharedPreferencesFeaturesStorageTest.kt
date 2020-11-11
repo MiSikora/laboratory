@@ -19,13 +19,13 @@ internal class SharedPreferencesFeaturesStorageTest {
   private val laboratory = Laboratory(storage)
 
   @Test fun storedFeatureIsAvailableAsExperiment() = runBlocking {
-    storage.setFeature(FeatureA.B)
+    storage.setOption(FeatureA.B)
 
     laboratory.experiment<FeatureA>() shouldBe FeatureA.B
   }
 
   @Test fun corruptedFeatureYieldsDefaultExperiment() = runBlocking {
-    storage.setFeature(FeatureA.B)
+    storage.setOption(FeatureA.B)
     preferences.edit().putInt(FeatureA::class.java.name, 1).commit()
 
     laboratory.experiment<FeatureA>() shouldBe FeatureA.A
@@ -35,20 +35,22 @@ internal class SharedPreferencesFeaturesStorageTest {
     storage.observeFeatureName(FeatureA::class.java).test {
       expectItem() shouldBe null
 
-      storage.setFeature(FeatureA.B)
+      storage.setOption(FeatureA.B)
       expectItem() shouldBe FeatureA.B.name
 
-      storage.setFeature(FeatureA.B)
+      storage.setOption(FeatureA.B)
       expectNoEvents()
 
-      storage.setFeature(FeatureA.A)
+      storage.setOption(FeatureA.A)
       expectItem() shouldBe FeatureA.A.name
     }
   }
 }
 
-private enum class FeatureA(override val isDefaultValue: Boolean = false) : Feature<FeatureA> {
+private enum class FeatureA : Feature<FeatureA> {
   A,
   B,
   ;
+
+  override val defaultOption get() = A
 }

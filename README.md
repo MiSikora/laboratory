@@ -43,13 +43,13 @@ android {
 Define your feature flags.
 
 ```kotlin
-enum class AuthType(
-  override val isDefaultValue: Boolean = false,
-) : Feature<AuthType> {
-  None(isDefaultValue = true),
+enum class AuthType : Feature<AuthType> {
+  None,
   Fingerprint,
   Retina,
-  Face
+  Face;
+
+  public override val defaultOption get() = Fingerprint
 }
 ```
 

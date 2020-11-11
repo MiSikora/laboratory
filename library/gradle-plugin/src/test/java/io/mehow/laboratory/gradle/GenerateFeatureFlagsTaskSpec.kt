@@ -39,12 +39,13 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |enum class Feature(
-      |  public override val isDefaultValue: Boolean = false
-      |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isDefaultValue = true),
+      |enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: Feature
+      |    get() = First
       |}
     """.trimMargin("|")
   }
@@ -60,12 +61,13 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureA.shouldExist()
 
     featureA.readText() shouldContain """
-      |enum class FeatureA(
-      |  public override val isDefaultValue: Boolean = false
-      |) : Feature<FeatureA> {
-      |  FirstA(isDefaultValue = true),
+      |enum class FeatureA : Feature<FeatureA> {
+      |  FirstA,
       |  SecondA,
       |  ;
+      |
+      |  public override val defaultOption: FeatureA
+      |    get() = FirstA
       |}
     """.trimMargin("|")
 
@@ -73,12 +75,13 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureB.shouldExist()
 
     featureB.readText() shouldContain """
-      |enum class FeatureB(
-      |  public override val isDefaultValue: Boolean = false
-      |) : Feature<FeatureB> {
-      |  FirstB(isDefaultValue = true),
+      |enum class FeatureB : Feature<FeatureB> {
+      |  FirstB,
       |  SecondB,
       |  ;
+      |
+      |  public override val defaultOption: FeatureB
+      |    get() = FirstB
       |}
     """.trimMargin("|")
   }
@@ -94,24 +97,26 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |enum class Feature(
-      |  public override val isDefaultValue: Boolean = false
-      |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isDefaultValue = true),
+      |enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: Feature
+      |    get() = First
       |
       |  @Suppress("UNCHECKED_CAST")
       |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
       |      Class<io.mehow.laboratory.Feature<*>>
       |
-      |  public enum class Source(
-      |    public override val isDefaultValue: Boolean = false
-      |  ) : io.mehow.laboratory.Feature<Source> {
-      |    Local(isDefaultValue = true),
+      |  public enum class Source : io.mehow.laboratory.Feature<Source> {
+      |    Local,
       |    RemoteA,
       |    RemoteB,
       |    ;
+      |
+      |    public override val defaultOption: Source
+      |      get() = Local
       |  }
       |}
     """.trimMargin("|")
@@ -128,24 +133,26 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |internal enum class Feature(
-      |  public override val isDefaultValue: Boolean = false
-      |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isDefaultValue = true),
+      |internal enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: Feature
+      |    get() = First
       |
       |  @Suppress("UNCHECKED_CAST")
       |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
       |      Class<io.mehow.laboratory.Feature<*>>
       |
-      |  internal enum class Source(
-      |    public override val isDefaultValue: Boolean = false
-      |  ) : io.mehow.laboratory.Feature<Source> {
-      |    Local(isDefaultValue = true),
+      |  internal enum class Source : io.mehow.laboratory.Feature<Source> {
+      |    Local,
       |    RemoteA,
       |    RemoteB,
       |    ;
+      |
+      |    public override val defaultOption: Source
+      |      get() = Local
       |  }
       |}
     """.trimMargin("|")
@@ -162,24 +169,26 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |public enum class Feature(
-      |  public override val isDefaultValue: Boolean = false
-      |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isDefaultValue = true),
+      |public enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: Feature
+      |    get() = First
       |
       |  @Suppress("UNCHECKED_CAST")
       |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
       |      Class<io.mehow.laboratory.Feature<*>>
       |
-      |  public enum class Source(
-      |    public override val isDefaultValue: Boolean = false
-      |  ) : io.mehow.laboratory.Feature<Source> {
-      |    Local(isDefaultValue = true),
+      |  public enum class Source : io.mehow.laboratory.Feature<Source> {
+      |    Local,
       |    RemoteA,
       |    RemoteB,
       |    ;
+      |
+      |    public override val defaultOption: Source
+      |      get() = Local
       |  }
       |}
     """.trimMargin("|")
@@ -196,23 +205,25 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureA.shouldExist()
 
     featureA.readText() shouldContain """
-      |enum class FeatureA(
-      |  public override val isDefaultValue: Boolean = false
-      |) : Feature<FeatureA> {
-      |  First(isDefaultValue = true),
+      |enum class FeatureA : Feature<FeatureA> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: FeatureA
+      |    get() = First
       |
       |  @Suppress("UNCHECKED_CAST")
       |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
       |
-      |  public enum class Source(
-      |    public override val isDefaultValue: Boolean = false
-      |  ) : Feature<Source> {
-      |    Local(isDefaultValue = true),
+      |  public enum class Source : Feature<Source> {
+      |    Local,
       |    RemoteA,
       |    RemoteB,
       |    ;
+      |
+      |    public override val defaultOption: Source
+      |      get() = Local
       |  }
       |}
     """.trimMargin("|")
@@ -221,12 +232,13 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureB.shouldExist()
 
     featureB.readText() shouldContain """
-      |enum class FeatureB(
-      |  public override val isDefaultValue: Boolean = false
-      |) : Feature<FeatureB> {
-      |  First(isDefaultValue = true),
+      |enum class FeatureB : Feature<FeatureB> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: FeatureB
+      |    get() = First
       |}
     """.trimMargin("|")
 
@@ -234,23 +246,25 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureC.shouldExist()
 
     featureC.readText() shouldContain """
-      |enum class FeatureC(
-      |  public override val isDefaultValue: Boolean = false
-      |) : Feature<FeatureC> {
-      |  First(isDefaultValue = true),
+      |enum class FeatureC : Feature<FeatureC> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: FeatureC
+      |    get() = First
       |
       |  @Suppress("UNCHECKED_CAST")
       |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
       |
-      |  public enum class Source(
-      |    public override val isDefaultValue: Boolean = false
-      |  ) : Feature<Source> {
+      |  public enum class Source : Feature<Source> {
       |    Local,
-      |    RemoteA(isDefaultValue = true),
+      |    RemoteA,
       |    RemoteC,
       |    ;
+      |
+      |    public override val defaultOption: Source
+      |      get() = RemoteA
       |  }
       |}
     """.trimMargin("|")
@@ -364,12 +378,13 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureA.shouldExist()
 
     featureA.readText() shouldContain """
-      |enum class FeatureA(
-      |  public override val isDefaultValue: Boolean = false
-      |) : Feature<FeatureA> {
-      |  First(isDefaultValue = true),
+      |enum class FeatureA : Feature<FeatureA> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: FeatureA
+      |    get() = First
       |}
     """.trimMargin("|")
 
@@ -377,12 +392,13 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureB.shouldExist()
 
     featureB.readText() shouldContain """
-      |enum class FeatureB(
-      |  public override val isDefaultValue: Boolean = false
-      |) : Feature<FeatureB> {
-      |  First(isDefaultValue = true),
+      |enum class FeatureB : Feature<FeatureB> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: FeatureB
+      |    get() = First
       |}
     """.trimMargin("|")
   }
@@ -470,11 +486,12 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |enum class Feature(
-      |  public override val isDefaultValue: Boolean = false
-      |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isDefaultValue = true),
+      |enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  First,
       |  ;
+      |
+      |  public override val defaultOption: Feature
+      |    get() = First
       |}
     """.trimMargin("|")
   }
@@ -490,11 +507,12 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |enum class Feature(
-      |  public override val isDefaultValue: Boolean = false
-      |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isDefaultValue = true),
+      |enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  First,
       |  ;
+      |
+      |  public override val defaultOption: Feature
+      |    get() = First
       |
       |  public override val description: String = "Feature description"
       |}
@@ -515,16 +533,16 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |package io.mehow.example
       |
       |import java.lang.Class
-      |import kotlin.Boolean
       |import kotlin.String
       |import kotlin.Suppress
       |
-      |public enum class Feature(
-      |  public override val isDefaultValue: Boolean = false
-      |) : io.mehow.laboratory.Feature<Feature> {
-      |  First(isDefaultValue = true),
+      |public enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  First,
       |  Second,
       |  ;
+      |
+      |  public override val defaultOption: Feature
+      |    get() = First
       |
       |  @Suppress("UNCHECKED_CAST")
       |  public override val source: Class<io.mehow.laboratory.Feature<*>> = Source::class.java as
@@ -532,12 +550,13 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |
       |  public override val description: String = "Feature description"
       |
-      |  public enum class Source(
-      |    public override val isDefaultValue: Boolean = false
-      |  ) : io.mehow.laboratory.Feature<Source> {
-      |    Local(isDefaultValue = true),
+      |  public enum class Source : io.mehow.laboratory.Feature<Source> {
+      |    Local,
       |    Remote,
       |    ;
+      |
+      |    public override val defaultOption: Source
+      |      get() = Local
       |  }
       |}
       |

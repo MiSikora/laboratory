@@ -6,6 +6,7 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
+import io.mehow.laboratory.source
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -39,7 +40,7 @@ internal class GroupViewModel(
 
   suspend fun resetAllFeatures() = withContext(Dispatchers.Default) {
     val defaultValues = metadataProvider.featuresAndSources()
-        .map(FeatureMetadata::defaultValue)
+        .map(FeatureMetadata::defaultOption)
         .toTypedArray()
     laboratory.setFeatures(*defaultValues)
   }
@@ -64,11 +65,11 @@ internal class GroupViewModel(
   private class FeatureMetadata private constructor(private val feature: Class<Feature<*>>) {
     val simpleReadableName = feature.name.substringAfterLast('.').replace('$', '.')
 
-    val options = feature.enumConstants?.toList<Feature<*>>().orEmpty()
+    val options = feature.enumConstants!!.toList<Feature<*>>()
 
-    val sourceMetadata = options.firstOrNull()?.source?.let(FeatureMetadata::create)
+    val defaultOption = options.first().defaultOption
 
-    val defaultValue = options.firstOrNull { it.isDefaultValue } ?: options.first()
+    val sourceMetadata = feature.source?.let(FeatureMetadata::create)
 
     fun observeGroup(laboratory: Laboratory): Flow<FeatureUiModel> {
       val featureEmissions = observeModels(laboratory)

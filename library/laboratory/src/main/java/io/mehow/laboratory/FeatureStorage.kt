@@ -10,28 +10,28 @@ public interface FeatureStorage {
    * Observes changes to currently selected feature flag name.
    * If feature flag is not available, it should emit `null`.
    */
-  public fun <T : Feature<*>> observeFeatureName(featureClass: Class<T>): Flow<String?>
+  public fun <T : Feature<*>> observeFeatureName(feature: Class<T>): Flow<String?>
 
   /**
    * Returns the current value of a selected feature flag name.
    * If feature flag is not available, it should return `null`.
    */
-  public suspend fun <T : Feature<*>> getFeatureName(featureClass: Class<T>): String?
+  public suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String?
 
   /**
-   * Sets [Features][Feature] to have the input [values]. If [values] contains more than one value
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
    * for the same feature flag, the last one should be applied.
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setFeatures(vararg values: T): Boolean
+  public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean
 
   /**
-   * Sets a [Feature] to have the input [value].
+   * Sets a [Feature] to have the input [option].
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  @JvmDefault public suspend fun <T : Feature<*>> setFeature(value: T): Boolean = setFeatures(value)
+  @JvmDefault public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = setFeatures(option)
 
   public companion object {
     /**

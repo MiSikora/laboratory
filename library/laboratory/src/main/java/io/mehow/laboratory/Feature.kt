@@ -1,20 +1,22 @@
 package io.mehow.laboratory
 
 /**
- * A representation of a feature flag.
+ * A feature flag that has one active option. Options are selected by interaction of this interface with [Laboratory].
+ * Feature flag is a enum that implements this interface.
+ *
+ * **Warning**: Enum values cannot individually override any functions. Otherwise serialization, and consequentially
+ * discovery of a selection option, will not work as it is based on a class name.
  */
-public interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
+public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
   /**
-   * A name of a feature that should uniquely identify it within this feature flag.
+   * A name of an option that should uniquely identify it within this feature flag.
    */
   public val name: String
 
   /**
-   * Determines whether a feature is the default value of the feature flag. If more than one feature has this value
-   * set to `true` the first one among them is used. If no feature has this value set to `true`
-   * the first one value is used.
+   * Determines which option is a default for this feature flag.
    */
-  public val isDefaultValue: Boolean
+  public val defaultOption: T
 
   /**
    * Source of feature flag values. When `null` it is assumed that the feature flag has only local source of values.
@@ -43,19 +45,43 @@ public interface Feature<T> : Comparable<T> where T : Enum<T>, T : Feature<T> {
    *   }
    * }
    * ```
-   *
-   * It should have the same value for all feature values. If sources differ between values the first one is used.
    */
   @JvmDefault public val source: Class<Feature<*>>? get() = null
 
   /**
-   * Description of the feature flag that can be used for more contextual information. It should have the same value
-   * for all feature values. If descriptions differ between values the first one is used.
+   * Description of the feature flag that can be used for more contextual information.
    */
   @JvmDefault public val description: String get() = ""
 }
 
 /**
+ * Default option of a feature flag.
+ *
+ * @see Feature.defaultOption
+ */
+public val <T : Feature<T>> Class<T>.defaultOption: T
+  get() = firstOption.defaultOption
+
+/**
+ * Source of feature flag values.
+ *
+ * @see Feature.source
+ */
+public val Class<Feature<*>>.source: Class<Feature<*>>?
+  get() = firstOption.source
+
+/**
+ * Description of a feature flag.
+ *
+ * @see Feature.description
+ */
+public val Class<Feature<*>>.description: String
+  get() = firstOption.description
+
+/**
  * All available options of a feature flag.
  */
 public val <T : Feature<T>> Class<T>.options: Array<T> get() = enumConstants
+
+private val <T : Feature<T>> Class<T>.firstOption
+  get() = options.firstOrNull() ?: error("$this must have at least one option")
