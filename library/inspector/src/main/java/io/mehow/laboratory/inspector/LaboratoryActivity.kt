@@ -115,7 +115,7 @@ public class LaboratoryActivity : AppCompatActivity() {
       private set
     internal val configuration
       get() = requireNotNull(backingConfiguration) {
-        "LaboratoryActivity must be initialized before using it."
+        "${LaboratoryActivity::class.java} must be initialized before using it."
       }
 
     /**
