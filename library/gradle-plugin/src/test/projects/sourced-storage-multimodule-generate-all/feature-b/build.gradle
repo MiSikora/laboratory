@@ -5,7 +5,7 @@ plugins {
 
 laboratory {
   feature("FeatureB") {
-    withDefaultValue("First")
+    withDefaultOption("First")
 
     withSource("RemoteB")
   }

@@ -1,7 +1,7 @@
 package io.mehow.laboratory.gradle
 
 import io.mehow.laboratory.generator.FeatureFlagModel
-import io.mehow.laboratory.generator.FeatureValue
+import io.mehow.laboratory.generator.FeatureFlagOption
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 
@@ -26,23 +26,37 @@ public class FeatureFlagInput internal constructor(
    */
   public var description: String? = null
 
-  private val values: MutableList<FeatureValue> = mutableListOf()
+  private val options: MutableList<FeatureFlagOption> = mutableListOf()
 
-  private val sources: MutableList<FeatureValue> = mutableListOf()
+  private val sources: MutableList<FeatureFlagOption> = mutableListOf()
 
   /**
    * Adds a feature value.
    */
-  public fun withValue(value: String) {
-    values += FeatureValue(value)
+  public fun withOption(name: String) {
+    options += FeatureFlagOption(name)
   }
+
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'withOption()' instead.",
+      replaceWith = ReplaceWith("withOption(value)"),
+  )
+  public fun withValue(value: String): Unit = withOption(value)
 
   /**
    * Adds a feature value that will be used as a default value.
    * Exactly one value must be set with this method.
    */
+  public fun withDefaultOption(name: String) {
+    options += FeatureFlagOption(name, isDefault = true)
+  }
+
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'withDefaultOption()' instead.",
+      replaceWith = ReplaceWith("withDefaultOption(value)"),
+  )
   public fun withDefaultValue(value: String) {
-    values += FeatureValue(value, isDefaultValue = true)
+    options += FeatureFlagOption(value, isDefault = true)
   }
 
   /**
@@ -50,7 +64,7 @@ public class FeatureFlagInput internal constructor(
    * will be filtered out.
    */
   public fun withSource(value: String) {
-    sources += FeatureValue(value)
+    sources += FeatureFlagOption(value)
   }
 
   /**
@@ -59,7 +73,7 @@ public class FeatureFlagInput internal constructor(
    * At most one value can be set with this method.
    */
   public fun withDefaultSource(value: String) {
-    sources += FeatureValue(value, isDefaultValue = true)
+    sources += FeatureFlagOption(value, isDefault = true)
   }
 
   internal fun toBuilder(): FeatureFlagModel.Builder {
@@ -67,8 +81,8 @@ public class FeatureFlagInput internal constructor(
         visibility = if (isPublic) Public else Internal,
         packageName = packageName ?: "",
         names = listOf(name),
-        values = values,
-        sourceValues = sources,
+        options = options,
+        sourceOptions = sources,
         description = description.orEmpty(),
     )
   }

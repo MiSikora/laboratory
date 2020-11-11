@@ -11,22 +11,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     ```groovy
     laboratory {
       SomeFeatureFlag {
-        withDefaultValue("Enabled")
-        withValue("Disabled")
+        withDefaultOption("Enabled")
+        withOption("Disabled")
       }
     }
     ```
 - `options` extension to `Class<Feature<T>>` that returns all available feature flag options.
+- `withOption()` and `withDefaultOption()` to Gradle plugin for adding options to feature flags.
 
 ### Changed
 - `excludeProjects` plugin functions are now called `projectFilter` and the condition is reversed. Previously they removed projects that matched a condition. Now they allow projects that match it.
 - `sourcedWith` property on `Feature` is now named `source`.
 
-### Fixed
-- Moved `generateSourcedFeatureStorage` task to a correct tasks group.
+### Deprecated
+- `withValue()` and `withDefaultValue()` functions in Gradle plugin. `withOption()` and `withDefaultOption()` should be used instead.
 
 ### Removed
 - `ProjectFilter` from `laboratory-gradle-plugin` in favour of `java.util.function.Predicate`.
+
+### Fixed
+- Moved `generateSourcedFeatureStorage` task to a correct tasks group.
 
 ## [0.8.0] - 2020-10-28
 ### Added

@@ -23,9 +23,9 @@ laboratory {
   feature("Authentication") {
     description = "Type of authentication when opening the app"
 
-    withValue("None")
-    withValue("Fingerprint")
-    withDefaultValue("Retina")
+    withOption("None")
+    withOption("Fingerprint")
+    withDefaultOption("Retina")
   }
 
   feature("LocationTracking") {
@@ -33,8 +33,8 @@ laboratory {
 
     isPublic = false
 
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
 
     withDefaultSource("Firebase")
     withSource("Aws")
@@ -109,31 +109,31 @@ laboratory {
   sourcedStorage()
 
   feature("FeatureA") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
 
     withSource("Azure")
     withSource("Firebase")
   }
 
   feature("FeatureB") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
 
     withSource("Azure")
     withSource("Aws")
   }
 
   feature("FeatureC") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
 
     withSource("Heroku")
   }
 
   feature("FeatureD") {
-    withDefaultValue("Enabled")
-    withValue("Disabled")
+    withDefaultOption("Enabled")
+    withOption("Disabled")
   }
 }
 ```
@@ -181,18 +181,18 @@ laboratory {
   featureFactory()
 
   feature("FeatureA") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
   }
 
   feature("FeatureB") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
   }
 
   feature("FeatureC") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
   }
 }
 ```
@@ -232,15 +232,15 @@ laboratory {
   featureSourceFactory()
 
   feature("FeatureA") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
 
     withSource(Remote)
   }
 
   feature("FeatureB") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
 
     withSource(Remote)
   }
@@ -300,18 +300,18 @@ laboratory {
   packageName = "com.sample.a"
 
   feature("Authentication") {
-    withDefaultValue("Password")
-    withValue("Fingerprint")
-    withValue("Retina")
-    withValue("Face")
+    withDefaultOption("Password")
+    withOption("Fingerprint")
+    withOption("Retina")
+    withOption("Face")
 
     withSource("Firebase")
     withSource("Aws")
   }
 
   feature("AllowScreenshots") {
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
   }
 }
 ```
@@ -329,11 +329,11 @@ laboratory {
   feature("DistanceAlgorithm") {
     isPublic = false
 
-    withDefaultValue("Euclidean")
-    withValue("Jaccard")
-    withValue("Cosine")
-    withValue("Edit")
-    withValue("Hamming")
+    withDefaultOption("Euclidean")
+    withOption("Jaccard")
+    withOption("Cosine")
+    withOption("Edit")
+    withOption("Hamming")
 
     withSource("Firebase")
     withDefaultSource("Azure")
@@ -406,10 +406,10 @@ laboratory {
 
     // Informs plugin to add 'ValueA' value to the generated feature flag and set it as a default value.
     // Exactly one of the feature values must be set with this function.
-    withDefaultValue("ValueA")
+    withDefaultOption("ValueA")
 
     // Informs plugin to add 'ValueB' value to the generated feature flag.
-    withValue("ValueB")
+    withOption("ValueB")
 
     // Informs plugin to add 'Firebase' value to the list of sources controlling this flag.
     // Adding any source automatically adds 'Local' value to the source enum.
@@ -428,8 +428,8 @@ laboratory {
     description = "Feature descritpion"
     isPublic = false
 
-    withDefaultValue("ValueA")
-    withValue("ValueB")
+    withDefaultOption("ValueA")
+    withOption("ValueB")
 
     withSource("Firebase")
     withSource("Aws")

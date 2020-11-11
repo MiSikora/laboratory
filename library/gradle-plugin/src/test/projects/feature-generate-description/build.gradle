@@ -7,6 +7,6 @@ laboratory {
   feature("Feature") {
     description = "Feature description"
 
-    withDefaultValue("First")
+    withDefaultOption("First")
   }
 }

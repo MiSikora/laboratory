@@ -5,12 +5,12 @@ plugins {
 
 laboratory {
   feature("FeatureA") {
-    withDefaultValue("First")
-    withValue("Second")
+    withDefaultOption("First")
+    withOption("Second")
   }
 
   feature("FeatureB") {
-    withDefaultValue("First")
-    withValue("Second")
+    withDefaultOption("First")
+    withOption("Second")
   }
 }

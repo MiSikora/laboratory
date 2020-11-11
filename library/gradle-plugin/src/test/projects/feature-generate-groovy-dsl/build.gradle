@@ -8,8 +8,8 @@ laboratory {
     packageName = "io.mehow.example"
     description = "Feature description"
 
-    withDefaultValue("First")
-    withValue("Second")
+    withDefaultOption("First")
+    withOption("Second")
 
     withSource("Remote")
   }

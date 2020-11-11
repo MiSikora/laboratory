@@ -9,12 +9,12 @@ laboratory {
   feature("FeatureA") {
     packageName = "io.mehow.first"
 
-    withDefaultValue("FirstA")
+    withDefaultOption("FirstA")
   }
 
   feature("FeatureB") {
     packageName = "io.mehow.second"
 
-    withDefaultValue("FirstB")
+    withDefaultOption("FirstB")
   }
 }

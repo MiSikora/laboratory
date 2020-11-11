@@ -11,6 +11,6 @@ laboratory {
   }
 
   feature("RootFeature") {
-    withDefaultValue("First")
+    withDefaultOption("First")
   }
 }

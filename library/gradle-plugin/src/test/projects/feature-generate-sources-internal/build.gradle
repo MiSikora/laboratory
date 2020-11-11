@@ -7,8 +7,8 @@ laboratory {
   feature("Feature") {
     isPublic = false
 
-    withDefaultValue("First")
-    withValue("Second")
+    withDefaultOption("First")
+    withOption("Second")
 
     withSource("RemoteA")
     withSource("RemoteB")

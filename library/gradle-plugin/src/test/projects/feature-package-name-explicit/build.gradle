@@ -7,7 +7,7 @@ laboratory {
   feature("Feature") {
     packageName = "io.mehow.explicit"
 
-    withDefaultValue("First")
-    withValue("Second")
+    withDefaultOption("First")
+    withOption("Second")
   }
 }

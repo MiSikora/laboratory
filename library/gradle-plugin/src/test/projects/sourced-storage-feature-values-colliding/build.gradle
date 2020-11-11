@@ -7,7 +7,7 @@ laboratory {
   sourcedStorage()
 
   feature("Feature") {
-    withValue("First")
-    withValue("First")
+    withOption("First")
+    withOption("First")
   }
 }

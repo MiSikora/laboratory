@@ -48,23 +48,23 @@ laboratory {
   featureFactory()
 
   feature("LogType") {
-    withValue("Verbose")
-    withValue("Debug")
-    withDefaultValue("Info")
-    withValue("Warning")
-    withValue("Error")
+    withOption("Verbose")
+    withOption("Debug")
+    withDefaultOption("Info")
+    withOption("Warning")
+    withOption("Error")
   }
 
   feature("ReportRootedDevice") {
     description = "Reports during cold start whether device is rooted"
 
-    withValue("Enabled")
-    withDefaultValue("Disabled")
+    withOption("Enabled")
+    withDefaultOption("Disabled")
   }
 
   feature("ShowAds") {
-    withDefaultValue("Enabled")
-    withValue("Disabled")
+    withDefaultOption("Enabled")
+    withOption("Disabled")
 
     withSource("Azure")
   }

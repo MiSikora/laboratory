@@ -9,10 +9,10 @@ laboratory {
   featureFactory()
 
   feature("Feature") {
-    withDefaultValue("First")
+    withDefaultOption("First")
   }
 
   feature("Feature") {
-    withDefaultValue("Second")
+    withDefaultOption("Second")
   }
 }

@@ -7,6 +7,6 @@ laboratory {
   sourcedStorage()
 
   feature("RootFeature") {
-    withDefaultValue("First")
+    withDefaultOption("First")
   }
 }

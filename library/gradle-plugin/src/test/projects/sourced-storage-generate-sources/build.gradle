@@ -7,13 +7,13 @@ laboratory {
   sourcedStorage()
 
   feature("FeatureA") {
-    withDefaultValue("FirstA")
+    withDefaultOption("FirstA")
 
     withSource("RemoteA")
   }
 
   feature("FeatureB") {
-    withDefaultValue("FirstB")
+    withDefaultOption("FirstB")
 
     withSource("RemoteB")
   }
