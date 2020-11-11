@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `excludeProjects` plugin functions are now called `projectFilter` and the condition is reversed. Previously they removed projects that matched a condition. Now they allow projects that match it.
 - `sourcedWith` property on `Feature` is now named `source`.
+- Upgrade to Coroutines `1.4.1`.
 
 ### Deprecated
 - `withValue()` and `withDefaultValue()` functions in Gradle plugin. `withOption()` and `withDefaultOption()` should be used instead.
