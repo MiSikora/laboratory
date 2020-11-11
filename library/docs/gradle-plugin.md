@@ -1,6 +1,6 @@
 # Gradle plugin
 
-Gradle plugin's main job is to make your life easier when creating and managing feature flags. It generates features, feature factories, and customized sourced feature storage. Plugin, additionally, verifies things that cannot be represented by the API. For example, it checks if a feature flag has exactly one default value defined.
+Gradle plugin's main job is to make your life easier when creating and managing feature flags. It generates features, feature factories, and customized sourced feature storage. Plugin, additionally, verifies things that cannot be represented by the API. For example, it checks if a feature flag has exactly one default option defined.
 
 Under the hood Gradle plugin uses [KotlinPoet](https://square.github.io/kotlinpoet/) to generate compact source files.
 
@@ -42,10 +42,10 @@ laboratory {
 }
 ```
 
-This setup creates two feature flags. `Authentication` and `LocationTracking` with values taken from the `feature(name) { }` block. Key things that might not be that obvious.
+This setup creates two feature flags. `Authentication` and `LocationTracking` with options taken from the `feature(name) { }` block. Key things that might not be that obvious.
 
 - Feature flag source visibility is inherited from a feature's visibility.
-- If a feature flag defines a remote source a `Local` source is automatically added as an enum value. Any custom `Local` sources will be filtered out.
+- If a feature flag defines a remote source a `Local` source is automatically added as an option. Any custom `Local` sources will be filtered out.
 - If all sources are added with `withSource()` function, `Local` source will be used as a default one.
 
 ```kotlin
@@ -404,21 +404,21 @@ laboratory {
     // Sets visibility of a feature flag to be either 'public' or 'internal'. 'true' by default.
     isPublic = false
 
-    // Informs plugin to add 'ValueA' value to the generated feature flag and set it as a default value.
-    // Exactly one of the feature values must be set with this function.
+    // Informs plugin to add 'ValueA' option to the generated feature flag and set it as a default option.
+    // Exactly one of the feature options must be set with this function.
     withDefaultOption("ValueA")
 
-    // Informs plugin to add 'ValueB' value to the generated feature flag.
+    // Informs plugin to add 'ValueB' option to the generated feature flag.
     withOption("ValueB")
 
-    // Informs plugin to add 'Firebase' value to the list of sources controlling this flag.
-    // Adding any source automatically adds 'Local' value to the source enum.
+    // Informs plugin to add 'Firebase' option to the list of sources controlling this flag.
+    // Adding any source automatically adds 'Local' option to the source enum.
     // Any custom 'Local' sources are ignored by the plugin.
     withSource("Firebase")
 
-    // Informs plugin to add 'Aws' value to the list of sources controlling this flag and to set is a default value.
-    // At most one of the source values can be set with this function.
-    // By default 'Local' sources are considered default values.
+    // Informs plugin to add 'Aws' option to the list of sources controlling this flag and to set is a default option.
+    // At most one of the source options can be set with this function.
+    // By default 'Local' sources are considered to be default options.
     withDefaultSource("Aws")
   }
 

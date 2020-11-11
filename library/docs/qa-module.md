@@ -1,6 +1,6 @@
 # QA module
 
-It is very often desirable to have an option of configuring feature flag values at runtime. Laboratory addresses this problem with its QA modules.
+It is very often desirable to have an option of configuring feature flag options at runtime. Laboratory addresses this problem with its QA modules.
 
 ## Inspector
 
@@ -8,9 +8,9 @@ Feature flags inspection is available through the `laboratory-inspector` artifac
 
 ![Inspector](images/inspector_screenshot.jpg){: style="width:480px" .center }
 
-Inspector displays feature flags as cards and their values on chips. Active values of feature flags are marked with a highlight colour. A local value of a feature flag can be changed by tapping on a chip. Chips that do not use `Local` sources cannot have their values changed. If a feature flag has multiple sources available they can be switched from a drop down menu.
+Inspector displays feature flags as cards and their options on chips. Active options of feature flags are marked with a highlight colour. A local option of a feature flag can be changed by tapping on a chip. Chips that do not use `Local` sources cannot have their options changed. If a feature flag has multiple sources available they can be switched from a drop down menu.
 
-Feature flags (including sources) can be reset to their default values with a button in an action bar.
+Feature flags (including sources) can be reset to their default options with a button in an action bar.
 
 ## Configuration
 
