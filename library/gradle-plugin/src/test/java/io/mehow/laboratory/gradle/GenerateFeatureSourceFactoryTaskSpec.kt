@@ -30,7 +30,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
         .withArguments("generateFeatureSourceFactory", "--stacktrace")
   }
 
-  "generates factory without any features" {
+  "generates factory without any feature flags" {
     val fixture = "source-factory-generate-empty".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
@@ -50,8 +50,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     """.trimMargin("|")
   }
 
-  "generates factory with features" {
-    val fixture = "source-factory-generate-features".toFixture()
+  "generates factory with feature flags" {
+    val fixture = "source-factory-generate-feature-flags".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -141,8 +141,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with no values" {
-    val fixture = "source-factory-feature-values-missing".toFixture()
+  "fails for feature flags with no options" {
+    val fixture = "source-factory-feature-flag-option-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -153,8 +153,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with colliding values" {
-    val fixture = "source-factory-feature-values-colliding".toFixture()
+  "fails for feature flags with colliding options" {
+    val fixture = "source-factory-feature-flag-option-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -165,8 +165,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with corrupted values" {
-    val fixture = "source-factory-feature-values-corrupted".toFixture()
+  "fails for feature flags with corrupted options" {
+    val fixture = "source-factory-feature-flag-option-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -177,8 +177,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with corrupted names" {
-    val fixture = "source-factory-feature-name-corrupted".toFixture()
+  "fails for feature flags with corrupted names" {
+    val fixture = "source-factory-feature-flag-name-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -189,8 +189,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with corrupted package names" {
-    val fixture = "source-factory-feature-package-name-corrupted".toFixture()
+  "fails for feature flags with corrupted package names" {
+    val fixture = "source-factory-feature-flag-package-name-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -201,8 +201,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with colliding namespaces" {
-    val fixture = "source-factory-feature-namespace-colliding".toFixture()
+  "fails for feature flags with colliding namespaces" {
+    val fixture = "source-factory-feature-flag-namespace-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -213,8 +213,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "generates factory with features from all modules" {
-    val fixture = "source-factory-multimodule-generate-all".toFixture()
+  "generates factory with feature flags from all modules" {
+    val fixture = "source-factory-multi-module-generate-all".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -238,8 +238,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     """.trimMargin("|")
   }
 
-  "generates factory with features from not excluded modules" {
-    val fixture = "source-factory-multimodule-generate-filtered".toFixture()
+  "generates factory with feature flags from not excluded modules" {
+    val fixture = "source-factory-multi-module-generate-filtered".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -262,8 +262,8 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     """.trimMargin("|")
   }
 
-  "fails for features with colliding namespaces between modules" {
-    val fixture = "source-factory-multimodule-namespace-colliding".toFixture()
+  "fails for feature flags with colliding namespaces between modules" {
+    val fixture = "source-factory-multi-module-namespace-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 

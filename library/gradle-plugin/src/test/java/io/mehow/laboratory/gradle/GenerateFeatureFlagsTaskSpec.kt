@@ -16,9 +16,8 @@ import io.mehow.laboratory.generator.NoFeatureValues
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import java.io.File
 
-internal class GenerateFeaturesTaskSpec : StringSpec({
+internal class GenerateFeatureFlagsTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
 
   cleanBuildDirs()
@@ -30,7 +29,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates single feature flag" {
-    val fixture = "feature-generate-single".toFixture()
+    val fixture = "feature-flag-generate-single".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -51,7 +50,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates multiple feature flags" {
-    val fixture = "feature-generate-multiple".toFixture()
+    val fixture = "feature-flag-generate-multiple".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -85,7 +84,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates a single feature flag with source" {
-    val fixture = "feature-generate-sources-single".toFixture()
+    val fixture = "feature-flag-generate-sources-single".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -119,7 +118,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates an internal feature flag with source" {
-    val fixture = "feature-generate-sources-internal".toFixture()
+    val fixture = "feature-flag-generate-sources-internal".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -153,7 +152,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates a public feature flag with source" {
-    val fixture = "feature-generate-sources-public".toFixture()
+    val fixture = "feature-flag-generate-sources-public".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -187,7 +186,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates multiple feature flags with sources" {
-    val fixture = "feature-generate-sources-multiple".toFixture()
+    val fixture = "feature-flag-generate-sources-multiple".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -258,7 +257,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "uses implicit package name" {
-    val fixture = "feature-package-name-implicit".toFixture()
+    val fixture = "feature-flag-package-name-implicit".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -269,7 +268,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "cascades implicit package name" {
-    val fixture = "feature-package-name-implicit-cascading".toFixture()
+    val fixture = "feature-flag-package-name-implicit-cascading".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -281,7 +280,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "switches implicit package name" {
-    val fixture = "feature-package-name-implicit-switching".toFixture()
+    val fixture = "feature-flag-package-name-implicit-switching".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -297,7 +296,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "uses explicit package name" {
-    val fixture = "feature-package-name-explicit".toFixture()
+    val fixture = "feature-flag-package-name-explicit".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -308,7 +307,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "switches explicit package name" {
-    val fixture = "feature-package-name-explicit-switching".toFixture()
+    val fixture = "feature-flag-package-name-explicit-switching".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -324,7 +323,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "overrides implicit package name" {
-    val fixture = "feature-package-name-explicit-override".toFixture()
+    val fixture = "feature-flag-package-name-explicit-override".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -335,7 +334,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates internal feature flag" {
-    val fixture = "feature-generate-internal".toFixture()
+    val fixture = "feature-flag-generate-internal".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -346,7 +345,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates public feature flag" {
-    val fixture = "feature-generate-public".toFixture()
+    val fixture = "feature-flag-generate-public".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -356,8 +355,8 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
     feature.readText() shouldContain "public enum class Feature"
   }
 
-  "generates features with same values but different names" {
-    val fixture = "feature-generate-common-values".toFixture()
+  "generates features with the same options but different names" {
+    val fixture = "feature-flag-generate-option-name-common".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
@@ -388,8 +387,8 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
     """.trimMargin("|")
   }
 
-  "fails for features with no values" {
-    val fixture = "feature-values-missing".toFixture()
+  "fails for features with no options" {
+    val fixture = "feature-flag-option-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -400,8 +399,8 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with colliding values" {
-    val fixture = "feature-values-colliding".toFixture()
+  "fails for features with colliding options" {
+    val fixture = "feature-flag-option-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -412,8 +411,8 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with corrupted values" {
-    val fixture = "feature-values-corrupted".toFixture()
+  "fails for features with corrupted options" {
+    val fixture = "feature-flag-option-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -425,7 +424,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "fails for features with corrupted names" {
-    val fixture = "feature-name-corrupted".toFixture()
+    val fixture = "feature-flag-name-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -437,7 +436,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "fails for features with corrupted package names" {
-    val fixture = "feature-package-name-corrupted".toFixture()
+    val fixture = "feature-flag-package-name-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -449,7 +448,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "fails for features with colliding namespaces" {
-    val fixture = "feature-namespace-colliding".toFixture()
+    val fixture = "feature-flag-namespace-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -461,7 +460,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates feature flag for Android project" {
-    val fixture = "feature-android-smoke".toFixture()
+    val fixture = "feature-flag-android-smoke".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -481,7 +480,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates feature flag with a description" {
-    val fixture = "feature-generate-description".toFixture()
+    val fixture = "feature-flag-generate-description".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -503,7 +502,7 @@ internal class GenerateFeaturesTaskSpec : StringSpec({
   }
 
   "generates feature flag from Groovy DSL" {
-    val fixture = "feature-generate-groovy-dsl".toFixture()
+    val fixture = "feature-flag-generate-groovy-dsl".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 

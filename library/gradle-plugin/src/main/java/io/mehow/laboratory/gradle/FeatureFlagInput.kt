@@ -63,8 +63,8 @@ public class FeatureFlagInput internal constructor(
    * Adds a feature flag source. Any sources that are named "Local", or any variation of this word,
    * will be filtered out.
    */
-  public fun withSource(value: String) {
-    sources += FeatureFlagOption(value)
+  public fun withSource(name: String) {
+    sources += FeatureFlagOption(name)
   }
 
   /**
@@ -72,8 +72,8 @@ public class FeatureFlagInput internal constructor(
    * or any variation of this word, will be filtered out.
    * At most one value can be set with this method.
    */
-  public fun withDefaultSource(value: String) {
-    sources += FeatureFlagOption(value, isDefault = true)
+  public fun withDefaultSource(name: String) {
+    sources += FeatureFlagOption(name, isDefault = true)
   }
 
   internal fun toBuilder(): FeatureFlagModel.Builder {

@@ -140,8 +140,8 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with no values" {
-    val fixture = "sourced-storage-feature-values-missing".toFixture()
+  "fails for feature flags with no options" {
+    val fixture = "sourced-storage-feature-flag-option-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -152,8 +152,8 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with colliding values" {
-    val fixture = "sourced-storage-feature-values-colliding".toFixture()
+  "fails for feature flags with colliding options" {
+    val fixture = "sourced-storage-feature-flag-option-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -164,8 +164,8 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with corrupted values" {
-    val fixture = "sourced-storage-feature-values-corrupted".toFixture()
+  "fails for feature flags with corrupted options" {
+    val fixture = "sourced-storage-feature-flag-option-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -176,8 +176,8 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with corrupted names" {
-    val fixture = "sourced-storage-feature-name-corrupted".toFixture()
+  "fails for feature flags with corrupted names" {
+    val fixture = "sourced-storage-feature-flag-name-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -188,8 +188,8 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with corrupted package names" {
-    val fixture = "sourced-storage-feature-package-name-corrupted".toFixture()
+  "fails for feature flags with corrupted package names" {
+    val fixture = "sourced-storage-feature-flag-package-name-corrupted".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -200,8 +200,8 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     feature.shouldNotExist()
   }
 
-  "fails for features with colliding namespaces" {
-    val fixture = "sourced-storage-feature-namespace-colliding".toFixture()
+  "fails for feature flags with colliding namespaces" {
+    val fixture = "sourced-storage-feature-flag-namespace-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
@@ -213,7 +213,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
   }
 
   "generates storage with sourced from all modules" {
-    val fixture = "sourced-storage-multimodule-generate-all".toFixture()
+    val fixture = "sourced-storage-multi-module-generate-all".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -240,7 +240,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
   }
 
   "generates storage with names from not excluded modules" {
-    val fixture = "sourced-storage-multimodule-generate-filtered".toFixture()
+    val fixture = "sourced-storage-multi-module-generate-filtered".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
 
@@ -265,7 +265,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
   }
 
   "fails for features with colliding namespaces between modules" {
-    val fixture = "sourced-storage-multimodule-namespace-colliding".toFixture()
+    val fixture = "sourced-storage-multi-module-namespace-colliding".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
