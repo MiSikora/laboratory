@@ -22,7 +22,7 @@ internal class DataStoreFeatureStorage(
     null
   }
 
-  override suspend fun <T : Feature<*>> setFeatures(vararg options: T) = try {
+  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = try {
     dataStore.updateData { flags ->
       val updatedFeatures = flags.value + options.map { it.javaClass.name to it.name }.toMap()
       return@updateData flags.copy(value = updatedFeatures)

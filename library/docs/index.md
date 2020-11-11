@@ -36,7 +36,7 @@ suspend fun main() {
   val laboratory = Laboratory.inMemory()
 
   // Set AuthType option to Fingerprint
-  val success = laboratory.setFeature(AuthType.Fingerprint)
+  val success = laboratory.setOption(AuthType.Fingerprint)
 
   // Check what is the current option of AuthType
   val currentAuthType = laboratory.experiment<AuthType>()

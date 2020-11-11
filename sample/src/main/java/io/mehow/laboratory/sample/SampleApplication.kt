@@ -57,7 +57,7 @@ class SampleApplication : Application() {
     while (isActive) {
       delay(10_000)
       val nextFeatureValue = featureValues[Random.nextInt(featureValues.size)]
-      laboratory.setFeature(nextFeatureValue)
+      laboratory.setOption(nextFeatureValue)
     }
   }
 

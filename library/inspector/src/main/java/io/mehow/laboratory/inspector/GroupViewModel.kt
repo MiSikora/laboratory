@@ -25,7 +25,7 @@ internal class GroupViewModel(
   private val metadataProvider = FeatureMetadata.Provider(configuration.featureFactories)
   private val emptyFlow = emptyFlow<List<FeatureUiModel>>()
 
-  suspend fun selectFeature(feature: Feature<*>) = laboratory.setFeature(feature)
+  suspend fun selectFeature(feature: Feature<*>) = laboratory.setOption(feature)
 
   fun observeFeatureGroups(section: String) = flow {
     val listGroupFlow = withContext(Dispatchers.Default) {
@@ -42,7 +42,7 @@ internal class GroupViewModel(
     val defaultValues = metadataProvider.featuresAndSources()
         .map(FeatureMetadata::defaultOption)
         .toTypedArray()
-    laboratory.setFeatures(*defaultValues)
+    laboratory.setOptions(*defaultValues)
   }
 
   private fun combineFeatureGroups(
