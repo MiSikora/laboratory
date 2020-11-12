@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     }
     ```
 - `options` extension to `Class<Feature<T>>` that returns all available feature flag options.
+- `defaultOption` extension to `Class<Feature<T>>` that returns a default option of a feature flag.
+- `source` extension to `Class<Feature<*>>` that returns a feature flag source if available.
+- `description` extension to `Class<Feature<*>>` that returns a feature flag description if available.
 - `withOption()` and `withDefaultOption()` to Gradle plugin for adding options to feature flags.
 - `defaultOption` property to `Feature` interface.
 - `setOption()` and `setOptions()` functions to `Laboratory` and `FeatureStorage`.
