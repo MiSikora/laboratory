@@ -13,7 +13,7 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
   "stored feature is available as experiment" {
     val tempFile = tempfile()
     val storage = FeatureStorage.dataStore { tempFile }
-    val laboratory = Laboratory(storage)
+    val laboratory = Laboratory.create(storage)
 
     storage.setOption(FeatureA.B)
 
@@ -23,7 +23,7 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
   "corrupted file yields default experiment" {
     val tempFile = tempfile()
     val storage = FeatureStorage.dataStore { tempFile }
-    val laboratory = Laboratory(storage)
+    val laboratory = Laboratory.create(storage)
 
     // Represents a map<string, int> with a key of Feature::class.java.name and value of 1.
     val corruptedBytes = "0a290a25696f2e6d65686f772e6c61626f7261746f72792e6461746173746f72652e466561747572651001"

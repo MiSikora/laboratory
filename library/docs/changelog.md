@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Builder pattern for `Laboratory` construction.
+
+### Deprecated
+- `Laboratory(storage)` constructor. Use `Laboratory.create(storage)` or `Laboratory.builder()` instead.
+
 ## [0.9.0] - 2020-11-11
 
 ### Added
@@ -33,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - `withValue()` and `withDefaultValue()` functions in Gradle plugin. `withOption()` and `withDefaultOption()` should be used instead.
-- `setFeature()` and `setFeatures()` functions. `setOption()` and `setOptions()` should be used insterad.
+- `setFeature()` and `setFeatures()` functions. `setOption()` and `setOptions()` should be used instead.
 
 ### Removed
 - `ProjectFilter` from `laboratory-gradle-plugin` in favour of `java.util.function.Predicate`.

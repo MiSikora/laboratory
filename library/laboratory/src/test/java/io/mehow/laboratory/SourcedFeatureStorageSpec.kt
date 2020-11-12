@@ -21,10 +21,10 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
             "RemoteB" to remoteStorageB,
         ),
     )
-    localLaboratory = Laboratory(localStorage)
-    remoteLaboratoryA = Laboratory(remoteStorageA)
-    remoteLaboratoryB = Laboratory(remoteStorageB)
-    sourcedLaboratory = Laboratory(sourcedStorage)
+    localLaboratory = Laboratory.create(localStorage)
+    remoteLaboratoryA = Laboratory.create(remoteStorageA)
+    remoteLaboratoryB = Laboratory.create(remoteStorageB)
+    sourcedLaboratory = Laboratory.create(sourcedStorage)
   }
 
   describe("sourced feature storage") {
@@ -130,8 +130,8 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       it("falls back to observing a local storage") {
         val localStorage = FeatureStorage.inMemory()
         val sourcedStorage = SourcedFeatureStorage(localStorage, emptyMap())
-        localLaboratory = Laboratory(localStorage)
-        sourcedLaboratory = Laboratory(sourcedStorage)
+        localLaboratory = Laboratory.create(localStorage)
+        sourcedLaboratory = Laboratory.create(sourcedStorage)
 
         sourcedLaboratory.observe<FirstFeature>().test {
           expectItem() shouldBe FirstFeature.A
@@ -146,8 +146,8 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       it("falls backs to experimenting with a local storage") {
         val localStorage = FeatureStorage.inMemory()
         val sourcedStorage = SourcedFeatureStorage(localStorage, emptyMap())
-        localLaboratory = Laboratory(localStorage)
-        sourcedLaboratory = Laboratory(sourcedStorage)
+        localLaboratory = Laboratory.create(localStorage)
+        sourcedLaboratory = Laboratory.create(sourcedStorage)
 
         sourcedLaboratory.experiment<FirstFeature>() shouldBe FirstFeature.A
 

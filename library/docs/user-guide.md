@@ -126,7 +126,7 @@ In this case `Theme` and `PowerType` feature flags share `Azure` source but `Fir
 
 ```kotlin
 // Create laboratory that understands sourced features
-val laboratory = Laboratory(sourcedFeatureStorage)
+val laboratory = Laboratory.create(sourcedFeatureStorage)
 
 // Check option of PowerType in Firebase FeatureStorage
 val powerTypeFirebaseValue = laboratory.experiment<PowerType>()
@@ -171,7 +171,7 @@ val sourcedFeatureStorage = FeatureStorage.sourced(
 )
 
 // During application initialisation
-val laboratory = Laboratory(firebaseStorage)
+val laboratory = Laboratory.create(firebaseStorage)
 remoteService.observeShowAdsFlag()
     // Some custom mapping between a service option and a feature flag
     .map { showAds: Boolean ->

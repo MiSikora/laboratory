@@ -31,7 +31,7 @@ val sourcedFeatureStorage = FeatureStorage.sourced(
     "Azure" to FeatureStorage.inMemory(),
   ),
 )
-val laboratory = Laboratory(sourcedFeatureStorage)
+val laboratory = Laboratory.create(sourcedFeatureStorage)
 
 LaboratoryActivity.configure(
   laboratory = laboratory,

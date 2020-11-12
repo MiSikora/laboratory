@@ -16,7 +16,7 @@ internal class SharedPreferencesFeaturesStorageTest {
       .getApplicationContext<Context>()
       .getSharedPreferences("laboratory", MODE_PRIVATE)
   private val storage = FeatureStorage.sharedPreferences(preferences)
-  private val laboratory = Laboratory(storage)
+  private val laboratory = Laboratory.create(storage)
 
   @Test fun storedFeatureIsAvailableAsExperiment() = runBlocking {
     storage.setOption(FeatureA.B)

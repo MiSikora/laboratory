@@ -36,7 +36,7 @@ class SampleApplication : Application() {
         awsSource = awsStorage,
         azureSource = azureStorage,
     )
-    laboratory = Laboratory(sourcedStorage)
+    laboratory = Laboratory.create(sourcedStorage)
     LaboratoryActivity.configure(
         laboratory = laboratory,
         mainFactory = FeatureFactory.featureGenerated(),
@@ -52,7 +52,7 @@ class SampleApplication : Application() {
   }
 
   private inline fun <reified T : Feature<T>> FeatureStorage.observeRemoteFeature() = GlobalScope.launch {
-    val laboratory = Laboratory(this@observeRemoteFeature)
+    val laboratory = Laboratory.create(this@observeRemoteFeature)
     val featureValues = T::class.java.enumConstants!!
     while (isActive) {
       delay(10_000)

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOf
 internal class LaboratorySpec : DescribeSpec({
   describe("laboratory") {
     it("cannot use features with no values") {
-      val laboratory = Laboratory(ThrowingStorage)
+      val laboratory = Laboratory.create(ThrowingStorage)
 
       shouldThrowExactly<IllegalStateException> {
         laboratory.experiment<NoValuesFeature>()
@@ -21,13 +21,13 @@ internal class LaboratorySpec : DescribeSpec({
 
     context("for feature with single default") {
       it("uses declared default value") {
-        val laboratory = Laboratory(NullStorage)
+        val laboratory = Laboratory.create(NullStorage)
 
         laboratory.experiment<SomeFeature>() shouldBe SomeFeature.B
       }
 
       it("uses declared default value if no match is found") {
-        val laboratory = Laboratory(EmptyStorage)
+        val laboratory = Laboratory.create(EmptyStorage)
 
         laboratory.experiment<SomeFeature>() shouldBe SomeFeature.B
       }
@@ -35,13 +35,13 @@ internal class LaboratorySpec : DescribeSpec({
 
     context("checking feature value") {
       it("returns false for non-default value") {
-        val laboratory = Laboratory(NullStorage)
+        val laboratory = Laboratory.create(NullStorage)
 
         laboratory.experimentIs(SomeFeature.A) shouldBe false
       }
 
       it("returns true for default value") {
-        val laboratory = Laboratory(NullStorage)
+        val laboratory = Laboratory.create(NullStorage)
 
         laboratory.experimentIs(SomeFeature.B) shouldBe true
       }
@@ -52,7 +52,7 @@ internal class LaboratorySpec : DescribeSpec({
 
       it("uses value saved in a storage") {
         val storage = FeatureStorage.inMemory()
-        val laboratory = Laboratory(storage)
+        val laboratory = Laboratory.create(storage)
 
         for (value in feature.enumConstants) {
           storage.setOption(value)

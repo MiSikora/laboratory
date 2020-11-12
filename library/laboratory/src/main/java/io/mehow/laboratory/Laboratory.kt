@@ -6,12 +6,16 @@ import kotlinx.coroutines.runBlocking
 
 /**
  * High-level API for interaction with feature flags. It allows to read and write their values.
- *
- * @param storage [FeatureStorage] delegate that will persist all feature flags that go through this laboratory.
  */
-public class Laboratory(
-  private val storage: FeatureStorage,
-) {
+public class Laboratory private constructor(builder: Builder) {
+  private val storage = builder.storage
+
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'Laboratory.create()' instead.",
+      replaceWith = ReplaceWith("Laboratory.create(storage)"),
+  )
+  public constructor(storage: FeatureStorage) : this(Builder().apply { this.storage = storage })
+
   /**
    * Observes any changes to the input [Feature].
    */
@@ -137,6 +141,36 @@ public class Laboratory(
     /**
      * Creates [Laboratory] with an in-memory persistence mechanism.
      */
-    public fun inMemory(): Laboratory = Laboratory(FeatureStorage.inMemory())
+    public fun inMemory(): Laboratory = create(FeatureStorage.inMemory())
+
+    /**
+     * Creates [Laboratory] with a provided [storage].
+     *
+     * @param storage [FeatureStorage] delegate that will persist all feature flags.
+     */
+    public fun create(storage: FeatureStorage): Laboratory = builder().featureStorage(storage).build()
+
+    /**
+     * Creates a builder that allows to customize [Laboratory].
+     */
+    public fun builder(): FeatureStorageStep = Builder()
+  }
+
+  private class Builder : FeatureStorageStep, BuildingStep {
+    lateinit var storage: FeatureStorage
+
+    override fun featureStorage(storage: FeatureStorage): BuildingStep = apply {
+      this.storage = storage
+    }
+
+    override fun build(): Laboratory = Laboratory(this)
+  }
+
+  public interface FeatureStorageStep {
+    public fun featureStorage(storage: FeatureStorage): BuildingStep
+  }
+
+  public interface BuildingStep {
+    public fun build(): Laboratory
   }
 }

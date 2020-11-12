@@ -10,7 +10,7 @@ internal class SourcedFeatureStorage(
   private val localSource: FeatureStorage,
   private val remoteSources: Map<String, FeatureStorage>,
 ) : FeatureStorage {
-  private val localLaboratory = Laboratory(localSource)
+  private val localLaboratory = Laboratory.create(localSource)
 
   @ExperimentalCoroutinesApi
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = feature.observeSource()
