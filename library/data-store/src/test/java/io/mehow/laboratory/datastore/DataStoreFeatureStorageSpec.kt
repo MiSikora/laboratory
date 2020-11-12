@@ -3,6 +3,7 @@ package io.mehow.laboratory.datastore
 import app.cash.turbine.test
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.engine.spec.tempfile
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
@@ -10,7 +11,7 @@ import io.mehow.laboratory.Laboratory
 import okio.ByteString.Companion.decodeHex
 
 internal class DataStoreFeatureStorageSpec : StringSpec({
-  "stored feature is available as experiment" {
+  "stored feature flag option is available as experiment" {
     val tempFile = tempfile()
     val storage = FeatureStorage.dataStore { tempFile }
     val laboratory = Laboratory.create(storage)
@@ -34,7 +35,7 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
     laboratory.experiment<FeatureA>() shouldBe FeatureA.A
   }
 
-  "observes feature changes" {
+  "observes feature flag changes" {
     val tempFile = tempfile()
     val storage = FeatureStorage.dataStore { tempFile }
 
@@ -52,6 +53,17 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
 
       cancel()
     }
+  }
+
+  "clears feature flag options" {
+    val tempFile = tempfile()
+    val storage = FeatureStorage.dataStore { tempFile }
+    val laboratory = Laboratory.create(storage)
+
+    storage.setOption(FeatureA.B)
+    storage.clear()
+
+    laboratory.experimentIs(FeatureA.A).shouldBeTrue()
   }
 })
 

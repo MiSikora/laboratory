@@ -26,6 +26,11 @@ public interface FeatureStorage {
    */
   public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean
 
+  /**
+   * Removes all stored feature flag options.
+   */
+  public suspend fun clear(): Boolean
+
   @JvmDefault
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'setOptions()' instead.",

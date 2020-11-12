@@ -39,6 +39,11 @@ internal class SharedPreferencesFeatureStorage(
     }
     return true
   }
+
+  override suspend fun clear(): Boolean {
+    preferences.edit().clear().apply()
+    return true
+  }
 }
 
 /**

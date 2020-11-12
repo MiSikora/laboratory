@@ -31,6 +31,13 @@ internal class DataStoreFeatureStorage(
   } catch (_: IOException) {
     false
   }
+
+  override suspend fun clear() = try {
+    dataStore.updateData { FeatureFlags() }
+    true
+  } catch (_: IOException) {
+    false
+  }
 }
 
 /**

@@ -156,7 +156,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       }
     }
 
-    context("for unsourced featre") {
+    context("for unsourced feature") {
       it("falls back to observing a local storage") {
         sourcedLaboratory.observe<UnsourcedFeature>().test {
           expectItem() shouldBe UnsourcedFeature.A
@@ -187,6 +187,18 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
         expectItem() shouldBe FirstFeature.C
       }
     }
+
+    it("clears only local source") {
+      localLaboratory.setOption(FirstFeature.B)
+      remoteLaboratoryA.setOption(FirstFeature.B)
+      sourcedLaboratory.setOption(FirstFeature.Source.RemoteA)
+
+      sourcedLaboratory.clear()
+
+      localLaboratory.experimentIs(FirstFeature.A)
+      remoteLaboratoryA.experimentIs(FirstFeature.B)
+      sourcedLaboratory.experimentIs(FirstFeature.A)
+    }
   }
 })
 
@@ -198,7 +210,7 @@ private enum class FirstFeature : Feature<FirstFeature> {
 
   override val defaultOption get() = A
 
-    @Suppress("UNCHECKED_CAST")
+  @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source : Feature<Source> {
@@ -218,7 +230,7 @@ private enum class SecondFeature : Feature<SecondFeature> {
 
   override val defaultOption get() = A
 
-    @Suppress("UNCHECKED_CAST")
+  @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source : Feature<Source> {

@@ -194,7 +194,7 @@ enum class ShowAds : Feature<ShowAds> {
   public override val defaultOption get() = Disabled
 }
 
-object DebugDefaultOptionsFactory : DefaultOptionsFactory {
+object DebugDefaultOptionFactory : DefaultOptionFactory {
   override fun <T : Feature<T>> create(feature: T): Feature<*>? = when(feature) {
     is ShowAds -> ShowAds.Enabled
     else -> null
@@ -203,9 +203,9 @@ object DebugDefaultOptionsFactory : DefaultOptionsFactory {
 
 val laboratory = Laboratory.builder()
     .featureStorage(FeatureStorage.inMemory())
-    .defaultOptionFactory(DebugDefaultOptionsFactory)
+    .defaultOptionFactory(DebugDefaultOptionFactory)
     .build()
 
-// Uses default option declared in DebugDefaultOptionsFactory
+// Uses default option declared in DebugDefaultOptionFactory
 laboratory.experimentIs(ShowAds.Enabled)
 ```
