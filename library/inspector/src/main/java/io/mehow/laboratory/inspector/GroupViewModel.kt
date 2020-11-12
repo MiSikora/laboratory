@@ -38,12 +38,7 @@ internal class GroupViewModel(
     emitAll(listGroupFlow)
   }
 
-  suspend fun resetAllFeatures() = withContext(Dispatchers.Default) {
-    val defaultValues = metadataProvider.featuresAndSources()
-        .map(FeatureMetadata::defaultOption)
-        .toTypedArray()
-    laboratory.setOptions(*defaultValues)
-  }
+  suspend fun resetAllFeatures() = laboratory.clear()
 
   private fun combineFeatureGroups(
     groups: Flow<List<FeatureUiModel>>,
@@ -67,8 +62,6 @@ internal class GroupViewModel(
 
     val options = feature.enumConstants!!.toList<Feature<*>>()
 
-    val defaultOption = options.first().defaultOption
-
     val sourceMetadata = feature.source?.let(FeatureMetadata::create)
 
     fun observeGroup(laboratory: Laboratory): Flow<FeatureUiModel> {
@@ -90,12 +83,6 @@ internal class GroupViewModel(
           .mapValues { (_, factory) -> factory.create() }
           .getValue(section)
           .mapNotNull(FeatureMetadata::create)
-
-      fun featuresAndSources() = featureFactories.values
-          .map(FeatureFactory::create)
-          .flatten()
-          .mapNotNull(FeatureMetadata::create)
-          .flatMap { metadata -> listOfNotNull(metadata, metadata.sourceMetadata) }
     }
 
     companion object {

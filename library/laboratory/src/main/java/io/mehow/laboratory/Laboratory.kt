@@ -138,6 +138,22 @@ public class Laboratory private constructor(builder: Builder) {
   )
   public fun <T : Feature<*>> setFeaturesBlocking(vararg options: T): Boolean = setOptionsBlocking(*options)
 
+  /**
+   * Removes all stored feature flag options.
+   *
+   * @return `true` if the value was set successfully, `false` otherwise.
+   */
+  public suspend fun clear(): Boolean = storage.clear()
+
+  /**
+   * Removes all stored feature flag options. Warning – this call can block the calling thread.
+   *
+   * @return `true` if the value was set successfully, `false` otherwise.
+   * @see BlockingIoCall
+   */
+  @BlockingIoCall
+  public fun clearBlocking(): Boolean = runBlocking { clear() }
+
   private fun <T : Feature<T>> getDefaultOption(
     feature: Class<T>,
   ) = defaultOptionFactory?.create(feature) ?: feature.defaultOption

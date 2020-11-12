@@ -10,6 +10,7 @@ import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mehow.laboratory.FeatureStorage.Companion
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import javax.print.attribute.standard.MediaSize.Other
 
 internal class LaboratorySpec : DescribeSpec({
   describe("laboratory") {
@@ -94,6 +95,17 @@ internal class LaboratorySpec : DescribeSpec({
 
         cancel()
       }
+    }
+
+    it("clears all feature flags") {
+      val laboratory = Laboratory.inMemory()
+
+      laboratory.setOption(SomeFeature.A)
+      laboratory.setOption(OtherFeature.B)
+      laboratory.clear()
+
+      laboratory.experimentIs(SomeFeature.B)
+      laboratory.experimentIs(OtherFeature.A)
     }
   }
 
@@ -187,16 +199,19 @@ private object ThrowingStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = fail("Unexpected call")
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = fail("Unexpected call")
   override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+  override suspend fun clear() = fail("Unexpected call")
 }
 
 private object NullStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>): Flow<String?> = flowOf(null)
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String? = null
   override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+  override suspend fun clear() = fail("Unexpected call")
 }
 
 private object EmptyStorage : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = flowOf("")
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = ""
   override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+  override suspend fun clear() = fail("Unexpected call")
 }

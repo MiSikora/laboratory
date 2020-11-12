@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Builder pattern for `Laboratory` construction.
-- `DefaultOptionsFactory` that can substitute default options for feature flags read by `Laboratory`.
+- `DefaultOptionFactory` that can substitute default options for feature flags read by `Laboratory`.
+- `clear()` function to `FeatureStorage` and `Laboratory`.
 
 ### Deprecated
 - `Laboratory(storage)` constructor. Use `Laboratory.create(storage)` or `Laboratory.builder()` instead.

@@ -25,6 +25,8 @@ internal class SourcedFeatureStorage(
 
   override suspend fun <T : Feature<*>> setOptions(vararg options: T) = localSource.setOptions(*options)
 
+  override suspend fun clear(): Boolean = localSource.clear()
+
   private fun <T : Feature<*>> Class<T>.observeSource() = validatedSource()
       ?.let { localLaboratory.observe(it) }
       ?: emptyFlow()

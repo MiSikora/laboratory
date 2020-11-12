@@ -4,8 +4,10 @@ import app.cash.turbine.test
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
+import io.mehow.laboratory.DefaultOptionFactory
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
+import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import kotlinx.coroutines.flow.first
@@ -158,6 +160,38 @@ internal class ViewModelSpec : DescribeSpec({
         )
       }
     }
+
+    it("resets feature flags to default options declared in factory") {
+      val defaultOptionFactory = object : DefaultOptionFactory {
+        override fun <T : Feature<T>> create(feature: T): Feature<*>? = when (feature) {
+          is First -> First.A
+          is Second -> Second.A
+          else -> null
+        }
+      }
+      val laboratory = Laboratory.builder()
+          .featureStorage(FeatureStorage.inMemory())
+          .defaultOptionFactory(defaultOptionFactory)
+          .build()
+      val viewModel = GroupViewModel(
+          Configuration(laboratory, mapOf("Local" to NoSourceFeatureFactory))
+      )
+
+      viewModel.observeSelectedFeatures("Local").test {
+        expectItem() shouldContainExactly listOf(First.A, Second.A)
+
+        viewModel.selectFeature(First.B)
+        expectItem()
+
+        viewModel.selectFeature(Second.C)
+        expectItem()
+
+        viewModel.resetAllFeatures()
+        expectItem() shouldContainExactly listOf(First.A, Second.A)
+
+        cancel()
+      }
+    }
   }
 })
 
@@ -225,7 +259,7 @@ private enum class Sourced : Feature<Sourced> {
 
   override val defaultOption get() = A
 
-    @Suppress("UNCHECKED_CAST")
+  @Suppress("UNCHECKED_CAST")
   override val source = Source::class.java as Class<Feature<*>>
 
   enum class Source : Feature<Source> {
