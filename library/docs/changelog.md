@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `DefaultOptionFactory` that can substitute default options for feature flags read by `Laboratory`.
 - `clear()` function to `FeatureStorage` and `Laboratory`.
 
+### Changed
+- Upgrade to DataStore `1.0.0-alpha03`.
+
 ### Deprecated
 - `Laboratory(storage)` constructor. Use `Laboratory.create(storage)` or `Laboratory.builder()` instead.
 

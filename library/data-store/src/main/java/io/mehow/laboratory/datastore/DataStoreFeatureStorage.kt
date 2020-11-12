@@ -1,7 +1,7 @@
 package io.mehow.laboratory.datastore
 
 import android.content.Context
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import kotlinx.coroutines.flow.first

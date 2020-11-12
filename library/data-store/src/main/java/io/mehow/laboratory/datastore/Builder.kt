@@ -1,11 +1,11 @@
 package io.mehow.laboratory.datastore
 
 import android.content.Context
-import androidx.datastore.DataMigration
-import androidx.datastore.DataStore
-import androidx.datastore.DataStoreFactory
-import androidx.datastore.Serializer
-import androidx.datastore.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.core.DataMigration
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.Serializer
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import io.mehow.laboratory.FeatureStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

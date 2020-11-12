@@ -1,6 +1,6 @@
 package io.mehow.laboratory.datastore
 
-import androidx.datastore.Serializer
+import androidx.datastore.core.Serializer
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -8,6 +8,8 @@ import java.io.OutputStream
  * [Serializer] that is capable of writing and reading of feature flags in an atomic way.
  */
 public object FeatureFlagsSerializer : Serializer<FeatureFlags> {
+  override val defaultValue: FeatureFlags = FeatureFlags()
+
   override fun readFrom(input: InputStream): FeatureFlags {
     return FeatureFlags.ADAPTER.decode(input)
   }
