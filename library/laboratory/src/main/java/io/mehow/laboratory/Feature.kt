@@ -83,5 +83,5 @@ public val Class<Feature<*>>.description: String
  */
 public val <T : Feature<T>> Class<T>.options: Array<T> get() = enumConstants
 
-private val <T : Feature<T>> Class<T>.firstOption
-  get() = options.firstOrNull() ?: error("$this must have at least one option")
+internal val <T : Feature<T>> Class<T>.firstOption
+  get() = options.firstOrNull() ?: error("$canonicalName must have at least one option")

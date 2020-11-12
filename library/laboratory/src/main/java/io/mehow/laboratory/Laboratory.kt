@@ -9,6 +9,7 @@ import kotlinx.coroutines.runBlocking
  */
 public class Laboratory private constructor(builder: Builder) {
   private val storage = builder.storage
+  private val defaultOptionFactory = builder.defaultOptionFactory?.let(::SafeDefaultOptionFactory)
 
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'Laboratory.create()' instead.",
@@ -26,7 +27,7 @@ public class Laboratory private constructor(builder: Builder) {
    */
   public fun <T : Feature<T>> observe(feature: Class<T>): Flow<T> {
     val options = feature.options
-    val defaultOption = feature.defaultOption
+    val defaultOption = getDefaultOption(feature)
     return storage.observeFeatureName(feature).map { featureName ->
       val expectedName = featureName ?: defaultOption.name
       options.firstOrNull { it.name == expectedName } ?: defaultOption
@@ -51,7 +52,7 @@ public class Laboratory private constructor(builder: Builder) {
    */
   public suspend fun <T : Feature<T>> experiment(feature: Class<T>): T {
     val options = feature.options
-    val defaultOption = feature.defaultOption
+    val defaultOption = getDefaultOption(feature)
     val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
     return options.firstOrNull { it.name == expectedName } ?: defaultOption
   }
@@ -137,6 +138,10 @@ public class Laboratory private constructor(builder: Builder) {
   )
   public fun <T : Feature<*>> setFeaturesBlocking(vararg options: T): Boolean = setOptionsBlocking(*options)
 
+  private fun <T : Feature<T>> getDefaultOption(
+    feature: Class<T>,
+  ) = defaultOptionFactory?.create(feature) ?: feature.defaultOption
+
   public companion object {
     /**
      * Creates [Laboratory] with an in-memory persistence mechanism.
@@ -163,14 +168,37 @@ public class Laboratory private constructor(builder: Builder) {
       this.storage = storage
     }
 
+    var defaultOptionFactory: DefaultOptionFactory? = null
+
+    override fun defaultOptionFactory(factory: DefaultOptionFactory): BuildingStep = apply {
+      this.defaultOptionFactory = factory
+    }
+
     override fun build(): Laboratory = Laboratory(this)
   }
 
+  /**
+   * A step of a fluent builder that requires [FeatureStorage] to proceed.
+   */
   public interface FeatureStorageStep {
+    /**
+     * Sets a feature storage that will be used by [Laboratory].
+     */
     public fun featureStorage(storage: FeatureStorage): BuildingStep
   }
 
+  /**
+   * The final step of a fluent builder that can set optional parameters.
+   */
   public interface BuildingStep {
+    /**
+     * Sets a factory that can provide default options override.
+     */
+    public fun defaultOptionFactory(factory: DefaultOptionFactory): BuildingStep
+
+    /**
+     * Creates a new [Laboratory] with
+     */
     public fun build(): Laboratory
   }
 }
