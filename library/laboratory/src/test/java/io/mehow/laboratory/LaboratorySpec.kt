@@ -4,8 +4,10 @@ import app.cash.turbine.test
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
+import io.mehow.laboratory.FeatureStorage.Companion
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -16,7 +18,7 @@ internal class LaboratorySpec : DescribeSpec({
 
       shouldThrowExactly<IllegalStateException> {
         laboratory.experiment<NoValuesFeature>()
-      } shouldHaveMessage "class io.mehow.laboratory.NoValuesFeature must have at least one option"
+      } shouldHaveMessage "io.mehow.laboratory.NoValuesFeature must have at least one option"
     }
 
     context("for feature with single default") {
@@ -109,6 +111,56 @@ internal class LaboratorySpec : DescribeSpec({
       secondLaboratory.experiment<SomeFeature>() shouldBe SomeFeature.C
     }
   }
+
+  describe("default options factory") {
+    val factory = object : DefaultOptionFactory {
+      override fun <T : Feature<T>> create(feature: T) = when(feature) {
+        is SomeFeature -> OtherFeature.C // Intentional wrong class for test
+        is OtherFeature -> OtherFeature.C
+        else -> null
+      }
+    }
+
+    it("changes default option") {
+      val laboratory = Laboratory.builder()
+          .featureStorage(FeatureStorage.inMemory())
+          .defaultOptionFactory(factory)
+          .build()
+      laboratory.experimentIs(OtherFeature.C).shouldBeTrue()
+    }
+
+    it("does not affect stored option") {
+      val laboratory = Laboratory.builder()
+          .featureStorage(FeatureStorage.inMemory())
+          .defaultOptionFactory(factory)
+          .build()
+      laboratory.setOption(OtherFeature.B)
+      laboratory.experimentIs(OtherFeature.B).shouldBeTrue()
+    }
+
+    it("changes default option when feature flag is observed") {
+      val laboratory = Laboratory.builder()
+          .featureStorage(FeatureStorage.inMemory())
+          .defaultOptionFactory(factory)
+          .build()
+      laboratory.observe<OtherFeature>().test {
+        expectItem() shouldBe OtherFeature.C
+
+        laboratory.setOption(OtherFeature.B)
+        expectItem() shouldBe OtherFeature.B
+      }
+    }
+
+    it("fails when provided default option has wrong type") {
+      val laboratory = Laboratory.builder()
+          .featureStorage(FeatureStorage.inMemory())
+          .defaultOptionFactory(factory)
+          .build()
+      shouldThrowExactly<IllegalStateException> {
+        laboratory.experiment<SomeFeature>()
+      } shouldHaveMessage "Tried to use OtherFeature.C as a default option for io.mehow.laboratory.SomeFeature"
+    }
+  }
 })
 
 private enum class SomeFeature : Feature<SomeFeature> {
@@ -118,6 +170,15 @@ private enum class SomeFeature : Feature<SomeFeature> {
   ;
 
   override val defaultOption get() = B
+}
+
+private enum class OtherFeature : Feature<OtherFeature> {
+  A,
+  B,
+  C,
+  ;
+
+  override val defaultOption get() = A
 }
 
 private enum class NoValuesFeature : Feature<NoValuesFeature>

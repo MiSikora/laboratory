@@ -181,3 +181,31 @@ remoteService.observeShowAdsFlag()
     // Scope should last for the lifetime of an application
     .launchIn(GlobalScope)
 ```
+
+## Default options override
+
+Whenever Laboratory reads an option for a feature flag it falls back to a default option declared on said flag. However, there might be cases when you'd like to change the default behaviour. One example might be having features enabled by default in your debug builds and disabled on production. Or you might use feature flags for configuration and you'd like to have different configuration per build variant. Laboratory enables this with default options overrides.
+
+```kotlin
+enum class ShowAds : Feature<ShowAds> {
+  Enabled,
+  Disabled;
+
+  public override val defaultOption get() = Disabled
+}
+
+object DebugDefaultOptionsFactory : DefaultOptionsFactory {
+  override fun <T : Feature<T>> create(feature: T): Feature<*>? = when(feature) {
+    is ShowAds -> ShowAds.Enabled
+    else -> null
+  }
+}
+
+val laboratory = Laboratory.builder()
+    .featureStorage(FeatureStorage.inMemory())
+    .defaultOptionFactory(DebugDefaultOptionsFactory)
+    .build()
+
+// Uses default option declared in DebugDefaultOptionsFactory
+laboratory.experimentIs(ShowAds.Enabled)
+```

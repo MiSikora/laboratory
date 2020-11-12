@@ -1,10 +1,12 @@
 package io.mehow.laboratory.sample
 
 import android.app.Application
+import io.mehow.laboratory.DefaultOptionFactory
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
+import io.mehow.laboratory.a.AllowScreenshots
 import io.mehow.laboratory.a.Authentication
 import io.mehow.laboratory.b.PowerSource
 import io.mehow.laboratory.c.DistanceAlgorithm
@@ -36,7 +38,10 @@ class SampleApplication : Application() {
         awsSource = awsStorage,
         azureSource = azureStorage,
     )
-    laboratory = Laboratory.create(sourcedStorage)
+    laboratory = Laboratory.builder()
+        .featureStorage(sourcedStorage)
+        .defaultOptionFactory(SampleDefaultOptionsFactory)
+        .build()
     LaboratoryActivity.configure(
         laboratory = laboratory,
         mainFactory = FeatureFactory.featureGenerated(),
@@ -58,6 +63,14 @@ class SampleApplication : Application() {
       delay(10_000)
       val nextFeatureValue = featureValues[Random.nextInt(featureValues.size)]
       laboratory.setOption(nextFeatureValue)
+    }
+  }
+
+  private object SampleDefaultOptionsFactory : DefaultOptionFactory {
+    override fun <T : Feature<T>> create(feature: T): Feature<*>? = when(feature) {
+      is DistanceAlgorithm -> DistanceAlgorithm.Cosine
+      is AllowScreenshots -> AllowScreenshots.Enabled
+      else -> null
     }
   }
 
