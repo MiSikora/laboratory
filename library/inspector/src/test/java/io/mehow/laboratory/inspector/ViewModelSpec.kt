@@ -181,10 +181,7 @@ internal class ViewModelSpec : DescribeSpec({
         expectItem() shouldContainExactly listOf(First.A, Second.A)
 
         viewModel.selectFeature(First.B)
-        expectItem()
-
-        viewModel.selectFeature(Second.C)
-        expectItem()
+        expectItem() shouldContainExactly listOf(First.B, Second.A)
 
         viewModel.resetAllFeatures()
         expectItem() shouldContainExactly listOf(First.A, Second.A)

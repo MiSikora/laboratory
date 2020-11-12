@@ -15,6 +15,7 @@ internal class InMemoryFeatureStorage : FeatureStorage {
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = features[feature]
 
   override suspend fun clear(): Boolean {
+    features = emptyMap()
     featureFlow.value = emptyMap()
     return true
   }
