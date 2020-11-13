@@ -40,7 +40,7 @@ class SampleApplication : Application() {
     )
     laboratory = Laboratory.builder()
         .featureStorage(sourcedStorage)
-        .defaultOptionFactory(SampleDefaultOptionsFactory)
+        .defaultOptionFactory(SampleDefaultOptionFactory)
         .build()
     LaboratoryActivity.configure(
         laboratory = laboratory,
@@ -66,7 +66,7 @@ class SampleApplication : Application() {
     }
   }
 
-  private object SampleDefaultOptionsFactory : DefaultOptionFactory {
+  private object SampleDefaultOptionFactory : DefaultOptionFactory {
     override fun <T : Feature<T>> create(feature: T): Feature<*>? = when(feature) {
       is DistanceAlgorithm -> DistanceAlgorithm.Cosine
       is AllowScreenshots -> AllowScreenshots.Enabled
