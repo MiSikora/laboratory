@@ -25,23 +25,23 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
    * will result in a flag that can be controlled by local, Firebase or Aws source.
    *
    * ```
-   * enum class SomeFeature(
-   *   override val isDefaultValue: Boolean = false
-   * ) : Feature<SomeFeature> {
-   *   FirstValue(isDefaultValue = true),
+   * enum class SomeFeature : Feature<SomeFeature> {
+   *   FirstValue,
    *   SecondValue,
    *   ;
+   *
+   *   override val defaultOption get() = FirstValue
    *
    *   @Suppress("UNCHECKED_CAST")
    *   override val source = Source::class.java as Class<Feature<*>>
    *
-   *   enum class Source(
-   *     override val isDefaultValue: Boolean = false
-   *   ) : Feature<Source> {
-   *     Local(isDefaultValue = true),
+   *   enum class Source : Feature<Source> {
+   *     Local,
    *     Firebase,
    *     Aws,
    *     ;
+   *
+   *     override val defaultOption get() = Local
    *   }
    * }
    * ```
