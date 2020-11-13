@@ -209,3 +209,15 @@ val laboratory = Laboratory.builder()
 // Uses default option declared in DebugDefaultOptionFactory
 laboratory.experimentIs(ShowAds.Enabled)
 ```
+
+You can be even more creative and, for example, enable all feature flags in your debug builds, which have an option `Enabled`.
+
+```kotlin
+class DebugDefaultOptionFactory : DefaultOptionFactory {
+  override fun <T : Feature<T>> create(feature: T): Feature<*>? {
+    return feature.options.associateBy { it.name }["Enabled"]
+  }
+
+  private val <T : Feature<T>> T.options get() = javaClass.options
+}
+```
