@@ -8,12 +8,12 @@ internal fun <T> Iterable<T>.findDuplicates(): Set<T> {
   return groupingBy(::identity).eachCount().filterValues { it > 1 }.keys
 }
 
-internal fun <T> List<T>.checkForDuplicates(
+internal fun <T> Iterable<T>.checkForDuplicates(
   failureProvider: (Nel<T>) -> GenerationFailure,
 ): Either<GenerationFailure, List<T>> {
   val duplicates = findDuplicates()
   return Nel.fromList(duplicates.toList())
-      .toEither { this }
+      .toEither { this.toList() }
       .swap()
       .mapLeft(failureProvider)
 }
