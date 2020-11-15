@@ -1,14 +1,14 @@
 # Laboratory ⚗️
 
-![Quality Check CI](https://github.com/MiSikora/Laboratory/workflows/Quality%20Check/badge.svg?branch=master&event=push)
-![Snapshot CI](https://github.com/MiSikora/Laboratory/workflows/Snapshot/badge.svg?branch=master&event=push)
+![Quality Check CI](https://github.com/MiSikora/laboratory/workflows/Quality%20Check/badge.svg?branch=master&event=push)
+![Snapshot CI](https://github.com/MiSikora/laboratory/workflows/Snapshot/badge.svg?branch=master&event=push)
 [<img src="https://img.shields.io/maven-central/v/io.mehow.laboratory/laboratory.svg?label=latest%20release"/>](https://search.maven.org/search?q=g:io.mehow.laboratory)
 [<img src="https://img.shields.io/nexus/s/https/oss.sonatype.org/io.mehow.laboratory/laboratory.svg?label=latest%20snapshot"/>](https://oss.sonatype.org/content/repositories/snapshots/io/mehow/laboratory/)
-![GitHub License](https://img.shields.io/github/license/MiSikora/Laboratory)
+![GitHub License](https://img.shields.io/github/license/MiSikora/laboratory)
 
 Feature flags for multi-module Kotlin Android projects.
 
-Please visit [project website](https://misikora.github.io/Laboratory/) for the full documentation and the [changelog](https://misikora.github.io/Laboratory/changelog/).
+Please visit [project website](https://mehow.io/laboratory/) for the full documentation and the [changelog](https://mehow.io/laboratory/changelog/).
 
 ## TLDR
 

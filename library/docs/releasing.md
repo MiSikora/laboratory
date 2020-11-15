@@ -2,14 +2,14 @@
 
 ## Versioning
 
-1. Run the [prepare release script](https://github.com/MiSikora/Laboratory/blob/master/library/prepare-release.sh) and bump the desirable version part.
+1. Run the [prepare release script](https://github.com/MiSikora/laboratory/blob/master/library/prepare-release.sh) and bump the desirable version part.
 2. If there are no errors `git push && git push --tags`.
-3. Wait for [the CI server](https://github.com/MiSikora/Laboratory/actions) to upload the artifacts.
+3. Wait for [the CI server](https://github.com/MiSikora/laboratory/actions) to upload the artifacts.
 4. Visit [Sonatype Nexus](https://oss.sonatype.org) and promote the artifacts.
 
 ## Documentation updates
 
-Website documentation lives under [`/library/docs`](https://github.com/MiSikora/Laboratory/tree/master/library/docs) directory and is deployed with [MkDocs](https://www.mkdocs.org/) using [Material Theme](https://squidfunk.github.io/mkdocs-material/). A new site is built and published for latest commits on the `master` branch.
+Website documentation lives under [`/library/docs`](https://github.com/MiSikora/laboratory/tree/master/library/docs) directory and is deployed with [MkDocs](https://www.mkdocs.org/) using [Material Theme](https://squidfunk.github.io/mkdocs-material/). A new site is built and published for latest commits on the `master` branch.
 
 If you want to test the website locally before pushing changes you need to follow these steps.
 
