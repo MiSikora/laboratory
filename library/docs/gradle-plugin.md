@@ -2,17 +2,17 @@
 
 Gradle plugin's main job is to make your life easier when creating and managing feature flags. It generates features, feature factories, and customized sourced feature storage. Plugin, additionally, verifies things that cannot be represented by the API. For example, it checks if a feature flag has exactly one default option defined.
 
-Under the hood Gradle plugin uses [KotlinPoet](https://square.github.io/kotlinpoet/) to generate compact source files.
+Under the hood, the Gradle plugin uses [KotlinPoet](https://square.github.io/kotlinpoet/) to generate compact source files.
 
 !!! info
-    Gradle plugin automatically adds the `laboratory` artifact to dependencies.
+    The Gradle plugin automatically adds the `laboratory` artifact to dependencies.
 
 !!! tip
     The best way to understand the Gradle plugin is to check [the sample](https://github.com/MiSikora/laboratory/tree/master/sample). It uses most of the Gradle plugin features that most of the applications need.
 
 ## Feature flags
 
-Feature flags are added to the generation process with a `feature()` function which uses the `generateFeatureFlags` Gradle task. Here is a sample configuration.
+Feature flags are added to the generation process with a `feature()` function, which uses the `generateFeatureFlags` Gradle task. Here is a sample configuration.
 
 ```groovy
 apply plugin: "io.mehow.laboratory"
@@ -45,7 +45,7 @@ laboratory {
 This setup creates two feature flags. `Authentication` and `LocationTracking` with options taken from the `feature(name) { }` block. Key things that might not be that obvious.
 
 - Feature flag source visibility is inherited from a feature's visibility.
-- If a feature flag defines a remote source a `Local` source is automatically added as an option. Any custom `Local` sources will be filtered out.
+- If a feature flag defines a remote source, a `Local` source is automatically added as an option. Any custom `Local` sources will be filtered out.
 - If all sources are added with `withSource()` function, `Local` source will be used as a default one.
 
 ```kotlin
@@ -98,7 +98,7 @@ internal enum class LocationTracking : LocationTracking<Authentication> {
 
 ## Feature flags storage
 
-If your feature flags use multiple sources you can configure Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage`.
+If your feature flags use multiple sources, you can configure the Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage`.
 
 ```groovy
 apply plugin: "io.mehow.laboratory"
@@ -166,11 +166,11 @@ internal fun FeatureStorage.Companion.sourcedGenerated(
 ```
 
 !!! tip
-    Use named arguments when you instantiate `FeatureStorage` with the `sourcedGenerated()` function. This will make sure that you accidentally don't mess up arguments order and that the compilation fails whenever there are changes to the sources.
+    Use named arguments when you instantiate `FeatureStorage` with the `sourcedGenerated()` function. This will ensure that you accidentally don't mess up arguments order and that the compilation fails whenever there are changes to the sources.
 
 ## Feature flags factory
 
-Generation of feature flags factory is useful if you use the [QA module](qa-module.md).
+The generation of feature flags factory is useful if you use the [QA module](qa-module.md).
 
 ```
 apply plugin: "io.mehow.laboratory"
@@ -223,7 +223,7 @@ private object GeneratedFeatureFactory : FeatureFactory {
 
 ## Feature flag sources factory
 
-If you want to group all feature flag sources in a similar way to feature flags you can use `featureSourceFactory()` function that collects them.
+If you want to group all feature flag sources similar to feature flags, you can use `featureSourceFactory()` function that collects them.
 
 ```groovy
 laboratory {
@@ -273,7 +273,7 @@ private object GeneratedFeatureSourceFactory : FeatureFactory {
 
 ## Multi-module support
 
-Gradle plugin was written with a support for multi-module projects in mind.
+The Gradle plugin was written with support for multi-module projects in mind.
 
 ```
 .
@@ -287,7 +287,7 @@ Gradle plugin was written with a support for multi-module projects in mind.
 └─ settings.gradle
 ```
 
-A Laboratory setup for a Gradle project like above could look like this. Configuration of Android Gradle plugin or any other dependencies are omitted for brevity.
+A Laboratory setup for a Gradle project like above could look like this. Configuration of the Android Gradle plugin or any other dependencies is omitted for brevity.
 
 ```groovy
 // module-a
@@ -364,9 +364,9 @@ dependencies {
 }
 ```
 
-This setup shows that each module can define its own feature flags that do not have to be exposed outside. In this scenario `module-app` is responsible only for gluing together all feature flags in a way that `Laboratory` instances are aware of feature flag sources and the [QA module](qa-module.md). It should then deliver the correct `Laboratory` to modules via dependency injection.
+This setup shows that each module can define its feature flags that do not have to be exposed outside. In this scenario, `module-app` is responsible only for gluing together all feature flags so that `Laboratory` instances are aware of feature flag sources and the [QA module](qa-module.md). It should then deliver the correct `Laboratory` to modules via dependency injection.
 
-Gradle plugin discovers all feature flags and theirs sources that are a part of the same project. There might be some rare cases when you'd like to exclude some modules from contributing its feature flags to the `featureFactory()` or `sourcedStorage()`. This can be achieved with project filtering.
+Gradle plugin discovers all feature flags and their sources that are a part of the same project. There might be some rare cases when you'd like to exclude some modules from contributing its feature flags to the `featureFactory()` or `sourcedStorage()`. This can be achieved with project filtering.
 
 ```groovy
 apply plugin: "io.mehow.laboratory"
@@ -382,7 +382,7 @@ laboratory {
 }
 ```
 
-This way `:module-a` will not contribute its feature flags to generation of a feature factory and feature storage.
+This way, `:module-a` will not contribute its feature flags to the generation of a feature factory and feature storage.
 
 ## Full configuration
 
@@ -398,10 +398,10 @@ laboratory {
     // Overrides globally declared namespace. No value by default.
     packageName = "io.mehow.sample.feature"
 
-    // Adds description to this feature that can be used for more context.
+    // Adds a description to this feature that can be used for more context.
     description = "Feature description"
 
-    // Sets visibility of a feature flag to be either 'public' or 'internal'. 'true' by default.
+    // Sets the visibility of a feature flag to be either 'public' or 'internal'. 'true' by default.
     isPublic = false
 
     // Informs plugin to add 'ValueA' option to the generated feature flag and set it as a default option.
@@ -412,13 +412,13 @@ laboratory {
     withOption("ValueB")
 
     // Informs plugin to add 'Firebase' option to the list of sources controlling this flag.
-    // Adding any source automatically adds 'Local' option to the source enum.
+    // Adding any source automatically adds the 'Local' option to the source enum.
     // Any custom 'Local' sources are ignored by the plugin.
     withSource("Firebase")
 
-    // Informs plugin to add 'Aws' option to the list of sources controlling this flag and to set is a default option.
-    // At most one of the source options can be set with this function.
-    // By default 'Local' sources are considered to be default options.
+    // Informs plugin to add 'Aws' option to the list of sources controlling this flag and to set a default option.
+    // At most, one of the source options can be set with this function.
+    // By default, 'Local' sources are considered to be default options.
     withDefaultSource("Aws")
   }
 

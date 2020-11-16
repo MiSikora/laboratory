@@ -9,9 +9,9 @@
 
 ## Documentation updates
 
-Website documentation lives under [`/library/docs`](https://github.com/MiSikora/laboratory/tree/master/library/docs) directory and is deployed with [MkDocs](https://www.mkdocs.org/) using [Material Theme](https://squidfunk.github.io/mkdocs-material/). A new site is built and published for latest commits on the `master` branch.
+Website documentation lives under [`/library/docs`](https://github.com/MiSikora/laboratory/tree/master/library/docs) directory and is deployed with [MkDocs](https://www.mkdocs.org/) using [Material Theme](https://squidfunk.github.io/mkdocs-material/). A new site is built and published for the latest commits on the `master` branch.
 
-If you want to test the website locally before pushing changes you need to follow these steps.
+If you want to test the website locally before pushing changes, you need to follow these steps.
 
 Make sure you have Python 3 and pip installed.
 
@@ -31,7 +31,7 @@ $ mkdocs --version
 mkdocs, version 1.1.2
 ```
 
-Navigate to library directory and run the site locally.
+Navigate to the library directory and run the site locally.
 
 ```sh
 $ ./library mkdocs serve

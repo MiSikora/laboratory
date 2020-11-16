@@ -1,6 +1,6 @@
 # QA module
 
-It is very often desirable to have an option of configuring feature flag options at runtime. Laboratory addresses this problem with its QA modules.
+It is very often desirable to have the option of configuring feature flag options at runtime. Laboratory addresses this problem with its QA modules.
 
 ## Inspector
 
@@ -8,19 +8,19 @@ Feature flags inspection is available through the `laboratory-inspector` artifac
 
 ![Inspector](images/inspector_screenshot.jpg){: style="width:480px" .center }
 
-Inspector displays feature flags as cards and their options on chips. Active options of feature flags are marked with a highlight colour. A local option of a feature flag can be changed by tapping on a chip. Chips that do not use `Local` sources cannot have their options changed. If a feature flag has multiple sources available they can be switched from a drop down menu.
+Inspector displays feature flags as cards and their options on chips. Active options of feature flags are marked with a highlight color. A local option of a feature flag can be changed by tapping on a chip. Chips that do not use `Local` sources cannot have their options changed. If a feature flag has multiple sources available, they can be switched from a drop down menu.
 
 Feature flags (including sources) can be reset to their default options with a button in an action bar.
 
 ## Configuration
 
-Before `LaboratoryActivity` can be started it has to be configured with an instance of `Laboratory` and at least one instance of `FeatureFactory`. `FeatureFactory` is an interface that should gather feature flags that are logically grouped together. Logical grouping can be different for each application but in most cases all feature flags in the project belong to a single unit. Cases when you might want to split feature flags are, for example:
+Before `LaboratoryActivity` can be started, it has to be configured with an instance of `Laboratory` and at least one instance of `FeatureFactory`. `FeatureFactory` is an interface that should gather feature flags that are logically grouped together. Logical grouping can be different for each application, but in most cases, all feature flags in the project belong to a single unit. Scenarios, when you might want to split feature flags, are for example:
 
 - Feature flags that do not belong to your project and are exposed to you from an external library.
-- Abundance of feature flags and a need to increase readability of the inspector interface by separating feature flags into custom categories.
+- Abundance of feature flags and a need to increase the readability of the inspector interface by separating feature flags into custom categories.
 
 !!! tip
-    A lot of the boilerplate code presented here can be generated with the [Gradle plugin](gradle-plugin.md). It is highly recommended to rely on the plugin instead of hand writing the code.
+    A lot of the boilerplate code presented here can be generated with the [Gradle plugin](gradle-plugin.md). It is highly recommended to rely on the plugin instead of handwriting the code.
 
 ```kotlin
 val sourcedFeatureStorage = FeatureStorage.sourced(
@@ -139,7 +139,7 @@ If you use [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) you ca
 
 ![Hyperion](images/hyperion_screenshot.jpg){: style="width:480px" .center }
 
-If you'd like to position the Laboratory menu item in a different place on the menu you can override the string id resource.
+If you'd like to position the Laboratory menu item in a different place on the menu, you can override the string id resource.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>

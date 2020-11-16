@@ -2,7 +2,7 @@
 
 ## Features
 
-Feature flags are nothing more than enums that implement the `Feature` interface. It allows to define a default option, remote sources that can provide different options, and a description for some human-readable metadata.
+Feature flags are nothing more than enums that implement the `Feature` interface. It allows us to define a default option, remote sources that can provide different options and descriptions for some human-readable metadata.
 
 !!! danger
     `Feature` enums must have at least one option. Defining an enum like below will make `Laboratory` throw an exception when used to read an option.
@@ -13,12 +13,12 @@ enum class SomeFeature : Feature<SomeFeature>
 
 ## I/O
 
-`Laboratory` is nothing more than a high-level API over the `FeatureStorage` interface that is responsible for persisting feature flags. All implementations that are provided by this library rely on a feature flag package name and on an enum name.
+`Laboratory` is nothing more than a high-level API over the `FeatureStorage` interface responsible for persisting feature flags. All implementations that are provided by this library rely on a feature flag package name and an enum name.
 
 !!! warning
-    Because persistence mechanism relies on package names and enum names you should be careful when refactoring feature flags that are already available on production. Changing these options may result in a perception of unsaved feature flags.
+    Because the persistence mechanism relies on package names and enum names, you should be careful when refactoring feature flags already available on production. Changing these options may result in a perception of unsaved feature flags.
 
-Because `FeatureStorage` is an interface that is meant to be used with I/O operations it exposes only `suspend` functions. `Laboratory`, on the other hand, allows you to opt-into blocking equivalents of read and write functions. You can do this either selectively by applying the `@BlockingIoCall` annotation, or globally by adding a compiler flag.
+Because `FeatureStorage` is an interface that is meant to be used with I/O operations, it exposes only `suspend` functions. `Laboratory`, on the other hand, allows you to opt-into blocking equivalents of read and write functions. You can selectively do this by applying the `@BlockingIoCall` annotation or globally by adding a compiler flag.
 
 ```groovy
 android {
@@ -28,16 +28,16 @@ android {
 }
 ```
 
-In either case a design that relies on non-blocking function calls is preferable.
+In either case, a design that relies on non-blocking function calls is preferable.
 
 ## Sources
 
-Feature flags by default have only a single source for their options. By convention it is considered to be a local source. However, you might have a need to have different data sources for feature flags depending on some runtime conditions or depending on a build variant. For example, you might want to use a local source during debugging and rely on some remote service in production.
+Feature flags, by default, have only a single source for their options. By convention, it is considered to be a local source. However, you might need to have different data sources for feature flags, depending on some runtime conditions or a build variant. For example, you might want to use a local source during debugging and rely on some remote services on production.
 
 Let's say that you want to have a feature flag that has three sources. One local, and two remote ones.
 
 !!! info
-    Notice that a feature flag source is also a feature flag. This allows to change feature flag sources via `Laboratory` as well.
+    Notice that a feature flag source is also a feature flag. This allows us to change feature flag sources via `Laboratory` as well.
 
 ```kotlin
 enum class PowerType : Feature<PowerType> {
@@ -60,9 +60,9 @@ enum class PowerType : Feature<PowerType> {
 }
 ```
 
-If you define multiple sources for a feature flag you should add a `Local` option to them. This allows to change feature flag options at runtime from the [QA module](qa-module.md).
+If you define multiple sources for a feature flag, you should add a `Local` option to them. This allows changing feature flag options at runtime from the [QA module](qa-module.md).
 
-This feature flag definition allows to configure `Laboratory` in a way that it is capable of recognizing that `PowerType` has different option providers, and that default provider is `Firebase`.
+This feature flag definition allows configuring `Laboratory` in a way that it is capable of recognizing that `PowerType` has different option providers and that the default provider is `Firebase`.
 
 Because the `Laboratory` only delegates its work to `FeatureStorage`, it is `FeatureStorage` that needs to understand how to connect feature flags with their sources. This is possible with a special implementation of this interface that is available as an extension function.
 
@@ -76,12 +76,12 @@ val sourcedFeatureStorage = FeatureStorage.sourced(
 )
 ```
 
-`sourcedFeatureStorage` delegates persistence mechanism to three different storage and is responsible for coordination of a selected source and a current feature flag option.
+`sourcedFeatureStorage` delegates persistence mechanism to three different storage and is responsible for coordinating a selected source and a current feature flag option.
 
-One thing that is error-prone is the fact that `sourcedFeatureStorage` relies on strings and source names to use the correct storage. The reason for this is that two different feature flags might share sources partially.
+One error-prone thing is that `sourcedFeatureStorage` relies on strings and source names to use the correct storage. The reason for this is that two different feature flags might share sources partially.
 
 !!! tip
-    Using [Gradle plugin](gradle-plugin.md) allows you to avoid this issue with generation of a custom `FeatureStorage` that is always up-to-date.
+    Using [Gradle plugin](gradle-plugin.md) allows you to avoid this issue with the generation of a custom `FeatureStorage` that is always up-to-date.
 
 ```kotlin
 enum class PowerType : Feature<PowerType> {
@@ -122,7 +122,7 @@ enum class Theme : Feature<PowerType> {
 }
 ```
 
-In this case `Theme` and `PowerType` feature flags share `Azure` source but `Firebase` is applicable only to the `PowerType` flag.
+In this case, `Theme` and `PowerType` feature flags share `Azure` source, but `Firebase` applies only to the `PowerType` flag.
 
 ```kotlin
 // Create laboratory that understands sourced features
@@ -144,7 +144,7 @@ val themeAzureValue laboratory.experiment<Theme>()
 !!! info
     The implementation of `sourcedFeatureStorage` provided by the library saves data only in `localSource`.
 
-In order to propagate remote feature flag options on updates they need to be connected to a remote source.
+To propagate remote feature flag options on updates, they need to be connected to a remote source.
 
 ```kotlin
 enum class ShowAds : Feature<ShowAds> {
@@ -184,7 +184,7 @@ remoteService.observeShowAdsFlag()
 
 ## Default options override
 
-Whenever Laboratory reads an option for a feature flag it falls back to a default option declared on said flag. However, there might be cases when you'd like to change the default behaviour. One example might be having features enabled by default in your debug builds and disabled on production. Or you might use feature flags for configuration and you'd like to have different configuration per build variant. Laboratory enables this with default options overrides.
+Whenever Laboratory reads an option for a feature flag, it falls back to a default option declared on a said flag. However, there might be cases when you'd like to change the default behavior. One example might be having features enabled by default in your debug builds and disabled on production. Or you might use feature flags for configuration, and you'd like to have a different configuration per build variant. Laboratory enables this with default options overrides.
 
 ```kotlin
 enum class ShowAds : Feature<ShowAds> {
