@@ -2,20 +2,29 @@ package io.mehow.laboratory
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 
 /**
- * High-level API for interaction with feature flags. It allows to read and write their values.
+ * High-level API for interaction with feature flags. It allows to read and write their options.
  */
-public class Laboratory private constructor(builder: Builder) {
+public class Laboratory private constructor(
+  builder: Builder,
+) {
   private val storage = builder.storage
   private val defaultOptionFactory = builder.defaultOptionFactory?.let(::SafeDefaultOptionFactory)
+  private val blockingLaboratory = BlockingLaboratory(this)
 
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'Laboratory.create()' instead.",
       replaceWith = ReplaceWith("Laboratory.create(storage)"),
   )
   public constructor(storage: FeatureStorage) : this(Builder().apply { this.storage = storage })
+
+  /**
+   * An entry point for blocking API.
+   *
+   * @see BlockingIoCall
+   */
+  public fun blocking(): BlockingLaboratory = blockingLaboratory
 
   /**
    * Observes any changes to the input [Feature].
@@ -35,20 +44,19 @@ public class Laboratory private constructor(builder: Builder) {
   }
 
   /**
-   * Returns the current value of the input [Feature].
+   * Returns the current option of the input [Feature].
    */
   public suspend inline fun <reified T : Feature<T>> experiment(): T = experiment(T::class.java)
 
-  /**
-   * Returns the current value of the input [Feature]. Warning – this call can block the calling thread.
-   *
-   * @see BlockingIoCall
-   */
   @BlockingIoCall
-  public inline fun <reified T : Feature<T>> experimentBlocking(): T = runBlocking { experiment<T>() }
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'blocking().experiment()' instead.",
+      replaceWith = ReplaceWith("blocking().experiment()"),
+  )
+  public inline fun <reified T : Feature<T>> experimentBlocking(): T = blocking().experiment()
 
   /**
-   * Returns the current value of the input [Feature].
+   * Returns the current option of the input [Feature].
    */
   public suspend fun <T : Feature<T>> experiment(feature: Class<T>): T {
     val options = feature.options
@@ -57,31 +65,29 @@ public class Laboratory private constructor(builder: Builder) {
     return options.firstOrNull { it.name == expectedName } ?: defaultOption
   }
 
-  /**
-   * Returns the current value of the input [Feature]. Warning – this call can block the calling thread.
-   *
-   * @see BlockingIoCall
-   */
   @BlockingIoCall
-  public fun <T : Feature<T>> experimentBlocking(feature: Class<T>): T = runBlocking { experiment(feature) }
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'blocking().experiment()' instead.",
+      replaceWith = ReplaceWith("blocking().experiment(feature)"),
+  )
+  public fun <T : Feature<T>> experimentBlocking(feature: Class<T>): T = blocking().experiment(feature)
 
   /**
    * Checks if a [Feature] is set to the input [option].
    */
   public suspend fun <T : Feature<T>> experimentIs(option: T): Boolean = experiment(option::class.java) == option
 
-  /**
-   * Checks if a [Feature] is set to the input [option]. Warning – this call can block the calling thread.
-   *
-   * @see BlockingIoCall
-   */
   @BlockingIoCall
-  public fun <T : Feature<T>> experimentIsBlocking(option: T): Boolean = runBlocking { experimentIs(option) }
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'blocking().experimentIs()' instead.",
+      replaceWith = ReplaceWith("blocking().experimentIs(option)"),
+  )
+  public fun <T : Feature<T>> experimentIsBlocking(option: T): Boolean = blocking().experimentIs(option)
 
   /**
    * Sets a [Feature] to have the input [option].
    *
-   * @return `true` if the value was set successfully, `false` otherwise.
+   * @return `true` if the option was set successfully, `false` otherwise.
    */
   public suspend fun <T : Feature<*>> setOption(option: T): Boolean = storage.setOption(option)
 
@@ -91,27 +97,25 @@ public class Laboratory private constructor(builder: Builder) {
   )
   public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = setOption(option)
 
-  /**
-   * Sets a [Feature] to have the input [option]. Warning – this call can block the calling thread.
-   *
-   * @return `true` if the value was set successfully, `false` otherwise.
-   * @see BlockingIoCall
-   */
   @BlockingIoCall
-  public fun <T : Feature<*>> setOptionBlocking(option: T): Boolean = runBlocking { setOption(option) }
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'blocking().setOption(option)' instead.",
+      replaceWith = ReplaceWith("blocking().setOption(option)"),
+  )
+  public fun <T : Feature<*>> setOptionBlocking(option: T): Boolean = blocking().setOption(option)
 
   @BlockingIoCall
   @Deprecated(
-      message = "This method will be removed in 1.0.0. Use 'setOptionBlocking()' instead.",
-      replaceWith = ReplaceWith("setOptionBlocking(option)"),
+      message = "This method will be removed in 1.0.0. Use 'blocking().setOption()' instead.",
+      replaceWith = ReplaceWith("blocking().setOption(option)"),
   )
-  public fun <T : Feature<*>> setFeatureBlocking(option: T): Boolean = setOptionBlocking(option)
+  public fun <T : Feature<*>> setFeatureBlocking(option: T): Boolean = blocking().setOption(option)
 
   /**
-   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one option
    * for the same feature flag, the last one should be applied.
    *
-   * @return `true` if the value was set successfully, `false` otherwise.
+   * @return `true` if the option was set successfully, `false` otherwise.
    */
   public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean = storage.setOptions(*options)
 
@@ -121,38 +125,33 @@ public class Laboratory private constructor(builder: Builder) {
   )
   public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean = setOptions(*options)
 
-  /**
-   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
-   * for the same feature flag, the last one should be applied. Warning – this call can block the calling thread.
-   *
-   * @return `true` if the value was set successfully, `false` otherwise.
-   * @see BlockingIoCall
-   */
   @BlockingIoCall
-  public fun <T : Feature<*>> setOptionsBlocking(vararg options: T): Boolean = runBlocking { setOptions(*options) }
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'blocking().setOptions()' instead.",
+      replaceWith = ReplaceWith("blocking().setOptions(*options)"),
+  )
+  public fun <T : Feature<*>> setOptionsBlocking(vararg options: T): Boolean = blocking().setOptions(*options)
 
   @BlockingIoCall
   @Deprecated(
-      message = "This method will be removed in 1.0.0. Use 'setOptionsBlocking()' instead.",
-      replaceWith = ReplaceWith("setOptionsBlocking(*options)"),
+      message = "This method will be removed in 1.0.0. Use 'blocking().setOptions()' instead.",
+      replaceWith = ReplaceWith("blocking().setOptions(*options)"),
   )
-  public fun <T : Feature<*>> setFeaturesBlocking(vararg options: T): Boolean = setOptionsBlocking(*options)
+  public fun <T : Feature<*>> setFeaturesBlocking(vararg options: T): Boolean = blocking().setOptions(*options)
 
   /**
    * Removes all stored feature flag options.
    *
-   * @return `true` if the value was set successfully, `false` otherwise.
+   * @return `true` if the option was set successfully, `false` otherwise.
    */
   public suspend fun clear(): Boolean = storage.clear()
 
-  /**
-   * Removes all stored feature flag options. Warning – this call can block the calling thread.
-   *
-   * @return `true` if the value was set successfully, `false` otherwise.
-   * @see BlockingIoCall
-   */
   @BlockingIoCall
-  public fun clearBlocking(): Boolean = runBlocking { clear() }
+  @Deprecated(
+      message = "This method will be removed in 1.0.0. Use 'blocking().clear()' instead.",
+      replaceWith = ReplaceWith("blocking().clear()"),
+  )
+  public fun clearBlocking(): Boolean = blocking().clear()
 
   private fun <T : Feature<T>> getDefaultOption(
     feature: Class<T>,
