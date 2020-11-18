@@ -47,11 +47,23 @@ internal class FeatureFlagGenerator(
             .build()
       }
 
+  private val deprecated = feature.deprecation?.let { deprecation ->
+    AnnotationSpec.builder(Deprecated::class)
+        .addMember("message = %S", deprecation.message)
+        .addMember("level = %T.%L", DeprecationLevel::class, deprecation.level)
+        .build()
+  }
+
   private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
+      .apply { deprecated?.let { @Kt41142 addAnnotation(it) } }
       .addModifiers(feature.visibility.modifier)
       .addSuperinterface(Feature::class(feature.className))
       .addProperty(defaultOptionProperty)
-      .let { feature.options.foldLeft(it) { builder, featureOption -> builder.addEnumConstant(featureOption.name) } }
+      .apply {
+        feature.options.foldLeft(this) { builder, featureOption ->
+          builder.addEnumConstant(featureOption.name)
+        }
+      }
       .apply {
         sourceProperty?.let { (nestedSource, sourceWithOverride) ->
           addType(FeatureFlagGenerator(nestedSource).typeSpec)

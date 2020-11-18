@@ -627,5 +627,73 @@ internal class FeatureFlagSpec : DescribeSpec({
           """.trimMargin("|")
       }
     }
+
+    context("can be deprecated") {
+      it("with warning level by default") {
+        val tempDir = createTempDir()
+
+        val outputFile = featureBuilder
+            .copy(deprecation = Deprecation(message = "Deprecation message"))
+            .build().map { model -> model.generate(tempDir) }
+
+        outputFile shouldBeRight { file ->
+          file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import kotlin.Deprecated
+            |import kotlin.DeprecationLevel
+            |
+            |@Deprecated(
+            |  message = "Deprecation message",
+            |  level = DeprecationLevel.WARNING
+            |)
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
+            |  Second,
+            |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
+            |}
+            |
+          """.trimMargin("|")
+        }
+      }
+
+      enumValues<DeprecationLevel>().forEach { level ->
+        it("with explicit $level deprecation level") {
+          val tempDir = createTempDir()
+
+          val outputFile = featureBuilder
+              .copy(deprecation = Deprecation(message = "Deprecation message", level = level))
+              .build().map { model -> model.generate(tempDir) }
+
+          outputFile shouldBeRight { file ->
+            file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import kotlin.Deprecated
+            |import kotlin.DeprecationLevel
+            |
+            |@Deprecated(
+            |  message = "Deprecation message",
+            |  level = DeprecationLevel.${level}
+            |)
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
+            |  Second,
+            |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
+            |}
+            |
+          """.trimMargin("|")
+          }
+        }
+      }
+    }
   }
 })

@@ -21,6 +21,7 @@ public class FeatureFlagModel private constructor(
   internal val options: Nel<FeatureFlagOption>,
   internal val source: FeatureFlagModel?,
   internal val description: String,
+  internal val deprecation: Deprecation?,
 ) {
   internal val packageName = className.packageName
   internal val name = className.simpleName
@@ -45,6 +46,7 @@ public class FeatureFlagModel private constructor(
     internal val options: List<FeatureFlagOption>,
     internal val sourceOptions: List<FeatureFlagOption> = emptyList(),
     internal val description: String = "",
+    internal val deprecation: Deprecation? = null,
   ) {
     internal val fqcn = ClassName(packageName, names).canonicalName
 
@@ -60,6 +62,7 @@ public class FeatureFlagModel private constructor(
             options = options,
             source = nestedSource,
             description = description,
+            deprecation = deprecation,
         )
       }
     }
