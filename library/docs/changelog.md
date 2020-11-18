@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.2] - 2020-11-18
+
 ### Added
 - `BlockingLaboratory` class that can read and write feature flags via blocking API.
 - `blocking()` function to `Laboratory` class that is an entry point to the blocking API.
@@ -187,7 +189,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.1...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.2...HEAD
+[0.9.2]: https://github.com/MiSikora/laboratory/releases/tag/0.9.2
 [0.9.1]: https://github.com/MiSikora/laboratory/releases/tag/0.9.1
 [0.9.0]: https://github.com/MiSikora/laboratory/releases/tag/0.9.0
 [0.8.0]: https://github.com/MiSikora/laboratory/releases/tag/0.8.0
