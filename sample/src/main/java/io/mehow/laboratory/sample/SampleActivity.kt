@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.onEach
 class SampleActivity : Activity() {
   private val mainScope = MainScope()
 
-  @Suppress("LongMethod", "StringLiteralDuplication")
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
 
