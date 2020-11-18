@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `BlockingLaboratory` class that can read and write feature flags via blocking API.
 - `blocking()` function to `Laboratory` class that is an entry point to the blocking API.
+- Deprecation of feature flags from the Gradle plugin with `deprecated(message, level)` method. `level` argument is optional and a warning level is used by default.
 
 ### Changed
 - Upgrade to DataStore `1.0.0-alpha04`.

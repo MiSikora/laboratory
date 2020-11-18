@@ -404,6 +404,10 @@ laboratory {
     // Sets the visibility of a feature flag to be either 'public' or 'internal'. 'true' by default.
     isPublic = false
 
+    // Deprecates a feature flag. `DeprecationLevel` argument is optional and uses `DeprecationLevel.Warning` by default.
+    // Add the class to the import list in your Gradle script to avoid typing the whole package name.
+    deprecated("Deprecation message", io.mehow.laboratory.gradle.DeprecationLevel.Hidden)
+
     // Informs plugin to add 'ValueA' option to the generated feature flag and set it as a default option.
     // Exactly one of the feature options must be set with this function.
     withDefaultOption("ValueA")

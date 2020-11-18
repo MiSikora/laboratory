@@ -562,4 +562,42 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |
     """.trimMargin("|")
   }
+
+  "generates deprecated feature flag" {
+    val fixture = "feature-flag-generate-deprecated".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |@Deprecated(
+      |  message = "Deprecation message",
+      |  level = DeprecationLevel.WARNING
+      |)
+      |public enum class Feature : io.mehow.laboratory.Feature<Feature>
+    """.trimMargin("|")
+  }
+
+  "generates deprecated feature flag with specified deprecation level" {
+    val fixture = "feature-flag-generate-deprecated-with-level".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |@Deprecated(
+      |  message = "Deprecation message",
+      |  level = DeprecationLevel.HIDDEN
+      |)
+      |public enum class Feature : io.mehow.laboratory.Feature<Feature>
+    """.trimMargin("|")
+  }
 })

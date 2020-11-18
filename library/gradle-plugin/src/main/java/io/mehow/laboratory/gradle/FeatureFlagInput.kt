@@ -1,9 +1,11 @@
 package io.mehow.laboratory.gradle
 
+import io.mehow.laboratory.generator.Deprecation
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.FeatureFlagOption
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import io.mehow.laboratory.gradle.DeprecationLevel.Warning
 
 /**
  * Representation of a generate feature flag. It must have at least one value and exactly one default value.
@@ -27,8 +29,6 @@ public class FeatureFlagInput internal constructor(
   public var description: String? = null
 
   private val options: MutableList<FeatureFlagOption> = mutableListOf()
-
-  private val sources: MutableList<FeatureFlagOption> = mutableListOf()
 
   /**
    * Adds a feature value.
@@ -59,6 +59,8 @@ public class FeatureFlagInput internal constructor(
     options += FeatureFlagOption(value, isDefault = true)
   }
 
+  private val sources: MutableList<FeatureFlagOption> = mutableListOf()
+
   /**
    * Adds a feature flag source. Any sources that are named "Local", or any variation of this word,
    * will be filtered out.
@@ -76,6 +78,15 @@ public class FeatureFlagInput internal constructor(
     sources += FeatureFlagOption(name, isDefault = true)
   }
 
+  private var deprecation: Deprecation? = null
+
+  /**
+   * Annotates a feature flag as deprecated.
+   */
+  @JvmOverloads public fun deprecated(message: String, level: DeprecationLevel = Warning) {
+    deprecation = Deprecation(message, level.kotlinLevel)
+  }
+
   internal fun toBuilder(): FeatureFlagModel.Builder {
     return FeatureFlagModel.Builder(
         visibility = if (isPublic) Public else Internal,
@@ -84,6 +95,7 @@ public class FeatureFlagInput internal constructor(
         options = options,
         sourceOptions = sources,
         description = description.orEmpty(),
+        deprecation = deprecation,
     )
   }
 }
