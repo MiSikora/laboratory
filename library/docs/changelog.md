@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Inspector tabs are now scrollable instead of fixed.
+
 ### Fixed
 - Shared preferences based `FeatureStorage` dispatches now changes to feature flag observers when `clear()` method is used. This fixes an issue with the QA module where it did not update the UI after resetting feature flags if shared preferences where used for feature flags persistence.
 - Preserve feature flags preview adapter scroll position on configuration changes.
