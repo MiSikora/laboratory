@@ -19,17 +19,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 internal class GroupViewModel(
-  configuration: Configuration,
+  private val laboratory: Laboratory,
+  private val groupFeatureFactory: FeatureFactory,
 ) : ViewModel() {
-  private val laboratory = configuration.laboratory
-  private val metadataProvider = FeatureMetadata.Provider(configuration.featureFactories)
   private val emptyFlow = emptyFlow<List<FeatureUiModel>>()
 
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setOption(feature)
 
-  fun observeFeatureGroups(section: String) = flow {
+  fun observeFeatureGroups() = flow {
     val listGroupFlow = withContext(Dispatchers.Default) {
-      metadataProvider[section]
+      groupFeatureFactory.create()
+          .mapNotNull(FeatureMetadata::create)
           .map { it.observeGroup(laboratory) }
           .fold(emptyFlow, ::combineFeatureGroups)
     }.flowOn(Dispatchers.Default).map { featureGroups ->
@@ -47,11 +47,14 @@ internal class GroupViewModel(
     groups.combine(group) { xs, x -> xs + x }
   }
 
-  class Factory(private val configuration: Configuration) : ViewModelProvider.Factory {
+  class Factory(
+    private val configuration: Configuration,
+    private val sectionName: String,
+  ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
       require(modelClass == GroupViewModel::class.java) { "Cannot create $modelClass" }
       @Suppress("UNCHECKED_CAST")
-      return GroupViewModel(configuration) as T
+      return GroupViewModel(configuration.laboratory, configuration.factory(sectionName)) as T
     }
   }
 
@@ -72,15 +75,6 @@ internal class GroupViewModel(
 
     fun observeModels(laboratory: Laboratory) = laboratory.observe(feature).map { selectedFeature ->
       options.map { option -> OptionUiModel(option, isSelected = selectedFeature == option) }
-    }
-
-    class Provider(
-      private val featureFactories: Map<String, FeatureFactory>,
-    ) {
-      operator fun get(section: String) = featureFactories
-          .mapValues { (_, factory) -> factory.create() }
-          .getValue(section)
-          .mapNotNull(FeatureMetadata::create)
     }
 
     companion object {

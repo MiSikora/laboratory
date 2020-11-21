@@ -9,38 +9,31 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
-import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 internal class ViewModelSpec : DescribeSpec({
   describe("view model") {
     it("filters empty feature flag groups") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureUiModel::name)
+      val featureNames = viewModel.observeFeatureGroups().first().map(FeatureUiModel::name)
 
       featureNames shouldNotContain "Empty"
     }
 
     it("orders feature flag groups by name") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val featureNames = viewModel.observeFeatureGroups("Local").first().map(FeatureUiModel::name)
+      val featureNames = viewModel.observeFeatureGroups().first().map(FeatureUiModel::name)
 
       featureNames shouldContainExactly listOf("First", "Second")
     }
 
     it("does not order feature flag options") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val features = viewModel.observeFeatureGroups("Local").first()
+      val features = viewModel.observeFeatureGroups().first()
           .map(FeatureUiModel::models)
           .map { models -> models.map(OptionUiModel::option) }
 
@@ -49,11 +42,9 @@ internal class ViewModelSpec : DescribeSpec({
     }
 
     it("marks first feature flag option as selected by default") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.C, Second.B)
+      viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.C, Second.B)
     }
 
     it("marks saved feature flag options as selected") {
@@ -62,30 +53,24 @@ internal class ViewModelSpec : DescribeSpec({
         setOption(Second.C)
       }
 
-      val viewModel = GroupViewModel(
-          Configuration(laboratory, mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(laboratory, NoSourceFeatureFactory)
 
-      viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.A, Second.C)
+      viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.A, Second.C)
     }
 
     it("selects feature flag options") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
       viewModel.selectFeature(First.B)
       viewModel.selectFeature(Second.A)
 
-      viewModel.observeSelectedFeatures("Local").first() shouldContainExactly listOf(First.B, Second.A)
+      viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.B, Second.A)
     }
 
     it("observes feature flag changes") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      viewModel.observeSelectedFeatures("Local").test {
+      viewModel.observeSelectedFeatures().test {
         expectItem() shouldContainExactly listOf(First.C, Second.B)
 
         viewModel.selectFeature(First.B)
@@ -99,11 +84,9 @@ internal class ViewModelSpec : DescribeSpec({
     }
 
     it("observes source changes") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to AllFeatureFactory))
-      )
+      val viewModel = GroupViewModel(Laboratory.inMemory(), AllFeatureFactory)
 
-      viewModel.observeSelectedFeaturesAndSources("Local").test {
+      viewModel.observeSelectedFeaturesAndSources().test {
         expectItem() shouldContainExactly listOf(
             First.C to null,
             Second.B to null,
@@ -132,11 +115,9 @@ internal class ViewModelSpec : DescribeSpec({
           .featureStorage(FeatureStorage.inMemory())
           .defaultOptionFactory(defaultOptionFactory)
           .build()
-      val viewModel = GroupViewModel(
-          Configuration(laboratory, mapOf("Local" to NoSourceFeatureFactory))
-      )
+      val viewModel = GroupViewModel(laboratory, NoSourceFeatureFactory)
 
-      viewModel.observeSelectedFeatures("Local").test {
+      viewModel.observeSelectedFeatures().test {
         expectItem() shouldContainExactly listOf(First.A, Second.A)
 
         viewModel.selectFeature(First.B)
@@ -154,9 +135,7 @@ internal class ViewModelSpec : DescribeSpec({
   }
 })
 
-internal fun GroupViewModel.observeSelectedFeaturesAndSources(
-  section: String,
-) = observeFeatureGroups(section).map { groups ->
+internal fun GroupViewModel.observeSelectedFeaturesAndSources() = observeFeatureGroups().map { groups ->
   groups.map { group ->
     val option = group.models.single(OptionUiModel::isSelected).option
     val source = group.sources.singleOrNull(OptionUiModel::isSelected)?.option
@@ -164,9 +143,7 @@ internal fun GroupViewModel.observeSelectedFeaturesAndSources(
   }
 }
 
-internal fun GroupViewModel.observeSelectedFeatures(
-  section: String,
-) = observeSelectedFeaturesAndSources(section).map { pairs ->
+internal fun GroupViewModel.observeSelectedFeatures() = observeSelectedFeaturesAndSources().map { pairs ->
   pairs.map { (feature, _) -> feature }
 }
 

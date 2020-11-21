@@ -16,8 +16,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 internal class GroupFragment : Fragment() {
+  private val sectionName
+    get() = requireNotNull(requireArguments().getString(sectionKey)) {
+      "Missing section key"
+    }
   internal val viewModel by activityViewModels<GroupViewModel> {
-    GroupViewModel.Factory(LaboratoryActivity.configuration)
+    GroupViewModel.Factory(LaboratoryActivity.configuration, sectionName)
   }
   private val adapter = FeatureAdapter(object : FeatureAdapter.Listener {
     override fun onSelectFeature(feature: Feature<*>) {
@@ -42,15 +46,10 @@ internal class GroupFragment : Fragment() {
     observeFeatureGroups()
   }
 
-  private fun observeFeatureGroups() {
-    val section = requireNotNull(requireArguments().getString(sectionKey)) {
-      "Missing section key"
-    }
-    viewModel
-        .observeFeatureGroups(section)
-        .onEach { adapter.submitList(it) }
-        .launchIn(lifecycleScope)
-  }
+  private fun observeFeatureGroups() = viewModel
+      .observeFeatureGroups()
+      .onEach { adapter.submitList(it) }
+      .launchIn(lifecycleScope)
 
   companion object {
     private const val sectionKey = "Section.Key"

@@ -47,17 +47,17 @@ public class LaboratoryActivity : AppCompatActivity() {
   }
 
   private fun setUpViewPager() {
-    val sections = configuration.featureFactories.keys.toList()
+    val sectionNames = configuration.sectionNames.toList()
     val viewPager = findViewById<ViewPager2>(R.id.io_mehow_laboratory_view_pager).apply {
-      adapter = GroupAdapter(this@LaboratoryActivity, sections)
+      adapter = GroupAdapter(this@LaboratoryActivity, sectionNames)
       disableScrollEffect()
     }
-    if (sections.size <= 1) return
+    if (sectionNames.size <= 1) return
     val tabLayout = findViewById<TabLayout>(R.id.io_mehow_laboratory_tab_layout).apply {
       isVisible = true
     }
     TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-      tab.text = sections[position]
+      tab.text = sectionNames[position]
     }.attach()
   }
 
@@ -94,8 +94,12 @@ public class LaboratoryActivity : AppCompatActivity() {
    */
   public class Configuration(
     internal val laboratory: Laboratory,
-    internal val featureFactories: Map<String, FeatureFactory>,
-  )
+    private val featureFactories: Map<String, FeatureFactory>,
+  ) {
+    internal val sectionNames = featureFactories.keys
+
+    internal fun factory(sectionName: String) = featureFactories.getValue(sectionName)
+  }
 
   public companion object {
     private const val featuresLabel = "Features"
