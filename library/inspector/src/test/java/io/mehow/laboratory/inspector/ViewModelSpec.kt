@@ -98,47 +98,6 @@ internal class ViewModelSpec : DescribeSpec({
       }
     }
 
-    it("resets all feature flags to their default options") {
-      val viewModel = GroupViewModel(
-          Configuration(
-              Laboratory.inMemory(),
-              mapOf(
-                  "First" to object : FeatureFactory {
-                    @Suppress("UNCHECKED_CAST")
-                    override fun create() = setOf(Empty::class.java, First::class.java) as Set<Class<Feature<*>>>
-                  },
-                  "Second" to object : FeatureFactory {
-                    @Suppress("UNCHECKED_CAST")
-                    override fun create() = setOf(Second::class.java) as Set<Class<Feature<*>>>
-                  },
-              ),
-          )
-      )
-
-      viewModel.selectFeature(First.B)
-      viewModel.selectFeature(Second.C)
-
-      viewModel.resetAllFeatures()
-
-      viewModel.observeSelectedFeatures("First").first() shouldContainExactly listOf(First.C)
-      viewModel.observeSelectedFeatures("Second").first() shouldContainExactly listOf(Second.B)
-    }
-
-    it("resets feature flags and sources to their default options") {
-      val viewModel = GroupViewModel(
-          Configuration(Laboratory.inMemory(), mapOf("Local" to SourcedFeatureFactory))
-      )
-
-      viewModel.selectFeature(Sourced.B)
-      viewModel.selectFeature(Sourced.Source.Remote)
-
-      viewModel.resetAllFeatures()
-
-      viewModel.observeSelectedFeaturesAndSources("Local").first() shouldContainExactly listOf(
-          Sourced.A to Sourced.Source.Local,
-      )
-    }
-
     it("observes source changes") {
       val viewModel = GroupViewModel(
           Configuration(Laboratory.inMemory(), mapOf("Local" to AllFeatureFactory))
@@ -186,7 +145,7 @@ internal class ViewModelSpec : DescribeSpec({
         viewModel.selectFeature(Second.B)
         expectItem() shouldContainExactly listOf(First.B, Second.B)
 
-        viewModel.resetAllFeatures()
+        laboratory.clear()
         expectItemEventually { it shouldContainExactly listOf(First.A, Second.A) }
 
         cancel()

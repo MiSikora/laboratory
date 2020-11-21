@@ -38,8 +38,6 @@ internal class GroupViewModel(
     emitAll(listGroupFlow)
   }
 
-  suspend fun resetAllFeatures() = laboratory.clear()
-
   private fun combineFeatureGroups(
     groups: Flow<List<FeatureUiModel>>,
     group: Flow<FeatureUiModel>,
