@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
@@ -22,8 +21,6 @@ internal class GroupViewModel(
   private val laboratory: Laboratory,
   private val groupFeatureFactory: FeatureFactory,
 ) : ViewModel() {
-  private val emptyFlow = emptyFlow<List<FeatureUiModel>>()
-
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setOption(feature)
 
   fun observeFeatureGroups() = flow {
@@ -31,20 +28,11 @@ internal class GroupViewModel(
       groupFeatureFactory.create()
           .mapNotNull(FeatureMetadata::create)
           .map { it.observeGroup(laboratory) }
-          .fold(emptyFlow, ::combineFeatureGroups)
+          .observeElements()
     }.flowOn(Dispatchers.Default).map { featureGroups ->
       featureGroups.sortedBy(FeatureUiModel::name)
     }
     emitAll(listGroupFlow)
-  }
-
-  private fun combineFeatureGroups(
-    groups: Flow<List<FeatureUiModel>>,
-    group: Flow<FeatureUiModel>,
-  ): Flow<List<FeatureUiModel>> = if (groups === emptyFlow) {
-    group.map(::listOf)
-  } else {
-    groups.combine(group) { xs, x -> xs + x }
   }
 
   class Factory(
