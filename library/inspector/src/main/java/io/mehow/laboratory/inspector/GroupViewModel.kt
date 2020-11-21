@@ -44,7 +44,7 @@ internal class GroupViewModel(
     private val configuration: Configuration,
     private val sectionName: String,
   ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
       require(modelClass == GroupViewModel::class.java) { "Cannot create $modelClass" }
       @Suppress("UNCHECKED_CAST")
       return GroupViewModel(configuration.laboratory, configuration.factory(sectionName)) as T
