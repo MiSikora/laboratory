@@ -53,6 +53,18 @@ internal class SharedPreferencesFeaturesStorageTest {
 
     laboratory.experimentIs(FeatureA.A).shouldBeTrue()
   }
+
+  @Test fun informsObserversAfterClearingFeatureFlags() = runBlocking {
+    storage.observeFeatureName(FeatureA::class.java).test {
+      expectItem() shouldBe null
+
+      storage.setOption(FeatureA.B)
+      expectItem() shouldBe FeatureA.B.name
+
+      storage.clear()
+      expectItem() shouldBe null
+    }
+  }
 }
 
 private enum class FeatureA : Feature<FeatureA> {
