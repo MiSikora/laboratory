@@ -1,9 +1,7 @@
 package io.mehow.laboratory.inspector
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,7 +13,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-internal class GroupFragment : Fragment() {
+internal class GroupFragment : Fragment(R.layout.io_mehow_laboratory_feature_group) {
   private val sectionName
     get() = requireNotNull(requireArguments().getString(sectionKey)) {
       "Missing section key"
@@ -32,12 +30,6 @@ internal class GroupFragment : Fragment() {
       lifecycleScope.launch { viewModel.selectFeature(feature) }
     }
   })
-
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    inState: Bundle?,
-  ): View = inflater.inflate(R.layout.io_mehow_laboratory_feature_group, container, false)
 
   override fun onViewCreated(view: View, inState: Bundle?) {
     val featureGroup = view.findViewById<RecyclerView>(R.id.io_mehow_laboratory_feature_group)
