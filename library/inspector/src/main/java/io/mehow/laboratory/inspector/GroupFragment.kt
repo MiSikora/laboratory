@@ -40,16 +40,16 @@ internal class GroupFragment : Fragment() {
   ): View = inflater.inflate(R.layout.io_mehow_laboratory_feature_group, container, false)
 
   override fun onViewCreated(view: View, inState: Bundle?) {
-    val features = view.findViewById<RecyclerView>(R.id.io_mehow_laboratory_feature_group)
-    features.layoutManager = LinearLayoutManager(requireActivity())
-    features.adapter = adapter
-    observeFeatureGroups()
+    val featureGroup = view.findViewById<RecyclerView>(R.id.io_mehow_laboratory_feature_group)
+    featureGroup.layoutManager = LinearLayoutManager(requireActivity())
+    featureGroup.adapter = adapter
+    observeGroup()
   }
 
-  private fun observeFeatureGroups() = viewModel
-      .observeFeatureGroups()
+  private fun observeGroup() = viewModel
+      .observeFeatureGroup()
       .onEach { adapter.submitList(it) }
-      .launchIn(lifecycleScope)
+      .launchIn(viewLifecycleOwner.lifecycleScope)
 
   companion object {
     private const val sectionKey = "Section.Key"

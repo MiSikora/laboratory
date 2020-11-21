@@ -38,7 +38,7 @@ internal class GroupViewModel(
     emitAll(listGroupFlow)
   }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
-  fun observeFeatureGroups(): Flow<List<FeatureUiModel>> = featureGroups
+  fun observeFeatureGroup(): Flow<List<FeatureUiModel>> = featureGroups
 
   class Factory(
     private val configuration: Configuration,

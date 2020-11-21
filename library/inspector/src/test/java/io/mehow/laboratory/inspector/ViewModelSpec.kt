@@ -9,11 +9,8 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 
 internal class ViewModelSpec : DescribeSpec({
   setMainDispatcher()
@@ -22,7 +19,7 @@ internal class ViewModelSpec : DescribeSpec({
     it("filters empty feature flag groups") {
       val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val featureNames = viewModel.observeFeatureGroups().first().map(FeatureUiModel::name)
+      val featureNames = viewModel.observeFeatureGroup().first().map(FeatureUiModel::name)
 
       featureNames shouldNotContain "Empty"
     }
@@ -30,7 +27,7 @@ internal class ViewModelSpec : DescribeSpec({
     it("orders feature flag groups by name") {
       val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val featureNames = viewModel.observeFeatureGroups().first().map(FeatureUiModel::name)
+      val featureNames = viewModel.observeFeatureGroup().first().map(FeatureUiModel::name)
 
       featureNames shouldContainExactly listOf("First", "Second")
     }
@@ -38,7 +35,7 @@ internal class ViewModelSpec : DescribeSpec({
     it("does not order feature flag options") {
       val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val features = viewModel.observeFeatureGroups().first()
+      val features = viewModel.observeFeatureGroup().first()
           .map(FeatureUiModel::models)
           .map { models -> models.map(OptionUiModel::option) }
 
@@ -140,7 +137,7 @@ internal class ViewModelSpec : DescribeSpec({
   }
 })
 
-internal fun GroupViewModel.observeSelectedFeaturesAndSources() = observeFeatureGroups().map { groups ->
+internal fun GroupViewModel.observeSelectedFeaturesAndSources() = observeFeatureGroup().map { groups ->
   groups.map { group ->
     val option = group.models.single(OptionUiModel::isSelected).option
     val source = group.sources.singleOrNull(OptionUiModel::isSelected)?.option
