@@ -120,7 +120,7 @@ public class LaboratoryActivity : AppCompatActivity() {
 
     /**
      * Configures [LaboratoryActivity] with a default "Features" tab, where feature flags are taken from the
-     * [mainFactory]. Any additional tabs can be added in [externalFactories].Rename
+     * [mainFactory]. Any additional tabs can be added in [externalFactories].
      */
     public fun configure(
       laboratory: Laboratory,
