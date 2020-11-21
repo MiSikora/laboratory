@@ -9,10 +9,15 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 
 internal class ViewModelSpec : DescribeSpec({
+  setMainDispatcher()
+
   describe("view model") {
     it("filters empty feature flag groups") {
       val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)

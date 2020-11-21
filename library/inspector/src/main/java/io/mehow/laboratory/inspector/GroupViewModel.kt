@@ -2,6 +2,7 @@ package io.mehow.laboratory.inspector
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
@@ -9,12 +10,14 @@ import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import io.mehow.laboratory.source
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 
 internal class GroupViewModel(
@@ -23,7 +26,7 @@ internal class GroupViewModel(
 ) : ViewModel() {
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setOption(feature)
 
-  fun observeFeatureGroups() = flow {
+  private val featureGroups = flow {
     val listGroupFlow = withContext(Dispatchers.Default) {
       groupFeatureFactory.create()
           .mapNotNull(FeatureMetadata::create)
@@ -33,7 +36,9 @@ internal class GroupViewModel(
       featureGroups.sortedBy(FeatureUiModel::name)
     }
     emitAll(listGroupFlow)
-  }
+  }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+
+  fun observeFeatureGroups(): Flow<List<FeatureUiModel>> = featureGroups
 
   class Factory(
     private val configuration: Configuration,
