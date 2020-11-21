@@ -24,10 +24,9 @@ import kotlinx.coroutines.launch
  * Entry point for QA module that allows to interact with feature flags.
  */
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
-public class LaboratoryActivity : AppCompatActivity() {
+public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory_inspector) {
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
-    setContentView(R.layout.io_mehow_laboratory_inspector)
     setUpToolbar()
     setUpViewPager()
   }
