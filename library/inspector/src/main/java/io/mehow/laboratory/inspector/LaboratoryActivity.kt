@@ -110,13 +110,8 @@ public class LaboratoryActivity : AppCompatActivity() {
 
   public companion object {
     private const val featuresLabel = "Features"
-
-    internal var backingConfiguration: Configuration? = null
+    internal lateinit var configuration: Configuration
       private set
-    internal val configuration
-      get() = requireNotNull(backingConfiguration) {
-        "${LaboratoryActivity::class.java} must be initialized before using it."
-      }
 
     /**
      * Configures [LaboratoryActivity] with a default "Features" tab, where feature flags are taken from the
@@ -138,13 +133,16 @@ public class LaboratoryActivity : AppCompatActivity() {
      * Configures [LaboratoryActivity] with an input [configuration].
      */
     public fun configure(configuration: Configuration) {
-      backingConfiguration = configuration
+      this.configuration = configuration
     }
 
     /**
      * Opens QA module. [Configure][configure] needs to be called before you interact with [LaboratoryActivity].
      */
     public fun start(context: Context) {
+      check(::configuration.isInitialized) {
+        "${LaboratoryActivity::class.java} must be initialized before using it."
+      }
       context.startActivity(Intent(context, LaboratoryActivity::class.java))
     }
   }
