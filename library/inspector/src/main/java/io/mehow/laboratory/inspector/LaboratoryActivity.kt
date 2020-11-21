@@ -115,7 +115,7 @@ public class LaboratoryActivity : AppCompatActivity() {
       mainFactory: FeatureFactory,
       externalFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
-      val filteredFactories = externalFactories.filter { it.key == featuresLabel }
+      val filteredFactories = externalFactories.filterNot { it.key == featuresLabel }
       configure(Configuration(
           laboratory,
           linkedMapOf(featuresLabel to mainFactory) + filteredFactories
