@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View.OVER_SCROLL_NEVER
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -32,16 +33,9 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   }
 
   private fun setUpToolbar() {
-    val toolbar = findViewById<MaterialToolbar>(R.id.io_mehow_laboratory_toolbar)
     val resetDialog = createResetDialog()
-    toolbar.setOnMenuItemClickListener { menuItem ->
-      when (menuItem.itemId) {
-        R.id.io_mehow_laboratory_reset_features_menu_item -> {
-          resetDialog.show()
-          true
-        }
-        else -> false
-      }
+    findViewById<AppCompatImageView>(R.id.io_mehow_laboratory_reset_features).setOnClickListener {
+      resetDialog.show()
     }
   }
 
