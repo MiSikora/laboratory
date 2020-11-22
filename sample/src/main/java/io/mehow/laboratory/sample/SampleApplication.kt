@@ -67,7 +67,7 @@ class SampleApplication : Application() {
   }
 
   private object SampleDefaultOptionFactory : DefaultOptionFactory {
-    override fun <T : Feature<T>> create(feature: T): Feature<*>? = when(feature) {
+    override fun <T : Feature<T>> create(feature: T): Feature<*>? = when (feature) {
       is DistanceAlgorithm -> DistanceAlgorithm.Cosine
       is AllowScreenshots -> AllowScreenshots.Enabled
       else -> null

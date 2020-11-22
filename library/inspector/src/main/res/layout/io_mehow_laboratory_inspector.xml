@@ -6,7 +6,7 @@
     android:id="@+id/io_mehow_laboratory_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="?colorSurface"
     tools:ignore="Overdraw"
     >
 
@@ -16,21 +16,37 @@
       android:orientation="vertical"
       >
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/io_mehow_laboratory_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimarySurface"
+        android:paddingHorizontal="@dimen/io_mehow_laboratory_spacing"
         >
 
-      <com.google.android.material.appbar.MaterialToolbar
-          android:id="@+id/io_mehow_laboratory_toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          app:menu="@menu/io_mehow_laboratory_menu"
-          app:title="@string/io_mehow_laboratory"
-          style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+      <com.google.android.material.textview.MaterialTextView
+          android:id="@+id/io_mehow_laboratory_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/io_mehow_laboratory"
+          android:textAppearance="?textAppearanceHeadline6"
+          android:textColor="?colorOnPrimarySurface"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
           />
 
-    </com.google.android.material.appbar.AppBarLayout>
+      <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/io_mehow_laboratory_reset_features"
+          android:contentDescription="@string/io_mehow_laboratory_reset_features"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/io_mehow_laboratory_reset_features"
+          style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
+          />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/io_mehow_laboratory_tab_layout"
@@ -49,4 +65,5 @@
         />
 
   </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
