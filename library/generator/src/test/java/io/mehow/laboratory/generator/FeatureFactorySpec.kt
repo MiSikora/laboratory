@@ -13,6 +13,7 @@ import io.kotest.property.arbitrary.stringPattern
 import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import kotlin.io.path.createTempDirectory
 
 internal class FeatureFactorySpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(
@@ -151,7 +152,7 @@ internal class FeatureFactorySpec : DescribeSpec({
 
   describe("generated feature flag factory") {
     it("can be internal") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = factoryBuilder
           .build("GeneratedFeatureFactory")
@@ -184,7 +185,7 @@ internal class FeatureFactorySpec : DescribeSpec({
     }
 
     it("can be public") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
       val builder = factoryBuilder.copy(visibility = Public)
 
       val outputFile = builder
@@ -219,7 +220,7 @@ internal class FeatureFactorySpec : DescribeSpec({
 
     it("is optimized in case of no features") {
       setOf(1).map { }
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
       val builder = factoryBuilder.copy(features = emptyList())
 
       val outputFile = builder
