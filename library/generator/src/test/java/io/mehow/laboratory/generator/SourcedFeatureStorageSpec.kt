@@ -12,6 +12,7 @@ import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import java.util.Locale
+import kotlin.io.path.createTempDirectory
 
 internal class SourcedFeatureStorageSpec : DescribeSpec({
   val storageBuilder = SourcedFeatureStorageModel.Builder(
@@ -59,7 +60,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
 
   describe("generated feature storage") {
     it("can be internal") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = storageBuilder.copy(visibility = Internal)
           .build()
@@ -91,7 +92,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     }
 
     it("can be public") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = storageBuilder.copy(visibility = Public)
           .build()
@@ -123,7 +124,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     }
 
     it("ignores duplicate source names") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = storageBuilder.copy(sourceNames = listOf("Foo", "Bar", "Baz", "Foo", "Baz", "Foo"))
           .build()
@@ -157,7 +158,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     }
 
     it("ignores local source name") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val localPermutations = (0b00000..0b11111).map {
         listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
@@ -194,7 +195,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     }
 
     it("can have only local source") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = storageBuilder.copy(sourceNames = emptyList())
           .build()
