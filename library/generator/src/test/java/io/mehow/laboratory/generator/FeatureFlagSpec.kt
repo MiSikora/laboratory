@@ -14,6 +14,7 @@ import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import java.util.Locale
+import kotlin.io.path.createTempDirectory
 
 internal class FeatureFlagSpec : DescribeSpec({
   val featureBuilder = FeatureFlagModel.Builder(
@@ -356,7 +357,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
   describe("generated feature flag") {
     it("can be internal") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = featureBuilder.build().map { model -> model.generate(tempDir) }
 
@@ -380,7 +381,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     it("can be public") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
       val builder = featureBuilder.copy(visibility = Public)
 
       val outputFile = builder.build().map { model -> model.generate(tempDir) }
@@ -405,7 +406,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     it("can have source parameter") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = featureBuilder
           .copy(sourceOptions = listOf(FeatureFlagOption("Remote")))
@@ -445,7 +446,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     it("does not have source parameter if only source is Local") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = featureBuilder
           .copy(sourceOptions = listOf(FeatureFlagOption("Local")))
@@ -471,7 +472,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     it("filters out any custom local source") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val localPermutations = (0b00000..0b11111).map {
         listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
@@ -520,7 +521,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     it("allows to set not Local default default for source") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = featureBuilder
           .copy(sourceOptions = listOf(FeatureFlagOption("Remote", isDefault = true)))
@@ -560,7 +561,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     it("source visibility follows feature visibility") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = featureBuilder
           .copy(visibility = Public, sourceOptions = listOf(FeatureFlagOption("Remote")))
@@ -600,7 +601,7 @@ internal class FeatureFlagSpec : DescribeSpec({
     }
 
     it("can have description") {
-      val tempDir = createTempDir()
+      val tempDir = createTempDirectory().toFile()
 
       val outputFile = featureBuilder
           .copy(description = "Feature description")
@@ -630,7 +631,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
     context("can be deprecated") {
       it("with warning level by default") {
-        val tempDir = createTempDir()
+        val tempDir = createTempDirectory().toFile()
 
         val outputFile = featureBuilder
             .copy(deprecation = Deprecation(message = "Deprecation message"))
@@ -663,7 +664,7 @@ internal class FeatureFlagSpec : DescribeSpec({
 
       enumValues<DeprecationLevel>().forEach { level ->
         it("with explicit $level deprecation level") {
-          val tempDir = createTempDir()
+          val tempDir = createTempDirectory().toFile()
 
           val outputFile = featureBuilder
               .copy(deprecation = Deprecation(message = "Deprecation message", level = level))

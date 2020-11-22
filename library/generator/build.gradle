@@ -1,8 +1,14 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
   id "org.jetbrains.kotlin.jvm"
 }
 
 test.useJUnitPlatform()
+
+tasks.withType(KotlinCompile) {
+  kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.io.path.ExperimentalPathApi"
+}
 
 dependencies {
   api libs.arrow
