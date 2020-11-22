@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="IoMehowLaboratory.Widget.ActionBar.ImageView" parent="">
+    <item name="android:layout_width">32dp</item>
+    <item name="android:layout_height">32dp</item>
+    <item name="android:background">?android:selectableItemBackgroundBorderless</item>
+    <item name="tint">?colorOnPrimarySurface</item>
+  </style>
+
+</resources>

@@ -15,6 +15,7 @@ dependencies {
   implementation libs.android.x.fragmentKtx
   implementation libs.android.x.viewModelKtx
   implementation libs.android.x.recyclerView
+  implementation libs.android.x.constraintLayout
   implementation libs.android.x.viewPager2
   implementation libs.android.material
   implementation libs.kotlin.x.coroutinesAndroid

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- ConstraintLayout `2.0.4` to `laboratory-inspector`.
+
 ### Changed
 - Inspector tabs are now scrollable instead of fixed.
 - Upgrade to Kotlin `1.4.20`.
