@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <dimen name="io_mehow_laboratory_spacing">8dp</dimen>
-  <dimen name="io_mehow_laboratory_elevation">8dp</dimen>
+  <dimen name="io_mehow_laboratory_elevation">4dp</dimen>
 </resources>

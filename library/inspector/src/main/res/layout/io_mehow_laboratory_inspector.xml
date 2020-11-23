@@ -36,6 +36,57 @@
           app:layout_constraintTop_toTopOf="parent"
           />
 
+      <androidx.appcompat.widget.AppCompatEditText
+          android:id="@+id/io_mehow_laboratory_feature_query"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:background="@null"
+          android:hint="@string/io_mehow_laboratory_search_features_hint"
+          android:imeOptions="actionDone|flagNoExtractUi"
+          android:inputType="text|textNoSuggestions"
+          android:selectAllOnFocus="true"
+          android:textColor="?colorOnPrimarySurface"
+          android:textColorHint="@color/io_mehow_laboratory_hint_text"
+          android:textCursorDrawable="@drawable/io_mehow_laboratory_hint_cursor"
+          android:visibility="gone"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/io_mehow_laboratory_clear_query"
+          app:layout_constraintStart_toEndOf="@+id/io_mehow_laboratory_close_search"
+          app:layout_constraintTop_toTopOf="parent"
+          />
+
+      <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/io_mehow_laboratory_close_search"
+          android:contentDescription="@string/io_mehow_laboratory_close_search"
+          android:visibility="gone"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/io_mehow_laboratory_back"
+          style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
+          />
+
+      <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/io_mehow_laboratory_show_search"
+          android:contentDescription="@string/io_mehow_laboratory_search_features"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/io_mehow_laboratory_reset_features"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/io_mehow_laboratory_search"
+          style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
+          />
+
+      <androidx.appcompat.widget.AppCompatImageView
+          android:id="@+id/io_mehow_laboratory_clear_query"
+          android:contentDescription="@string/io_mehow_laboratory_clear_query"
+          android:visibility="gone"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/io_mehow_laboratory_reset_features"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/io_mehow_laboratory_clear"
+          style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
+          />
+
       <androidx.appcompat.widget.AppCompatImageView
           android:id="@+id/io_mehow_laboratory_reset_features"
           android:contentDescription="@string/io_mehow_laboratory_reset_features"
