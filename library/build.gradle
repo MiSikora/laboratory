@@ -33,6 +33,10 @@ allprojects {
   tasks.withType(Test) {
     testLogging {
       events "skipped", "failed", "passed"
+      showExceptions true
+      exceptionFormat "full"
+      showCauses true
+      showStackTraces true
     }
   }
 
