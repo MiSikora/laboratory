@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.3] - 2020-11-23
+
 ### Added
 - Feature flags filtering to the QA module. Features are filtered by their name, options or source options.
 - ConstraintLayout `2.0.4` to `laboratory-inspector`.
@@ -202,7 +204,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.2...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.3...HEAD
+[0.9.3]: https://github.com/MiSikora/laboratory/releases/tag/0.9.3
 [0.9.2]: https://github.com/MiSikora/laboratory/releases/tag/0.9.2
 [0.9.1]: https://github.com/MiSikora/laboratory/releases/tag/0.9.1
 [0.9.0]: https://github.com/MiSikora/laboratory/releases/tag/0.9.0
