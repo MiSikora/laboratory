@@ -152,8 +152,8 @@ naming:
     active: true
   ObjectPropertyNaming:
     active: true
-    constantPattern: '^[a-z]+(?:[A-Z][a-z]+)*$'
-    propertyPattern: '^[a-z]+(?:[A-Z][a-z]+)*$'
+    constantPattern: '^[a-zA-Z]+(?:[A-Z][a-z]+)*$'
+    propertyPattern: '^[a-zA-Z]+(?:[A-Z][a-z]+)*$'
     privatePropertyPattern: '^[a-z]+(?:[A-Z][a-z]+)*$'
   PackageNaming:
     active: true

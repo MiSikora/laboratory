@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -23,19 +24,26 @@ import kotlinx.coroutines.withContext
 internal class GroupViewModel(
   private val laboratory: Laboratory,
   private val groupFeatureFactory: FeatureFactory,
+  searchQueries: Flow<SearchQuery>,
 ) : ViewModel() {
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setOption(feature)
 
+  private val initiatedSearchQueries = flow {
+    emit(SearchQuery.Empty)
+    emitAll(searchQueries)
+  }.distinctUntilChanged()
+
   private val featureGroups = flow {
-    val listGroupFlow = withContext(Dispatchers.Default) {
+    val groups = withContext(Dispatchers.Default) {
       groupFeatureFactory.create()
           .mapNotNull(FeatureMetadata::create)
           .map { it.observeGroup(laboratory) }
           .observeElements()
-    }.flowOn(Dispatchers.Default).map { featureGroups ->
-      featureGroups.sortedBy(FeatureUiModel::name)
     }
-    emitAll(listGroupFlow)
+    val searchedGroups = combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
+        .map { it.sortedBy(FeatureUiModel::name) }
+        .flowOn(Dispatchers.Default)
+    emitAll(searchedGroups)
   }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
   fun observeFeatureGroup(): Flow<List<FeatureUiModel>> = featureGroups
@@ -43,11 +51,12 @@ internal class GroupViewModel(
   class Factory(
     private val configuration: Configuration,
     private val sectionName: String,
+    private val searchQueries: Flow<SearchQuery>,
   ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
       require(modelClass == GroupViewModel::class.java) { "Cannot create $modelClass" }
       @Suppress("UNCHECKED_CAST")
-      return GroupViewModel(configuration.laboratory, configuration.factory(sectionName)) as T
+      return GroupViewModel(configuration.laboratory, configuration.factory(sectionName), searchQueries) as T
     }
   }
 

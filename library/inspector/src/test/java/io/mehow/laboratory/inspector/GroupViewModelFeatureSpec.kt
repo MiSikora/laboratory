@@ -9,10 +9,10 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
-internal class ViewModelSpec : DescribeSpec({
+internal class GroupViewModelFeatureSpec : DescribeSpec({
   setMainDispatcher()
 
   describe("view model") {
@@ -137,17 +137,7 @@ internal class ViewModelSpec : DescribeSpec({
   }
 })
 
-internal fun GroupViewModel.observeSelectedFeaturesAndSources() = observeFeatureGroup().map { groups ->
-  groups.map { group ->
-    val option = group.models.single(OptionUiModel::isSelected).option
-    val source = group.sources.singleOrNull(OptionUiModel::isSelected)?.option
-    option to source
-  }
-}
 
-internal fun GroupViewModel.observeSelectedFeatures() = observeSelectedFeaturesAndSources().map { pairs ->
-  pairs.map { (feature, _) -> feature }
-}
 
 private object NoSourceFeatureFactory : FeatureFactory {
   override fun create(): Set<Class<Feature<*>>> {
@@ -208,3 +198,9 @@ private enum class Sourced : Feature<Sourced> {
     override val defaultOption get() = Local
   }
 }
+
+@Suppress("TestFunctionName")
+private fun GroupViewModel(
+  laboratory: Laboratory,
+  factory: FeatureFactory,
+) = GroupViewModel(laboratory, factory, emptyFlow())

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.mehow.laboratory.Feature
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ internal class GroupFragment : Fragment(R.layout.io_mehow_laboratory_feature_gro
       "Missing section key"
     }
   internal val viewModel by viewModels<GroupViewModel> {
-    GroupViewModel.Factory(LaboratoryActivity.configuration, sectionName)
+    GroupViewModel.Factory(LaboratoryActivity.configuration, sectionName, emptyFlow())
   }
   private val adapter = FeatureAdapter(object : FeatureAdapter.Listener {
     override fun onSelectFeature(feature: Feature<*>) {
