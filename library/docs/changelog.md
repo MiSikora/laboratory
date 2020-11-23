@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Feature flags filtering to the QA module. Features are filtered by their name, options or source options.
 - ConstraintLayout `2.0.4` to `laboratory-inspector`.
 
 ### Changed

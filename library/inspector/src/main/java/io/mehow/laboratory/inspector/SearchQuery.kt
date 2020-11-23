@@ -9,6 +9,8 @@ internal class SearchQuery(input: String) {
       .map { it.toLowerCase(Locale.ROOT) }
   private val joinedParts = parts.joinToString("")
 
+  fun isNotEmpty() = parts.isNotEmpty()
+
   fun matches(text: List<String>) = text.map { it.toLowerCase(Locale.ROOT) }
       .containsAllInOrder(parts) { textPart, queryPart -> queryPart in textPart }
 
@@ -33,6 +35,8 @@ internal class SearchQuery(input: String) {
   override fun equals(other: Any?) = other is SearchQuery && this.parts == other.parts
 
   override fun hashCode() = parts.hashCode()
+
+  override fun toString() = "SearchQuery(joinedParts='$joinedParts')"
 
   companion object {
     private val whiteSpaceRegex = """\s""".toRegex()
