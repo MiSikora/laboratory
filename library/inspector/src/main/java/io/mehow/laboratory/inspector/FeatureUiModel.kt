@@ -15,3 +15,15 @@ internal data class FeatureUiModel(
       ?.name
       ?.equals("Local", ignoreCase = true) ?: true
 }
+
+internal fun List<FeatureUiModel>.search(query: SearchQuery) = mapNotNull { uiModels ->
+  uiModels.search(query)
+}
+
+private fun FeatureUiModel.search(query: SearchQuery) = takeIf {
+  query.matches(name) || query.matches(modelNames) || query.matches(sourceNames)
+}
+
+private val FeatureUiModel.modelNames get() = models.map { it.option.name }
+
+private val FeatureUiModel.sourceNames get() = sources.map { it.option.name }
