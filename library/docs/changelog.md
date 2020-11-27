@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Kyrie `0.2.1` to `laboratory-inspector`.
+- DynamicAnimation `1.0.0` to `laboratory-inspector`.
+
+### Changed
+- Animation of search feature in inspector. It no longer makes ugly visibility transitions.
+
 ## [0.9.3] - 2020-11-23
 
 ### Added
