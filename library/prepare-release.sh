@@ -6,6 +6,8 @@ if [[ $(git rev-parse --abbrev-ref HEAD) != master ]]; then
   exit 0
 fi
 
+cd "${0%/*}"
+
 currentVersion=$(git describe --abbrev=0)
 currentMajor=$(echo "$currentVersion" | cut -d. -f1)
 currentMinor=$(echo "$currentVersion" | cut -d. -f2)
