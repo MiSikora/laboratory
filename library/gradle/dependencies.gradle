@@ -30,6 +30,7 @@ ext.libs = [
                 "runner": "androidx.test:runner:${versions.androidxTest}",
             ],
             "testExtJunitKtx": "androidx.test.ext:junit-ktx:1.1.2",
+            "dynamicAnimation": "androidx.dynamicanimation:dynamicanimation:1.0.0",
         ],
         "material": "com.google.android.material:material:1.2.1",
     ],
@@ -68,4 +69,5 @@ ext.libs = [
     "arrow": "io.arrow-kt:arrow-core:0.10.5",
     "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:3.5.0",
     "turbine": "app.cash.turbine:turbine:0.3.0",
+    "kyrie": "com.github.alexjlockwood:kyrie:0.2.1",
 ]
