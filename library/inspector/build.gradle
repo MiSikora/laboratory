@@ -5,6 +5,10 @@ plugins {
 
 android {
   resourcePrefix "io_mehow_laboratory_"
+
+  defaultConfig {
+    consumerProguardFile "io-mehow-laboratory-inspector.pro"
+  }
 }
 
 dependencies {

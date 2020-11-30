@@ -20,7 +20,7 @@ internal class FeatureAdapter(
   override fun onBindViewHolder(holder: FeatureViewHolder, position: Int) = holder.bind(getItem(position))
 
   private object DiffCallback : ItemCallback<FeatureUiModel>() {
-    override fun areItemsTheSame(old: FeatureUiModel, new: FeatureUiModel) = old.fqcn == new.fqcn
+    override fun areItemsTheSame(old: FeatureUiModel, new: FeatureUiModel) = old.type == new.type
 
     override fun areContentsTheSame(old: FeatureUiModel, new: FeatureUiModel): Boolean {
       return old.models.selected == new.models.selected && old.sources.selected == new.sources.selected

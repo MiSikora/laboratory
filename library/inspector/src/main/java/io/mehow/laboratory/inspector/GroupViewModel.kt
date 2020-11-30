@@ -24,8 +24,11 @@ import kotlinx.coroutines.withContext
 internal class GroupViewModel(
   private val laboratory: Laboratory,
   private val groupFeatureFactory: FeatureFactory,
+  deprecationHandler: DeprecationHandler,
   searchQueries: Flow<SearchQuery>,
 ) : ViewModel() {
+  private val featureMetadataFactory = FeatureMetadata.Factory(deprecationHandler)
+
   suspend fun selectFeature(feature: Feature<*>) = laboratory.setOption(feature)
 
   private val initiatedSearchQueries = flow {
@@ -36,12 +39,13 @@ internal class GroupViewModel(
   private val featureGroups = flow {
     val groups = withContext(Dispatchers.Default) {
       groupFeatureFactory.create()
-          .mapNotNull(FeatureMetadata::create)
+          .mapNotNull(featureMetadataFactory::create)
+          .filter { it.deprecationPhenotype != DeprecationPhenotype.Hide }
           .map { it.observeGroup(laboratory) }
           .observeElements()
     }
     val searchedGroups = combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
-        .map { it.sortedBy(FeatureUiModel::name) }
+        .map { it.sortedWith(FeatureUiModel.NaturalComparator) }
         .flowOn(Dispatchers.Default)
     emitAll(searchedGroups)
   }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
@@ -56,33 +60,50 @@ internal class GroupViewModel(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
       require(modelClass == GroupViewModel::class.java) { "Cannot create $modelClass" }
       @Suppress("UNCHECKED_CAST")
-      return GroupViewModel(configuration.laboratory, configuration.factory(sectionName), searchQueries) as T
+      return GroupViewModel(
+          configuration.laboratory,
+          configuration.factory(sectionName),
+          configuration.deprecation,
+          searchQueries
+      ) as T
     }
   }
 
-  private class FeatureMetadata private constructor(private val feature: Class<Feature<*>>) {
+  private class FeatureMetadata(
+    private val feature: Class<Feature<*>>,
+    private val deprecationHandler: DeprecationHandler,
+  ) {
     val simpleReadableName = feature.name.substringAfterLast('.').replace('$', '.')
 
     val options = feature.enumConstants!!.toList<Feature<*>>()
 
-    val sourceMetadata = feature.source?.let(FeatureMetadata::create)
+    val sourceMetadata = feature.source?.let { FeatureMetadata(it, deprecationHandler) }
+
+    private val deprecationLevel = feature.annotations
+        .filterIsInstance<Deprecated>()
+        .firstOrNull()
+        ?.level
+
+    val deprecationPhenotype = deprecationLevel?.let(deprecationHandler::getPhenotype)
+
+    val deprecationPlacement = deprecationLevel?.let(deprecationHandler::getAlignment)
 
     fun observeGroup(laboratory: Laboratory): Flow<FeatureUiModel> {
-      val featureEmissions = observeModels(laboratory)
-      val sourceEmissions = sourceMetadata?.observeModels(laboratory) ?: flowOf(emptyList())
+      val featureEmissions = observeOptions(laboratory)
+      val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
       return featureEmissions.combine(sourceEmissions) { features, sources ->
-        FeatureUiModel(simpleReadableName, feature.name, features, sources)
+        FeatureUiModel(feature, simpleReadableName, features, sources, deprecationPlacement, deprecationPhenotype)
       }
     }
 
-    fun observeModels(laboratory: Laboratory) = laboratory.observe(feature).map { selectedFeature ->
+    private fun observeOptions(laboratory: Laboratory) = laboratory.observe(feature).map { selectedFeature ->
       options.map { option -> OptionUiModel(option, isSelected = selectedFeature == option) }
     }
 
-    companion object {
+    class Factory(private val deprecationHandler: DeprecationHandler) {
       fun create(feature: Class<Feature<*>>) = feature
           .takeUnless { it.enumConstants.isNullOrEmpty() }
-          ?.let(::FeatureMetadata)
+          ?.let { FeatureMetadata(it, deprecationHandler) }
     }
   }
 }

@@ -84,6 +84,7 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   ) {
     internal val laboratory = builder.laboratory
     private val featureFactories = builder.featureFactories
+    internal val deprecation = DeprecationHandler(builder.phenotypeSelector, builder.alignmentSelector)
 
     @Deprecated(
         message = "This method will be removed in 1.0.0. Use 'Configuration.create()' instead.",
@@ -112,6 +113,18 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
 
       override fun featureFactories(factories: Map<String, FeatureFactory>): BuildingStep = apply {
         this.featureFactories = factories
+      }
+
+      internal var phenotypeSelector = DeprecationPhenotype.Selector { DeprecationPhenotype.Strikethrough }
+
+      override fun deprecationPhenotypeSelector(selector: DeprecationPhenotype.Selector): BuildingStep = apply {
+        this.phenotypeSelector = selector
+      }
+
+      internal var alignmentSelector = DeprecationAlignment.Selector { DeprecationAlignment.Bottom }
+
+      override fun deprecationAlignmentSelector(selector: DeprecationAlignment.Selector): BuildingStep = apply {
+        this.alignmentSelector = selector
       }
 
       override fun build(): Configuration = Configuration(this)
@@ -158,6 +171,16 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
      * The final step of a fluent builder that can set optional parameters.
      */
     public interface BuildingStep {
+      /**
+       * Sets how deprecated feature flags will be displayed to the user.
+       */
+      public fun deprecationPhenotypeSelector(selector: DeprecationPhenotype.Selector): BuildingStep
+
+      /**
+       * Sets how deprecated feature flags will be sorted in a displayed group.
+       */
+      public fun deprecationAlignmentSelector(selector: DeprecationAlignment.Selector): BuildingStep
+
       /**
        * Creates a new [Configuration] with provided parameters.
        */

@@ -2,6 +2,7 @@ package io.mehow.laboratory.inspector
 
 import app.cash.turbine.FlowTurbine
 import app.cash.turbine.test
+import io.kotest.assertions.fail
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.property.Arb
@@ -235,7 +236,12 @@ private enum class SourcedFeature : Feature<SourcedFeature> {
 @Suppress("TestFunctionName")
 private fun GroupViewModel(
   searchFlow: Flow<SearchQuery>,
-) = GroupViewModel(Laboratory.inMemory(), SearchFeatureFactory, searchFlow)
+) = GroupViewModel(
+    Laboratory.inMemory(),
+    SearchFeatureFactory,
+    DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
+    searchFlow,
+)
 
 private suspend fun FlowTurbine<List<KClass<out Feature<*>>>>.expectAllFeatureFlags() {
   expectItem() shouldContainExactly listOf(
