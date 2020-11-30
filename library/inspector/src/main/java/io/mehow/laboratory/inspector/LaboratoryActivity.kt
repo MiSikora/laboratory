@@ -77,20 +77,92 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   }
 
   /**
-   * Initialisation data for QA module.
-   *
-   * @param laboratory [Laboratory] instance that should share [FeatureStorage][io.mehow.laboratory.FeatureStorage]
-   * instance with your application.
-   * @param featureFactories Each entry in this map will result in a separate tab in the QA module. Key is used
-   * as a tab name, and each tab displays all feature flags provided by [FeatureFactory] from value.
+   * Configuration data for QA module.
    */
-  public class Configuration(
-    internal val laboratory: Laboratory,
-    private val featureFactories: Map<String, FeatureFactory>,
+  public class Configuration internal constructor(
+    builder: Builder,
   ) {
+    internal val laboratory = builder.laboratory
+    private val featureFactories = builder.featureFactories
+
+    @Deprecated(
+        message = "This method will be removed in 1.0.0. Use 'Configuration.create()' instead.",
+        replaceWith = ReplaceWith("Configuration.create(laboratory, featureFactories)")
+    )
+    public constructor(
+      laboratory: Laboratory,
+      featureFactories: Map<String, FeatureFactory>,
+    ) : this(Builder().apply {
+      this.laboratory = laboratory
+      this.featureFactories = featureFactories
+    })
+
     internal val sectionNames = featureFactories.keys
 
     internal fun factory(sectionName: String) = featureFactories.getValue(sectionName)
+
+    internal class Builder : LaboratoryStep, FeatureFactoriesStep, BuildingStep {
+      lateinit var laboratory: Laboratory
+
+      override fun laboratory(laboratory: Laboratory): FeatureFactoriesStep = apply {
+        this.laboratory = laboratory
+      }
+
+      lateinit var featureFactories: Map<String, FeatureFactory>
+
+      override fun featureFactories(factories: Map<String, FeatureFactory>): BuildingStep = apply {
+        this.featureFactories = factories
+      }
+
+      override fun build(): Configuration = Configuration(this)
+    }
+
+    public companion object {
+      /**
+       * Creates [Configuration] with provided [laboratory] and [featureFactories].
+       */
+      public fun create(
+        laboratory: Laboratory,
+        featureFactories: Map<String, FeatureFactory>,
+      ): Configuration = builder().laboratory(laboratory).featureFactories(featureFactories).build()
+
+      /**
+       * Creates a builder that allows to customize [Configuration].
+       */
+      public fun builder(): LaboratoryStep = Builder()
+    }
+
+    /**
+     * A step of a fluent builder that requires [Laboratory] to proceed.
+     */
+    public interface LaboratoryStep {
+      /**
+       * Sets laboratory. Its instance should share [FeatureStorage][io.mehow.laboratory.FeatureStorage]
+       * instance with your application.
+       */
+      public fun laboratory(laboratory: Laboratory): FeatureFactoriesStep
+    }
+
+    /**
+     * A step of a fluent builder that requires [feature factories][FeatureFactory] to proceed.
+     */
+    public interface FeatureFactoriesStep {
+      /**
+       * Sets feature factories. Each entry in this map will result in a separate tab in the QA module. Key is used
+       * as a tab name, and each tab displays all feature flags provided by [FeatureFactory] from value.
+       */
+      public fun featureFactories(factories: Map<String, FeatureFactory>): BuildingStep
+    }
+
+    /**
+     * The final step of a fluent builder that can set optional parameters.
+     */
+    public interface BuildingStep {
+      /**
+       * Creates a new [Configuration] with provided parameters.
+       */
+      public fun build(): Configuration
+    }
   }
 
   public companion object {
@@ -108,9 +180,9 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
       externalFactories: Map<String, FeatureFactory> = emptyMap(),
     ) {
       val filteredFactories = externalFactories.filterNot { it.key == featuresLabel }
-      configure(Configuration(
+      configure(Configuration.create(
           laboratory,
-          linkedMapOf(featuresLabel to mainFactory) + filteredFactories
+          featureFactories = linkedMapOf(featuresLabel to mainFactory) + filteredFactories
       ))
     }
 
