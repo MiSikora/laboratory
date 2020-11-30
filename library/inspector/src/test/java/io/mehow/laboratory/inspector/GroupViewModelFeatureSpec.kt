@@ -137,8 +137,6 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
   }
 })
 
-
-
 private object NoSourceFeatureFactory : FeatureFactory {
   override fun create(): Set<Class<Feature<*>>> {
     @Suppress("UNCHECKED_CAST")

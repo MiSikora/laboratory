@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Builder pattern for `LaboratoryActivity.Configuration` construction.
+
+### Deprecated
+- `LaboratoryActivity.Configuration(storage)` constructor. Use `LaboratoryActivity.Configuration.create(storage)` or `LaboratoryActivity.Configuration.builder()` instead.
+
 ## [0.9.4] - 2020-11-27
 
 ### Added
