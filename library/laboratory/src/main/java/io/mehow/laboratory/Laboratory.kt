@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.map
 /**
  * High-level API for interaction with feature flags. It allows to read and write their options.
  */
-public class Laboratory private constructor(
+public class Laboratory internal constructor(
   builder: Builder,
 ) {
   private val storage = builder.storage
@@ -176,7 +176,7 @@ public class Laboratory private constructor(
     public fun builder(): FeatureStorageStep = Builder()
   }
 
-  private class Builder : FeatureStorageStep, BuildingStep {
+  internal class Builder : FeatureStorageStep, BuildingStep {
     lateinit var storage: FeatureStorage
 
     override fun featureStorage(storage: FeatureStorage): BuildingStep = apply {
