@@ -212,7 +212,7 @@ public class Laboratory internal constructor(
     public fun defaultOptionFactory(factory: DefaultOptionFactory): BuildingStep
 
     /**
-     * Creates a new [Laboratory] with
+     * Creates a new [Laboratory] with provided parameters.
      */
     public fun build(): Laboratory
   }
