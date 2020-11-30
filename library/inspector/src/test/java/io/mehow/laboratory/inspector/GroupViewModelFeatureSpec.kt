@@ -1,6 +1,7 @@
 package io.mehow.laboratory.inspector
 
 import app.cash.turbine.test
+import io.kotest.assertions.fail
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
@@ -201,4 +202,9 @@ private enum class Sourced : Feature<Sourced> {
 private fun GroupViewModel(
   laboratory: Laboratory,
   factory: FeatureFactory,
-) = GroupViewModel(laboratory, factory, emptyFlow())
+) = GroupViewModel(
+    laboratory,
+    factory,
+    DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
+    emptyFlow(),
+)

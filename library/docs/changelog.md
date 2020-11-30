@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Builder pattern for `LaboratoryActivity.Configuration` construction.
+- Visual representation of deprecated feature flags in the QA module.
+- Visual representation of deprecated feature flags can be configured via `LaboratoryActivity.Configuration` builder with `deprecationPhenotypeSelector()` and `deprecationAlignmentSelector()` functions.
+- Consumer ProGuard rules to `laboratory-inspector` to keep `@Deprecated` annotation.
 
 ### Deprecated
 - `LaboratoryActivity.Configuration(storage)` constructor. Use `LaboratoryActivity.Configuration.create(storage)` or `LaboratoryActivity.Configuration.builder()` instead.

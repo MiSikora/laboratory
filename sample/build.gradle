@@ -36,6 +36,7 @@ android {
   }
 
   buildTypes.debug.setMatchingFallbacks "release"
+  buildTypes.debug.minifyEnabled true
 
   variantFilter {
     setIgnore it.name != "debug"
@@ -57,6 +58,8 @@ laboratory {
 
   feature("ReportRootedDevice") {
     description = "Reports during cold start whether device is rooted"
+
+    deprecated("Sample deprecation")
 
     withOption("Enabled")
     withDefaultOption("Disabled")

@@ -1,9 +1,13 @@
 package io.mehow.laboratory.inspector
 
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.textview.MaterialTextView
+import io.mehow.laboratory.inspector.DeprecationPhenotype.Hide
+import io.mehow.laboratory.inspector.DeprecationPhenotype.Show
+import io.mehow.laboratory.inspector.DeprecationPhenotype.Strikethrough
 
 internal class FeatureViewHolder(
   itemView: View,
@@ -22,6 +26,11 @@ internal class FeatureViewHolder(
 
   fun bind(group: FeatureUiModel) {
     name.text = group.name
+    name.paintFlags = when (group.deprecationPhenotype) {
+      null, Show -> name.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
+      Strikethrough -> name.paintFlags or STRIKE_THRU_TEXT_FLAG
+      Hide -> name.paintFlags
+    }
     description.text = group.description
     description.isVisible = group.description.isNotBlank()
     options.render(group.models, group.isCurrentSourceLocal)

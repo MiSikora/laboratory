@@ -1,10 +1,14 @@
 package io.mehow.laboratory.inspector
 
+import io.mehow.laboratory.Feature
+
 internal data class FeatureUiModel(
+  val type: Class<Feature<*>>,
   val name: String,
-  val fqcn: String,
   val models: List<OptionUiModel>,
   val sources: List<OptionUiModel>,
+  val deprecationAlignment: DeprecationAlignment?,
+  val deprecationPhenotype: DeprecationPhenotype?,
 ) {
   val description = models.firstOrNull()?.option?.description.orEmpty()
 
@@ -14,6 +18,15 @@ internal data class FeatureUiModel(
       ?.option
       ?.name
       ?.equals("Local", ignoreCase = true) ?: true
+
+  companion object {
+    private val firstAlignmentOrdinal = DeprecationAlignment.values().first()
+
+    val NaturalComparator = compareBy<FeatureUiModel>(
+        { it.deprecationAlignment ?: firstAlignmentOrdinal },
+        { it.name }
+    )
+  }
 }
 
 internal fun List<FeatureUiModel>.search(query: SearchQuery) = mapNotNull { uiModels ->
