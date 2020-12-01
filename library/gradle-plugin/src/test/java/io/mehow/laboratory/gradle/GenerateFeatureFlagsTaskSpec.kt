@@ -578,7 +578,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  message = "Deprecation message",
       |  level = DeprecationLevel.WARNING
       |)
-      |public enum class Feature : io.mehow.laboratory.Feature<Feature>
+      |public enum class Feature : io.mehow.laboratory.Feature<@Suppress("DEPRECATION") Feature>
     """.trimMargin("|")
   }
 
@@ -592,6 +592,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     val feature = fixture.featureFile("Feature")
     feature.shouldExist()
 
+    // TODO: https://github.com/MiSikora/laboratory/issues/62
     feature.readText() shouldContain """
       |@Deprecated(
       |  message = "Deprecation message",

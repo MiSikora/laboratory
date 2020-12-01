@@ -12,16 +12,42 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import io.mehow.laboratory.Feature
 import java.io.File
+import kotlin.DeprecationLevel.ERROR
+import kotlin.DeprecationLevel.HIDDEN
+import kotlin.DeprecationLevel.WARNING
 import kotlin.reflect.KClass
 
+@Suppress("StringLiteralDuplication")
 internal class FeatureFlagGenerator(
   private val feature: FeatureFlagModel,
 ) {
+  private val deprecated = feature.deprecation?.let { deprecation ->
+    AnnotationSpec.builder(Deprecated::class)
+        .addMember("message = %S", deprecation.message)
+        .addMember("level = %T.%L", DeprecationLevel::class, deprecation.level)
+        .build()
+  }
+
+  private val suppressDeprecation = feature.deprecation
+      ?.let {
+        when (it.level) {
+          WARNING -> "DEPRECATION"
+          ERROR -> "DEPRECATION_ERROR"
+          HIDDEN -> null // TODO: https://github.com/MiSikora/laboratory/issues/62
+        }
+      }
+      ?.let { name ->
+        AnnotationSpec.builder(Suppress::class)
+            .addMember("%S", name)
+            .build()
+      }
+
   private val defaultOptionProperty = feature.options.toList()
       .single { @Kt41142 it.isDefault }
       .let { option ->
         PropertySpec
             .builder(defaultOptionPropertyName, feature.className, OVERRIDE)
+            .apply { suppressDeprecation?.let { @Kt41142 addAnnotation(it) } }
             .getter(FunSpec.getterBuilder().addCode("return %L", option.name).build())
             .build()
       }
@@ -47,17 +73,16 @@ internal class FeatureFlagGenerator(
             .build()
       }
 
-  private val deprecated = feature.deprecation?.let { deprecation ->
-    AnnotationSpec.builder(Deprecated::class)
-        .addMember("message = %S", deprecation.message)
-        .addMember("level = %T.%L", DeprecationLevel::class, deprecation.level)
-        .build()
-  }
-
   private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
       .apply { deprecated?.let { @Kt41142 addAnnotation(it) } }
       .addModifiers(feature.visibility.modifier)
-      .addSuperinterface(Feature::class(feature.className))
+      .apply {
+        var parametrizedType: TypeName = feature.className
+        if (suppressDeprecation != null) {
+          parametrizedType = parametrizedType.copy(annotations = listOf(suppressDeprecation))
+        }
+        addSuperinterface(Feature::class(parametrizedType))
+      }
       .addProperty(defaultOptionProperty)
       .apply {
         feature.options.foldLeft(this) { builder, featureOption ->
