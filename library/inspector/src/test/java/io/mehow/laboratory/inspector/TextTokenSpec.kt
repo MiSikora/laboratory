@@ -11,36 +11,30 @@ import io.mehow.laboratory.inspector.TextToken.Regular
 internal class TextTokenSpec : DescribeSpec({
   describe("text tokens") {
     it("can be empty") {
-      TextToken.create("").shouldBeEmpty()
+      "".tokenize().shouldBeEmpty()
     }
 
     it("can be blank") {
-      TextToken.create("   ") shouldContainExactly listOf(
-          Regular("   "),
-      )
+      "   ".tokenize() shouldContainExactly listOf(Regular("   "))
     }
 
     it("can have regular text") {
-      TextToken.create("Hello") shouldContainExactly listOf(
-          Regular("Hello"),
-      )
+      "Hello".tokenize() shouldContainExactly listOf(Regular("Hello"))
     }
 
     it("can have link") {
-      TextToken.create("[Hello](https://mehow.io)") shouldContainExactly listOf(
-          Link("Hello", "https://mehow.io"),
-      )
+      "[Hello](https://mehow.io)".tokenize() shouldContainExactly listOf(Link("Hello", "https://mehow.io"))
     }
 
     it("can start with regular text followed by a link") {
-      TextToken.create("Hello [there](https://github.com/MiSikora/)") shouldContainExactly listOf(
+      "Hello [there](https://github.com/MiSikora/)".tokenize() shouldContainExactly listOf(
           Regular("Hello "),
           Link("there", "https://github.com/MiSikora/"),
       )
     }
 
     it("can start with a link followed by a regular text") {
-      TextToken.create("[General](https://google.com) Kenobi") shouldContainExactly listOf(
+      "[General](https://google.com) Kenobi".tokenize() shouldContainExactly listOf(
           Link("General", "https://google.com"),
           Regular(" Kenobi"),
       )
@@ -48,7 +42,7 @@ internal class TextTokenSpec : DescribeSpec({
 
     it("can have multiple regular texts and links") {
       val input = "Hello [there](https://github.com)… [General](https://sample.org) Kenobi"
-      TextToken.create(input) shouldContainExactly listOf(
+      input.tokenize() shouldContainExactly listOf(
           Regular("Hello "),
           Link("there", "https://github.com"),
           Regular("… "),
@@ -59,7 +53,7 @@ internal class TextTokenSpec : DescribeSpec({
 
     it("can have multiple consecutive links") {
       val input = "[One,](https://one.com)[ Two](https://two.com)[, Three](https://three.com)"
-      TextToken.create(input) shouldContainExactly listOf(
+      input.tokenize() shouldContainExactly listOf(
           Link("One,", "https://one.com"),
           Link(" Two", "https://two.com"),
           Link(", Three", "https://three.com"),
@@ -76,7 +70,7 @@ internal class TextTokenSpec : DescribeSpec({
           row("[O]ne](https://one.com)"),
           row("[One](h(ttps://one.com)"),
       ) {
-        TextToken.create(it) shouldContainExactly listOf(Regular(it))
+        it.tokenize() shouldContainExactly listOf(Regular(it))
       }
     }
   }

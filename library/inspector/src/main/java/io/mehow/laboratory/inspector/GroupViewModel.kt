@@ -96,7 +96,7 @@ internal class GroupViewModel(
         FeatureUiModel(
             type = feature,
             name = simpleReadableName,
-            description = TextToken.create(feature.description),
+            description = feature.description.tokenize(),
             models = features,
             sources = sources,
             deprecationAlignment = deprecationPlacement,
