@@ -5,13 +5,12 @@ import io.mehow.laboratory.Feature
 internal data class FeatureUiModel(
   val type: Class<Feature<*>>,
   val name: String,
+  val description: List<TextToken>,
   val models: List<OptionUiModel>,
   val sources: List<OptionUiModel>,
   val deprecationAlignment: DeprecationAlignment?,
   val deprecationPhenotype: DeprecationPhenotype?,
 ) {
-  val description = models.firstOrNull()?.option?.description.orEmpty()
-
   val hasMultipleSources = sources.size > 1
 
   val isCurrentSourceLocal = sources.firstOrNull(OptionUiModel::isSelected)

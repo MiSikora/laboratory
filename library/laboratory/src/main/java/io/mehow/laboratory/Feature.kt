@@ -49,7 +49,8 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
   @JvmDefault public val source: Class<Feature<*>>? get() = null
 
   /**
-   * Description of the feature flag that can be used for more contextual information.
+   * Description of the feature flag that can be used for more contextual information. Markdown formatted links
+   * will be picked up by the QA module and represented as hyperlinks.
    */
   @JvmDefault public val description: String get() = ""
 }
