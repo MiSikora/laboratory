@@ -14,6 +14,9 @@ import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import java.util.Locale
+import kotlin.DeprecationLevel.ERROR
+import kotlin.DeprecationLevel.HIDDEN
+import kotlin.DeprecationLevel.WARNING
 import kotlin.io.path.createTempDirectory
 
 internal class FeatureFlagSpec : DescribeSpec({
@@ -644,16 +647,18 @@ internal class FeatureFlagSpec : DescribeSpec({
             |import io.mehow.laboratory.Feature
             |import kotlin.Deprecated
             |import kotlin.DeprecationLevel
+            |import kotlin.Suppress
             |
             |@Deprecated(
             |  message = "Deprecation message",
             |  level = DeprecationLevel.WARNING
             |)
-            |internal enum class FeatureA : Feature<FeatureA> {
+            |internal enum class FeatureA : Feature<@Suppress("DEPRECATION") FeatureA> {
             |  First,
             |  Second,
             |  ;
             |
+            |  @Suppress("DEPRECATION")
             |  public override val defaultOption: FeatureA
             |    get() = First
             |}
@@ -670,24 +675,37 @@ internal class FeatureFlagSpec : DescribeSpec({
               .copy(deprecation = Deprecation(message = "Deprecation message", level = level))
               .build().map { model -> model.generate(tempDir) }
 
+          // TODO: https://github.com/MiSikora/laboratory/issues/62
+          val suppressImport = "\nimport kotlin.Suppress".takeIf { level != HIDDEN }.orEmpty()
+          val suppressParamAnnotation = when (level) {
+            WARNING -> "@Suppress(\"DEPRECATION\") "
+            ERROR -> "@Suppress(\"DEPRECATION_ERROR\") "
+            HIDDEN -> ""
+          }
+          val suppressPropertyAnnotation = when (level) {
+            WARNING -> "@Suppress(\"DEPRECATION\")\n  "
+            ERROR -> "@Suppress(\"DEPRECATION_ERROR\")\n  "
+            HIDDEN -> ""
+          }
+
           outputFile shouldBeRight { file ->
             file.readText() shouldBe """
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
             |import kotlin.Deprecated
-            |import kotlin.DeprecationLevel
+            |import kotlin.DeprecationLevel${suppressImport}
             |
             |@Deprecated(
             |  message = "Deprecation message",
             |  level = DeprecationLevel.${level}
             |)
-            |internal enum class FeatureA : Feature<FeatureA> {
+            |internal enum class FeatureA : Feature<${suppressParamAnnotation}FeatureA> {
             |  First,
             |  Second,
             |  ;
             |
-            |  public override val defaultOption: FeatureA
+            |  ${suppressPropertyAnnotation}public override val defaultOption: FeatureA
             |    get() = First
             |}
             |
