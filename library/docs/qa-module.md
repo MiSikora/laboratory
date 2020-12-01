@@ -133,6 +133,20 @@ enum class PowerSource : Feature<PowerSource> {
 }
 ```
 
+## Deprecation
+
+You can configure how deprecated feature flags will be represented in the QA module. To do this you need to pass additional parameters to the `Configuration` builder.
+
+```kotlin
+val configuration = Configuration.builder()
+    .laboratory(laboratory)
+    .featureFactories(mapOf("Features" to featureFactory))
+    .deprecationPhenotypeSelector(DeprecationPhenotype.Selector { deprecationLevel -> DeprecationPhenotype.Strikethrough })
+    .deprecationAlignmentSelector(DeprecationAlignment.Selector { deprecationLevel -> DeprecationAlignment.Bottom })
+    .build()
+LaboratoryActivity.configure(configuration)
+```
+
 ## Hyperion
 
 If you use [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) you can easily integrate Laboratory by adding the `laboratory-hyperion-plugin` artifact to your dependencies. This will put an item in Hyperion's debug menu.
