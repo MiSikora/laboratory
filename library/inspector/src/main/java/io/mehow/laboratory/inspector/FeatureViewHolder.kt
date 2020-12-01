@@ -1,6 +1,7 @@
 package io.mehow.laboratory.inspector
 
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -22,6 +23,7 @@ internal class FeatureViewHolder(
   init {
     sources.setOnSelectSourceListener(listener)
     options.setOnSelectFeatureListener(listener)
+    description.movementMethod = LinkMovementMethod.getInstance()
   }
 
   fun bind(group: FeatureUiModel) {
@@ -31,8 +33,8 @@ internal class FeatureViewHolder(
       Strikethrough -> name.paintFlags or STRIKE_THRU_TEXT_FLAG
       Hide -> name.paintFlags
     }
-    description.text = group.description
-    description.isVisible = group.description.isNotBlank()
+    description.setTextTokens(group.description)
+    description.isVisible = group.description.isNotEmpty()
     options.render(group.models, group.isCurrentSourceLocal)
     sources.render(group.sources)
     sources.isVisible = group.hasMultipleSources

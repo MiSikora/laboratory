@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
+import io.mehow.laboratory.description
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import io.mehow.laboratory.source
 import kotlinx.coroutines.Dispatchers
@@ -92,7 +93,15 @@ internal class GroupViewModel(
       val featureEmissions = observeOptions(laboratory)
       val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
       return featureEmissions.combine(sourceEmissions) { features, sources ->
-        FeatureUiModel(feature, simpleReadableName, features, sources, deprecationPlacement, deprecationPhenotype)
+        FeatureUiModel(
+            type = feature,
+            name = simpleReadableName,
+            description = TextToken.create(feature.description),
+            models = features,
+            sources = sources,
+            deprecationAlignment = deprecationPlacement,
+            deprecationPhenotype = deprecationPhenotype,
+        )
       }
     }
 

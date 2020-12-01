@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Visual representation of deprecated feature flags in the QA module.
 - Visual representation of deprecated feature flags can be configured via `LaboratoryActivity.Configuration` builder with `deprecationPhenotypeSelector()` and `deprecationAlignmentSelector()` functions.
 - Consumer ProGuard rules to `laboratory-inspector` to keep `@Deprecated` annotation.
+- QA module displays clickable hyperlinks from a feature flag description if it contains Markdown formatted links.
 
 ### Deprecated
 - `LaboratoryActivity.Configuration(storage)` constructor. Use `LaboratoryActivity.Configuration.create(storage)` or `LaboratoryActivity.Configuration.builder()` instead.

@@ -10,6 +10,8 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
+import io.mehow.laboratory.inspector.TextToken.Link
+import io.mehow.laboratory.inspector.TextToken.Regular
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 
@@ -135,6 +137,22 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
         cancel()
       }
     }
+
+    it("uses text tokens for feature flag description") {
+      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+
+      val descriptions = viewModel.observeFeatureGroup().first().map(FeatureUiModel::description)
+
+      descriptions shouldContainExactly listOf(
+          listOf(
+              Regular("Description with a "),
+              Link("link", "https://mehow.io"),
+          ),
+          listOf(
+              Regular("Description without a link"),
+          ),
+      )
+    }
   }
 })
 
@@ -165,6 +183,8 @@ private enum class First : Feature<First> {
   ;
 
   override val defaultOption get() = C
+
+  override val description = "Description with a [link](https://mehow.io)"
 }
 
 private enum class Second : Feature<Second> {
@@ -174,6 +194,8 @@ private enum class Second : Feature<Second> {
   ;
 
   override val defaultOption get() = B
+
+  override val description = "Description without a link"
 }
 
 private enum class Empty : Feature<Empty>
