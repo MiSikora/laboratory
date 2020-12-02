@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - QA module displays clickable hyperlinks from a feature flag description if it contains Markdown formatted links.
 
 ### Deprecated
-- `LaboratoryActivity.Configuration(storage)` constructor. Use `LaboratoryActivity.Configuration.create(storage)` or `LaboratoryActivity.Configuration.builder()` instead.
+- `LaboratoryActivity.Configuration()` constructor. Use `LaboratoryActivity.Configuration.create()` or `LaboratoryActivity.Configuration.builder()` instead.
 
 ### Fixed
 - Warning and error level deprecation on generated feature flags is now correctly suppressed.
