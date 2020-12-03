@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Consumer ProGuard rules to `laboratory-inspector` to keep `@Deprecated` annotation.
 - QA module displays clickable hyperlinks from a feature flag description if it contains Markdown formatted links.
 
+### Changed
+- Upgrade to DataStore `1.0.0-alpha05`.
+
 ### Deprecated
 - `LaboratoryActivity.Configuration()` constructor. Use `LaboratoryActivity.Configuration.create()` or `LaboratoryActivity.Configuration.builder()` instead.
 
@@ -24,10 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Kyrie `0.2.1` to `laboratory-inspector`.
 - DynamicAnimation `1.0.0` to `laboratory-inspector`.
-- Upgrade to Coroutines `1.4.2`.
 
 ### Changed
 - Animation of search feature in inspector. It no longer makes ugly visibility transitions.
+- Upgrade to Coroutines `1.4.2`.
 
 ## [0.9.3] - 2020-11-23
 
