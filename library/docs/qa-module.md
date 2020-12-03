@@ -138,11 +138,11 @@ enum class PowerSource : Feature<PowerSource> {
 You can configure how deprecated feature flags will be represented in the QA module. To do this you need to pass additional parameters to the `Configuration` builder.
 
 ```kotlin
-val configuration = Configuration.builder()
+val configuration = LaboratoryActivity.Configuration.builder()
     .laboratory(laboratory)
     .featureFactories(mapOf("Features" to featureFactory))
-    .deprecationPhenotypeSelector(DeprecationPhenotype.Selector { deprecationLevel -> DeprecationPhenotype.Strikethrough })
-    .deprecationAlignmentSelector(DeprecationAlignment.Selector { deprecationLevel -> DeprecationAlignment.Bottom })
+    .deprecationPhenotypeSelector { deprecationLevel -> DeprecationPhenotype.Strikethrough }
+    .deprecationAlignmentSelector { deprecationLevel -> DeprecationAlignment.Bottom }
     .build()
 LaboratoryActivity.configure(configuration)
 ```
