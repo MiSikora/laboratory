@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.5] - 2020-12-03
+
 ### Added
 - Builder pattern for `LaboratoryActivity.Configuration` construction.
 - Visual representation of deprecated feature flags in the QA module.
@@ -230,7 +232,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.4...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.5...HEAD
+[0.9.5]: https://github.com/MiSikora/laboratory/releases/tag/0.9.5
 [0.9.4]: https://github.com/MiSikora/laboratory/releases/tag/0.9.4
 [0.9.3]: https://github.com/MiSikora/laboratory/releases/tag/0.9.3
 [0.9.2]: https://github.com/MiSikora/laboratory/releases/tag/0.9.2
