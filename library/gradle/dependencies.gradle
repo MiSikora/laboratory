@@ -42,7 +42,7 @@ ext.libs = [
             "coroutinesTest": "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}",
         ],
     ],
-    "dokkaGradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:1.4.10.2",
+    "dokkaGradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:1.4.20",
     "kotest": [
         "runnerJunit5": "io.kotest:kotest-runner-junit5-jvm:${versions.kotest}",
         "assertions": "io.kotest:kotest-assertions-core-jvm:${versions.kotest}",
