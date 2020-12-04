@@ -16,14 +16,14 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 internal class SearchViewModel : ViewModel() {
-  private val uiModelChanges = MutableSharedFlow<(SearchUiModel) -> SearchUiModel>()
+  private val uiModelChanges = MutableSharedFlow<(UiModel) -> UiModel>()
 
   private val sharedUiModels = uiModelChanges.scan(
-      initial = SearchUiModel(Idle, SearchQuery.Empty),
+      initial = UiModel(Idle, SearchQuery.Empty),
       operation = { currentModel, updateModel -> updateModel(currentModel) }
   ).shareIn(viewModelScope, SharingStarted.Lazily, replay = 1).distinctUntilChanged()
 
-  val uiModels: Flow<SearchUiModel> = sharedUiModels
+  val uiModels: Flow<UiModel> = sharedUiModels
 
   fun sendEvent(event: Event) = when (event) {
     is ToggleSearchMode -> updateToggleMode()
@@ -58,7 +58,7 @@ internal class SearchViewModel : ViewModel() {
     class UpdateQuery(val query: String) : Event()
   }
 
-  data class SearchUiModel(
+  data class UiModel(
     val mode: SearchMode,
     val query: SearchQuery,
   ) {

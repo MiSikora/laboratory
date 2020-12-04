@@ -4,14 +4,13 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.mehow.laboratory.inspector.SearchMode.Active
 import io.mehow.laboratory.inspector.SearchMode.Idle
 import io.mehow.laboratory.inspector.SearchViewModel.Event.ToggleSearchMode
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
-import io.mehow.laboratory.inspector.SearchViewModel.SearchUiModel
+import io.mehow.laboratory.inspector.SearchViewModel.UiModel
 
 internal class ToolbarBinding(
   view: View,
@@ -46,7 +45,7 @@ internal class ToolbarBinding(
     resetFeatures.setOnClickListener { resetFeaturesDialog.show() }
   }
 
-  fun render(uiModel: SearchUiModel) {
+  fun render(uiModel: UiModel) {
     uiModel.mode.applyTransition(toolbar)
     clearQuery.springVisibility(isVisible = uiModel.showSearch && uiModel.query.isNotEmpty())
 

@@ -9,7 +9,7 @@ import io.mehow.laboratory.inspector.SearchMode.Idle
 import io.mehow.laboratory.inspector.SearchQuery.Companion
 import io.mehow.laboratory.inspector.SearchViewModel.Event.ToggleSearchMode
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
-import io.mehow.laboratory.inspector.SearchViewModel.SearchUiModel
+import io.mehow.laboratory.inspector.SearchViewModel.UiModel
 
 internal class SearchViewModelSpec : DescribeSpec({
   setMainDispatcher()
@@ -29,10 +29,10 @@ internal class SearchViewModelSpec : DescribeSpec({
         expectIdleModel()
 
         viewModel.sendEvent(ToggleSearchMode)
-        expectItem() shouldBe SearchUiModel(Active, SearchQuery.Empty)
+        expectItem() shouldBe UiModel(Active, SearchQuery.Empty)
 
         viewModel.sendEvent(ToggleSearchMode)
-        expectItem() shouldBe SearchUiModel(Idle, Companion.Empty)
+        expectItem() shouldBe UiModel(Idle, Companion.Empty)
 
         cancel()
       }
@@ -47,10 +47,10 @@ internal class SearchViewModelSpec : DescribeSpec({
         expectItem()
 
         viewModel.sendEvent(UpdateQuery("Hello"))
-        expectItem() shouldBe SearchUiModel(Active, SearchQuery("Hello"))
+        expectItem() shouldBe UiModel(Active, SearchQuery("Hello"))
 
         viewModel.sendEvent(UpdateQuery("World"))
-        expectItem() shouldBe SearchUiModel(Active, SearchQuery("World"))
+        expectItem() shouldBe UiModel(Active, SearchQuery("World"))
 
         cancel()
       }
@@ -77,7 +77,7 @@ internal class SearchViewModelSpec : DescribeSpec({
         expectItem()
 
         viewModel.sendEvent(UpdateQuery("Hello"))
-        expectItem() shouldBe SearchUiModel(Active, SearchQuery("Hello"))
+        expectItem() shouldBe UiModel(Active, SearchQuery("Hello"))
 
         viewModel.sendEvent(ToggleSearchMode)
         expectIdleModel()
@@ -88,6 +88,6 @@ internal class SearchViewModelSpec : DescribeSpec({
   }
 })
 
-private suspend fun FlowTurbine<SearchUiModel>.expectIdleModel() {
-  expectItem() shouldBe SearchUiModel(Idle, SearchQuery.Empty)
+private suspend fun FlowTurbine<UiModel>.expectIdleModel() {
+  expectItem() shouldBe UiModel(Idle, SearchQuery.Empty)
 }
