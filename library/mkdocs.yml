@@ -4,7 +4,7 @@ site_author: Michał Sikora
 site_url: https://mehow.io/laboratory/
 repo_name: Laboratory
 repo_url: https://github.com/MiSikora/laboratory/
-edit_uri: edit/master/library/docs
+edit_uri: edit/trunk/library/docs
 remote_branch: gh-pages
 
 copyright: Copyright &copy; 2020 Michał Sikora

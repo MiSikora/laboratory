@@ -8,7 +8,7 @@ Under the hood, the Gradle plugin uses [KotlinPoet](https://square.github.io/kot
     The Gradle plugin automatically adds the `laboratory` artifact to dependencies.
 
 !!! tip
-    The best way to understand the Gradle plugin is to check [the sample](https://github.com/MiSikora/laboratory/tree/master/sample). It uses most of the Gradle plugin features that most of the applications need.
+    The best way to understand the Gradle plugin is to check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/sample). It uses most of the Gradle plugin features that most of the applications need.
 
 ## Feature flags
 

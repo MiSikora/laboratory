@@ -2,7 +2,7 @@ name: Gradle Wrapper Validation
 on:
   push:
     branches:
-      - master
+      - trunk
   pull_request:
 
 jobs:

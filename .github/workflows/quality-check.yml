@@ -2,7 +2,7 @@ name: Quality Check
 on:
   push:
     branches:
-      - master
+      - trunk
     paths-ignore:
       - 'library/docs/**'
       - '**.md'
