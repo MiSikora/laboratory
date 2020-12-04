@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Deprecated
+- Using `DeprecationLevel.Hidden` is temporarily treated as error until the [compiler issue](https://github.com/MiSikora/laboratory/issues/62) is fixed.
+
 ## [0.9.5] - 2020-12-03
 
 ### Added

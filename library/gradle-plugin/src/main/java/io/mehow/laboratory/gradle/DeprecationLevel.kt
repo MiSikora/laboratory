@@ -15,5 +15,9 @@ public enum class DeprecationLevel(
   Error(KotlinDeprecationLevel.ERROR),
 
   /** Deprecated element will not be accessible from code. */
+  @Deprecated(
+      message = "Does not work. See https://github.com/MiSikora/laboratory/issues/62.",
+      level = KotlinDeprecationLevel.ERROR,
+  )
   Hidden(KotlinDeprecationLevel.HIDDEN),
 }
