@@ -15,7 +15,7 @@ internal class InMemoryFeatureStorage : FeatureStorage {
       .map { it[feature] }
       .distinctUntilChanged()
 
-  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = featureFlow.first()[feature]
+  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = featureFlow.map { it[feature] }.first()
 
   override suspend fun clear(): Boolean {
     updateMutex.withLock { featureFlow.value = emptyMap() }
