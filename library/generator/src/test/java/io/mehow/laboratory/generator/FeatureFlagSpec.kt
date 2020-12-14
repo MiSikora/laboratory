@@ -603,7 +603,7 @@ internal class FeatureFlagSpec : DescribeSpec({
       }
     }
 
-    it("can have description") {
+    it("can have description doubling as KDoc") {
       val tempDir = createTempDirectory().toFile()
 
       val outputFile = featureBuilder
@@ -617,6 +617,9 @@ internal class FeatureFlagSpec : DescribeSpec({
             |import io.mehow.laboratory.Feature
             |import kotlin.String
             |
+            |/**
+            | * Feature description
+            | */
             |internal enum class FeatureA : Feature<FeatureA> {
             |  First,
             |  Second,

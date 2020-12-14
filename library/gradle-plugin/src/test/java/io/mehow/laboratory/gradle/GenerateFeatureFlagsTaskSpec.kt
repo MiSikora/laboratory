@@ -536,6 +536,9 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |import kotlin.String
       |import kotlin.Suppress
       |
+      |/**
+      | * Feature description
+      | */
       |public enum class Feature : io.mehow.laboratory.Feature<Feature> {
       |  First,
       |  Second,
