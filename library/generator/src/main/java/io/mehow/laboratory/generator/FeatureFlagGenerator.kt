@@ -1,6 +1,7 @@
 package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
@@ -64,14 +65,16 @@ internal class FeatureFlagGenerator(
         .build()
   }
 
-  private val descriptionProperty = feature.description
-      .takeIf { @Kt41142 it.isNotBlank() }
-      ?.let { description ->
-        PropertySpec
-            .builder(descriptionPropertyName, String::class, OVERRIDE)
-            .initializer("%S", description)
-            .build()
-      }
+  private val description: String? = feature.description.takeIf { @Kt41142 it.isNotBlank() }
+
+  private val kdoc = description?.let(CodeBlock::of)
+
+  private val descriptionProperty = description?.let { description ->
+    PropertySpec
+        .builder(descriptionPropertyName, String::class, OVERRIDE)
+        .initializer("%S", description)
+        .build()
+  }
 
   private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
       .apply { deprecated?.let { @Kt41142 addAnnotation(it) } }
@@ -95,6 +98,7 @@ internal class FeatureFlagGenerator(
           addProperty(sourceWithOverride)
         }
       }
+      .apply { kdoc?.let { @Kt41142 addKdoc(it) } }
       .apply { descriptionProperty?.let { @Kt41142 addProperty(it) } }
       .build()
 
