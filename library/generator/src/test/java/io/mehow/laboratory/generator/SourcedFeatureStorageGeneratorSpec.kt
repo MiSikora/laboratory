@@ -14,7 +14,7 @@ import io.mehow.laboratory.generator.Visibility.Public
 import java.util.Locale
 import kotlin.io.path.createTempDirectory
 
-internal class SourcedFeatureStorageSpec : DescribeSpec({
+internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
   val storageBuilder = SourcedFeatureStorageModel.Builder(
       visibility = Public,
       packageName = "io.mehow",
