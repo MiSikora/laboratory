@@ -1,0 +1,85 @@
+package io.mehow.laboratory
+
+internal enum class FirstFeature : Feature<FirstFeature> {
+  A,
+  B,
+  C,
+  ;
+
+  override val defaultOption get() = A
+
+  @Suppress("UNCHECKED_CAST")
+  override val source = Source::class.java as Class<Feature<*>>
+
+  enum class Source : Feature<Source> {
+    Local,
+    RemoteA,
+    ;
+
+    override val defaultOption get() = Local
+  }
+}
+
+internal enum class SecondFeature : Feature<SecondFeature> {
+  A,
+  B,
+  C,
+  ;
+
+  override val defaultOption get() = A
+
+  @Suppress("UNCHECKED_CAST")
+  override val source = Source::class.java as Class<Feature<*>>
+
+  enum class Source : Feature<Source> {
+    Local,
+    RemoteA,
+    RemoteB,
+    ;
+
+    override val defaultOption get() = RemoteB
+  }
+}
+
+internal enum class EmptySourceFeature : Feature<EmptySourceFeature> {
+  A,
+  B,
+  C,
+  ;
+
+  override val defaultOption get() = A
+
+  @Suppress("UNCHECKED_CAST")
+  override val source = Source::class.java as Class<Feature<*>>
+
+  internal enum class Source : Feature<Source>
+}
+
+internal enum class UnsourcedFeature : Feature<UnsourcedFeature> {
+  A,
+  B,
+  C,
+  ;
+
+  override val defaultOption get() = A
+}
+
+internal enum class SomeFeature : Feature<SomeFeature> {
+  A,
+  B,
+  C,
+  ;
+
+  override val defaultOption get() = B
+}
+
+internal enum class OtherFeature : Feature<OtherFeature> {
+  A,
+  B,
+  C,
+  ;
+
+  override val defaultOption get() = A
+}
+
+internal enum class NoValuesFeature : Feature<NoValuesFeature>

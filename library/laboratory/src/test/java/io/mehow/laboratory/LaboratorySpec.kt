@@ -7,15 +7,34 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
-import io.mehow.laboratory.FeatureStorage.Companion
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import javax.print.attribute.standard.MediaSize.Other
 
 internal class LaboratorySpec : DescribeSpec({
+  val throwingStorage = object : FeatureStorage {
+    override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = fail("Unexpected call")
+    override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = fail("Unexpected call")
+    override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+    override suspend fun clear() = fail("Unexpected call")
+  }
+
+  val nullStorage = object : FeatureStorage {
+    override fun <T : Feature<*>> observeFeatureName(feature: Class<T>): Flow<String?> = flowOf(null)
+    override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String? = null
+    override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+    override suspend fun clear() = fail("Unexpected call")
+  }
+
+  val emptyStorage = object : FeatureStorage {
+    override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = flowOf("")
+    override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = ""
+    override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+    override suspend fun clear() = fail("Unexpected call")
+  }
+
   describe("laboratory") {
     it("cannot use features with no values") {
-      val laboratory = Laboratory.create(ThrowingStorage)
+      val laboratory = Laboratory.create(throwingStorage)
 
       shouldThrowExactly<IllegalStateException> {
         laboratory.experiment<NoValuesFeature>()
@@ -24,13 +43,13 @@ internal class LaboratorySpec : DescribeSpec({
 
     context("for feature with single default") {
       it("uses declared default value") {
-        val laboratory = Laboratory.create(NullStorage)
+        val laboratory = Laboratory.create(nullStorage)
 
         laboratory.experiment<SomeFeature>() shouldBe SomeFeature.B
       }
 
       it("uses declared default value if no match is found") {
-        val laboratory = Laboratory.create(EmptyStorage)
+        val laboratory = Laboratory.create(emptyStorage)
 
         laboratory.experiment<SomeFeature>() shouldBe SomeFeature.B
       }
@@ -38,13 +57,13 @@ internal class LaboratorySpec : DescribeSpec({
 
     context("checking feature value") {
       it("returns false for non-default value") {
-        val laboratory = Laboratory.create(NullStorage)
+        val laboratory = Laboratory.create(nullStorage)
 
         laboratory.experimentIs(SomeFeature.A) shouldBe false
       }
 
       it("returns true for default value") {
-        val laboratory = Laboratory.create(NullStorage)
+        val laboratory = Laboratory.create(nullStorage)
 
         laboratory.experimentIs(SomeFeature.B) shouldBe true
       }
@@ -126,7 +145,7 @@ internal class LaboratorySpec : DescribeSpec({
 
   describe("default options factory") {
     val factory = object : DefaultOptionFactory {
-      override fun <T : Feature<T>> create(feature: T) = when(feature) {
+      override fun <T : Feature<T>> create(feature: T) = when (feature) {
         is SomeFeature -> OtherFeature.C // Intentional wrong class for test
         is OtherFeature -> OtherFeature.C
         else -> null
@@ -174,44 +193,3 @@ internal class LaboratorySpec : DescribeSpec({
     }
   }
 })
-
-private enum class SomeFeature : Feature<SomeFeature> {
-  A,
-  B,
-  C,
-  ;
-
-  override val defaultOption get() = B
-}
-
-private enum class OtherFeature : Feature<OtherFeature> {
-  A,
-  B,
-  C,
-  ;
-
-  override val defaultOption get() = A
-}
-
-private enum class NoValuesFeature : Feature<NoValuesFeature>
-
-private object ThrowingStorage : FeatureStorage {
-  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = fail("Unexpected call")
-  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = fail("Unexpected call")
-  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
-  override suspend fun clear() = fail("Unexpected call")
-}
-
-private object NullStorage : FeatureStorage {
-  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>): Flow<String?> = flowOf(null)
-  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String? = null
-  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
-  override suspend fun clear() = fail("Unexpected call")
-}
-
-private object EmptyStorage : FeatureStorage {
-  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = flowOf("")
-  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = ""
-  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
-  override suspend fun clear() = fail("Unexpected call")
-}
