@@ -13,6 +13,7 @@ import io.mehow.laboratory.inspector.DeprecationPhenotype.Strikethrough
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlin.DeprecationLevel.ERROR
+import kotlin.DeprecationLevel.HIDDEN
 import kotlin.DeprecationLevel.WARNING
 
 internal class GroupViewModelDeprecationSpec : DescribeSpec({
@@ -40,6 +41,7 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
 
       featureNames shouldContainExactly listOf(
           "DeprecatedError" to Strikethrough,
+          "DeprecatedHidden" to Strikethrough,
           "DeprecatedWarning" to Strikethrough,
           "NotDeprecated" to null,
       )
@@ -55,6 +57,7 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
 
       featureNames shouldContainExactly listOf(
           "DeprecatedError" to Show,
+          "DeprecatedHidden" to Show,
           "DeprecatedWarning" to Show,
           "NotDeprecated" to null,
       )
@@ -71,6 +74,7 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
       featureNames shouldContainExactly listOf(
           "NotDeprecated" to null,
           "DeprecatedError" to Show,
+          "DeprecatedHidden" to Show,
           "DeprecatedWarning" to Show,
       )
     }
@@ -78,7 +82,7 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
     it("can be selected based on deprecation level") {
       val viewModel = GroupViewModel(DeprecationHandler(
           phenotypeSelector = { if (it == WARNING) Strikethrough else Show },
-          alignmentSelector = { if (it == ERROR) Bottom else Regular },
+          alignmentSelector = { if (it != WARNING) Bottom else Regular },
       ))
 
       val featureNames = viewModel.observeFeatureGroup().first().map { it.name to it.deprecationPhenotype }
@@ -87,6 +91,7 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
           "DeprecatedWarning" to Strikethrough,
           "NotDeprecated" to null,
           "DeprecatedError" to Show,
+          "DeprecatedHidden" to Show,
       )
     }
   }
@@ -98,12 +103,8 @@ private object DeprecatedFeatureFactory : FeatureFactory {
     return setOf(
         Class.forName("io.mehow.laboratory.inspector.DeprecatedWarning"),
         Class.forName("io.mehow.laboratory.inspector.DeprecatedError"),
-        /*
-         * https://github.com/MiSikora/laboratory/issues/62
-         *
-         * Class.forName("io.mehow.laboratory.inspector.DeprecatedHidden"),
-         */
-        NotDeprecated::class.java
+        Class.forName("io.mehow.laboratory.inspector.DeprecatedHidden"),
+        Class.forName("io.mehow.laboratory.inspector.NotDeprecated"),
     ) as Set<Class<Feature<*>>>
   }
 }
@@ -113,7 +114,9 @@ private enum class DeprecatedWarning : Feature<@Suppress("DEPRECATION") Deprecat
   Option,
   ;
 
-  override val defaultOption get() = Option
+  @Suppress("DEPRECATION")
+  override val defaultOption: DeprecatedWarning
+    get() = Option
 }
 
 @Deprecated("message", level = ERROR)
@@ -121,26 +124,27 @@ private enum class DeprecatedError : Feature<@Suppress("DEPRECATION_ERROR") Depr
   Option,
   ;
 
-  override val defaultOption get() = Option
+  @Suppress("DEPRECATION_ERROR")
+  override val defaultOption: DeprecatedError
+    get() = Option
 }
 
-/*
- * https://github.com/MiSikora/laboratory/issues/62
- *
- * @Deprecated("", level = HIDDEN)
- * private enum class DeprecatedHidden : Feature<DeprecatedHidden> {
- *   Option,
- *   ;
- *
- *   override val defaultOption get() = Option
- * }
- */
+@Deprecated("", level = HIDDEN)
+private enum class DeprecatedHidden : Feature<@Suppress("DEPRECATION_ERROR") DeprecatedHidden> {
+  Option,
+  ;
+
+  @Suppress("DEPRECATION_ERROR")
+  override val defaultOption: DeprecatedHidden
+    get() = Option
+}
 
 private enum class NotDeprecated : Feature<NotDeprecated> {
   Option,
   ;
 
-  override val defaultOption get() = Option
+  override val defaultOption: NotDeprecated
+    get() = Option
 }
 
 @Suppress("TestFunctionName")

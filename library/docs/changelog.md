@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `DeprecationLevel.Hidden` is no longer deprecated. It was a mistake to deprecate it at all since it could work from the start.
+
 ## [0.9.6] - 2020-12-15
 
 ### Added

@@ -678,17 +678,9 @@ internal class FeatureFlagSpec : DescribeSpec({
               .copy(deprecation = Deprecation(message = "Deprecation message", level = level))
               .build().map { model -> model.generate(tempDir) }
 
-          // TODO: https://github.com/MiSikora/laboratory/issues/62
-          val suppressImport = "\nimport kotlin.Suppress".takeIf { level != HIDDEN }.orEmpty()
-          val suppressParamAnnotation = when (level) {
-            WARNING -> "@Suppress(\"DEPRECATION\") "
-            ERROR -> "@Suppress(\"DEPRECATION_ERROR\") "
-            HIDDEN -> ""
-          }
-          val suppressPropertyAnnotation = when (level) {
-            WARNING -> "@Suppress(\"DEPRECATION\")\n  "
-            ERROR -> "@Suppress(\"DEPRECATION_ERROR\")\n  "
-            HIDDEN -> ""
+          val suppressLevel = when (level) {
+            WARNING -> "DEPRECATION"
+            ERROR, HIDDEN -> "DEPRECATION_ERROR"
           }
 
           outputFile shouldBeRight { file ->
@@ -697,18 +689,20 @@ internal class FeatureFlagSpec : DescribeSpec({
             |
             |import io.mehow.laboratory.Feature
             |import kotlin.Deprecated
-            |import kotlin.DeprecationLevel${suppressImport}
+            |import kotlin.DeprecationLevel
+            |import kotlin.Suppress
             |
             |@Deprecated(
             |  message = "Deprecation message",
             |  level = DeprecationLevel.${level}
             |)
-            |internal enum class FeatureA : Feature<${suppressParamAnnotation}FeatureA> {
+            |internal enum class FeatureA : Feature<@Suppress("$suppressLevel") FeatureA> {
             |  First,
             |  Second,
             |  ;
             |
-            |  ${suppressPropertyAnnotation}public override val defaultOption: FeatureA
+            |  @Suppress("$suppressLevel")
+            |  public override val defaultOption: FeatureA
             |    get() = First
             |}
             |
