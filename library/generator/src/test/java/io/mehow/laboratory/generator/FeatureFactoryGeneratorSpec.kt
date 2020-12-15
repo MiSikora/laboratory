@@ -15,7 +15,7 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import kotlin.io.path.createTempDirectory
 
-internal class FeatureFactorySpec : DescribeSpec({
+internal class FeatureFactoryGeneratorSpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(
       visibility = Internal,
       packageName = "io.mehow",

@@ -19,7 +19,7 @@ import kotlin.DeprecationLevel.HIDDEN
 import kotlin.DeprecationLevel.WARNING
 import kotlin.io.path.createTempDirectory
 
-internal class FeatureFlagSpec : DescribeSpec({
+internal class FeatureFlagGeneratorSpec : DescribeSpec({
   val featureBuilder = FeatureFlagModel.Builder(
       visibility = Internal,
       packageName = "io.mehow",
