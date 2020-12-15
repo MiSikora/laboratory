@@ -33,8 +33,7 @@ internal class FeatureFlagGenerator(
       ?.let {
         when (it.level) {
           WARNING -> "DEPRECATION"
-          ERROR -> "DEPRECATION_ERROR"
-          HIDDEN -> null // TODO: https://github.com/MiSikora/laboratory/issues/62
+          ERROR, HIDDEN -> "DEPRECATION_ERROR"
         }
       }
       ?.let { name ->
