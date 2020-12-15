@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Use description as feature flag's KDoc content
-- Upgrade Kotlin to `1.4.21`
+- Use description as feature flag's KDoc content.
+- Upgrade Kotlin to `1.4.21`.
 
 ### Deprecated
 - Using `DeprecationLevel.Hidden` is temporarily treated as an error until the [compiler issue](https://github.com/MiSikora/laboratory/issues/62) is fixed.
