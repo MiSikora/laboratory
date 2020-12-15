@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `FeatureFactory` can be now appended to another with plus operator.
+- `DefaultOptionFactory` can be now appended to another with plus operator.
 
 ### Changed
 - Use description as feature flag's KDoc content.
