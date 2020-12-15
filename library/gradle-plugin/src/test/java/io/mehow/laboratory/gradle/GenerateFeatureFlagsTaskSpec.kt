@@ -507,7 +507,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.shouldExist()
 
     feature.readText() shouldContain """
-      |enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |/**
+      | * Feature description
+      | */
+      |public enum class Feature : io.mehow.laboratory.Feature<Feature> {
       |  First,
       |  ;
       |
