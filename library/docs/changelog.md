@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.7] - 2020-12-15
+
 ### Changed
 - `DeprecationLevel.Hidden` is no longer deprecated. It was a mistake to deprecate it at all since it could work from the start.
 
@@ -251,7 +253,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.6...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.9.7...HEAD
+[0.9.7]: https://github.com/MiSikora/laboratory/releases/tag/0.9.7
 [0.9.6]: https://github.com/MiSikora/laboratory/releases/tag/0.9.6
 [0.9.5]: https://github.com/MiSikora/laboratory/releases/tag/0.9.5
 [0.9.4]: https://github.com/MiSikora/laboratory/releases/tag/0.9.4
