@@ -603,15 +603,16 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       }
     }
 
-    it("can have description doubling as KDoc") {
-      val tempDir = createTempDirectory().toFile()
+    context("description") {
+      it("is added as KDoc") {
+        val tempDir = createTempDirectory().toFile()
 
-      val outputFile = featureBuilder
-          .copy(description = "Feature description")
-          .build().map { model -> model.generate(tempDir) }
+        val outputFile = featureBuilder
+            .copy(description = "Feature description")
+            .build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
+        outputFile shouldBeRight { file ->
+          file.readText() shouldBe """
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
@@ -632,6 +633,42 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             |}
             |
           """.trimMargin("|")
+        }
+      }
+
+      it("does not break hyperlinks") {
+        val tempDir = createTempDirectory().toFile()
+
+        val outputFile = featureBuilder
+            .copy(description = "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc.")
+            .build().map { model -> model.generate(tempDir) }
+
+        outputFile shouldBeRight { file ->
+          file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import kotlin.String
+            |
+            |/**
+            | * Some
+            | * [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/)
+            | * in the KDoc.
+            | */
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
+            |  Second,
+            |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
+            |
+            |  public override val description: String =
+            |      "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc."
+            |}
+            |
+          """.trimMargin("|")
+        }
       }
     }
 

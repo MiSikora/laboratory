@@ -66,7 +66,7 @@ internal class FeatureFlagGenerator(
 
   private val description: String? = feature.description.takeIf { @Kt41142 it.isNotBlank() }
 
-  private val kdoc = description?.let(CodeBlock::of)
+  private val kdoc = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
 
   private val descriptionProperty = description?.let { description ->
     PropertySpec
