@@ -15,3 +15,6 @@ build/
 
 # OSX
 .DS_Store
+
+# MkDocs
+/library/docs/api

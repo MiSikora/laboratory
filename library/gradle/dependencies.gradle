@@ -42,7 +42,10 @@ ext.libs = [
             "coroutinesTest": "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}",
         ],
     ],
-    "dokkaGradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:1.4.20",
+    "dokka": [
+        "gradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:1.4.20",
+        "gradlePluginId": "org.jetbrains.dokka",
+    ],
     "kotest": [
         "runnerJunit5": "io.kotest:kotest-runner-junit5-jvm:${versions.kotest}",
         "assertions": "io.kotest:kotest-assertions-core-jvm:${versions.kotest}",
@@ -54,7 +57,10 @@ ext.libs = [
         "plugin": "com.willowtreeapps.hyperion:hyperion-plugin:${versions.hyperion}"
     ],
     "autoService": "com.google.auto.service:auto-service:1.0-rc7",
-    "mavenPublishGradlePlugin": "com.vanniktech:gradle-maven-publish-plugin:0.13.0",
+    "mavenPublish": [
+        "gradlePlugin": "com.vanniktech:gradle-maven-publish-plugin:0.13.0",
+        "gradlePluginId": "com.vanniktech.maven.publish",
+    ],
     "detekt": [
         "gradlePluginId": "io.gitlab.arturbosch.detekt",
         "gradlePlugin": "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}",

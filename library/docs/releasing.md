@@ -34,7 +34,7 @@ mkdocs, version 1.1.2
 Navigate to the library directory and run the site locally.
 
 ```sh
-$ ./library mkdocs serve
+$ mkdocs serve
 INFO    -  Building documentation...
 INFO    -  Cleaning site directory
 INFO    -  Documentation built in 0.73 seconds

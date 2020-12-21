@@ -1,0 +1,14 @@
+apply plugin: libs.dokka.gradlePluginId
+
+dokkaHtml {
+  outputDirectory.set(file("$rootDir/docs/api/${project.name}"))
+
+  dokkaSourceSets {
+    configureEach {
+      jdkVersion.set(8)
+      reportUndocumented.set(false)
+      skipDeprecated.set(true)
+      skipEmptyPackages.set(true)
+    }
+  }
+}

@@ -34,6 +34,9 @@ jobs:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
         run: ./gradlew -p library uploadArchives --no-daemon --no-parallel --stacktrace
 
+      - name: Build HTML Docs
+        run: ./gradlew -p library dokkaHtml --stacktrace
+
       - name: Stop Gradle
         run: ./gradlew --stop
 

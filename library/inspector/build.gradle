@@ -33,4 +33,5 @@ dependencies {
   testImplementation libs.kotlin.x.coroutinesTest
 }
 
+apply from: "$rootDir/gradle/dokka-config.gradle"
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
