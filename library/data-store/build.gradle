@@ -24,4 +24,13 @@ dependencies {
 }
 
 apply from: "$rootDir/gradle/dokka-config.gradle"
+
+dokkaHtml {
+  dokkaSourceSets {
+    configureEach {
+      sourceRoots.from(file("$buildDir/generated/source/wire/io/mehow/laboratory/datastore/FeatureFlags.kt"))
+    }
+  }
+}
+
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
