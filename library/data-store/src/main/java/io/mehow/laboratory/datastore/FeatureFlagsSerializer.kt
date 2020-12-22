@@ -5,7 +5,8 @@ import java.io.InputStream
 import java.io.OutputStream
 
 /**
- * [Serializer] that is capable of writing and reading of feature flags in an atomic way.
+ * [Serializer] that is capable of writing and reading of feature flags. It can be used, for example,
+ * as a delegate of encryption serializer.
  */
 public object FeatureFlagsSerializer : Serializer<FeatureFlags> {
   override val defaultValue: FeatureFlags = FeatureFlags()
