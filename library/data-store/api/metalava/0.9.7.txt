@@ -1,0 +1,33 @@
+// Signature format: 4.0
+package io.mehow.laboratory.datastore {
+
+  public final class Builder {
+    method public io.mehow.laboratory.FeatureStorage build();
+    method public io.mehow.laboratory.datastore.Builder coroutineScope(kotlinx.coroutines.CoroutineScope scope);
+    method public io.mehow.laboratory.datastore.Builder corruptionHandler(androidx.datastore.core.handlers.ReplaceFileCorruptionHandler<io.mehow.laboratory.datastore.FeatureFlags> handler);
+    method public io.mehow.laboratory.datastore.Builder featureSerializer(androidx.datastore.core.Serializer<io.mehow.laboratory.datastore.FeatureFlags> serializer);
+    method public io.mehow.laboratory.datastore.Builder migrations(Iterable<? extends androidx.datastore.core.DataMigration<io.mehow.laboratory.datastore.FeatureFlags>> migrations);
+    method public io.mehow.laboratory.datastore.Builder migrations(androidx.datastore.core.DataMigration<io.mehow.laboratory.datastore.FeatureFlags>... migrations);
+  }
+
+  public final class BuilderKt {
+    method public static io.mehow.laboratory.datastore.Builder dataStoreBuilder(io.mehow.laboratory.FeatureStorage.Companion, kotlin.jvm.functions.Function0<? extends java.io.File> fileProvider);
+    method public static io.mehow.laboratory.datastore.Builder dataStoreBuilder(io.mehow.laboratory.FeatureStorage.Companion, android.content.Context context, String fileName);
+  }
+
+  public final class DataStoreFeatureStorageKt {
+    method public static io.mehow.laboratory.FeatureStorage dataStore(io.mehow.laboratory.FeatureStorage.Companion, androidx.datastore.core.DataStore<io.mehow.laboratory.datastore.FeatureFlags> dataStore);
+    method public static io.mehow.laboratory.FeatureStorage dataStore(io.mehow.laboratory.FeatureStorage.Companion, kotlin.jvm.functions.Function0<? extends java.io.File> fileProvider);
+    method public static io.mehow.laboratory.FeatureStorage dataStore(io.mehow.laboratory.FeatureStorage.Companion, android.content.Context context, String fileName);
+  }
+
+  public final class FeatureFlagsSerializer implements androidx.datastore.core.Serializer<io.mehow.laboratory.datastore.FeatureFlags> {
+    method public io.mehow.laboratory.datastore.FeatureFlags getDefaultValue();
+    method public io.mehow.laboratory.datastore.FeatureFlags readFrom(java.io.InputStream input);
+    method public void writeTo(io.mehow.laboratory.datastore.FeatureFlags t, java.io.OutputStream output);
+    property public io.mehow.laboratory.datastore.FeatureFlags defaultValue;
+    field public static final io.mehow.laboratory.datastore.FeatureFlagsSerializer INSTANCE;
+  }
+
+}
+

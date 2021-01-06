@@ -1,0 +1,10 @@
+// Signature format: 4.0
+package io.mehow.laboratory.sharedpreferences {
+
+  public final class SharedPreferencesFeatureStorageKt {
+    method public static io.mehow.laboratory.FeatureStorage sharedPreferences(io.mehow.laboratory.FeatureStorage.Companion, android.content.SharedPreferences preferences);
+    method public static io.mehow.laboratory.FeatureStorage sharedPreferences(io.mehow.laboratory.FeatureStorage.Companion, android.content.Context context, String fileName);
+  }
+
+}
+

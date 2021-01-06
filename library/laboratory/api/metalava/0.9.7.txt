@@ -1,0 +1,104 @@
+// Signature format: 4.0
+package io.mehow.laboratory {
+
+  @kotlin.RequiresOptIn(message="" + "Used API can block a thread with IO operations. " + "Either opt in to its usage or use a suspending equivalent.") @kotlin.annotation.Retention(kotlin.annotation.AnnotationRetention) @kotlin.annotation.Target(allowedTargets={kotlin.annotation.AnnotationTarget, kotlin.annotation.AnnotationTarget}) public @interface BlockingIoCall {
+  }
+
+  public final class BlockingLaboratory {
+    method @io.mehow.laboratory.BlockingIoCall public boolean clear();
+    method @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<T>> T experiment(Class<T> feature);
+    method @io.mehow.laboratory.BlockingIoCall public inline <reified T extends io.mehow.laboratory.Feature<T>> T! experiment();
+    method @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<T>> boolean experimentIs(T option);
+    method @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<?>> boolean setOption(T option);
+    method @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<?>> boolean setOptions(T... options);
+  }
+
+  public interface DefaultOptionFactory {
+    method public <T extends io.mehow.laboratory.Feature<T>> io.mehow.laboratory.Feature<?>? create(T feature);
+    method @kotlin.jvm.JvmDefault public default operator io.mehow.laboratory.DefaultOptionFactory plus(io.mehow.laboratory.DefaultOptionFactory factory);
+  }
+
+  public interface Feature<T extends java.lang.Enum<T> & io.mehow.laboratory.Feature<T>> extends java.lang.Comparable<T> {
+    method public T getDefaultOption();
+    method @kotlin.jvm.JvmDefault public default String getDescription();
+    method public String getName();
+    method @kotlin.jvm.JvmDefault public default Class<io.mehow.laboratory.Feature<?>>? getSource();
+    property public abstract T defaultOption;
+    property @kotlin.jvm.JvmDefault public default String description;
+    property public abstract String name;
+    property @kotlin.jvm.JvmDefault public default Class<io.mehow.laboratory.Feature<?>>? source;
+  }
+
+  public interface FeatureFactory {
+    method public java.util.Set<java.lang.Class<io.mehow.laboratory.Feature<?>>> create();
+    method @kotlin.jvm.JvmDefault public default operator io.mehow.laboratory.FeatureFactory plus(io.mehow.laboratory.FeatureFactory factory);
+    field public static final io.mehow.laboratory.FeatureFactory.Companion Companion;
+  }
+
+  public static final class FeatureFactory.Companion {
+  }
+
+  public final class FeatureKt {
+    method public static <T extends io.mehow.laboratory.Feature<T>> T getDefaultOption(Class<T>);
+    method public static String getDescription(Class<io.mehow.laboratory.Feature<?>>);
+    method public static <T extends io.mehow.laboratory.Feature<T>> T![] getOptions(Class<T>);
+    method public static Class<io.mehow.laboratory.Feature<?>>? getSource(Class<io.mehow.laboratory.Feature<?>>);
+  }
+
+  public interface FeatureStorage {
+    method public suspend Object? clear(kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method public suspend <T extends io.mehow.laboratory.Feature<?>> Object? getFeatureName(Class<T> feature, kotlin.coroutines.Continuation<? super java.lang.String> p);
+    method public <T extends io.mehow.laboratory.Feature<?>> kotlinx.coroutines.flow.Flow<java.lang.String> observeFeatureName(Class<T> feature);
+    method @Deprecated @kotlin.jvm.JvmDefault public default suspend <T extends io.mehow.laboratory.Feature<?>> Object? setFeature(T option, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @Deprecated @kotlin.jvm.JvmDefault public default suspend <T extends io.mehow.laboratory.Feature<?>> Object? setFeatures(T![] options, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @kotlin.jvm.JvmDefault public default suspend <T extends io.mehow.laboratory.Feature<?>> Object? setOption(T option, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method public suspend <T extends io.mehow.laboratory.Feature<?>> Object? setOptions(T![] options, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    field public static final io.mehow.laboratory.FeatureStorage.Companion Companion;
+  }
+
+  public static final class FeatureStorage.Companion {
+    method public io.mehow.laboratory.FeatureStorage inMemory();
+    method public io.mehow.laboratory.FeatureStorage sourced(io.mehow.laboratory.FeatureStorage localSource, java.util.Map<java.lang.String,? extends io.mehow.laboratory.FeatureStorage> remoteSources);
+  }
+
+  public final class Laboratory {
+    ctor @Deprecated public Laboratory(io.mehow.laboratory.FeatureStorage storage);
+    method public io.mehow.laboratory.BlockingLaboratory blocking();
+    method public suspend Object? clear(kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @Deprecated @io.mehow.laboratory.BlockingIoCall public boolean clearBlocking();
+    method public suspend <T extends io.mehow.laboratory.Feature<T>> Object? experiment(Class<T> feature, kotlin.coroutines.Continuation<? super T> p);
+    method public suspend inline <reified T extends io.mehow.laboratory.Feature<T>> T! experiment();
+    method @Deprecated @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<T>> T experimentBlocking(Class<T> feature);
+    method @io.mehow.laboratory.BlockingIoCall public inline <reified T extends io.mehow.laboratory.Feature<T>> T! experimentBlocking();
+    method public suspend <T extends io.mehow.laboratory.Feature<T>> Object? experimentIs(T option, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @Deprecated @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<T>> boolean experimentIsBlocking(T option);
+    method public <T extends io.mehow.laboratory.Feature<T>> kotlinx.coroutines.flow.Flow<T> observe(Class<T> feature);
+    method public inline <reified T extends io.mehow.laboratory.Feature<T>> kotlinx.coroutines.flow.Flow<? extends T>! observe();
+    method @Deprecated public suspend <T extends io.mehow.laboratory.Feature<?>> Object? setFeature(T option, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @Deprecated @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<?>> boolean setFeatureBlocking(T option);
+    method @Deprecated public suspend <T extends io.mehow.laboratory.Feature<?>> Object? setFeatures(T![] options, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @Deprecated @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<?>> boolean setFeaturesBlocking(T... options);
+    method public suspend <T extends io.mehow.laboratory.Feature<?>> Object? setOption(T option, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @Deprecated @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<?>> boolean setOptionBlocking(T option);
+    method public suspend <T extends io.mehow.laboratory.Feature<?>> Object? setOptions(T![] options, kotlin.coroutines.Continuation<? super java.lang.Boolean> p);
+    method @Deprecated @io.mehow.laboratory.BlockingIoCall public <T extends io.mehow.laboratory.Feature<?>> boolean setOptionsBlocking(T... options);
+    field public static final io.mehow.laboratory.Laboratory.Companion Companion;
+  }
+
+  public static interface Laboratory.BuildingStep {
+    method public io.mehow.laboratory.Laboratory build();
+    method public io.mehow.laboratory.Laboratory.BuildingStep defaultOptionFactory(io.mehow.laboratory.DefaultOptionFactory factory);
+  }
+
+  public static final class Laboratory.Companion {
+    method public io.mehow.laboratory.Laboratory.FeatureStorageStep builder();
+    method public io.mehow.laboratory.Laboratory create(io.mehow.laboratory.FeatureStorage storage);
+    method public io.mehow.laboratory.Laboratory inMemory();
+  }
+
+  public static interface Laboratory.FeatureStorageStep {
+    method public io.mehow.laboratory.Laboratory.BuildingStep featureStorage(io.mehow.laboratory.FeatureStorage storage);
+  }
+
+}
+
