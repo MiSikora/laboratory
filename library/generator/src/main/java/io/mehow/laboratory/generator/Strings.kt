@@ -3,6 +3,8 @@ package io.mehow.laboratory.generator
 import io.mehow.laboratory.generator.TextToken.Link
 import io.mehow.laboratory.generator.TextToken.Regular
 
+private val extractLinkRegex = """\[([^\[\]]+)]\(([^()]+)\)""".toRegex()
+
 // TODO: https://github.com/MiSikora/laboratory/issues/71
 internal fun String.prepareKdocHyperlinks(): String {
   val matches = extractLinkRegex.findAll(this)
@@ -17,8 +19,6 @@ internal fun String.prepareKdocHyperlinks(): String {
     }
   }
 }
-
-private val extractLinkRegex = """\[([^\[\]]+)]\(([^()]+)\)""".toRegex()
 
 private sealed class TextToken {
   abstract fun append(builder: StringBuilder)
@@ -51,6 +51,6 @@ private fun Sequence<MatchResult>.toRegularTokens(text: String) = toUnmatchedRan
 
 private fun Sequence<MatchResult>.toUnmatchedRanges(text: String) = sequence {
   yield(Int.MIN_VALUE..0)
-  yieldAll(map(MatchResult::range).map { it.first - 1..it.last + 1 })
+  yieldAll(map { it.range }.map { it.first - 1..it.last + 1 })
   yield(text.length - 1..Int.MAX_VALUE)
 }.windowed(2, 1).map { (start, end) -> start.last..end.first }.filterNot { range -> range.isEmpty() }
