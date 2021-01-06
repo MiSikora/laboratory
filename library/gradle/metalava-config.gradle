@@ -1,0 +1,7 @@
+apply plugin: libs.metalava.gradlePluginId
+
+metalava {
+  filename "api/metalava/${project.version}.txt"
+  inputKotlinNulls true
+  androidVariantName "release"
+}

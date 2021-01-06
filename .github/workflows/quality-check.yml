@@ -110,3 +110,29 @@ jobs:
 
       - name: Stop Gradle
         run: ./gradlew --stop
+
+  metalava:
+    if: ${{ github.repository == 'MiSikora/laboratory' }}
+    name: Metalava
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: cache-gradle-
+
+      - name: Create JARs
+        run: ./gradlew -p library createFullJarRelease --stacktrace
+
+      - name: Check Metalava API
+        run: ./gradlew -p library metalavaCheckCompatibility --stacktrace
+
+      - name: Stop Gradle
+        run: ./gradlew --stop

@@ -10,6 +10,7 @@
 - [ ] I updated the [changelog](https://github.com/MiSikora/laboratory/blob/trunk/library/docs/changelog.md).
 - [ ] I updated the [documentation](https://github.com/MiSikora/laboratory/tree/trunk/library/docs).
 - [ ] I updated the [sample](https://github.com/MiSikora/laboratory/tree/trunk/sample) with relevant changes.
+- [ ] I updated the API `./gradlew -p library createFullJarRelease metalavaGenerateSignature`.
 
 ## :test_tube: How to test
 <!-- Is there a special case to test your changes? -->

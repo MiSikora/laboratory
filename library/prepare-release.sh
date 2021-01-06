@@ -6,6 +6,8 @@ if [[ $(git rev-parse --abbrev-ref HEAD) != trunk ]]; then
   exit 0
 fi
 
+git reset --hard &> /dev/null
+
 currentVersion=$(git describe --abbrev=0)
 currentMajor=$(echo "$currentVersion" | cut -d. -f1)
 currentMinor=$(echo "$currentVersion" | cut -d. -f2)
@@ -70,6 +72,9 @@ sed -i "" "s/$currentVersion/$newVersion/g" $indexFile
 readmeFile="../README.md"
 sed -i "" "s/$currentVersion/$newVersion/g" $readmeFile
 
+# Generate Metalava release API
+../gradlew createFullJarRelease metalavaGenerateSignature
+
 git reset &> /dev/null
 git commit -am "Prepare for release $newVersion" &> /dev/null
 git tag -a "$newVersion" -m "Version $newVersion" &> /dev/null
@@ -81,6 +86,10 @@ newPatch="$(cut -d"." -f3 <<<"$newVersion")"
 newSnapshotVersion="$newMajor.$newMinor.$((newPatch + 1))-SNAPSHOT"
 sed -i "" "s/.*$versionNameKey.*/$versionNameKey=$newSnapshotVersion/g" $propertiesFile
 
+# Generate Metalava snapshot API
+../gradlew createFullJarRelease metalavaGenerateSignature
+
+git add . &> /dev/null
 git commit -am "Prepare next development version" &> /dev/null
 
 echo "\
