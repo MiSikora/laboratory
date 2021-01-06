@@ -76,4 +76,8 @@ ext.libs = [
     "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:3.5.0",
     "turbine": "app.cash.turbine:turbine:0.3.0",
     "kyrie": "com.github.alexjlockwood:kyrie:0.2.1",
+    "metalava": [
+        "gradlePlugin": "me.tylerbwong.gradle:metalava-gradle:0.1.6",
+        "gradlePluginId": "me.tylerbwong.gradle.metalava",
+    ],
 ]
