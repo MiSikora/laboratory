@@ -1,0 +1,147 @@
+// Signature format: 4.0
+package io.mehow.laboratory.generator {
+
+  public final class Deprecation {
+    ctor public Deprecation(String message, kotlin.DeprecationLevel level);
+    method public String component1();
+    method public kotlin.DeprecationLevel component2();
+    method public io.mehow.laboratory.generator.Deprecation copy(String message, kotlin.DeprecationLevel level);
+    method public kotlin.DeprecationLevel getLevel();
+    method public String getMessage();
+    property public final kotlin.DeprecationLevel level;
+    property public final String message;
+  }
+
+  public final class FeatureFactoryModel {
+    method public java.io.File generate(String functionName, java.io.File file);
+  }
+
+  public static final class FeatureFactoryModel.Builder {
+    ctor public FeatureFactoryModel.Builder(io.mehow.laboratory.generator.Visibility visibility, String packageName, java.util.List<io.mehow.laboratory.generator.FeatureFlagModel> features);
+    method public arrow.core.Either<io.mehow.laboratory.generator.GenerationFailure,io.mehow.laboratory.generator.FeatureFactoryModel> build(String name);
+    method public io.mehow.laboratory.generator.FeatureFactoryModel.Builder copy(io.mehow.laboratory.generator.Visibility visibility, String packageName, java.util.List<io.mehow.laboratory.generator.FeatureFlagModel> features);
+  }
+
+  public final class FeatureFlagModel {
+    method public java.io.File generate(java.io.File file);
+  }
+
+  public static final class FeatureFlagModel.Builder {
+    ctor public FeatureFlagModel.Builder(io.mehow.laboratory.generator.Visibility visibility, String packageName, java.util.List<java.lang.String> names, java.util.List<io.mehow.laboratory.generator.FeatureFlagOption> options, java.util.List<io.mehow.laboratory.generator.FeatureFlagOption> sourceOptions, String description, io.mehow.laboratory.generator.Deprecation? deprecation);
+    method public arrow.core.Either<io.mehow.laboratory.generator.GenerationFailure,io.mehow.laboratory.generator.FeatureFlagModel> build();
+    method public io.mehow.laboratory.generator.FeatureFlagModel.Builder copy(io.mehow.laboratory.generator.Visibility visibility, String packageName, java.util.List<java.lang.String> names, java.util.List<io.mehow.laboratory.generator.FeatureFlagOption> options, java.util.List<io.mehow.laboratory.generator.FeatureFlagOption> sourceOptions, String description, io.mehow.laboratory.generator.Deprecation? deprecation);
+  }
+
+  public final class FeatureFlagModelKt {
+    method public static arrow.core.Either<io.mehow.laboratory.generator.GenerationFailure,java.util.List<io.mehow.laboratory.generator.FeatureFlagModel>> buildAll(java.util.List<io.mehow.laboratory.generator.FeatureFlagModel.Builder>);
+    method public static java.util.List<io.mehow.laboratory.generator.FeatureFlagModel> sourceModels(java.util.List<io.mehow.laboratory.generator.FeatureFlagModel>);
+    method public static java.util.List<java.lang.String> sourceNames(java.util.List<io.mehow.laboratory.generator.FeatureFlagModel>);
+  }
+
+  public final class FeatureFlagOption {
+    ctor public FeatureFlagOption(String name, boolean isDefault);
+    method public String component1();
+    method public boolean component2();
+    method public io.mehow.laboratory.generator.FeatureFlagOption copy(String name, boolean isDefault);
+    method public String getName();
+    method public boolean isDefault();
+    property public final boolean isDefault;
+    property public final String name;
+  }
+
+  public final class FeatureValuesCollision implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public FeatureValuesCollision(arrow.core.NonEmptyList<java.lang.String> collisions, String fqcn);
+    method public io.mehow.laboratory.generator.FeatureValuesCollision copy(arrow.core.NonEmptyList<java.lang.String> collisions, String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class FeaturesCollision implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public FeaturesCollision(arrow.core.NonEmptyList<java.lang.String> collisions);
+    method public io.mehow.laboratory.generator.FeaturesCollision copy(arrow.core.NonEmptyList<java.lang.String> collisions);
+    method public String getMessage();
+    property public String message;
+    field public static final io.mehow.laboratory.generator.FeaturesCollision.Companion Companion;
+  }
+
+  public static final class FeaturesCollision.Companion {
+    method public io.mehow.laboratory.generator.FeaturesCollision fromFeatures(arrow.core.NonEmptyList<io.mehow.laboratory.generator.FeatureFlagModel> models);
+  }
+
+  public interface GenerationFailure {
+    method public String getMessage();
+    property public abstract String message;
+  }
+
+  public final class InvalidFactoryName implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public InvalidFactoryName(String name, String fqcn);
+    method public io.mehow.laboratory.generator.InvalidFactoryName copy(String name, String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class InvalidFeatureName implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public InvalidFeatureName(String name, String fqcn);
+    method public io.mehow.laboratory.generator.InvalidFeatureName copy(String name, String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class InvalidFeatureValues implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public InvalidFeatureValues(arrow.core.NonEmptyList<java.lang.String> invalidValues, String fqcn);
+    method public io.mehow.laboratory.generator.InvalidFeatureValues copy(arrow.core.NonEmptyList<java.lang.String> invalidValues, String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class InvalidPackageName implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public InvalidPackageName(String fqcn);
+    method public io.mehow.laboratory.generator.InvalidPackageName copy(String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class IterablesKt {
+  }
+
+  public final class MultipleFeatureDefaultValues implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public MultipleFeatureDefaultValues(arrow.core.NonEmptyList<java.lang.String> collisions, String fqcn);
+    method public io.mehow.laboratory.generator.MultipleFeatureDefaultValues copy(arrow.core.NonEmptyList<java.lang.String> collisions, String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class NoFeatureDefaultValue implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public NoFeatureDefaultValue(String fqcn);
+    method public io.mehow.laboratory.generator.NoFeatureDefaultValue copy(String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class NoFeatureValues implements io.mehow.laboratory.generator.GenerationFailure {
+    ctor public NoFeatureValues(String fqcn);
+    method public io.mehow.laboratory.generator.NoFeatureValues copy(String fqcn);
+    method public String getMessage();
+    property public String message;
+  }
+
+  public final class SourcedFeatureStorageModel {
+    method public java.io.File generate(java.io.File file);
+  }
+
+  public static final class SourcedFeatureStorageModel.Builder {
+    ctor public SourcedFeatureStorageModel.Builder(io.mehow.laboratory.generator.Visibility visibility, String packageName, java.util.List<java.lang.String> sourceNames);
+    method public arrow.core.Either<io.mehow.laboratory.generator.GenerationFailure,io.mehow.laboratory.generator.SourcedFeatureStorageModel> build();
+    method public io.mehow.laboratory.generator.SourcedFeatureStorageModel.Builder copy(io.mehow.laboratory.generator.Visibility visibility, String packageName, java.util.List<java.lang.String> sourceNames);
+  }
+
+  public final class StringsKt {
+  }
+
+  public enum Visibility {
+    enum_constant public static final io.mehow.laboratory.generator.Visibility Internal;
+    enum_constant public static final io.mehow.laboratory.generator.Visibility Public;
+  }
+
+}
+

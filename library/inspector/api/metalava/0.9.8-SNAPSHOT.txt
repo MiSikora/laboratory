@@ -1,0 +1,71 @@
+// Signature format: 4.0
+package io.mehow.laboratory.inspector {
+
+  public enum DeprecationAlignment {
+    enum_constant public static final io.mehow.laboratory.inspector.DeprecationAlignment Bottom;
+    enum_constant public static final io.mehow.laboratory.inspector.DeprecationAlignment Regular;
+  }
+
+  public static fun interface DeprecationAlignment.Selector {
+    method public io.mehow.laboratory.inspector.DeprecationAlignment select(kotlin.DeprecationLevel level);
+  }
+
+  public enum DeprecationPhenotype {
+    enum_constant public static final io.mehow.laboratory.inspector.DeprecationPhenotype Hide;
+    enum_constant public static final io.mehow.laboratory.inspector.DeprecationPhenotype Show;
+    enum_constant public static final io.mehow.laboratory.inspector.DeprecationPhenotype Strikethrough;
+  }
+
+  public static fun interface DeprecationPhenotype.Selector {
+    method public io.mehow.laboratory.inspector.DeprecationPhenotype select(kotlin.DeprecationLevel level);
+  }
+
+  public final class FeatureUiModelKt {
+  }
+
+  public final class IterablesKt {
+  }
+
+  @com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore public final class LaboratoryActivity extends androidx.appcompat.app.AppCompatActivity {
+    ctor public LaboratoryActivity();
+    field public static final io.mehow.laboratory.inspector.LaboratoryActivity.Companion Companion;
+  }
+
+  public static final class LaboratoryActivity.Companion {
+    method public void configure(io.mehow.laboratory.Laboratory laboratory, io.mehow.laboratory.FeatureFactory mainFactory, optional java.util.Map<java.lang.String,? extends io.mehow.laboratory.FeatureFactory> externalFactories);
+    method public void configure(io.mehow.laboratory.inspector.LaboratoryActivity.Configuration configuration);
+    method public void start(android.content.Context context);
+  }
+
+  public static final class LaboratoryActivity.Configuration {
+    ctor @Deprecated public LaboratoryActivity.Configuration(io.mehow.laboratory.Laboratory laboratory, java.util.Map<java.lang.String,? extends io.mehow.laboratory.FeatureFactory> featureFactories);
+    field public static final io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.Companion Companion;
+  }
+
+  public static interface LaboratoryActivity.Configuration.BuildingStep {
+    method public io.mehow.laboratory.inspector.LaboratoryActivity.Configuration build();
+    method public io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.BuildingStep deprecationAlignmentSelector(io.mehow.laboratory.inspector.DeprecationAlignment.Selector selector);
+    method public io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.BuildingStep deprecationPhenotypeSelector(io.mehow.laboratory.inspector.DeprecationPhenotype.Selector selector);
+  }
+
+  public static final class LaboratoryActivity.Configuration.Companion {
+    method public io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.LaboratoryStep builder();
+    method public io.mehow.laboratory.inspector.LaboratoryActivity.Configuration create(io.mehow.laboratory.Laboratory laboratory, java.util.Map<java.lang.String,? extends io.mehow.laboratory.FeatureFactory> featureFactories);
+  }
+
+  public static interface LaboratoryActivity.Configuration.FeatureFactoriesStep {
+    method public io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.BuildingStep featureFactories(java.util.Map<java.lang.String,? extends io.mehow.laboratory.FeatureFactory> factories);
+  }
+
+  public static interface LaboratoryActivity.Configuration.LaboratoryStep {
+    method public io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.FeatureFactoriesStep laboratory(io.mehow.laboratory.Laboratory laboratory);
+  }
+
+  public final class TextTokenKt {
+  }
+
+  public final class ViewsKt {
+  }
+
+}
+

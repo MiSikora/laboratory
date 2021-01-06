@@ -1,0 +1,92 @@
+// Signature format: 4.0
+package io.mehow.laboratory.gradle {
+
+  public enum DeprecationLevel {
+    enum_constant public static final io.mehow.laboratory.gradle.DeprecationLevel Error;
+    enum_constant public static final io.mehow.laboratory.gradle.DeprecationLevel Hidden;
+    enum_constant public static final io.mehow.laboratory.gradle.DeprecationLevel Warning;
+  }
+
+  public final class FeatureFactoryInput {
+    method public String? getPackageName();
+    method public boolean isPublic();
+    method public void projectFilter(java.util.function.Predicate<org.gradle.api.Project> filter);
+    method public void setPackageName(String? p);
+    method public void setPublic(boolean p);
+    property public final boolean isPublic;
+    property public final String? packageName;
+  }
+
+  public class FeatureFactoryTask extends org.gradle.api.DefaultTask {
+    ctor public FeatureFactoryTask();
+    method @org.gradle.api.tasks.TaskAction public final void generateFeatureFactory();
+  }
+
+  public final class FeatureFlagInput {
+    method public void deprecated(String message, optional io.mehow.laboratory.gradle.DeprecationLevel level);
+    method public void deprecated(String message);
+    method public String? getDescription();
+    method public String? getPackageName();
+    method public boolean isPublic();
+    method public void setDescription(String? p);
+    method public void setPackageName(String? p);
+    method public void setPublic(boolean p);
+    method public void withDefaultOption(String name);
+    method public void withDefaultSource(String name);
+    method @Deprecated public void withDefaultValue(String value);
+    method public void withOption(String name);
+    method public void withSource(String name);
+    method @Deprecated public void withValue(String value);
+    property public final String? description;
+    property public final boolean isPublic;
+    property public final String? packageName;
+  }
+
+  public class FeatureFlagsTask extends org.gradle.api.DefaultTask {
+    ctor public FeatureFlagsTask();
+    method @org.gradle.api.tasks.TaskAction public final void generateFeatureFlags();
+  }
+
+  public class LaboratoryExtension {
+    ctor public LaboratoryExtension();
+    method public final void feature(String name, org.gradle.api.Action<io.mehow.laboratory.gradle.FeatureFlagInput> action);
+    method public final void featureFactory();
+    method public final void featureFactory(org.gradle.api.Action<io.mehow.laboratory.gradle.FeatureFactoryInput> action);
+    method public final void featureSourceFactory();
+    method public final void featureSourceFactory(org.gradle.api.Action<io.mehow.laboratory.gradle.FeatureFactoryInput> action);
+    method public final String getPackageName();
+    method public final void methodMissing(String name, Object args);
+    method public final void setPackageName(String p);
+    method public final void sourcedStorage();
+    method public final void sourcedStorage(org.gradle.api.Action<io.mehow.laboratory.gradle.SourcedFeatureStorageInput> action);
+    property public final String packageName;
+  }
+
+  public final class LaboratoryPlugin implements org.gradle.api.Plugin<org.gradle.api.Project> {
+    ctor public LaboratoryPlugin();
+    method public void apply(org.gradle.api.Project project);
+  }
+
+  public final class LaboratoryPluginKt {
+  }
+
+  public final class SourceSetContributionKt {
+  }
+
+  public final class SourcedFeatureStorageInput {
+    method public String? getPackageName();
+    method public boolean isPublic();
+    method public void projectFilter(java.util.function.Predicate<org.gradle.api.Project> filter);
+    method public void setPackageName(String? p);
+    method public void setPublic(boolean p);
+    property public final boolean isPublic;
+    property public final String? packageName;
+  }
+
+  public class SourcedFeatureStorageTask extends org.gradle.api.DefaultTask {
+    ctor public SourcedFeatureStorageTask();
+    method @org.gradle.api.tasks.TaskAction public final void generateSourcedFeatureStorage();
+  }
+
+}
+
