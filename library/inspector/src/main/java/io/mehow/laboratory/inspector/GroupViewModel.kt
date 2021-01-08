@@ -43,7 +43,7 @@ internal class GroupViewModel(
           .mapNotNull(featureMetadataFactory::create)
           .filter { it.deprecationPhenotype != DeprecationPhenotype.Hide }
           .map { it.observeGroup(laboratory) }
-          .observeElements()
+          .combineLatest()
     }
     val searchedGroups = combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
         .map { it.sortedWith(FeatureUiModel.NaturalComparator) }
