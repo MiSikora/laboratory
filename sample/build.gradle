@@ -34,10 +34,6 @@ android {
 
     signingConfig signingConfigs.config
   }
-  buildTypes {
-    debug {
-    }
-  }
 
   buildTypes.debug.setMatchingFallbacks "release"
   buildTypes.debug.minifyEnabled true
