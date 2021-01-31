@@ -1,3 +1,4 @@
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -17,9 +18,11 @@ buildscript {
     classpath libs.detekt.gradlePlugin
     classpath libs.gradleVersions.gradlePlugin
     classpath libs.wireGradlePlugin
-    classpath libs.metalava.gradlePlugin
+    classpath libs.kotlin.x.binaryCompatibility.gradlePlugin
   }
 }
+
+apply plugin: libs.kotlin.x.binaryCompatibility.gradlePluginId
 
 allprojects {
   repositories {
@@ -118,7 +121,7 @@ dependencies {
   detekt libs.detekt.cli
 }
 
-tasks.withType(io.gitlab.arturbosch.detekt.Detekt) {
+tasks.withType(Detekt) {
   parallel true
   config.setFrom(rootProject.files("detekt-config.yml"))
   setSource(files(projectDir))

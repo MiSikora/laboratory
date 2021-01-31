@@ -37,6 +37,5 @@ dependencies {
   androidTestImplementation libs.turbine
 }
 
-apply from: "$rootDir/gradle/metalava-config.gradle"
 apply from: "$rootDir/gradle/dokka-config.gradle"
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

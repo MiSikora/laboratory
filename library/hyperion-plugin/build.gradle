@@ -15,5 +15,4 @@ dependencies {
   kapt libs.autoService
 }
 
-apply from: "$rootDir/gradle/metalava-config.gradle"
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
