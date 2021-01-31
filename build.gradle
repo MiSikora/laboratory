@@ -20,7 +20,7 @@ buildscript {
   }
 
   dependencies {
-    classpath libs.android.gradlePlugin
+    classpath libs.android.gradlePlugin.project
     classpath libs.kotlin.gradlePlugin
   }
 }

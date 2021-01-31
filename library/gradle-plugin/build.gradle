@@ -25,13 +25,13 @@ tasks.getByName("pluginUnderTestMetadata").getPluginClasspath().from(configurati
 dependencies {
   implementation project(":generator")
   implementation libs.kotlin.gradlePlugin
-  compileOnly libs.android.gradlePlugin
+  compileOnly libs.android.gradlePlugin.api
 
   testImplementation libs.kotest.runnerJunit5
   testImplementation libs.kotest.assertions
 
   fixtureClasspath libs.kotlin.gradlePlugin
-  fixtureClasspath libs.android.gradlePlugin
+  fixtureClasspath libs.android.gradlePlugin.api
 }
 
 def versionDir = "${buildDir}/generated/source/laboratory"
