@@ -113,7 +113,7 @@ jobs:
 
   binary-compatibility:
     if: ${{ github.repository == 'MiSikora/laboratory' }}
-    name: Metalava
+    name: Binary compatibility
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
