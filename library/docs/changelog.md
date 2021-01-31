@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to DataStore `1.0.0-alpha06`.
 - Upgrade to AGP `4.1.2`.
 
+### Deprecated
+- `DataStore` custom builder and builder factory methods. Factory method that accept `DataStore` directly should be used instead.
+
 ## [0.9.7] - 2020-12-15
 
 ### Changed

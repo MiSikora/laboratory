@@ -15,6 +15,9 @@ import java.io.File
 /**
  * Builder for a [FeatureStorage] backed by [DataStore].
  */
+@Deprecated(
+    message = "This class will be removed in 1.0.0. Use FeatureStorage.Companion.dataStore(DataStore) instead.",
+)
 public class Builder internal constructor(
   private val fileProvider: () -> File,
 ) {
@@ -77,6 +80,13 @@ public class Builder internal constructor(
 /**
  * Creates a [FeatureStorage builder][Builder] with a file taken from [fileProvider].
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(
+    message = "" +
+        "This method will be removed in 1.0.0. " +
+        "Configure data store separately using DataStoreFactory " +
+        "and use FeatureStorage.Companion.dataStore(DataStore<FeatureFlags>) instead.",
+)
 public fun FeatureStorage.Companion.dataStoreBuilder(fileProvider: () -> File): Builder {
   return Builder(fileProvider)
 }
@@ -84,6 +94,13 @@ public fun FeatureStorage.Companion.dataStoreBuilder(fileProvider: () -> File): 
 /**
  * Creates a [FeatureStorage builder][Builder] with a file in an apps default directory.
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(
+    message = "" +
+        "This method will be removed in 1.0.0. " +
+        "Configure data store separately using DataStoreFactory " +
+        "and use FeatureStorage.Companion.dataStore(DataStore<FeatureFlags>) instead.",
+)
 public fun FeatureStorage.Companion.dataStoreBuilder(context: Context, fileName: String): Builder {
   return dataStoreBuilder { File(context.filesDir, "datastore/$fileName") }
 }
