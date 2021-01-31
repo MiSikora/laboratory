@@ -1,0 +1,77 @@
+public final class io/mehow/laboratory/gradle/DeprecationLevel : java/lang/Enum {
+	public static final field Error Lio/mehow/laboratory/gradle/DeprecationLevel;
+	public static final field Hidden Lio/mehow/laboratory/gradle/DeprecationLevel;
+	public static final field Warning Lio/mehow/laboratory/gradle/DeprecationLevel;
+	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/gradle/DeprecationLevel;
+	public static fun values ()[Lio/mehow/laboratory/gradle/DeprecationLevel;
+}
+
+public final class io/mehow/laboratory/gradle/FeatureFactoryInput {
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun isPublic ()Z
+	public final fun projectFilter (Ljava/util/function/Predicate;)V
+	public final fun setPackageName (Ljava/lang/String;)V
+	public final fun setPublic (Z)V
+}
+
+public class io/mehow/laboratory/gradle/FeatureFactoryTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public final fun generateFeatureFactory ()V
+}
+
+public final class io/mehow/laboratory/gradle/FeatureFlagInput {
+	public final fun deprecated (Ljava/lang/String;)V
+	public final fun deprecated (Ljava/lang/String;Lio/mehow/laboratory/gradle/DeprecationLevel;)V
+	public static synthetic fun deprecated$default (Lio/mehow/laboratory/gradle/FeatureFlagInput;Ljava/lang/String;Lio/mehow/laboratory/gradle/DeprecationLevel;ILjava/lang/Object;)V
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun isPublic ()Z
+	public final fun setDescription (Ljava/lang/String;)V
+	public final fun setPackageName (Ljava/lang/String;)V
+	public final fun setPublic (Z)V
+	public final fun withDefaultOption (Ljava/lang/String;)V
+	public final fun withDefaultSource (Ljava/lang/String;)V
+	public final fun withDefaultValue (Ljava/lang/String;)V
+	public final fun withOption (Ljava/lang/String;)V
+	public final fun withSource (Ljava/lang/String;)V
+	public final fun withValue (Ljava/lang/String;)V
+}
+
+public class io/mehow/laboratory/gradle/FeatureFlagsTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public final fun generateFeatureFlags ()V
+}
+
+public class io/mehow/laboratory/gradle/LaboratoryExtension {
+	public fun <init> ()V
+	public final fun feature (Ljava/lang/String;Lorg/gradle/api/Action;)V
+	public final fun featureFactory ()V
+	public final fun featureFactory (Lorg/gradle/api/Action;)V
+	public final fun featureSourceFactory ()V
+	public final fun featureSourceFactory (Lorg/gradle/api/Action;)V
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun methodMissing (Ljava/lang/String;Ljava/lang/Object;)V
+	public final fun setPackageName (Ljava/lang/String;)V
+	public final fun sourcedStorage ()V
+	public final fun sourcedStorage (Lorg/gradle/api/Action;)V
+}
+
+public final class io/mehow/laboratory/gradle/LaboratoryPlugin : org/gradle/api/Plugin {
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public final class io/mehow/laboratory/gradle/SourcedFeatureStorageInput {
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun isPublic ()Z
+	public final fun projectFilter (Ljava/util/function/Predicate;)V
+	public final fun setPackageName (Ljava/lang/String;)V
+	public final fun setPublic (Z)V
+}
+
+public class io/mehow/laboratory/gradle/SourcedFeatureStorageTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public final fun generateSourcedFeatureStorage ()V
+}
+

@@ -1,0 +1,49 @@
+public final class io/mehow/laboratory/datastore/Builder {
+	public final fun build ()Lio/mehow/laboratory/FeatureStorage;
+	public final fun coroutineScope (Lkotlinx/coroutines/CoroutineScope;)Lio/mehow/laboratory/datastore/Builder;
+	public final fun corruptionHandler (Landroidx/datastore/core/handlers/ReplaceFileCorruptionHandler;)Lio/mehow/laboratory/datastore/Builder;
+	public final fun featureSerializer (Landroidx/datastore/core/Serializer;)Lio/mehow/laboratory/datastore/Builder;
+	public final fun migrations (Ljava/lang/Iterable;)Lio/mehow/laboratory/datastore/Builder;
+	public final fun migrations ([Landroidx/datastore/core/DataMigration;)Lio/mehow/laboratory/datastore/Builder;
+}
+
+public final class io/mehow/laboratory/datastore/BuilderKt {
+	public static final fun dataStoreBuilder (Lio/mehow/laboratory/FeatureStorage$Companion;Landroid/content/Context;Ljava/lang/String;)Lio/mehow/laboratory/datastore/Builder;
+	public static final fun dataStoreBuilder (Lio/mehow/laboratory/FeatureStorage$Companion;Lkotlin/jvm/functions/Function0;)Lio/mehow/laboratory/datastore/Builder;
+}
+
+public final class io/mehow/laboratory/datastore/DataStoreFeatureStorageKt {
+	public static final fun dataStore (Lio/mehow/laboratory/FeatureStorage$Companion;Landroid/content/Context;Ljava/lang/String;)Lio/mehow/laboratory/FeatureStorage;
+	public static final fun dataStore (Lio/mehow/laboratory/FeatureStorage$Companion;Landroidx/datastore/core/DataStore;)Lio/mehow/laboratory/FeatureStorage;
+	public static final fun dataStore (Lio/mehow/laboratory/FeatureStorage$Companion;Lkotlin/jvm/functions/Function0;)Lio/mehow/laboratory/FeatureStorage;
+}
+
+public final class io/mehow/laboratory/datastore/FeatureFlags : com/squareup/wire/Message {
+	public static final field ADAPTER Lcom/squareup/wire/ProtoAdapter;
+	public static final field Companion Lio/mehow/laboratory/datastore/FeatureFlags$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;Lokio/ByteString;)V
+	public synthetic fun <init> (Ljava/util/Map;Lokio/ByteString;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy (Ljava/util/Map;Lokio/ByteString;)Lio/mehow/laboratory/datastore/FeatureFlags;
+	public static synthetic fun copy$default (Lio/mehow/laboratory/datastore/FeatureFlags;Ljava/util/Map;Lokio/ByteString;ILjava/lang/Object;)Lio/mehow/laboratory/datastore/FeatureFlags;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/util/Map;
+	public fun hashCode ()I
+	public synthetic fun newBuilder ()Lcom/squareup/wire/Message$Builder;
+	public synthetic fun newBuilder ()Ljava/lang/Void;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/mehow/laboratory/datastore/FeatureFlags$Companion {
+}
+
+public final class io/mehow/laboratory/datastore/FeatureFlagsSerializer : androidx/datastore/core/Serializer {
+	public static final field INSTANCE Lio/mehow/laboratory/datastore/FeatureFlagsSerializer;
+	public fun getDefaultValue ()Lio/mehow/laboratory/datastore/FeatureFlags;
+	public synthetic fun getDefaultValue ()Ljava/lang/Object;
+	public fun readFrom (Ljava/io/InputStream;)Lio/mehow/laboratory/datastore/FeatureFlags;
+	public synthetic fun readFrom (Ljava/io/InputStream;)Ljava/lang/Object;
+	public fun writeTo (Lio/mehow/laboratory/datastore/FeatureFlags;Ljava/io/OutputStream;)V
+	public synthetic fun writeTo (Ljava/lang/Object;Ljava/io/OutputStream;)V
+}
+

@@ -1,0 +1,59 @@
+public final class io/mehow/laboratory/inspector/DeprecationAlignment : java/lang/Enum {
+	public static final field Bottom Lio/mehow/laboratory/inspector/DeprecationAlignment;
+	public static final field Regular Lio/mehow/laboratory/inspector/DeprecationAlignment;
+	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/inspector/DeprecationAlignment;
+	public static fun values ()[Lio/mehow/laboratory/inspector/DeprecationAlignment;
+}
+
+public abstract interface class io/mehow/laboratory/inspector/DeprecationAlignment$Selector {
+	public abstract fun select (Lkotlin/DeprecationLevel;)Lio/mehow/laboratory/inspector/DeprecationAlignment;
+}
+
+public final class io/mehow/laboratory/inspector/DeprecationPhenotype : java/lang/Enum {
+	public static final field Hide Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+	public static final field Show Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+	public static final field Strikethrough Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+	public static fun values ()[Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+}
+
+public abstract interface class io/mehow/laboratory/inspector/DeprecationPhenotype$Selector {
+	public abstract fun select (Lkotlin/DeprecationLevel;)Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+}
+
+public final class io/mehow/laboratory/inspector/LaboratoryActivity : androidx/appcompat/app/AppCompatActivity {
+	public static final field Companion Lio/mehow/laboratory/inspector/LaboratoryActivity$Companion;
+	public fun <init> ()V
+}
+
+public final class io/mehow/laboratory/inspector/LaboratoryActivity$Companion {
+	public final fun configure (Lio/mehow/laboratory/Laboratory;Lio/mehow/laboratory/FeatureFactory;Ljava/util/Map;)V
+	public final fun configure (Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration;)V
+	public static synthetic fun configure$default (Lio/mehow/laboratory/inspector/LaboratoryActivity$Companion;Lio/mehow/laboratory/Laboratory;Lio/mehow/laboratory/FeatureFactory;Ljava/util/Map;ILjava/lang/Object;)V
+	public final fun start (Landroid/content/Context;)V
+}
+
+public final class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration {
+	public static final field Companion Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$Companion;
+	public fun <init> (Lio/mehow/laboratory/Laboratory;Ljava/util/Map;)V
+}
+
+public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep {
+	public abstract fun build ()Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration;
+	public abstract fun deprecationAlignmentSelector (Lio/mehow/laboratory/inspector/DeprecationAlignment$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
+	public abstract fun deprecationPhenotypeSelector (Lio/mehow/laboratory/inspector/DeprecationPhenotype$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
+}
+
+public final class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$Companion {
+	public final fun builder ()Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$LaboratoryStep;
+	public final fun create (Lio/mehow/laboratory/Laboratory;Ljava/util/Map;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration;
+}
+
+public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$FeatureFactoriesStep {
+	public abstract fun featureFactories (Ljava/util/Map;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
+}
+
+public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$LaboratoryStep {
+	public abstract fun laboratory (Lio/mehow/laboratory/Laboratory;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$FeatureFactoriesStep;
+}
+
