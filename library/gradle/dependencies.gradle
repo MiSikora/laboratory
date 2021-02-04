@@ -37,7 +37,7 @@ ext.libs = [
         "material": "com.google.android.material:material:1.2.1",
     ],
     "kotlin": [
-        "gradlePlugin": "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21",
+        "gradlePlugin": "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30",
         "x": [
             "coroutinesCore": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
             "coroutinesAndroid": "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}",
