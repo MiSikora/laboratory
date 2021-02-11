@@ -19,6 +19,7 @@ public abstract interface class io/mehow/laboratory/Feature : java/lang/Comparab
 	public fun getDescription ()Ljava/lang/String;
 	public abstract fun getName ()Ljava/lang/String;
 	public fun getSource ()Ljava/lang/Class;
+	public fun getSupervisorOption ()Lio/mehow/laboratory/Feature;
 }
 
 public abstract interface class io/mehow/laboratory/FeatureFactory {
@@ -34,6 +35,7 @@ public final class io/mehow/laboratory/FeatureKt {
 	public static final fun getDefaultOption (Ljava/lang/Class;)Lio/mehow/laboratory/Feature;
 	public static final fun getDescription (Ljava/lang/Class;)Ljava/lang/String;
 	public static final fun getOptions (Ljava/lang/Class;)[Lio/mehow/laboratory/Feature;
+	public static final fun getParent (Ljava/lang/Class;)Lio/mehow/laboratory/Feature;
 	public static final fun getSource (Ljava/lang/Class;)Ljava/lang/Class;
 }
 
