@@ -45,8 +45,8 @@ public class Laboratory internal constructor(
       options.firstOrNull { it.name == expectedName } ?: defaultOption
     }
 
-    val parent = feature.parent ?: return activeOption
-    val activeParentOption = observeRaw(parent.javaClass)
+    val supervisor = feature.supervisorOption ?: return activeOption
+    val activeParentOption = observeRaw(supervisor.javaClass)
 
     return combine(activeOption, activeParentOption) { option, parentOption ->
       if (option.supervisorOption != parentOption) defaultOption else option
@@ -62,8 +62,8 @@ public class Laboratory internal constructor(
       options.firstOrNull { it.name == expectedName } ?: defaultOption
     }
 
-    val parent = feature.parent ?: return activeOption
-    return combine(activeOption, observeRaw(parent.javaClass)) { option, parentOption ->
+    val supervisor = feature.supervisorOption ?: return activeOption
+    return combine(activeOption, observeRaw(supervisor.javaClass)) { option, parentOption ->
       if (option.supervisorOption != parentOption) defaultOption else option
     }.distinctUntilChanged()
   }
@@ -89,7 +89,7 @@ public class Laboratory internal constructor(
     val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
     val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
 
-    val parent = feature.parent ?: return activeOption
+    val parent = feature.supervisorOption ?: return activeOption
     return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) defaultOption else activeOption
   }
 
@@ -99,7 +99,7 @@ public class Laboratory internal constructor(
     val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
     val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
 
-    val parent = feature.parent ?: return activeOption
+    val parent = feature.supervisorOption ?: return activeOption
     return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) defaultOption else activeOption
   }
 

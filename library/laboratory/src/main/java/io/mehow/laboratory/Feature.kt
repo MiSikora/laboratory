@@ -55,7 +55,7 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
   @JvmDefault public val description: String get() = ""
 
   /**
-   * Option of another feature flag that controls value of this child flag. When parent feature flag
+   * Option of another feature flag that controls value of this child flag. When supervisor feature flag
    * has an option different from this value then the child does not produce values other than the default one.
    * Option can still be set via `Laboratory` but it will not be exposed as long as a feature flag is not supervised.
    */
@@ -87,11 +87,11 @@ public val Class<Feature<*>>.description: String
   get() = firstOption.description
 
 /**
- * Parent of a feature flag.
+ * Supervisor of a feature flag.
  *
  * @see Feature.supervisorOption
  */
-public val <T : Feature<T>> Class<T>.parent: Feature<*>?
+public val <T : Feature<T>> Class<T>.supervisorOption: Feature<*>?
   get() = firstOption.supervisorOption
 
 /**
