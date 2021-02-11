@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Wire `3.6.0`.
 - Upgrade to Material `1.3.0`.
 - Upgrade to FragmentKtx `1.3.0`.
+- Upgrade to LifecycleViewModelKtx `2.3.0`.
 
 ### Deprecated
 - `DataStore` custom builder and builder factory methods. Factory method that accept `DataStore` directly should be used instead.
