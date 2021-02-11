@@ -1,6 +1,8 @@
 package io.mehow.laboratory
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /**
@@ -37,10 +39,33 @@ public class Laboratory internal constructor(
   public fun <T : Feature<T>> observe(feature: Class<T>): Flow<T> {
     val options = feature.options
     val defaultOption = getDefaultOption(feature)
-    return storage.observeFeatureName(feature).map { featureName ->
+
+    val activeOption = storage.observeFeatureName(feature).map { featureName ->
       val expectedName = featureName ?: defaultOption.name
       options.firstOrNull { it.name == expectedName } ?: defaultOption
     }
+
+    val parent = feature.parent ?: return activeOption
+    val activeParentOption = observeRaw(parent.javaClass)
+
+    return combine(activeOption, activeParentOption) { option, parentOption ->
+      if (option.supervisorOption != parentOption) defaultOption else option
+    }.distinctUntilChanged()
+  }
+
+  private fun observeRaw(feature: Class<Feature<*>>): Flow<Feature<*>> {
+    val options = feature.options
+    val defaultOption = getDefaultOption(feature)
+
+    val activeOption = storage.observeFeatureName(feature).map { parentName ->
+      val expectedName = parentName ?: defaultOption.name
+      options.firstOrNull { it.name == expectedName } ?: defaultOption
+    }
+
+    val parent = feature.parent ?: return activeOption
+    return combine(activeOption, observeRaw(parent.javaClass)) { option, parentOption ->
+      if (option.supervisorOption != parentOption) defaultOption else option
+    }.distinctUntilChanged()
   }
 
   /**
@@ -62,7 +87,20 @@ public class Laboratory internal constructor(
     val options = feature.options
     val defaultOption = getDefaultOption(feature)
     val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
-    return options.firstOrNull { it.name == expectedName } ?: defaultOption
+    val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
+
+    val parent = feature.parent ?: return activeOption
+    return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) defaultOption else activeOption
+  }
+
+  private suspend fun experimentRaw(feature: Class<Feature<*>>): Feature<*> {
+    val options = feature.options
+    val defaultOption = getDefaultOption(feature)
+    val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
+    val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
+
+    val parent = feature.parent ?: return activeOption
+    return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) defaultOption else activeOption
   }
 
   @BlockingIoCall
