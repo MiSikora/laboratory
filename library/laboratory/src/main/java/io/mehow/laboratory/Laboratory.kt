@@ -36,22 +36,10 @@ public class Laboratory internal constructor(
   /**
    * Observes any changes to the input [Feature].
    */
-  public fun <T : Feature<T>> observe(feature: Class<T>): Flow<T> {
-    val options = feature.options
-    val defaultOption = getDefaultOption(feature)
-
-    val activeOption = storage.observeFeatureName(feature).map { featureName ->
-      val expectedName = featureName ?: defaultOption.name
-      options.firstOrNull { it.name == expectedName } ?: defaultOption
-    }
-
-    val supervisor = feature.supervisorOption ?: return activeOption
-    val activeParentOption = observeRaw(supervisor.javaClass)
-
-    return combine(activeOption, activeParentOption) { option, parentOption ->
-      if (option.supervisorOption != parentOption) defaultOption else option
-    }.distinctUntilChanged()
-  }
+  @Suppress("UNCHECKED_CAST")
+  public fun <T : Feature<T>> observe(
+    feature: Class<T>,
+  ): Flow<T> = observeRaw(feature as Class<Feature<*>>) as Flow<T>
 
   private fun observeRaw(feature: Class<Feature<*>>): Flow<Feature<*>> {
     val options = feature.options
@@ -83,15 +71,10 @@ public class Laboratory internal constructor(
   /**
    * Returns the current option of the input [Feature].
    */
-  public suspend fun <T : Feature<T>> experiment(feature: Class<T>): T {
-    val options = feature.options
-    val defaultOption = getDefaultOption(feature)
-    val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
-    val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
-
-    val parent = feature.supervisorOption ?: return activeOption
-    return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) defaultOption else activeOption
-  }
+  @Suppress("UNCHECKED_CAST")
+  public suspend fun <T : Feature<T>> experiment(
+    feature: Class<T>,
+  ): T = experimentRaw(feature as Class<Feature<*>>) as T
 
   private suspend fun experimentRaw(feature: Class<Feature<*>>): Feature<*> {
     val options = feature.options
