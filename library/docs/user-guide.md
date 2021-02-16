@@ -221,3 +221,49 @@ class DebugDefaultOptionFactory : DefaultOptionFactory {
   private val <T : Feature<T>> T.options get() = javaClass.options
 }
 ```
+## Parent–child relationship
+
+Feature flags can be supervised using `FeatureFlag.supervisorOption` property. Whenever supervisor has its option different from the value in this property then the supervised feature flag cannot return any other option than a default one. Option can still be set via `Laboratory` but it will not be exposed as long as a feature flag is not supervised. This relationship is recursive meaning that grandparents control grandchildren indirectly.
+
+```kotlin
+enum class ChristmasTheme : Feature<ChristmasTheme> {
+  Enabled,
+  Disabled,
+  ;
+
+  public override val defaultOption get() = Disabled
+}
+
+enum class Greeting : Feature<Greeting> {
+  Hello,
+  HoHoHo,
+  ;
+
+  public override val defaultOption get() = Hello
+
+  public override val supervisorOption get() = ChristmasTheme.Enabled
+}
+
+enum class Background : Feature<Background> {
+  White,
+  Reindeer,
+  Snowman,
+  ;
+
+  public override val defaultOption get() = White
+
+  public override val supervisorOption get() = ChristmasTheme.Enabled
+}
+
+val laboratory = Laboratory.inMemory()
+
+laboratory.setOptions(Greeting.HoHoHo, Background.Reindeer)
+
+laboratory.experimentIs(Greeting.HoHoHo) // false
+laboratory.experimentIs(Background.Reindeer) // false
+
+laboratory.setOption(ChristmasTheme.Enabled)
+
+laboratory.experimentIs(Greeting.HoHoHo) // true
+laboratory.experimentIs(Background.Reindeer) // true
+```

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add parent–child relationship to `Feature`. This relationship is controlled with a `Feature.supervisorOption` property. Whenever supervisor has its option different from this value then the supervised feature flag cannot return any other option than a default one. Option can still be set via `Laboratory` but it will not be exposed as long as a feature flag is not supervised. This relationship is recursive meaning that grandparents control grandchildren indirectly.
+
 ### Changed
 - Upgrade to DataStore `1.0.0-alpha06`.
 - Upgrade to AGP `4.1.2`.

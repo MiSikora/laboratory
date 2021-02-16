@@ -83,3 +83,41 @@ internal enum class OtherFeature : Feature<OtherFeature> {
 }
 
 internal enum class NoValuesFeature : Feature<NoValuesFeature>
+
+internal enum class GrandParentFeature : Feature<GrandParentFeature> {
+  A,
+  B,
+  ;
+
+  override val defaultOption get() = A
+}
+
+internal enum class ParentFeature : Feature<ParentFeature> {
+  A,
+  B,
+  ;
+
+  override val defaultOption get() = A
+
+  override val supervisorOption = GrandParentFeature.A
+}
+
+internal enum class FirstChildFeature : Feature<FirstChildFeature> {
+  A,
+  B,
+  ;
+
+  override val defaultOption get() = A
+
+  override val supervisorOption = ParentFeature.A
+}
+
+internal enum class SecondChildFeature : Feature<SecondChildFeature> {
+  A,
+  B,
+  ;
+
+  override val defaultOption get() = A
+
+  override val supervisorOption = ParentFeature.B
+}
