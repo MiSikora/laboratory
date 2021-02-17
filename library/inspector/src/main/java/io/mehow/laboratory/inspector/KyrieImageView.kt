@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.annotation.Keep
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.res.use
+import androidx.core.content.withStyledAttributes
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.github.alexjlockwood.kyrie.KyrieDrawable
@@ -21,9 +21,8 @@ internal class KyrieImageView @JvmOverloads constructor(
 
   init {
     if (drawable::class in vectorDrawableTypes) {
-      @Suppress("CustomViewStyleable")
-      context.obtainStyledAttributes(attrs, R.styleable.AppCompatImageView, defStyleAttr, 0).use {
-        setImageResource(it.getResourceId(R.styleable.AppCompatImageView_srcCompat, -1))
+      context.withStyledAttributes(attrs, R.styleable.AppCompatImageView, defStyleAttr, 0) {
+        setImageResource(getResourceId(R.styleable.AppCompatImageView_srcCompat, -1))
       }
     }
   }
