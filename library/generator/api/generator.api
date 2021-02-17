@@ -28,7 +28,7 @@ public final class io/mehow/laboratory/generator/FeatureFactoryModel$Builder {
 }
 
 public final class io/mehow/laboratory/generator/FeatureFlagModel {
-	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Lcom/squareup/kotlinpoet/ClassName;Larrow/core/NonEmptyList;Lio/mehow/laboratory/generator/FeatureFlagModel;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Lcom/squareup/kotlinpoet/ClassName;Larrow/core/NonEmptyList;Lio/mehow/laboratory/generator/FeatureFlagModel;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Lio/mehow/laboratory/generator/Supervisor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun generate (Ljava/io/File;)Ljava/io/File;
 	public fun hashCode ()I
@@ -36,11 +36,11 @@ public final class io/mehow/laboratory/generator/FeatureFlagModel {
 }
 
 public final class io/mehow/laboratory/generator/FeatureFlagModel$Builder {
-	public fun <init> (Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;)V
-	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Lio/mehow/laboratory/generator/Supervisor$Builder;)V
+	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Lio/mehow/laboratory/generator/Supervisor$Builder;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun build ()Larrow/core/Either;
-	public final fun copy (Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;)Lio/mehow/laboratory/generator/FeatureFlagModel$Builder;
-	public static synthetic fun copy$default (Lio/mehow/laboratory/generator/FeatureFlagModel$Builder;Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;ILjava/lang/Object;)Lio/mehow/laboratory/generator/FeatureFlagModel$Builder;
+	public final fun copy (Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Lio/mehow/laboratory/generator/Supervisor$Builder;)Lio/mehow/laboratory/generator/FeatureFlagModel$Builder;
+	public static synthetic fun copy$default (Lio/mehow/laboratory/generator/FeatureFlagModel$Builder;Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Lio/mehow/laboratory/generator/Supervisor$Builder;ILjava/lang/Object;)Lio/mehow/laboratory/generator/FeatureFlagModel$Builder;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -165,6 +165,26 @@ public final class io/mehow/laboratory/generator/NoFeatureValues : io/mehow/labo
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/mehow/laboratory/generator/NoMatchingOptionFound : io/mehow/laboratory/generator/GenerationFailure {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lio/mehow/laboratory/generator/NoMatchingOptionFound;
+	public static synthetic fun copy$default (Lio/mehow/laboratory/generator/NoMatchingOptionFound;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/mehow/laboratory/generator/NoMatchingOptionFound;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/mehow/laboratory/generator/SelfSupervision : io/mehow/laboratory/generator/GenerationFailure {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun copy (Ljava/lang/String;)Lio/mehow/laboratory/generator/SelfSupervision;
+	public static synthetic fun copy$default (Lio/mehow/laboratory/generator/SelfSupervision;Ljava/lang/String;ILjava/lang/Object;)Lio/mehow/laboratory/generator/SelfSupervision;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/mehow/laboratory/generator/SourcedFeatureStorageModel {
 	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun generate (Ljava/io/File;)Ljava/io/File;
@@ -175,6 +195,19 @@ public final class io/mehow/laboratory/generator/SourcedFeatureStorageModel$Buil
 	public final fun build ()Larrow/core/Either;
 	public final fun copy (Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;)Lio/mehow/laboratory/generator/SourcedFeatureStorageModel$Builder;
 	public static synthetic fun copy$default (Lio/mehow/laboratory/generator/SourcedFeatureStorageModel$Builder;Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lio/mehow/laboratory/generator/SourcedFeatureStorageModel$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/mehow/laboratory/generator/Supervisor {
+	public synthetic fun <init> (Lio/mehow/laboratory/generator/FeatureFlagModel;Lio/mehow/laboratory/generator/FeatureFlagOption;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class io/mehow/laboratory/generator/Supervisor$Builder {
+	public fun <init> (Lio/mehow/laboratory/generator/FeatureFlagModel;Lio/mehow/laboratory/generator/FeatureFlagOption;)V
+	public final fun copy (Lio/mehow/laboratory/generator/FeatureFlagModel;Lio/mehow/laboratory/generator/FeatureFlagOption;)Lio/mehow/laboratory/generator/Supervisor$Builder;
+	public static synthetic fun copy$default (Lio/mehow/laboratory/generator/Supervisor$Builder;Lio/mehow/laboratory/generator/FeatureFlagModel;Lio/mehow/laboratory/generator/FeatureFlagOption;ILjava/lang/Object;)Lio/mehow/laboratory/generator/Supervisor$Builder;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

@@ -1,6 +1,7 @@
 package io.mehow.laboratory.generator
 
 import arrow.core.Nel
+import arrow.core.getOrElse
 import arrow.core.identity
 import arrow.core.nel
 import io.kotest.assertions.arrow.either.shouldBeLeft
@@ -255,6 +256,47 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
 
           result.shouldBeRight()
         }
+      }
+    }
+
+    context("supervisor option") {
+      it("must be present in parent") {
+        checkAll(
+            Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})"),
+            Arb.stringPattern("[a-zA-Z](1)([a-zA-Z0-9_]{0,10})"),
+        ) { first, second ->
+          val options = listOf(FeatureFlagOption(first, isDefault = true), FeatureFlagOption(second))
+          val parent = featureBuilder.copy(names = listOf("Parent"), options = options)
+              .build().getOrElse { error("Should be right") }
+          val builder = featureBuilder.copy(supervisor = Supervisor.Builder(parent, options[0]))
+
+          val result = builder.build()
+
+          result.shouldBeRight()
+        }
+      }
+
+      it("cannot be absent in parent") {
+        checkAll(Arb.stringPattern("[a-zA-Z](0)([a-zA-Z0-9_]{0,10})")) { optionName ->
+          val parent = featureBuilder.copy(names = listOf("Parent"))
+              .build().getOrElse { error("Should be right") }
+          val option = FeatureFlagOption(optionName)
+          val builder = featureBuilder.copy(supervisor = Supervisor.Builder(parent, option))
+
+          val result = builder.build()
+
+          result shouldBeLeft NoMatchingOptionFound(parent.toString(), optionName)
+        }
+      }
+
+      it("cannot self-supervise") {
+        val parent = featureBuilder.build().getOrElse { error("Should be right") }
+        val supervisor = Supervisor.Builder(parent, parent.options.head)
+        val builder = featureBuilder.copy(supervisor = supervisor)
+
+        val result = builder.build()
+
+        result shouldBeLeft SelfSupervision(parent.toString())
       }
     }
   }
@@ -640,7 +682,8 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         val tempDir = createTempDirectory().toFile()
 
         val outputFile = featureBuilder
-            .copy(description = "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc.")
+            .copy(
+                description = "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc.")
             .build().map { model -> model.generate(tempDir) }
 
         outputFile shouldBeRight { file ->
@@ -746,6 +789,39 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           """.trimMargin("|")
           }
         }
+      }
+    }
+
+    it("can have supervisor") {
+      val tempDir = createTempDirectory().toFile()
+
+      val parent = featureBuilder.copy(packageName = "io.mehow.parent", names = listOf("Parent"))
+          .build().getOrElse { error("Should be right") }
+      val option = FeatureFlagOption("First")
+
+      val outputFile = featureBuilder
+          .copy(supervisor = Supervisor.Builder(parent, option))
+          .build().map { model -> model.generate(tempDir) }
+
+      outputFile shouldBeRight { file ->
+        file.readText() shouldBe """
+            |package io.mehow
+            |
+            |import io.mehow.laboratory.Feature
+            |import io.mehow.parent.Parent
+            |
+            |internal enum class FeatureA : Feature<FeatureA> {
+            |  First,
+            |  Second,
+            |  ;
+            |
+            |  public override val defaultOption: FeatureA
+            |    get() = First
+            |
+            |  public override val supervisorOption: Feature<*> = Parent.First
+            |}
+            |
+          """.trimMargin("|")
       }
     }
   }

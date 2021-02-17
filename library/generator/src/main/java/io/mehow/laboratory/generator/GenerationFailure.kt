@@ -85,3 +85,18 @@ public data class FeaturesCollision(
     }
   }
 }
+
+public data class NoMatchingOptionFound(
+  private val fqcn: String,
+  private val option: String,
+) : GenerationFailure {
+  override val message: String
+    get() = "Feature flag $fqcn does not contain option $option."
+}
+
+public data class SelfSupervision(
+  private val fqcn: String,
+) : GenerationFailure {
+  override val message: String
+    get() = "Feature flag $fqcn cannot be supervisor of itself."
+}

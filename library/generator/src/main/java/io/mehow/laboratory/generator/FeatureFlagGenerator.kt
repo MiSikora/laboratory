@@ -58,9 +58,9 @@ internal class FeatureFlagGenerator(
 
   private val sourceProperty = feature.source?.let { nestedSource ->
     nestedSource to PropertySpec
-        .builder(sourcePropertyName, featureType, OVERRIDE)
+        .builder(sourcePropertyName, featureClassType, OVERRIDE)
         .addAnnotation(suppressCast)
-        .initializer("%T::class.java as %T", nestedSource.className, featureType)
+        .initializer("%T::class.java as %T", nestedSource.className, featureClassType)
         .build()
   }
 
@@ -72,6 +72,13 @@ internal class FeatureFlagGenerator(
     PropertySpec
         .builder(descriptionPropertyName, String::class, OVERRIDE)
         .initializer("%S", description)
+        .build()
+  }
+
+  private val supervisorOptionProperty = feature.supervisor?.let { supervisor ->
+    PropertySpec
+        .builder(supervisorOptionPropertyName, featureType, OVERRIDE)
+        .initializer("%T.%L", supervisor.featureFlag.className, supervisor.option.name)
         .build()
   }
 
@@ -99,6 +106,7 @@ internal class FeatureFlagGenerator(
       }
       .apply { kdoc?.let { @Kt41142 addKdoc(it) } }
       .apply { descriptionProperty?.let { @Kt41142 addProperty(it) } }
+      .apply { supervisorOptionProperty?.let { @Kt41142 addProperty(it) } }
       .build()
 
   private val fileSpec = FileSpec.builder(feature.packageName, feature.name)
@@ -111,8 +119,10 @@ internal class FeatureFlagGenerator(
     const val defaultOptionPropertyName = "defaultOption"
     const val sourcePropertyName = "source"
     const val descriptionPropertyName = "description"
+    const val supervisorOptionPropertyName = "supervisorOption"
 
-    val featureType = Class::class(Feature::class(STAR))
+    val featureType = Feature::class(STAR)
+    val featureClassType = Class::class(featureType)
 
     operator fun KClass<*>.invoke(parameter: TypeName) = asClassName().parameterizedBy(parameter)
   }

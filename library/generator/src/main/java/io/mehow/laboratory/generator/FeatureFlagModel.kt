@@ -22,6 +22,7 @@ public class FeatureFlagModel private constructor(
   internal val source: FeatureFlagModel?,
   internal val description: String,
   internal val deprecation: Deprecation?,
+  internal val supervisor: Supervisor?,
 ) {
   internal val packageName = className.packageName
   internal val name = className.simpleName
@@ -47,6 +48,7 @@ public class FeatureFlagModel private constructor(
     internal val sourceOptions: List<FeatureFlagOption> = emptyList(),
     internal val description: String = "",
     internal val deprecation: Deprecation? = null,
+    internal val supervisor: Supervisor.Builder? = null,
   ) {
     internal val fqcn = ClassName(packageName, names).canonicalName
 
@@ -56,6 +58,7 @@ public class FeatureFlagModel private constructor(
         val names = !validateName()
         val options = !validateOptions()
         val nestedSource = createNestedSource()?.bind()
+        val supervisor = !validateSupervisor()
         FeatureFlagModel(
             visibility = visibility,
             className = ClassName(packageName, names),
@@ -63,6 +66,7 @@ public class FeatureFlagModel private constructor(
             source = nestedSource,
             description = description,
             deprecation = deprecation,
+            supervisor = supervisor,
         )
       }
     }
@@ -141,6 +145,18 @@ public class FeatureFlagModel private constructor(
             )
           }?.build()
     }
+
+    private fun validateSupervisor(): Either<GenerationFailure, Supervisor?> = supervisor?.build()
+        ?.flatMap { @Kt41142 validateSelfSupervision(it) }
+        ?: Either.right(null)
+
+    private fun validateSelfSupervision(
+      supervisor: Supervisor,
+    ): Either<GenerationFailure, Supervisor> = Either.cond(
+        test = supervisor.featureFlag.className.canonicalName != fqcn,
+        ifTrue = { supervisor },
+        ifFalse = { SelfSupervision(supervisor.featureFlag.toString()) }
+    )
 
     private companion object {
       val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
