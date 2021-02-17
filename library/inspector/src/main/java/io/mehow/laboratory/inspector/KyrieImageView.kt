@@ -32,15 +32,13 @@ internal class KyrieImageView @JvmOverloads constructor(
     kyrieDrawable = KyrieDrawable.create(context, resId)?.also(::setImageDrawable)
   }
 
-  @Keep
-  var playTime: Float = 0f
-    set(value) {
-      field = kyrieDrawable?.run {
-        val coercedValue = value.coerceIn(0f, 1f)
-        currentPlayTime = (totalDuration * coercedValue).toLong()
-        coercedValue
-      } ?: 0f
-    }
+  @get:Keep @set:Keep
+  var playTime
+    get() = kyrieDrawable?.run { currentPlayTime.toFloat() / totalDuration } ?: 0f
+    set(value) = kyrieDrawable?.run {
+      val coercedValue = value.coerceIn(0f, 1f)
+      currentPlayTime = (totalDuration * coercedValue).toLong()
+    } ?: Unit
 
   private companion object {
     val vectorDrawableTypes = setOf(
