@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to LifecycleViewmodelKtx `2.3.0`.
 - Upgrade to Hyperion `0.9.31`.
 
+### Fixed
+- Search icon not animating on Android below SDK 24.
+
 ### Deprecated
 - `DataStore` custom builder and builder factory methods. Factory method that accepts `DataStore` directly should be used instead.
 
