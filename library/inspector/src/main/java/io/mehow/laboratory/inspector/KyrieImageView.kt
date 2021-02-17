@@ -8,6 +8,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.Keep
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.use
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.github.alexjlockwood.kyrie.KyrieDrawable
 
 internal class KyrieImageView @JvmOverloads constructor(
@@ -18,7 +20,7 @@ internal class KyrieImageView @JvmOverloads constructor(
   private var kyrieDrawable: KyrieDrawable? = null
 
   init {
-    if (drawable is VectorDrawable || drawable is AnimatedVectorDrawable) {
+    if (drawable::class in vectorDrawableTypes) {
       @Suppress("CustomViewStyleable")
       context.obtainStyledAttributes(attrs, R.styleable.AppCompatImageView, defStyleAttr, 0).use {
         setImageResource(it.getResourceId(R.styleable.AppCompatImageView_srcCompat, -1))
@@ -39,4 +41,13 @@ internal class KyrieImageView @JvmOverloads constructor(
         coercedValue
       } ?: 0f
     }
+
+  private companion object {
+    val vectorDrawableTypes = setOf(
+        VectorDrawable::class,
+        AnimatedVectorDrawable::class,
+        VectorDrawableCompat::class,
+        AnimatedVectorDrawableCompat::class,
+    )
+  }
 }
