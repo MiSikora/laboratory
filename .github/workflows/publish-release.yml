@@ -33,7 +33,7 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralRepositoryUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralRepositoryPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_SIGNING_KEY: ${{ secrets.SONATYPE_NEXUS_SIGNING_KEY }}
-        run: ./gradlew -p library uploadArchives --no-daemon --no-parallel --stacktrace
+        run: ./gradlew -p library publish --no-daemon --no-parallel --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop
