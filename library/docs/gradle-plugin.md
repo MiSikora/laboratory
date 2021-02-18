@@ -384,6 +384,66 @@ laboratory {
 
 This way, `:module-a` will not contribute its feature flags to the generation of a feature factory and feature storage.
 
+## Supervised feature flags
+
+Gradle plugin supports generation [supervised feature flags](user-guide.md#feature-flag-supervision).
+
+```groovy
+laboratory {
+  feature("ChristmasTheme") {
+    withDefaultOption("Disabled")
+
+    withOption("Enabled") { enabledChristmas ->
+      enabledChristmas.feature("Greeting") { greeting ->
+        greeting.withDefaultOption("Hello")
+        greeting.withOption("HoHoHo")
+      }
+
+      enabledChristmas.feature("Background") { background ->
+        background.withDefaultOption("White")
+        background.withOption("Reindeer")
+        background.withOption("Snowman")
+      }
+    }
+  }
+}
+```
+
+This configuration generates the code below.
+
+```kotlin
+enum class ChristmasTheme : Feature<ChristmasTheme> {
+  Enabled,
+  Disabled,
+  ;
+
+  public override val defaultOption get() = Disabled
+}
+
+enum class Greeting : Feature<Greeting> {
+  Hello,
+  HoHoHo,
+  ;
+
+  public override val defaultOption get() = Hello
+
+  public override val supervisorOption get() = ChristmasTheme.Enabled
+}
+
+enum class Background : Feature<Background> {
+  White,
+  Reindeer,
+  Snowman,
+  ;
+
+  public override val defaultOption get() = White
+
+  public override val supervisorOption get() = ChristmasTheme.Enabled
+}
+```
+
+DSL for supervised feature flags is recursive allowing to nest them in `withOption()` and `withDefaultOption()` function.
+
 ## Full configuration
 
 Below is the full configuration of the Gradle plugins.
@@ -424,9 +484,26 @@ laboratory {
     // At most, one of the source options can be set with this function.
     // By default, 'Local' sources are considered to be default options.
     withDefaultSource("Aws")
+
+    // Same as `withDefaultOption(option)` without lambda except that it generates supervised feature flags
+    // defined in the lambda.
+    withDefaultOption("Option") { option ->
+      option.feature("SupervisedFeature") {
+        // recursive feature generation
+      }
+    }
+
+    // Same as `withOption(option)` without lambda except that it generates supervised feature flags
+    // defined in the lambda.
+    withOption("Option") { option ->
+      option.feature("SupervisedFeature") {
+        // recursive feature generation
+      }
+    }
   }
 
-  // An alternative syntax for adding features with Groovy DSL.
+  // An alternative syntax for adding features with Groovy DSL. It is available only for top level features.
+  // Supervised features do not use this syntax.
   SomeFeature {
     packageName = "io.mehow.sample.feature"
     description = "Feature descritpion"
