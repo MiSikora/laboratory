@@ -91,7 +91,7 @@ public val Class<Feature<*>>.description: String
  *
  * @see Feature.supervisorOption
  */
-public val <T : Feature<T>> Class<T>.supervisorOption: Feature<*>?
+public val Class<Feature<*>>.supervisorOption: Feature<*>?
   get() = firstOption.supervisorOption
 
 /**

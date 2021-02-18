@@ -10,6 +10,9 @@ import io.mehow.laboratory.a.AllowScreenshots
 import io.mehow.laboratory.a.Authentication
 import io.mehow.laboratory.b.PowerSource
 import io.mehow.laboratory.c.DistanceAlgorithm
+import io.mehow.laboratory.christmas.ChristmasBackground
+import io.mehow.laboratory.christmas.ChristmasGreeting
+import io.mehow.laboratory.christmas.ChristmasTheme
 import io.mehow.laboratory.inspector.LaboratoryActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -35,6 +38,9 @@ class SampleActivity : Activity() {
     findViewById<TextView>(R.id.reportRootedDevice).observeFeature<ReportRootedDevice>()
     findViewById<TextView>(R.id.showAds).observeFeature<ShowAds>()
     findViewById<TextView>(R.id.allowScreenshots).observeFeature<AllowScreenshots>()
+    findViewById<TextView>(R.id.christmasTheme).observeFeature<ChristmasTheme>()
+    findViewById<TextView>(R.id.greeting).observeFeature<ChristmasGreeting>()
+    findViewById<TextView>(R.id.background).observeFeature<ChristmasBackground>()
   }
 
   private inline fun <reified T : Feature<T>> TextView.observeFeature() {

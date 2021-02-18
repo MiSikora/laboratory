@@ -17,3 +17,10 @@ internal fun GroupViewModel.observeSelectedFeatures() = observeSelectedFeaturesA
 internal fun GroupViewModel.observeFeatureClasses() = observeFeatureGroup().map { groups ->
   groups.map { group -> group.models.first().option::class }
 }
+
+internal fun GroupViewModel.observeSelectedFeaturesAndEnabledState() = observeFeatureGroup().map { groups ->
+  groups.map { group ->
+    val option = group.models.single(OptionUiModel::isSelected).option
+    option to group.isEnabled
+  }
+}

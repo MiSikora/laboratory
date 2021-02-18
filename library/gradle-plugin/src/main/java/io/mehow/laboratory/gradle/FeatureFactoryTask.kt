@@ -17,7 +17,7 @@ public open class FeatureFactoryTask : DefaultTask() {
   @get:Internal internal lateinit var featureModelsMapper: (List<FeatureFlagModel>) -> List<FeatureFlagModel>
 
   @TaskAction public fun generateFeatureFactory() {
-    val featureModels = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
+    val featureModels = features.flatMap(FeatureFlagInput::toBuilders).buildAll().fold(
         ifLeft = { failure -> error(failure.message) },
         ifRight = ::identity
     ).let(featureModelsMapper)

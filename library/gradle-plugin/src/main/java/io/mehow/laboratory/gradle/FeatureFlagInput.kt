@@ -1,17 +1,22 @@
 package io.mehow.laboratory.gradle
 
+import arrow.core.getOrHandle
 import io.mehow.laboratory.generator.Deprecation
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.FeatureFlagOption
+import io.mehow.laboratory.generator.Supervisor
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import io.mehow.laboratory.gradle.DeprecationLevel.Warning
+import org.gradle.api.Action
 
 /**
- * Representation of a generate feature flag. It must have at least one value and exactly one default value.
+ * Representation of a generated feature flag. It must have at least one value and exactly one default value.
  */
 public class FeatureFlagInput internal constructor(
   private val name: String,
+  private val packageNameProvider: () -> String,
+  private val supervisor: (() -> Supervisor.Builder)? = null,
 ) {
   /**
    * Sets whether the generated feature flag should be public or internal.
@@ -31,11 +36,15 @@ public class FeatureFlagInput internal constructor(
   private val options: MutableList<FeatureFlagOption> = mutableListOf()
 
   /**
-   * Adds a feature value.
+   * Adds a feature option.
    */
-  public fun withOption(name: String) {
-    options += FeatureFlagOption(name)
-  }
+  public fun withOption(name: String): Unit = withOption(name) { }
+
+  /**
+   * Adds a feature option and configures features flags supervised by it.
+   */
+  public fun withOption(name: String, action: Action<ChildFeatureFlagsInput>): Unit =
+    withOption(name, isDefault = false, action)
 
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'withOption()' instead.",
@@ -47,16 +56,35 @@ public class FeatureFlagInput internal constructor(
    * Adds a feature value that will be used as a default value.
    * Exactly one value must be set with this method.
    */
-  public fun withDefaultOption(name: String) {
-    options += FeatureFlagOption(name, isDefault = true)
-  }
+  public fun withDefaultOption(name: String): Unit = withDefaultOption(name) { }
+
+  /**
+   * Adds a feature value that will be used as a default value and configures features flags supervised by it.
+   * Exactly one value must be set with this method.
+   */
+  public fun withDefaultOption(name: String, action: Action<ChildFeatureFlagsInput>): Unit =
+    withOption(name, isDefault = true, action)
 
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'withDefaultOption()' instead.",
       replaceWith = ReplaceWith("withDefaultOption(value)"),
   )
-  public fun withDefaultValue(value: String) {
-    options += FeatureFlagOption(value, isDefault = true)
+  public fun withDefaultValue(value: String): Unit = withDefaultOption(value)
+
+  private val childFeatureInputs = mutableListOf<ChildFeatureFlagsInput>()
+
+  private fun withOption(name: String, isDefault: Boolean, action: Action<ChildFeatureFlagsInput>) {
+    val option = FeatureFlagOption(name, isDefault)
+    options += option
+    val packageNameProvider = { packageName ?: packageNameProvider() }
+    val supervisorBuilder = {
+      val supervisor = toBuilder().build().getOrHandle { error(it.message) }
+      Supervisor.Builder(supervisor, option)
+    }
+    childFeatureInputs += ChildFeatureFlagsInput(packageNameProvider, supervisorBuilder).let { input ->
+      action.execute(input)
+      return@let input
+    }
   }
 
   private val sources: MutableList<FeatureFlagOption> = mutableListOf()
@@ -87,15 +115,17 @@ public class FeatureFlagInput internal constructor(
     deprecation = Deprecation(message, level.kotlinLevel)
   }
 
-  internal fun toBuilder(): FeatureFlagModel.Builder {
-    return FeatureFlagModel.Builder(
-        visibility = if (isPublic) Public else Internal,
-        packageName = packageName ?: "",
-        names = listOf(name),
-        options = options,
-        sourceOptions = sources,
-        description = description.orEmpty(),
-        deprecation = deprecation,
-    )
-  }
+  private fun toBuilder() = FeatureFlagModel.Builder(
+      visibility = if (isPublic) Public else Internal,
+      packageName = packageName ?: packageNameProvider(),
+      names = listOf(name),
+      options = options,
+      sourceOptions = sources,
+      description = description.orEmpty(),
+      deprecation = deprecation,
+      supervisor = supervisor?.invoke(),
+  )
+
+  internal fun toBuilders(): List<FeatureFlagModel.Builder> =
+    listOf(toBuilder()) + childFeatureInputs.flatMap(ChildFeatureFlagsInput::toBuilders)
 }

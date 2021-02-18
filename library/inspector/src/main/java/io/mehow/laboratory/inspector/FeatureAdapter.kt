@@ -23,13 +23,11 @@ internal class FeatureAdapter(
     override fun areItemsTheSame(old: FeatureUiModel, new: FeatureUiModel) = old.type == new.type
 
     override fun areContentsTheSame(old: FeatureUiModel, new: FeatureUiModel): Boolean {
-      return old.models.selected == new.models.selected && old.sources.selected == new.sources.selected
+      return old == new && old == new
     }
 
     // Prevent item animation change.
     override fun getChangePayload(old: FeatureUiModel, new: FeatureUiModel) = Unit
-
-    private val List<OptionUiModel>.selected get() = firstOrNull(OptionUiModel::isSelected)
   }
 
   interface Listener : OnSelectFeatureListener, OnSelectSourceListener

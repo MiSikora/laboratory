@@ -14,7 +14,7 @@ public open class SourcedFeatureStorageTask : DefaultTask() {
   @get:Internal internal lateinit var codeGenDir: File
 
   @TaskAction public fun generateSourcedFeatureStorage() {
-    val sourceNames = features.map(FeatureFlagInput::toBuilder).buildAll().fold(
+    val sourceNames = features.flatMap(FeatureFlagInput::toBuilders).buildAll().fold(
         ifLeft = { failure -> error(failure.message) },
         ifRight = ::identity
     ).sourceNames().distinct()

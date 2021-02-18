@@ -13,6 +13,7 @@ import io.mehow.laboratory.generator.InvalidFeatureName
 import io.mehow.laboratory.generator.InvalidFeatureValues
 import io.mehow.laboratory.generator.InvalidPackageName
 import io.mehow.laboratory.generator.NoFeatureValues
+import io.mehow.laboratory.generator.SelfSupervision
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -24,8 +25,8 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
 
   beforeTest {
     gradleRunner = GradleRunner.create()
-            .withPluginClasspath()
-            .withArguments("generateFeatureFlags", "--stacktrace")
+        .withPluginClasspath()
+        .withArguments("generateFeatureFlags", "--stacktrace")
   }
 
   "generates single feature flag" {
@@ -298,10 +299,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val featureA = fixture.featureFile("io.mehow.implicit.FeatureA")
+    val featureA = fixture.featureFile("io.mehow.implicit.switch.FeatureA")
     featureA.shouldExist()
 
-    featureA.readText() shouldContain "package io.mehow.implicit"
+    featureA.readText() shouldContain "package io.mehow.implicit.switch"
 
     val featureB = fixture.featureFile("io.mehow.implicit.switch.FeatureB")
     featureB.shouldExist()
@@ -605,5 +606,134 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |)
       |public enum class Feature : io.mehow.laboratory.Feature<@Suppress("DEPRECATION_ERROR") Feature>
     """.trimMargin("|")
+  }
+
+  "generates supervised child feature flag" {
+    val fixture = "feature-flag-supervisor-generate-child".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Child")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |enum class Child : Feature<Child> {
+      |  ChildOption,
+      |  ;
+      |
+      |  public override val defaultOption: Child
+      |    get() = ChildOption
+      |
+      |  public override val supervisorOption: Feature<*> = Parent.ParentOption
+      |}
+    """.trimMargin("|")
+  }
+
+  "generates supervised grandchild feature flag" {
+    val fixture = "feature-flag-supervisor-generate-grandchild".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val feature = fixture.featureFile("Grandchild")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |enum class Grandchild : Feature<Grandchild> {
+      |  GrandchildOption,
+      |  ;
+      |
+      |  public override val defaultOption: Grandchild
+      |    get() = GrandchildOption
+      |
+      |  public override val supervisorOption: Feature<*> = Parent.ParentOption
+      |}
+    """.trimMargin("|")
+  }
+
+  "generates supervised multiple children feature flags" {
+    val fixture = "feature-flag-supervisor-generate-multiple-children".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val first = fixture.featureFile("FirstChild")
+    first.shouldExist()
+
+    first.readText() shouldContain """
+      |enum class FirstChild : Feature<FirstChild> {
+      |  ChildOption,
+      |  ;
+      |
+      |  public override val defaultOption: FirstChild
+      |    get() = ChildOption
+      |
+      |  public override val supervisorOption: Feature<*> = Parent.FirstParentOption
+      |}
+    """.trimMargin("|")
+
+    val second = fixture.featureFile("SecondChild")
+    second.shouldExist()
+
+    second.readText() shouldContain """
+      |enum class SecondChild : Feature<SecondChild> {
+      |  ChildOption,
+      |  ;
+      |
+      |  public override val defaultOption: SecondChild
+      |    get() = ChildOption
+      |
+      |  public override val supervisorOption: Feature<*> = Parent.SecondParentOption
+      |}
+    """.trimMargin("|")
+  }
+
+  "supervised feature flag uses explicit package name" {
+    val fixture = "feature-flag-supervisor-package-name-explicit".toFixture()
+
+    gradleRunner.withProjectDir(fixture).build()
+
+    val feature = fixture.featureFile("io.mehow.explicit.Child")
+    feature.shouldExist()
+
+    feature.readText() shouldContain "package io.mehow.explicit"
+  }
+
+  "supervised feature flag uses implicit package name" {
+    val fixture = "feature-flag-supervisor-package-name-explicit-override".toFixture()
+
+    gradleRunner.withProjectDir(fixture).build()
+
+    val feature = fixture.featureFile("io.mehow.explicit.Child")
+    feature.shouldExist()
+
+    feature.readText() shouldContain "package io.mehow.explicit"
+  }
+
+  "supervised feature flag overrides implicit package name" {
+    val fixture = "feature-flag-supervisor-package-name-implicit".toFixture()
+
+    gradleRunner.withProjectDir(fixture).build()
+
+    val feature = fixture.featureFile("io.mehow.implicit.Child")
+    feature.shouldExist()
+
+    feature.readText() shouldContain "package io.mehow.implicit"
+  }
+
+  "fails for feature supervising itself" {
+    val fixture = "feature-flag-supervisor-self-supervision".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
+    result.output shouldContain SelfSupervision("Feature").message
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldNotExist()
   }
 })

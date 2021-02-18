@@ -72,4 +72,28 @@
       android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
       />
 
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/christmasTheme"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/greeting"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/background"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
 </LinearLayout>

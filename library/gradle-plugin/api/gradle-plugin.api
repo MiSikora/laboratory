@@ -1,3 +1,7 @@
+public final class io/mehow/laboratory/gradle/ChildFeatureFlagsInput {
+	public final fun feature (Ljava/lang/String;Lorg/gradle/api/Action;)V
+}
+
 public final class io/mehow/laboratory/gradle/DeprecationLevel : java/lang/Enum {
 	public static final field Error Lio/mehow/laboratory/gradle/DeprecationLevel;
 	public static final field Hidden Lio/mehow/laboratory/gradle/DeprecationLevel;
@@ -30,9 +34,11 @@ public final class io/mehow/laboratory/gradle/FeatureFlagInput {
 	public final fun setPackageName (Ljava/lang/String;)V
 	public final fun setPublic (Z)V
 	public final fun withDefaultOption (Ljava/lang/String;)V
+	public final fun withDefaultOption (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public final fun withDefaultSource (Ljava/lang/String;)V
 	public final fun withDefaultValue (Ljava/lang/String;)V
 	public final fun withOption (Ljava/lang/String;)V
+	public final fun withOption (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public final fun withSource (Ljava/lang/String;)V
 	public final fun withValue (Ljava/lang/String;)V
 }

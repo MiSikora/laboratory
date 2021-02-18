@@ -153,6 +153,41 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
           ),
       )
     }
+
+    it("observers feature flags supervision") {
+      val viewModel = GroupViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
+
+      viewModel.observeSelectedFeaturesAndEnabledState().test {
+        expectItem() shouldContainExactly listOf(
+            Child.A to false,
+            Parent.Disabled to true,
+        )
+
+        viewModel.selectFeature(Parent.Enabled)
+        expectItemEventually {
+          it shouldContainExactly listOf(
+              Child.A to true,
+              Parent.Enabled to true,
+          )
+        }
+
+        viewModel.selectFeature(Child.B)
+        expectItem() shouldContainExactly listOf(
+            Child.B to true,
+            Parent.Enabled to true,
+        )
+
+        viewModel.selectFeature(Parent.Disabled)
+        expectItemEventually {
+          it shouldContainExactly listOf(
+              Child.A to false,
+              Parent.Disabled to true,
+          )
+        }
+
+        cancel()
+      }
+    }
   }
 })
 
@@ -173,6 +208,13 @@ private object SourcedFeatureFactory : FeatureFactory {
 private object AllFeatureFactory : FeatureFactory {
   override fun create(): Set<Class<Feature<*>>> {
     return NoSourceFeatureFactory.create() + SourcedFeatureFactory.create()
+  }
+}
+
+private object SupervisedFeatureFactory : FeatureFactory {
+  override fun create(): Set<Class<Feature<*>>> {
+    @Suppress("UNCHECKED_CAST")
+    return setOf(Parent::class.java, Child::class.java) as Set<Class<Feature<*>>>
   }
 }
 
@@ -218,6 +260,24 @@ private enum class Sourced : Feature<Sourced> {
 
     override val defaultOption get() = Local
   }
+}
+
+private enum class Parent : Feature<Parent> {
+  Enabled,
+  Disabled,
+  ;
+
+  override val defaultOption get() = Disabled
+}
+
+private enum class Child : Feature<Child> {
+  A,
+  B,
+  ;
+
+  override val defaultOption get() = A
+
+  override val supervisorOption get() = Parent.Enabled
 }
 
 @Suppress("TestFunctionName")

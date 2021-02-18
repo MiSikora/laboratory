@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+import io.mehow.laboratory.christmas.featureGenerated as christmasGenerated
 
 class SampleApplication : Application() {
   private lateinit var localStorage: FeatureStorage
@@ -45,6 +46,7 @@ class SampleApplication : Application() {
     LaboratoryActivity.configure(
         laboratory = laboratory,
         mainFactory = FeatureFactory.featureGenerated(),
+        externalFactories = mapOf("Christmas" to FeatureFactory.christmasGenerated()),
     )
     observeRemoteFeatures()
   }

@@ -9,7 +9,9 @@ import java.util.function.Predicate
 /**
  * Representation of a generated feature storage that is aware of feature flags sources.
  */
-public class SourcedFeatureStorageInput internal constructor() {
+public class SourcedFeatureStorageInput internal constructor(
+  private val packageNameProvider: () -> String,
+) {
   /**
    * Sets whether the generated feature storage should be public or internal.
    */
@@ -34,7 +36,7 @@ public class SourcedFeatureStorageInput internal constructor() {
   internal fun toBuilder(sourceNames: List<String>): SourcedFeatureStorageModel.Builder {
     return SourcedFeatureStorageModel.Builder(
         visibility = if (isPublic) Public else Internal,
-        packageName = packageName ?: "",
+        packageName = packageName ?: packageNameProvider(),
         sourceNames = sourceNames,
     )
   }

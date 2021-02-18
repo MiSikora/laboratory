@@ -221,7 +221,8 @@ class DebugDefaultOptionFactory : DefaultOptionFactory {
   private val <T : Feature<T>> T.options get() = javaClass.options
 }
 ```
-## Parent–child relationship
+
+## Feature flag supervision
 
 Feature flags can be supervised using `FeatureFlag.supervisorOption` property. Whenever supervisor has its option different from the value in this property then the supervised feature flag cannot return any other option than a default one. Option can still be set via `Laboratory` but it will not be exposed as long as a feature flag is not supervised. This relationship is recursive meaning that grandparents control grandchildren indirectly.
 

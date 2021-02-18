@@ -9,6 +9,7 @@ import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.description
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import io.mehow.laboratory.source
+import io.mehow.laboratory.supervisorOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -74,11 +75,11 @@ internal class GroupViewModel(
     private val feature: Class<Feature<*>>,
     private val deprecationHandler: DeprecationHandler,
   ) {
-    val simpleReadableName = feature.name.substringAfterLast('.').replace('$', '.')
+    private val simpleReadableName = feature.name.substringAfterLast('.').replace('$', '.')
 
-    val options = feature.enumConstants!!.toList<Feature<*>>()
+    private val options = feature.enumConstants!!.toList<Feature<*>>()
 
-    val sourceMetadata = feature.source?.let { FeatureMetadata(it, deprecationHandler) }
+    private val sourceMetadata = feature.source?.let { FeatureMetadata(it, deprecationHandler) }
 
     private val deprecationLevel = feature.annotations
         .filterIsInstance<Deprecated>()
@@ -87,12 +88,15 @@ internal class GroupViewModel(
 
     val deprecationPhenotype = deprecationLevel?.let(deprecationHandler::getPhenotype)
 
-    val deprecationPlacement = deprecationLevel?.let(deprecationHandler::getAlignment)
+    private val deprecationPlacement = deprecationLevel?.let(deprecationHandler::getAlignment)
 
     fun observeGroup(laboratory: Laboratory): Flow<FeatureUiModel> {
       val featureEmissions = observeOptions(laboratory)
       val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
-      return featureEmissions.combine(sourceEmissions) { features, sources ->
+      val supervisorEmissions = feature.supervisorOption
+          ?.let { laboratory.observe(it.javaClass as Class<Feature<*>>) }
+          ?: flowOf(null)
+      return combine(featureEmissions, sourceEmissions, supervisorEmissions) { features, sources, supervisor ->
         FeatureUiModel(
             type = feature,
             name = simpleReadableName,
@@ -101,6 +105,7 @@ internal class GroupViewModel(
             sources = sources,
             deprecationAlignment = deprecationPlacement,
             deprecationPhenotype = deprecationPhenotype,
+            supervisorOption = supervisor,
         )
       }
     }

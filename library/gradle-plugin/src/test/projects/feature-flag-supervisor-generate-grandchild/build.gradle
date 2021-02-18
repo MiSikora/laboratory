@@ -1,0 +1,18 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("Grandparent") {
+    withDefaultOption("GrandparentOption") { grandparent ->
+      grandparent.feature("Parent") {
+        it.withDefaultOption("ParentOption") { parent ->
+          parent.feature("Grandchild") {
+            it.withDefaultOption("GrandchildOption")
+          }
+        }
+      }
+    }
+  }
+}
