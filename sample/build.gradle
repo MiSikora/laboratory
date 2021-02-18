@@ -46,7 +46,9 @@ android {
 laboratory {
   packageName = "io.mehow.laboratory.sample"
   sourcedStorage()
-  featureFactory()
+  featureFactory {
+    projectFilter {!it.name.contains("christmas")  }
+  }
 
   feature("LogType") {
     deprecated("Sample deprecation")
@@ -82,4 +84,5 @@ dependencies {
   implementation project(":sample:module-a")
   implementation project(":sample:module-b")
   implementation project(":sample:module-c")
+  implementation project(":sample:christmas")
 }

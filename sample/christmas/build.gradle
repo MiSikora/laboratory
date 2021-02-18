@@ -1,0 +1,29 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  packageName = "io.mehow.laboratory.christmas"
+  featureFactory {
+    isPublic = true
+    projectFilter { it == project }
+  }
+
+  feature("ChristmasTheme") {
+    withDefaultOption("Disabled")
+
+    withOption("Enabled") { enabledChristmas ->
+      enabledChristmas.feature("ChristmasGreeting") { greeting ->
+        greeting.withDefaultOption("Hello")
+        greeting.withOption("HoHoHo")
+      }
+
+      enabledChristmas.feature("ChristmasBackground") { background ->
+        background.withDefaultOption("White")
+        background.withOption("Reindeer")
+        background.withOption("Snowman")
+      }
+    }
+  }
+}
