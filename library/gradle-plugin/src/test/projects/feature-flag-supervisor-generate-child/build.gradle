@@ -1,0 +1,14 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("Parent") {
+    withDefaultOption("ParentOption") { parent ->
+      parent.feature("Child") {
+        it.withDefaultOption("ChildOption")
+      }
+    }
+  }
+}

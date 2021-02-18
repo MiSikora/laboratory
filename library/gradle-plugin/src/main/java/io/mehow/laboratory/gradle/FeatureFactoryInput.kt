@@ -10,7 +10,9 @@ import java.util.function.Predicate
 /**
  * Representation of a generated feature factory class.
  */
-public class FeatureFactoryInput internal constructor() {
+public class FeatureFactoryInput internal constructor(
+  private val packageNameProvider: () -> String,
+) {
   /**
    * Sets whether the generated feature factory should be public or internal.
    */
@@ -35,7 +37,7 @@ public class FeatureFactoryInput internal constructor() {
   internal fun toBuilder(features: List<FeatureFlagModel>): FeatureFactoryModel.Builder {
     return FeatureFactoryModel.Builder(
         visibility = if (isPublic) Public else Internal,
-        packageName = packageName ?: "",
+        packageName = packageName ?: packageNameProvider(),
         features = features,
     )
   }

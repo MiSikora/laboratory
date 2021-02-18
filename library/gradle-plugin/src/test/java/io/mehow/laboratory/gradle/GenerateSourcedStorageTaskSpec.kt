@@ -25,8 +25,8 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
 
   beforeTest {
     gradleRunner = GradleRunner.create()
-            .withPluginClasspath()
-            .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+        .withPluginClasspath()
+        .withArguments("generateSourcedFeatureStorage", "--stacktrace")
   }
 
   "generates storage with only local source" {
@@ -310,6 +310,33 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |    = sourced(
       |  localSource,
       |  emptyMap()
+      |)
+    """.trimMargin("|")
+  }
+
+  "generates storage with supervised feature flag sources" {
+    val fixture = "sourced-storage-generate-supervised-feature-flags".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+
+    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+    factory.shouldExist()
+
+    factory.readText() shouldContain """
+      |fun FeatureStorage.Companion.sourcedGenerated(
+      |  localSource: FeatureStorage,
+      |  grandparentSource: FeatureStorage,
+      |  parentSource: FeatureStorage,
+      |  childSource: FeatureStorage
+      |): FeatureStorage = sourced(
+      |  localSource,
+      |  mapOf(
+      |    "Grandparent" to grandparentSource,
+      |    "Parent" to parentSource,
+      |    "Child" to childSource
+      |  )
       |)
     """.trimMargin("|")
   }

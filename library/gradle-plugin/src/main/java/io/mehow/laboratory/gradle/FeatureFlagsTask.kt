@@ -11,7 +11,7 @@ public open class FeatureFlagsTask : DefaultTask() {
   @get:Internal internal lateinit var codeGenDir: File
 
   @TaskAction public fun generateFeatureFlags() {
-    features.map(FeatureFlagInput::toBuilder).buildAll().fold(
+    features.flatMap(FeatureFlagInput::toBuilders).buildAll().fold(
         ifLeft = { failure -> error(failure.message) },
         ifRight = { featureFlagModels ->
           codeGenDir.deleteRecursively()

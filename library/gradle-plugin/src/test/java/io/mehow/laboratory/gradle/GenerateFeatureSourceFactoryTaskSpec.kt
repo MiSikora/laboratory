@@ -293,4 +293,29 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |}
     """.trimMargin("|")
   }
+
+  "generates factory with supervised feature flag sources" {
+    val fixture = "source-factory-generate-supervised-feature-flags".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureSourceFactory")!!.outcome shouldBe SUCCESS
+
+    val factory = fixture.featureSourceStorageFile("GeneratedFeatureSourceFactory")
+    factory.shouldExist()
+
+    factory.readText() shouldContain """
+      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
+      |    GeneratedFeatureSourceFactory
+      |
+      |private object GeneratedFeatureSourceFactory : FeatureFactory {
+      |  @Suppress("UNCHECKED_CAST")
+      |  public override fun create() = setOf(
+      |    Class.forName("Child${"\${'$'}"}Source"),
+      |    Class.forName("Grandparent${"\${'$'}"}Source"),
+      |    Class.forName("Parent${"\${'$'}"}Source")
+      |  ) as Set<Class<Feature<*>>>
+      |}
+    """.trimMargin("|")
+  }
 })

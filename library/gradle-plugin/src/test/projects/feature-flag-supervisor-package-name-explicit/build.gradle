@@ -1,0 +1,16 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("Parent") {
+    withDefaultOption("ParentOption") { parent ->
+      parent.feature("Child") {
+        packageName = "io.mehow.explicit"
+
+        it.withDefaultOption("ChildOption")
+      }
+    }
+  }
+}
