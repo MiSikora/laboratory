@@ -1,6 +1,7 @@
 package io.mehow.laboratory.inspector
 
 import io.mehow.laboratory.Feature
+import io.mehow.laboratory.supervisorOption
 
 internal data class FeatureUiModel(
   val type: Class<Feature<*>>,
@@ -10,13 +11,18 @@ internal data class FeatureUiModel(
   val sources: List<OptionUiModel>,
   val deprecationAlignment: DeprecationAlignment?,
   val deprecationPhenotype: DeprecationPhenotype?,
+  val supervisorOption: Feature<*>?,
 ) {
   val hasMultipleSources = sources.size > 1
 
-  val isCurrentSourceLocal = sources.firstOrNull(OptionUiModel::isSelected)
+  private val isCurrentSourceLocal = sources.firstOrNull(OptionUiModel::isSelected)
       ?.option
       ?.name
       ?.equals("Local", ignoreCase = true) ?: true
+
+  private val isSupervised = type.supervisorOption == supervisorOption
+
+  val isEnabled = isCurrentSourceLocal && isSupervised
 
   companion object {
     private val firstAlignmentOrdinal = DeprecationAlignment.values().first()

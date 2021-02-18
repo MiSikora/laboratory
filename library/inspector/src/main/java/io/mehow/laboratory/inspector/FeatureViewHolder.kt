@@ -35,7 +35,7 @@ internal class FeatureViewHolder(
     }
     description.setTextTokens(group.description)
     description.isVisible = group.description.isNotEmpty()
-    options.render(group.models, group.isCurrentSourceLocal)
+    options.render(group.models, group.isEnabled)
     sources.render(group.sources)
     sources.isVisible = group.hasMultipleSources
     divider.isVisible = group.hasMultipleSources

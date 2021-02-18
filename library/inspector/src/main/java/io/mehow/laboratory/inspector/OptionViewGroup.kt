@@ -26,19 +26,19 @@ internal class OptionViewGroup @JvmOverloads constructor(
     this.listener = listener
   }
 
-  fun render(models: List<OptionUiModel>, isCurrentSourceLocal: Boolean) {
+  fun render(models: List<OptionUiModel>, isEnabled: Boolean) {
     children.filterIsInstance<Chip>().forEach(::removeOnCheckedChangeListener)
     removeAllViews()
-    models.map { createChip(it, isCurrentSourceLocal) }.forEach(::addView)
+    models.map { createChip(it, isEnabled) }.forEach(::addView)
   }
 
-  private fun createChip(model: OptionUiModel, isCurrentSourceLocal: Boolean): Chip {
+  private fun createChip(model: OptionUiModel, isEnabled: Boolean): Chip {
     val chip = inflater.inflate(R.layout.io_mehow_laboratory_feature_option_chip, this, false) as Chip
     return chip.apply {
       text = model.option.name
       isChecked = model.isSelected
-      isActivated = isCurrentSourceLocal
-      isEnabled = isCurrentSourceLocal
+      isActivated = isEnabled
+      this.isEnabled = isEnabled
       setOnCheckedChangeListener(createListener(model))
     }
   }
