@@ -96,6 +96,66 @@ internal enum class LocationTracking : LocationTracking<Authentication> {
 }
 ```
 
+### Supervision
+
+Gradle plugin supports generation [supervised feature flags](user-guide.md#feature-flag-supervision).
+
+```groovy
+laboratory {
+  feature("ChristmasTheme") {
+    withDefaultOption("Disabled")
+
+    withOption("Enabled") { enabledChristmas ->
+      enabledChristmas.feature("Greeting") { greeting ->
+        greeting.withDefaultOption("Hello")
+        greeting.withOption("HoHoHo")
+      }
+
+      enabledChristmas.feature("Background") { background ->
+        background.withDefaultOption("White")
+        background.withOption("Reindeer")
+        background.withOption("Snowman")
+      }
+    }
+  }
+}
+```
+
+This configuration generates the code below.
+
+```kotlin
+enum class ChristmasTheme : Feature<ChristmasTheme> {
+  Enabled,
+  Disabled,
+  ;
+
+  public override val defaultOption get() = Disabled
+}
+
+enum class Greeting : Feature<Greeting> {
+  Hello,
+  HoHoHo,
+  ;
+
+  public override val defaultOption get() = Hello
+
+  public override val supervisorOption get() = ChristmasTheme.Enabled
+}
+
+enum class Background : Feature<Background> {
+  White,
+  Reindeer,
+  Snowman,
+  ;
+
+  public override val defaultOption get() = White
+
+  public override val supervisorOption get() = ChristmasTheme.Enabled
+}
+```
+
+DSL for supervised feature flags is recursive allowing to nest them in `withOption()` and `withDefaultOption()` function.
+
 ## Feature flags storage
 
 If your feature flags use multiple sources, you can configure the Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage`.
@@ -383,66 +443,6 @@ laboratory {
 ```
 
 This way, `:module-a` will not contribute its feature flags to the generation of a feature factory and feature storage.
-
-## Supervised feature flags
-
-Gradle plugin supports generation [supervised feature flags](user-guide.md#feature-flag-supervision).
-
-```groovy
-laboratory {
-  feature("ChristmasTheme") {
-    withDefaultOption("Disabled")
-
-    withOption("Enabled") { enabledChristmas ->
-      enabledChristmas.feature("Greeting") { greeting ->
-        greeting.withDefaultOption("Hello")
-        greeting.withOption("HoHoHo")
-      }
-
-      enabledChristmas.feature("Background") { background ->
-        background.withDefaultOption("White")
-        background.withOption("Reindeer")
-        background.withOption("Snowman")
-      }
-    }
-  }
-}
-```
-
-This configuration generates the code below.
-
-```kotlin
-enum class ChristmasTheme : Feature<ChristmasTheme> {
-  Enabled,
-  Disabled,
-  ;
-
-  public override val defaultOption get() = Disabled
-}
-
-enum class Greeting : Feature<Greeting> {
-  Hello,
-  HoHoHo,
-  ;
-
-  public override val defaultOption get() = Hello
-
-  public override val supervisorOption get() = ChristmasTheme.Enabled
-}
-
-enum class Background : Feature<Background> {
-  White,
-  Reindeer,
-  Snowman,
-  ;
-
-  public override val defaultOption get() = White
-
-  public override val supervisorOption get() = ChristmasTheme.Enabled
-}
-```
-
-DSL for supervised feature flags is recursive allowing to nest them in `withOption()` and `withDefaultOption()` function.
 
 ## Full configuration
 
