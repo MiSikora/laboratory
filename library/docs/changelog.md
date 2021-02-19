@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Use `proto3` for `FeatureFlags` definition.
+
 ## [0.10.0] - 2021-02-18
 
 ### Added

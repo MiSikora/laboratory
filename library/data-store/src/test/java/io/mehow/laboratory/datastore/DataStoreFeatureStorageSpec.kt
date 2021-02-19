@@ -5,7 +5,6 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
-import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import okio.ByteString.Companion.decodeHex
@@ -66,11 +65,3 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
     laboratory.experimentIs(FeatureA.A).shouldBeTrue()
   }
 })
-
-private enum class FeatureA : Feature<FeatureA> {
-  A,
-  B,
-  ;
-
-  override val defaultOption get() = A
-}
