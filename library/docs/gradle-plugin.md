@@ -98,7 +98,7 @@ internal enum class LocationTracking : LocationTracking<Authentication> {
 
 ### Supervision
 
-Gradle plugin supports generation [supervised feature flags](user-guide.md#feature-flag-supervision).
+Gradle plugin supports generation of [supervised feature flags](user-guide.md#feature-flag-supervision).
 
 ```groovy
 laboratory {
