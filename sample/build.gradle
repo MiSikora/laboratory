@@ -47,7 +47,7 @@ laboratory {
   packageName = "io.mehow.laboratory.sample"
   sourcedStorage()
   featureFactory {
-    projectFilter {!it.name.contains("christmas")  }
+    projectFilter { !it.name.contains("christmas") }
   }
 
   feature("LogType") {
