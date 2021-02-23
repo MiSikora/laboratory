@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class GroupViewModel(
@@ -31,7 +32,9 @@ internal class GroupViewModel(
 ) : ViewModel() {
   private val featureMetadataFactory = FeatureMetadata.Factory(deprecationHandler)
 
-  suspend fun selectFeature(feature: Feature<*>) = laboratory.setOption(feature)
+  fun selectFeature(feature: Feature<*>) {
+    viewModelScope.launch { laboratory.setOption(feature) }
+  }
 
   private val initiatedSearchQueries = flow {
     emit(SearchQuery.Empty)

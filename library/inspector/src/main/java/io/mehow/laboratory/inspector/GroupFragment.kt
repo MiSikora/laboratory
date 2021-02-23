@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlin.time.milliseconds
 
 internal class GroupFragment : Fragment(R.layout.io_mehow_laboratory_feature_group) {
@@ -32,13 +31,9 @@ internal class GroupFragment : Fragment(R.layout.io_mehow_laboratory_feature_gro
     )
   }
   private val featureAdapter = FeatureAdapter(object : FeatureAdapter.Listener {
-    override fun onSelectFeature(feature: Feature<*>) {
-      lifecycleScope.launch { viewModel.selectFeature(feature) }
-    }
+    override fun onSelectFeature(feature: Feature<*>) = viewModel.selectFeature(feature)
 
-    override fun onSelectSource(feature: Feature<*>) {
-      lifecycleScope.launch { viewModel.selectFeature(feature) }
-    }
+    override fun onSelectSource(feature: Feature<*>) = viewModel.selectFeature(feature)
   })
 
   override fun onViewCreated(view: View, inState: Bundle?) {
