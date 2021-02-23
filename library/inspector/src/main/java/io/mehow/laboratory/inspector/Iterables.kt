@@ -19,3 +19,7 @@ internal fun <T> Iterable<T>.containsAllInOrder(
       .map { (_, value) -> value }
   return uniqueFinds.toList() == other.toList()
 }
+
+internal fun Iterable<String>.containsAllInOrder(other: Iterable<String>) = containsAllInOrder(other) { text, query ->
+  text.contains(query, ignoreCase = true)
+}
