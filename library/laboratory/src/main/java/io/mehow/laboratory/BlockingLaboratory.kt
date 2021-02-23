@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
  * A blocking equivalent of [Laboratory].
  */
 public class BlockingLaboratory internal constructor(
-  @PublishedApi internal val laboratory: Laboratory,
+  private val laboratory: Laboratory,
 ) {
   /**
    * Returns the current option of the input [Feature]. Warning – this call can block the calling thread.
@@ -14,7 +14,7 @@ public class BlockingLaboratory internal constructor(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public inline fun <reified T : Feature<T>> experiment(): T = runBlocking { laboratory.experiment() }
+  public inline fun <reified T : Feature<T>> experiment(): T = experiment(T::class.java)
 
   /**
    * Returns the current option of the input [Feature]. Warning – this call can block the calling thread.
