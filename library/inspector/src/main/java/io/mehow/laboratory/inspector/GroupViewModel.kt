@@ -94,7 +94,7 @@ internal class GroupViewModel(
       val featureEmissions = observeOptions(laboratory)
       val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
       val supervisorEmissions = feature.supervisorOption
-          ?.let { laboratory.observe(it.javaClass as Class<Feature<*>>) }
+          ?.let { laboratory.observe(it::class.java) }
           ?: flowOf(null)
       return combine(featureEmissions, sourceEmissions, supervisorEmissions) { features, sources, supervisor ->
         FeatureUiModel(
