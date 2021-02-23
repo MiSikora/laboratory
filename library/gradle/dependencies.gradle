@@ -49,7 +49,7 @@ ext.libs = [
         ],
     ],
     "dokka": [
-        "gradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:1.4.20",
+        "gradlePlugin": "org.jetbrains.dokka:dokka-gradle-plugin:1.4.20-dev-65",
         "gradlePluginId": "org.jetbrains.dokka",
     ],
     "kotest": [
