@@ -22,9 +22,7 @@ internal class FeatureAdapter(
   private object DiffCallback : ItemCallback<FeatureUiModel>() {
     override fun areItemsTheSame(old: FeatureUiModel, new: FeatureUiModel) = old.type == new.type
 
-    override fun areContentsTheSame(old: FeatureUiModel, new: FeatureUiModel): Boolean {
-      return old == new && old == new
-    }
+    override fun areContentsTheSame(old: FeatureUiModel, new: FeatureUiModel) = old == new
 
     // Prevent item animation change.
     override fun getChangePayload(old: FeatureUiModel, new: FeatureUiModel) = Unit
