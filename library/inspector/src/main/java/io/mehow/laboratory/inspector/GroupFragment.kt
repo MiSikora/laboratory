@@ -18,10 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlin.time.milliseconds
 
 internal class GroupFragment : Fragment(R.layout.io_mehow_laboratory_feature_group) {
-  private val sectionName
-    get() = requireNotNull(requireArguments().getString(sectionKey)) {
-      "Missing section key"
-    }
+  private val sectionName get() = requireStringArgument(sectionKey)
   private val searchViewModel by activityViewModels<SearchViewModel> { SearchViewModel.Factory }
   @OptIn(FlowPreview::class) internal val viewModel by viewModels<GroupViewModel> {
     GroupViewModel.Factory(
