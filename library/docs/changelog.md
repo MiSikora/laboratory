@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Use `proto3` for `FeatureFlags` definition.
+- Upgrade to DataStore `1.0.0-alpha07`.
 - Upgrade to Kotlin `1.4.31`.
 
 ## [0.10.0] - 2021-02-18
