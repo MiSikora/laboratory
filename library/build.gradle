@@ -34,7 +34,7 @@ allprojects {
   group GROUP
   version VERSION_NAME
 
-  tasks.withType(Test) {
+  tasks.withType(Test).configureEach {
     testLogging {
       events "skipped", "failed", "passed"
       showExceptions true
@@ -44,12 +44,12 @@ allprojects {
     }
   }
 
-  tasks.withType(JavaCompile) {
+  tasks.withType(JavaCompile).configureEach {
     sourceCompatibility "1.8"
     targetCompatibility "1.8"
   }
 
-  tasks.withType(KotlinCompile) {
+  tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
       jvmTarget = "1.8"
       freeCompilerArgs += [
@@ -121,7 +121,7 @@ dependencies {
   detekt libs.detekt.cli
 }
 
-tasks.withType(Detekt) {
+tasks.withType(Detekt).configureEach {
   parallel true
   config.setFrom(rootProject.files("detekt-config.yml"))
   setSource(files(projectDir))

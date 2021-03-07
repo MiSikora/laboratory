@@ -6,7 +6,7 @@ plugins {
 
 test.useJUnitPlatform()
 
-tasks.withType(KotlinCompile) {
+tasks.withType(KotlinCompile).configureEach {
   kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.io.path.ExperimentalPathApi"
 }
 

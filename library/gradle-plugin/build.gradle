@@ -51,7 +51,7 @@ internal const val laboratoryVersion = "$version"
   }
 }
 
-tasks.withType(KotlinCompile) {
+tasks.withType(KotlinCompile).configureEach {
   it.dependsOn(generateVersion)
 }
 
