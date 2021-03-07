@@ -28,7 +28,7 @@ internal fun TaskProvider<out Task>.contributeToAndroidSourceSets(dir: File, pro
 }
 
 private fun TaskProvider<out Task>.makeKotlinDependOnTask(project: Project) {
-  project.tasks.withType(KotlinCompile::class.java) { kotlinTask ->
+  project.tasks.withType(KotlinCompile::class.java).configureEach { kotlinTask ->
     kotlinTask.dependsOn(this)
   }
 }
@@ -44,7 +44,9 @@ private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Proje
     }
     kotlinSourceSet.srcDir(dir.toRelativeString(project.projectDir))
     variant.addJavaSourceFoldersToModel(dir)
-    project.tasks.named("generate${variant.name.capitalize()}Sources").dependsOn(this)
+    project.tasks.named("generate${variant.name.capitalize()}Sources").configure {
+      it.dependsOn(this)
+    }
   }
 }
 
