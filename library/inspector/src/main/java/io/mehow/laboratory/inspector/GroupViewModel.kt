@@ -10,6 +10,7 @@ import io.mehow.laboratory.description
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import io.mehow.laboratory.source
 import io.mehow.laboratory.supervisorOption
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,7 +34,7 @@ internal class GroupViewModel(
   private val featureMetadataFactory = FeatureMetadata.Factory(deprecationHandler)
 
   fun selectFeature(feature: Feature<*>) {
-    viewModelScope.launch { laboratory.setOption(feature) }
+    viewModelScope.launch(start = UNDISPATCHED) { laboratory.setOption(feature) }
   }
 
   private val initiatedSearchQueries = flow {
