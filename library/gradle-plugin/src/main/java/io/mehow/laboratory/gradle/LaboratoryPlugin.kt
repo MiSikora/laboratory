@@ -132,7 +132,7 @@ public class LaboratoryPlugin : Plugin<Project> {
   ) {
     rootProject.allprojects { project ->
       if (projectFilter.test(project)) {
-        project.plugins.withType(LaboratoryPlugin::class.java) { labPlugin ->
+        project.plugins.withType(LaboratoryPlugin::class.java).configureEach { labPlugin ->
           val pluginFeatures = labPlugin.extension.featureInputs
           onFeatureInputsFound(pluginFeatures)
           if (pluginFeatures.isEmpty()) {
