@@ -41,9 +41,8 @@ public final class io/mehow/laboratory/datastore/FeatureFlagsSerializer : androi
 	public static final field INSTANCE Lio/mehow/laboratory/datastore/FeatureFlagsSerializer;
 	public fun getDefaultValue ()Lio/mehow/laboratory/datastore/FeatureFlags;
 	public synthetic fun getDefaultValue ()Ljava/lang/Object;
-	public fun readFrom (Ljava/io/InputStream;)Lio/mehow/laboratory/datastore/FeatureFlags;
-	public synthetic fun readFrom (Ljava/io/InputStream;)Ljava/lang/Object;
-	public fun writeTo (Lio/mehow/laboratory/datastore/FeatureFlags;Ljava/io/OutputStream;)V
-	public synthetic fun writeTo (Ljava/lang/Object;Ljava/io/OutputStream;)V
+	public fun readFrom (Ljava/io/InputStream;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun writeTo (Lio/mehow/laboratory/datastore/FeatureFlags;Ljava/io/OutputStream;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public synthetic fun writeTo (Ljava/lang/Object;Ljava/io/OutputStream;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
