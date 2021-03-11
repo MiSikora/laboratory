@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-  implementation "io.mehow.laboratory:laboratory:0.10.0"
+  implementation "io.mehow.laboratory:laboratory:0.11.0"
 }
 ```
 

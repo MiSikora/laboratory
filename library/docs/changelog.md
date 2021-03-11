@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2021-03-11
+
 ### Changed
 - Use `proto3` for `FeatureFlags` definition.
 - Upgrade to DataStore `1.0.0-alpha08`.
@@ -283,7 +285,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.10.0...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.11.0...HEAD
+[0.11.0]: https://github.com/MiSikora/laboratory/releases/tag/0.11.0
 [0.10.0]: https://github.com/MiSikora/laboratory/releases/tag/0.10.0
 [0.9.7]: https://github.com/MiSikora/laboratory/releases/tag/0.9.7
 [0.9.6]: https://github.com/MiSikora/laboratory/releases/tag/0.9.6
