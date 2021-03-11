@@ -11,11 +11,11 @@ import java.io.OutputStream
 public object FeatureFlagsSerializer : Serializer<FeatureFlags> {
   override val defaultValue: FeatureFlags = FeatureFlags()
 
-  override fun readFrom(input: InputStream): FeatureFlags {
+  override suspend fun readFrom(input: InputStream): FeatureFlags {
     return FeatureFlags.ADAPTER.decode(input)
   }
 
-  override fun writeTo(t: FeatureFlags, output: OutputStream) {
+  override suspend fun writeTo(t: FeatureFlags, output: OutputStream) {
     FeatureFlags.ADAPTER.encode(output, t)
   }
 }
