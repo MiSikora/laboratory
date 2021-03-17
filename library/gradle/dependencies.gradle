@@ -1,5 +1,5 @@
 ext.versions = [
-    "coroutines": "1.4.2",
+    "coroutines": "1.4.3",
     "kotest": "4.4.1",
     "androidxTest": "1.3.0",
     "hyperion": "0.9.31",
@@ -80,6 +80,6 @@ ext.libs = [
     "kotlinPoet": "com.squareup:kotlinpoet:1.7.2",
     "arrow": "io.arrow-kt:arrow-core:0.10.5",
     "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:3.6.1",
-    "turbine": "app.cash.turbine:turbine:0.4.0",
+    "turbine": "app.cash.turbine:turbine:0.4.1",
     "kyrie": "com.github.alexjlockwood:kyrie:0.2.1",
 ]
