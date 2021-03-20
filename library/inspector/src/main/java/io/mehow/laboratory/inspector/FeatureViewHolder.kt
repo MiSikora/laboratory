@@ -15,6 +15,7 @@ internal class FeatureViewHolder(
   listener: FeatureAdapter.Listener,
 ) : ViewHolder(itemView) {
   private val name = itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_name)
+  private val supervisor = itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_supervisor)
   private val description = itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_description)
   private val sources = itemView.findViewById<SourceViewGroup>(R.id.io_mehow_laboratory_feature_sources)
   private val divider = itemView.findViewById<View>(R.id.io_mehow_laboratory_sources_divider)
@@ -32,6 +33,10 @@ internal class FeatureViewHolder(
       null, Show -> name.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
       Strikethrough -> name.paintFlags or STRIKE_THRU_TEXT_FLAG
       Hide -> name.paintFlags
+    }
+    supervisor.isVisible = group.supervisorName != null
+    supervisor.text = group.supervisorName?.let { supervisorName ->
+      itemView.context.getString(R.string.io_mehow_laboratory_feature_supervisor, supervisorName)
     }
     description.setTextTokens(group.description)
     description.isVisible = group.description.isNotEmpty()

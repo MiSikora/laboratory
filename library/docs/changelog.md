@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Gradle plugin generates `sourcedBuilder()` extension function for `SourcedFeatureStorage` that returns custom builder with steps for each source. This makes changes to sources compile time safe.
+- Show feature's supervisor option in inspector – [#95](https://github.com/MiSikora/laboratory/issues/95).
 
 ### Changed
 - Upgrade to Coroutines `1.4.3`.
