@@ -31,6 +31,17 @@ complexity:
     ignoreAnnotation: true
     excludeStringsWithLessThan5Characters: false
 
+coroutines:
+  active: true
+  GlobalCoroutineUsage:
+    active: true
+  RedundantSuspendModifier:
+    active: true
+  SleepInsteadOfDelay:
+    active: true
+  SuspendFunWithFlowReturnType:
+    active: true
+
 empty-blocks:
   active: true
   EmptyCatchBlock:
@@ -71,6 +82,8 @@ exceptions:
     active: true
   NotImplementedDeclaration:
     active: true
+  ObjectExtendsThrowable:
+    active: true
   PrintStackTrace:
     active: true
   RethrowCaughtException:
@@ -84,6 +97,10 @@ exceptions:
   ThrowingExceptionsWithoutMessageOrCause:
     active: true
   ThrowingNewInstanceOfSameException:
+    active: true
+  TooGenericExceptionCaught:
+    active: true
+  TooGenericExceptionThrown:
     active: true
 
 formatting:
@@ -198,6 +215,8 @@ potential-bugs:
   UnconditionalJumpStatementInLoop:
     active: true
   UnreachableCode:
+    active: true
+  UnusedUnaryOperator:
     active: true
   UselessPostfixExpression:
     active: true
