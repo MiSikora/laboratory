@@ -33,12 +33,11 @@ class SampleApplication : Application() {
     firebaseStorage = FeatureStorage.sharedPreferences(this, "firebaseFeatures")
     awsStorage = FeatureStorage.sharedPreferences(this, "awsFeatures")
     azureStorage = FeatureStorage.sharedPreferences(this, "azureStorage")
-    val sourcedStorage = FeatureStorage.sourcedGenerated(
-        localSource = localStorage,
-        firebaseSource = firebaseStorage,
-        awsSource = awsStorage,
-        azureSource = azureStorage,
-    )
+    val sourcedStorage = FeatureStorage.sourcedBuilder(localStorage)
+        .awsSource(awsStorage)
+        .azureSource(azureStorage)
+        .firebaseSource(firebaseStorage)
+        .build()
     laboratory = Laboratory.builder()
         .featureStorage(sourcedStorage)
         .defaultOptionFactory(SampleDefaultOptionFactory)

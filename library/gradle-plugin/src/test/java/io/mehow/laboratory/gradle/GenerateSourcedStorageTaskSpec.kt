@@ -16,7 +16,6 @@ import io.mehow.laboratory.generator.NoFeatureValues
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import java.io.File
 
 internal class GenerateSourcedStorageTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
@@ -40,7 +39,22 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
+      |    Builder(localSource, emptyMap())
+      |
+      |internal interface BuildingStep {
+      |  public fun build(): FeatureStorage
+      |}
+      |
+      |private data class Builder(
+      |  private val localSource: FeatureStorage,
+      |  private val remoteSources: Map<String, FeatureStorage>
+      |) : BuildingStep {
+      |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+      |}
+      |
+      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+      |internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
       |    = sourced(
       |  localSource,
       |  emptyMap()
@@ -59,7 +73,38 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.sourcedGenerated(
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteAStep =
+      |    Builder(localSource, emptyMap())
+      |
+      |internal interface RemoteAStep {
+      |  public fun remoteASource(source: FeatureStorage): RemoteBStep
+      |}
+      |
+      |internal interface RemoteBStep {
+      |  public fun remoteBSource(source: FeatureStorage): BuildingStep
+      |}
+      |
+      |internal interface BuildingStep {
+      |  public fun build(): FeatureStorage
+      |}
+      |
+      |private data class Builder(
+      |  private val localSource: FeatureStorage,
+      |  private val remoteSources: Map<String, FeatureStorage>
+      |) : RemoteAStep, RemoteBStep, BuildingStep {
+      |  public override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
+      |    remoteSources = remoteSources + ("RemoteA" to source)
+      |  )
+      |
+      |  public override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
+      |    remoteSources = remoteSources + ("RemoteB" to source)
+      |  )
+      |
+      |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+      |}
+      |
+      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+      |internal fun FeatureStorage.Companion.sourcedGenerated(
       |  localSource: FeatureStorage,
       |  remoteASource: FeatureStorage,
       |  remoteBSource: FeatureStorage
@@ -114,7 +159,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
-    factory.readText() shouldContain "internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage)"
+    factory.readText() shouldContain "internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage)"
   }
 
   "generates public storage" {
@@ -125,7 +170,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
     factory.shouldExist()
 
-    factory.readText() shouldContain "public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage)"
+    factory.readText() shouldContain "public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage)"
   }
 
   "fails for corrupted storage package name" {
@@ -223,7 +268,46 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.sourcedGenerated(
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep =
+      |    Builder(localSource, emptyMap())
+      |
+      |internal interface RemoteStep {
+      |  public fun remoteSource(source: FeatureStorage): RemoteAStep
+      |}
+      |
+      |internal interface RemoteAStep {
+      |  public fun remoteASource(source: FeatureStorage): RemoteBStep
+      |}
+      |
+      |internal interface RemoteBStep {
+      |  public fun remoteBSource(source: FeatureStorage): BuildingStep
+      |}
+      |
+      |internal interface BuildingStep {
+      |  public fun build(): FeatureStorage
+      |}
+      |
+      |private data class Builder(
+      |  private val localSource: FeatureStorage,
+      |  private val remoteSources: Map<String, FeatureStorage>
+      |) : RemoteStep, RemoteAStep, RemoteBStep, BuildingStep {
+      |  public override fun remoteSource(source: FeatureStorage): RemoteAStep = copy(
+      |    remoteSources = remoteSources + ("Remote" to source)
+      |  )
+      |
+      |  public override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
+      |    remoteSources = remoteSources + ("RemoteA" to source)
+      |  )
+      |
+      |  public override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
+      |    remoteSources = remoteSources + ("RemoteB" to source)
+      |  )
+      |
+      |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+      |}
+      |
+      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+      |internal fun FeatureStorage.Companion.sourcedGenerated(
       |  localSource: FeatureStorage,
       |  remoteSource: FeatureStorage,
       |  remoteASource: FeatureStorage,
@@ -250,7 +334,38 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.sourcedGenerated(
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep =
+      |    Builder(localSource, emptyMap())
+      |
+      |internal interface RemoteStep {
+      |  public fun remoteSource(source: FeatureStorage): RemoteBStep
+      |}
+      |
+      |internal interface RemoteBStep {
+      |  public fun remoteBSource(source: FeatureStorage): BuildingStep
+      |}
+      |
+      |internal interface BuildingStep {
+      |  public fun build(): FeatureStorage
+      |}
+      |
+      |private data class Builder(
+      |  private val localSource: FeatureStorage,
+      |  private val remoteSources: Map<String, FeatureStorage>
+      |) : RemoteStep, RemoteBStep, BuildingStep {
+      |  public override fun remoteSource(source: FeatureStorage): RemoteBStep = copy(
+      |    remoteSources = remoteSources + ("Remote" to source)
+      |  )
+      |
+      |  public override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
+      |    remoteSources = remoteSources + ("RemoteB" to source)
+      |  )
+      |
+      |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+      |}
+      |
+      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+      |internal fun FeatureStorage.Companion.sourcedGenerated(
       |  localSource: FeatureStorage,
       |  remoteSource: FeatureStorage,
       |  remoteBSource: FeatureStorage
@@ -287,7 +402,22 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
+      |    Builder(localSource, emptyMap())
+      |
+      |internal interface BuildingStep {
+      |  public fun build(): FeatureStorage
+      |}
+      |
+      |private data class Builder(
+      |  private val localSource: FeatureStorage,
+      |  private val remoteSources: Map<String, FeatureStorage>
+      |) : BuildingStep {
+      |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+      |}
+      |
+      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+      |internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
       |    = sourced(
       |  localSource,
       |  emptyMap()
@@ -306,7 +436,22 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
+      |    Builder(localSource, emptyMap())
+      |
+      |internal interface BuildingStep {
+      |  public fun build(): FeatureStorage
+      |}
+      |
+      |private data class Builder(
+      |  private val localSource: FeatureStorage,
+      |  private val remoteSources: Map<String, FeatureStorage>
+      |) : BuildingStep {
+      |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+      |}
+      |
+      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+      |internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
       |    = sourced(
       |  localSource,
       |  emptyMap()
@@ -325,7 +470,46 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureStorage.Companion.sourcedGenerated(
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): ChildStep =
+      |    Builder(localSource, emptyMap())
+      |
+      |internal interface ChildStep {
+      |  public fun childSource(source: FeatureStorage): GrandparentStep
+      |}
+      |
+      |internal interface GrandparentStep {
+      |  public fun grandparentSource(source: FeatureStorage): ParentStep
+      |}
+      |
+      |internal interface ParentStep {
+      |  public fun parentSource(source: FeatureStorage): BuildingStep
+      |}
+      |
+      |internal interface BuildingStep {
+      |  public fun build(): FeatureStorage
+      |}
+      |
+      |private data class Builder(
+      |  private val localSource: FeatureStorage,
+      |  private val remoteSources: Map<String, FeatureStorage>
+      |) : ChildStep, GrandparentStep, ParentStep, BuildingStep {
+      |  public override fun childSource(source: FeatureStorage): GrandparentStep = copy(
+      |    remoteSources = remoteSources + ("Child" to source)
+      |  )
+      |
+      |  public override fun grandparentSource(source: FeatureStorage): ParentStep = copy(
+      |    remoteSources = remoteSources + ("Grandparent" to source)
+      |  )
+      |
+      |  public override fun parentSource(source: FeatureStorage): BuildingStep = copy(
+      |    remoteSources = remoteSources + ("Parent" to source)
+      |  )
+      |
+      |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+      |}
+      |
+      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+      |internal fun FeatureStorage.Companion.sourcedGenerated(
       |  localSource: FeatureStorage,
       |  grandparentSource: FeatureStorage,
       |  parentSource: FeatureStorage,

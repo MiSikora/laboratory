@@ -5,18 +5,15 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
 import io.mehow.laboratory.Feature
 import java.io.File
 import kotlin.DeprecationLevel.ERROR
 import kotlin.DeprecationLevel.HIDDEN
 import kotlin.DeprecationLevel.WARNING
-import kotlin.reflect.KClass
 
 @Suppress("StringLiteralDuplication")
 internal class FeatureFlagGenerator(
@@ -123,7 +120,5 @@ internal class FeatureFlagGenerator(
 
     val featureType = Feature::class(STAR)
     val featureClassType = Class::class(featureType)
-
-    operator fun KClass<*>.invoke(parameter: TypeName) = asClassName().parameterizedBy(parameter)
   }
 }
