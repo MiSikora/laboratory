@@ -158,7 +158,7 @@ DSL for supervised feature flags is recursive allowing to nest them in `withOpti
 
 ## Feature flags storage
 
-If your feature flags use multiple sources, you can configure the Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage`.
+If your feature flags use multiple sources, you can configure the Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage` builder.
 
 ```groovy
 apply plugin: "io.mehow.laboratory"
@@ -198,35 +198,65 @@ laboratory {
 }
 ```
 
-`sourcedStorage()` function uses `generateSourcedFeatureStorage` Gradle task that generates the code below.
+`sourcedBuilder()` function uses `generateSourcedFeatureStorage` Gradle task that generates the code below.
 
 ```kotlin
 package io.mehow.laboratory.sample
 
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.FeatureStorage.Companion.sourced
-import kotlin.collections.mapOf
+import kotlin.String
+import kotlin.collections.Map
+import kotlin.collections.emptyMap
+import kotlin.collections.plus
 import kotlin.to
 
-internal fun FeatureStorage.Companion.sourcedGenerated(
-  localSource: FeatureStorage,
-  azureSource: FeatureStorage,
-  firebaseSource: FeatureStorage,
-  awsSource: FeatureStorage,
-  herokuSource: FeatureStorage
-): FeatureStorage = sourced(
-  localSource,
-  mapOf(
-    "Azure" to azureSource,
-    "Firebase" to firebaseSource,
-    "Aws" to awsSource,
-    "Heroku" to herokuSource,
-  )
-)
-```
+internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): AwsStep =
+    Builder(localSource, emptyMap())
 
-!!! tip
-    Use named arguments when you instantiate `FeatureStorage` with the `sourcedGenerated()` function. This will ensure that you accidentally don't mess up arguments order and that the compilation fails whenever there are changes to the sources.
+internal interface AwsStep {
+  public fun awsSource(source: FeatureStorage): AzureStep
+}
+
+internal interface AzureStep {
+  public fun azureSource(source: FeatureStorage): FirebaseStep
+}
+
+internal interface FirebaseStep {
+  public fun firebaseSource(source: FeatureStorage): HerokuStep
+}
+
+internal interface HerokuStep {
+  public fun herokuSource(source: FeatureStorage): BuildingStep
+}
+
+internal interface BuildingStep {
+  public fun build(): FeatureStorage
+}
+
+private data class Builder(
+  private val localSource: FeatureStorage,
+  private val remoteSources: Map<String, FeatureStorage>
+) : AwsStep, AzureStep, FirebaseStep, HerokuStep, BuildingStep {
+  public override fun awsSourceSource(source: FeatureStorage): AzureStep = copy(
+    remoteSources = remoteSources + ("Firebase" to source)
+  )
+
+  public override fun azureSource(source: FeatureStorage): FirebaseStep = copy(
+    remoteSources = remoteSources + ("Azure" to source)
+  )
+
+  public override fun firebaseSource(source: FeatureStorage): HerokuStep = copy(
+    remoteSources = remoteSources + ("Firebase" to source)
+  )
+
+  public override fun herokuSource(source: FeatureStorage): BuildingStep = copy(
+    remoteSources = remoteSources + ("Heroku" to source)
+  )
+
+  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+}
+```
 
 ## Feature flags factory
 

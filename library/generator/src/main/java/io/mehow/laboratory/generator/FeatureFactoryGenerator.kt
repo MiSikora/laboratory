@@ -7,17 +7,13 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.STAR
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.joinToCode
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import java.io.File
-import kotlin.reflect.KClass
 
 internal class FeatureFactoryGenerator(
   factory: FeatureFactoryModel,
@@ -70,7 +66,5 @@ internal class FeatureFactoryGenerator(
   private companion object {
     val featureType = Class::class(Feature::class(STAR))
     val factoryReturnType = Set::class(featureType)
-
-    operator fun KClass<*>.invoke(parameter: TypeName) = asClassName().parameterizedBy(parameter)
   }
 }
