@@ -12,4 +12,5 @@
   <string name="io_mehow_laboratory_search_features_hint">Search features…</string>
   <string name="io_mehow_laboratory_clear_query">Clear query</string>
   <string name="io_mehow_laboratory_close_search">Close search</string>
+  <string name="io_mehow_laboratory_feature_supervisor">Supervisor: %1$s</string>
 </resources>

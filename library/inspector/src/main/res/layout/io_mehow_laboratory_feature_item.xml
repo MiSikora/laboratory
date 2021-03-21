@@ -24,6 +24,15 @@
         />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/io_mehow_laboratory_feature_supervisor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/io_mehow_laboratory_spacing"
+        android:paddingBottom="@dimen/io_mehow_laboratory_spacing"
+        android:textAppearance="?textAppearanceCaption"
+        />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/io_mehow_laboratory_feature_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -24,6 +24,8 @@ internal data class FeatureUiModel(
 
   val isEnabled = isCurrentSourceLocal && isSupervised
 
+  val supervisorName: String? = type.supervisorOption?.fullName
+
   companion object {
     private val firstAlignmentOrdinal = DeprecationAlignment.values().first()
 
@@ -45,3 +47,5 @@ private fun FeatureUiModel.search(query: SearchQuery) = takeIf {
 private val FeatureUiModel.modelNames get() = models.map { it.option.name }
 
 private val FeatureUiModel.sourceNames get() = sources.map { it.option.name }
+
+internal val Feature<*>.fullName get() = "${this::class.simpleName}.$this"
