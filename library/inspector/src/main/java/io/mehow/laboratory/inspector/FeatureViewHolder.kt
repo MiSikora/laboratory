@@ -27,22 +27,22 @@ internal class FeatureViewHolder(
     description.movementMethod = LinkMovementMethod.getInstance()
   }
 
-  fun bind(group: FeatureUiModel) {
-    name.text = group.name
-    name.paintFlags = when (group.deprecationPhenotype) {
+  fun bind(uiModel: FeatureUiModel) {
+    name.text = uiModel.name
+    name.paintFlags = when (uiModel.deprecationPhenotype) {
       null, Show -> name.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
       Strikethrough -> name.paintFlags or STRIKE_THRU_TEXT_FLAG
       Hide -> name.paintFlags
     }
-    supervisor.isVisible = group.supervisorName != null
-    supervisor.text = group.supervisorName?.let { supervisorName ->
+    supervisor.isVisible = uiModel.supervisorName != null
+    supervisor.text = uiModel.supervisorName?.let { supervisorName ->
       itemView.context.getString(R.string.io_mehow_laboratory_feature_supervisor, supervisorName)
     }
-    description.setTextTokens(group.description)
-    description.isVisible = group.description.isNotEmpty()
-    options.render(group.models, group.isEnabled)
-    sources.render(group.sources)
-    sources.isVisible = group.hasMultipleSources
-    divider.isVisible = group.hasMultipleSources
+    description.setTextTokens(uiModel.description)
+    description.isVisible = uiModel.description.isNotEmpty()
+    options.render(uiModel.models, uiModel.isEnabled)
+    sources.render(uiModel.sources)
+    sources.isVisible = uiModel.hasMultipleSources
+    divider.isVisible = uiModel.hasMultipleSources
   }
 }
