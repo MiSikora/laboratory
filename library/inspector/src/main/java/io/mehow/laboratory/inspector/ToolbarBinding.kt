@@ -30,6 +30,9 @@ internal class ToolbarBinding(
       .setPositiveButton(R.string.io_mehow_laboratory_reset) { _, _ -> onResetEventsListener() }
       .create()
 
+  private val closeSearchDescription = view.context.getString(R.string.io_mehow_laboratory_close_search)
+  private val openSearchDescription = view.context.getString(R.string.io_mehow_laboratory_search_features)
+
   init {
     var oldText: String? = null
     searchQuery.addTextChangedListener { editable ->
@@ -51,9 +54,11 @@ internal class ToolbarBinding(
 
     if (uiModel.showSearch) {
       searchQuery.focusAndShowKeyboard()
+      searchQuery.contentDescription = closeSearchDescription
     } else {
       searchQuery.hideKeyboard()
       searchQuery.setText("")
+      searchQuery.contentDescription = openSearchDescription
     }
   }
 
