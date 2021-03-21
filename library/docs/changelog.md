@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] - 2021-03-21
+
 ### Added
 - Gradle plugin generates `sourcedBuilder()` extension function for `SourcedFeatureStorage` that returns custom builder with steps for each source. This makes changes to sources compile time safe.
 - Show feature's supervisor option in inspector – [#95](https://github.com/MiSikora/laboratory/issues/95).
@@ -296,7 +298,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.11.0...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.12.0...HEAD
+[0.12.0]: https://github.com/MiSikora/laboratory/releases/tag/0.12.0
 [0.11.0]: https://github.com/MiSikora/laboratory/releases/tag/0.11.0
 [0.10.0]: https://github.com/MiSikora/laboratory/releases/tag/0.10.0
 [0.9.7]: https://github.com/MiSikora/laboratory/releases/tag/0.9.7
