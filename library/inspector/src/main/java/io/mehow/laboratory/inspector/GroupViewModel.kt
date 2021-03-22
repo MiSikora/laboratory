@@ -46,7 +46,6 @@ internal class GroupViewModel(
     val groups = withContext(Dispatchers.Default) {
       groupFeatureFactory.create()
           .mapNotNull(featureMetadataFactory::create)
-          .filter { it.deprecationPhenotype != DeprecationPhenotype.Hide }
           .map { it.observeGroup(laboratory) }
           .combineLatest()
     }
@@ -90,7 +89,7 @@ internal class GroupViewModel(
         .firstOrNull()
         ?.level
 
-    val deprecationPhenotype = deprecationLevel?.let(deprecationHandler::getPhenotype)
+    private val deprecationPhenotype = deprecationLevel?.let(deprecationHandler::getPhenotype)
 
     private val deprecationPlacement = deprecationLevel?.let(deprecationHandler::getAlignment)
 
@@ -122,6 +121,7 @@ internal class GroupViewModel(
       fun create(feature: Class<Feature<*>>) = feature
           .takeUnless { it.enumConstants.isNullOrEmpty() }
           ?.let { FeatureMetadata(it, deprecationHandler) }
+          ?.takeIf { it.deprecationPhenotype != DeprecationPhenotype.Hide }
     }
   }
 }
