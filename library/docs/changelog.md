@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Upgrade to Kotlin `1.4.32`.
+
 ## [0.12.0] - 2021-03-21
 
 ### Added
