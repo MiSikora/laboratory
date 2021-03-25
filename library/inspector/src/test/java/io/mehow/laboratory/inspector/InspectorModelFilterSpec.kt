@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlin.reflect.KClass
 
-internal class GroupViewModelFilterSpec : DescribeSpec({
+internal class InspectorViewModelFilterSpec : DescribeSpec({
   setMainDispatcher()
 
   describe("feature flags filtering") {
     it("emits all feature flags for no search terms") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         cancel()
@@ -31,7 +31,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
     it("emits all feature flags for blank search terms") {
       checkAll(Arb.stringPattern("([ ]{0,10})")) { query ->
         val searchFlow = MutableSharedFlow<SearchQuery>()
-        GroupViewModel(searchFlow).observeFeatureClasses().test {
+        InspectorViewModel(searchFlow).observeFeatureClasses().test {
           expectAllFeatureFlags()
 
           searchFlow.emit(SearchQuery(query))
@@ -44,7 +44,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("finds feature flags by their exact name") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("RegularNameFeature"))
@@ -62,7 +62,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("finds feature flags by split name parts") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Name Feature"))
@@ -80,7 +80,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
     // Pattern in generator also doesn't matter as long as it produces valid input for the test.
     it("finds no feature flags for no matches") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("???"))
@@ -92,7 +92,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("finds feature flags by their options") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Disabled"))
@@ -107,7 +107,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("finds feature flags by their sources") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Remote"))
@@ -119,7 +119,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("finds feature flags by partial matches") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("me ture"))
@@ -140,7 +140,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("finds feature flags by ordered input") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Enabled Disabled"))
@@ -155,7 +155,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("ignores capitalization during search") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("enabled"))
@@ -173,7 +173,7 @@ internal class GroupViewModelFilterSpec : DescribeSpec({
 
     it("finds feature flags by partial, non-split inner search") {
       val searchFlow = MutableSharedFlow<SearchQuery>()
-      GroupViewModel(searchFlow).observeFeatureClasses().test {
+      InspectorViewModel(searchFlow).observeFeatureClasses().test {
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("arnamefea"))
@@ -234,13 +234,13 @@ private enum class SourcedFeature : Feature<SourcedFeature> {
 }
 
 @Suppress("TestFunctionName")
-private fun GroupViewModel(
+private fun InspectorViewModel(
   searchFlow: Flow<SearchQuery>,
-) = GroupViewModel(
+) = InspectorViewModel(
     Laboratory.inMemory(),
+    searchFlow,
     SearchFeatureFactory,
     DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
-    searchFlow,
 )
 
 private suspend fun FlowTurbine<List<KClass<out Feature<*>>>>.expectAllFeatureFlags() {

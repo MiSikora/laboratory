@@ -16,28 +16,28 @@ import kotlin.DeprecationLevel.ERROR
 import kotlin.DeprecationLevel.HIDDEN
 import kotlin.DeprecationLevel.WARNING
 
-internal class GroupViewModelDeprecationSpec : DescribeSpec({
+internal class InspectorViewModelDeprecationSpec : DescribeSpec({
   setMainDispatcher()
 
   describe("deprecated feature flags") {
     it("can be filtered out") {
-      val viewModel = GroupViewModel(DeprecationHandler(
+      val viewModel = InspectorViewModel(DeprecationHandler(
           phenotypeSelector = { Hide },
           alignmentSelector = { Regular },
       ))
 
-      val featureNames = viewModel.observeFeatureGroup().first().map(FeatureUiModel::name)
+      val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
 
       featureNames shouldContainExactly listOf("NotDeprecated")
     }
 
     it("can be struck through") {
-      val viewModel = GroupViewModel(DeprecationHandler(
+      val viewModel = InspectorViewModel(DeprecationHandler(
           phenotypeSelector = { Strikethrough },
           alignmentSelector = { Regular },
       ))
 
-      val featureNames = viewModel.observeFeatureGroup().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
       featureNames shouldContainExactly listOf(
           "DeprecatedError" to Strikethrough,
@@ -48,12 +48,12 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
     }
 
     it("can be shown") {
-      val viewModel = GroupViewModel(DeprecationHandler(
+      val viewModel = InspectorViewModel(DeprecationHandler(
           phenotypeSelector = { Show },
           alignmentSelector = { Regular },
       ))
 
-      val featureNames = viewModel.observeFeatureGroup().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
       featureNames shouldContainExactly listOf(
           "DeprecatedError" to Show,
@@ -64,12 +64,12 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
     }
 
     it("can be moved to bottom") {
-      val viewModel = GroupViewModel(DeprecationHandler(
+      val viewModel = InspectorViewModel(DeprecationHandler(
           phenotypeSelector = { Show },
           alignmentSelector = { Bottom },
       ))
 
-      val featureNames = viewModel.observeFeatureGroup().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
       featureNames shouldContainExactly listOf(
           "NotDeprecated" to null,
@@ -80,12 +80,12 @@ internal class GroupViewModelDeprecationSpec : DescribeSpec({
     }
 
     it("can be selected based on deprecation level") {
-      val viewModel = GroupViewModel(DeprecationHandler(
+      val viewModel = InspectorViewModel(DeprecationHandler(
           phenotypeSelector = { if (it == WARNING) Strikethrough else Show },
           alignmentSelector = { if (it != WARNING) Bottom else Regular },
       ))
 
-      val featureNames = viewModel.observeFeatureGroup().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
       featureNames shouldContainExactly listOf(
           "DeprecatedWarning" to Strikethrough,
@@ -148,11 +148,6 @@ private enum class NotDeprecated : Feature<NotDeprecated> {
 }
 
 @Suppress("TestFunctionName")
-private fun GroupViewModel(
+private fun InspectorViewModel(
   deprecationHandler: DeprecationHandler,
-) = GroupViewModel(
-    Laboratory.inMemory(),
-    DeprecatedFeatureFactory,
-    deprecationHandler,
-    emptyFlow(),
-)
+) = InspectorViewModel(Laboratory.inMemory(), emptyFlow(), DeprecatedFeatureFactory, deprecationHandler)

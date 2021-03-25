@@ -15,30 +15,30 @@ import io.mehow.laboratory.inspector.TextToken.Regular
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 
-internal class GroupViewModelFeatureSpec : DescribeSpec({
+internal class InspectorViewModelFeatureSpec : DescribeSpec({
   setMainDispatcher()
 
   describe("view model") {
     it("filters empty feature flag groups") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val featureNames = viewModel.observeFeatureGroup().first().map(FeatureUiModel::name)
+      val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
 
       featureNames shouldNotContain "Empty"
     }
 
     it("orders feature flag groups by name") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val featureNames = viewModel.observeFeatureGroup().first().map(FeatureUiModel::name)
+      val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
 
       featureNames shouldContainExactly listOf("First", "Second")
     }
 
     it("does not order feature flag options") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val features = viewModel.observeFeatureGroup().first()
+      val features = viewModel.sectionFlow().first()
           .map(FeatureUiModel::models)
           .map { models -> models.map(OptionUiModel::option) }
 
@@ -47,7 +47,7 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
     }
 
     it("marks first feature flag option as selected by default") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
       viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.C, Second.B)
     }
@@ -58,13 +58,13 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
         setOption(Second.C)
       }
 
-      val viewModel = GroupViewModel(laboratory, NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(laboratory, NoSourceFeatureFactory)
 
       viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.A, Second.C)
     }
 
     it("selects feature flag options") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
       viewModel.selectFeature(First.B)
       viewModel.selectFeature(Second.A)
@@ -73,7 +73,7 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
     }
 
     it("observes feature flag changes") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
       viewModel.observeSelectedFeatures().test {
         expectItem() shouldContainExactly listOf(First.C, Second.B)
@@ -89,7 +89,7 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
     }
 
     it("observes source changes") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), AllFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), AllFeatureFactory)
 
       viewModel.observeSelectedFeaturesAndSources().test {
         expectItem() shouldContainExactly listOf(
@@ -120,7 +120,7 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
           .featureStorage(FeatureStorage.inMemory())
           .defaultOptionFactory(defaultOptionFactory)
           .build()
-      val viewModel = GroupViewModel(laboratory, NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(laboratory, NoSourceFeatureFactory)
 
       viewModel.observeSelectedFeatures().test {
         expectItem() shouldContainExactly listOf(First.A, Second.A)
@@ -139,9 +139,9 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
     }
 
     it("uses text tokens for feature flag description") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-      val descriptions = viewModel.observeFeatureGroup().first().map(FeatureUiModel::description)
+      val descriptions = viewModel.sectionFlow().first().map(FeatureUiModel::description)
 
       descriptions shouldContainExactly listOf(
           listOf(
@@ -155,7 +155,7 @@ internal class GroupViewModelFeatureSpec : DescribeSpec({
     }
 
     it("observers feature flags supervision") {
-      val viewModel = GroupViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
 
       viewModel.observeSelectedFeaturesAndEnabledState().test {
         expectItem() shouldContainExactly listOf(
@@ -281,12 +281,12 @@ private enum class Child : Feature<Child> {
 }
 
 @Suppress("TestFunctionName")
-private fun GroupViewModel(
+private fun InspectorViewModel(
   laboratory: Laboratory,
   factory: FeatureFactory,
-) = GroupViewModel(
+) = InspectorViewModel(
     laboratory,
+    emptyFlow(),
     factory,
     DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
-    emptyFlow(),
 )

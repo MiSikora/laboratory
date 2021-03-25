@@ -12,11 +12,14 @@ import io.mehow.laboratory.source
 import io.mehow.laboratory.supervisorOption
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
@@ -24,54 +27,40 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.time.milliseconds
 
-internal class GroupViewModel(
+internal class InspectorViewModel(
   private val laboratory: Laboratory,
-  private val groupFeatureFactory: FeatureFactory,
+  private val searchQueries: Flow<SearchQuery>,
+  featureFactories: Map<String, FeatureFactory>,
   deprecationHandler: DeprecationHandler,
-  searchQueries: Flow<SearchQuery>,
 ) : ViewModel() {
-  private val featureMetadataFactory = FeatureMetadata.Factory(deprecationHandler)
-
-  fun selectFeature(feature: Feature<*>) {
-    viewModelScope.launch(start = UNDISPATCHED) { laboratory.setOption(feature) }
-  }
+  private val metadataFactory = FeatureMetadata.Factory(deprecationHandler)
 
   private val initiatedSearchQueries = flow {
     emit(SearchQuery.Empty)
     emitAll(searchQueries)
   }.distinctUntilChanged()
 
-  private val featureGroups = flow {
-    val groups = withContext(Dispatchers.Default) {
-      groupFeatureFactory.create()
-          .mapNotNull(featureMetadataFactory::create)
-          .map { it.observeGroup(laboratory) }
-          .combineLatest()
-    }
-    val searchedGroups = combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
-        .map { it.sortedWith(FeatureUiModel.NaturalComparator) }
-        .flowOn(Dispatchers.Default)
-    emitAll(searchedGroups)
-  }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+  private val groupFlows = featureFactories.mapValues { (_, featureFactory) ->
+    flow {
+      val groups = withContext(Dispatchers.Default) {
+        featureFactory.create()
+            .mapNotNull(metadataFactory::create)
+            .map { it.observeGroup(laboratory) }
+            .combineLatest()
+      }
+      val searchedGroups = combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
+          .map { it.sortedWith(FeatureUiModel.NaturalComparator) }
+          .flowOn(Dispatchers.Default)
+      emitAll(searchedGroups)
+    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+  }
 
-  fun observeFeatureGroup(): Flow<List<FeatureUiModel>> = featureGroups
+  fun sectionFlow(sectionName: String) = groupFlows[sectionName] ?: emptyFlow()
 
-  class Factory(
-    private val configuration: Configuration,
-    private val sectionName: String,
-    private val searchQueries: Flow<SearchQuery>,
-  ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-      require(modelClass == GroupViewModel::class.java) { "Cannot create $modelClass" }
-      @Suppress("UNCHECKED_CAST")
-      return GroupViewModel(
-          configuration.laboratory,
-          configuration.factory(sectionName),
-          configuration.deprecation,
-          searchQueries
-      ) as T
-    }
+  fun selectFeature(feature: Feature<*>) {
+    viewModelScope.launch(start = UNDISPATCHED) { laboratory.setOption(feature) }
   }
 
   private class FeatureMetadata(
@@ -124,4 +113,22 @@ internal class GroupViewModel(
           ?.takeIf { it.deprecationPhenotype != DeprecationPhenotype.Hide }
     }
   }
+
+  class Factory(
+    private val configuration: Configuration,
+    private val searchViewModel: SearchViewModel,
+  ) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+      require(modelClass == InspectorViewModel::class.java) { "Cannot create $modelClass" }
+      @Suppress("UNCHECKED_CAST") @OptIn(FlowPreview::class)
+      return InspectorViewModel(
+          configuration.laboratory,
+          searchViewModel.uiModels.debounce(200.milliseconds).map { it.query },
+          configuration.featureFactories,
+          configuration.deprecation,
+      ) as T
+    }
+  }
+
+  companion object
 }

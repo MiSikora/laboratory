@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.mehow.laboratory.inspector.SearchMode.Active
 import io.mehow.laboratory.inspector.SearchMode.Idle
+import io.mehow.laboratory.inspector.SearchViewModel.Event.HideSearch
 import io.mehow.laboratory.inspector.SearchViewModel.Event.ToggleSearchMode
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +28,7 @@ internal class SearchViewModel : ViewModel() {
 
   fun sendEvent(event: Event) = when (event) {
     is ToggleSearchMode -> updateToggleMode()
+    is HideSearch -> hideSearch()
     is UpdateQuery -> updateQuery(event)
   }
 
@@ -34,6 +36,10 @@ internal class SearchViewModel : ViewModel() {
     uiModelChanges.emit { model ->
       model.copy(mode = model.mode.toggle(), query = SearchQuery.Empty)
     }
+  }
+
+  private fun hideSearch() = viewModelScope.launch {
+    uiModelChanges.emit { UiModel(Idle, SearchQuery.Empty) }
   }
 
   private fun updateQuery(event: UpdateQuery) = viewModelScope.launch {
@@ -55,6 +61,7 @@ internal class SearchViewModel : ViewModel() {
 
   sealed class Event {
     object ToggleSearchMode : Event()
+    object HideSearch : Event()
     class UpdateQuery(val query: String) : Event()
   }
 

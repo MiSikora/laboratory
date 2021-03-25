@@ -83,7 +83,7 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
     builder: Builder,
   ) {
     internal val laboratory = builder.laboratory
-    private val featureFactories = builder.featureFactories
+    internal val featureFactories = builder.featureFactories
     internal val deprecation = DeprecationHandler(builder.phenotypeSelector, builder.alignmentSelector)
 
     @Deprecated(
@@ -99,8 +99,6 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
     })
 
     internal val sectionNames = featureFactories.keys
-
-    internal fun factory(sectionName: String) = featureFactories.getValue(sectionName)
 
     internal class Builder : LaboratoryStep, FeatureFactoriesStep, BuildingStep {
       lateinit var laboratory: Laboratory

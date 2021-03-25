@@ -10,25 +10,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.mehow.laboratory.Feature
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlin.time.milliseconds
 
 internal class GroupFragment : Fragment(R.layout.io_mehow_laboratory_feature_group) {
   private val sectionName get() = requireStringArgument(sectionKey)
   private val searchViewModel by activityViewModels<SearchViewModel> { SearchViewModel.Factory }
-  @OptIn(FlowPreview::class) internal val viewModel by viewModels<GroupViewModel> {
-    GroupViewModel.Factory(
-        configuration = LaboratoryActivity.configuration,
-        sectionName = sectionName,
-        searchQueries = searchViewModel.uiModels.debounce(200.milliseconds).map { it.query }
-    )
+  val viewModel by viewModels<InspectorViewModel> {
+    InspectorViewModel.Factory(LaboratoryActivity.configuration, searchViewModel)
   }
   private val featureAdapter = FeatureAdapter(object : FeatureAdapter.Listener {
-    override fun onSelectFeature(feature: Feature<*>) = viewModel.selectFeature(feature)
+    override fun onSelectFeature(feature: Feature<*>) {
+      viewModel.selectFeature(feature)
+    }
 
     override fun onSelectSource(feature: Feature<*>) = viewModel.selectFeature(feature)
   })
@@ -42,8 +36,7 @@ internal class GroupFragment : Fragment(R.layout.io_mehow_laboratory_feature_gro
     observeGroup()
   }
 
-  private fun observeGroup() = viewModel
-      .observeFeatureGroup()
+  private fun observeGroup() = viewModel.sectionFlow(sectionName)
       .onEach { featureAdapter.submitList(it) }
       .launchIn(viewLifecycleOwner.lifecycleScope)
 
