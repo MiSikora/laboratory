@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade to Kotlin `1.4.32`.
+- Upgrade to LifecycleViewModelKtx `2.3.1`.
 
 ## [0.12.0] - 2021-03-21
 
