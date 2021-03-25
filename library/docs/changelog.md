@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade to Kotlin `1.4.32`.
+- Upgrade to FragmentKtx `1.3.2`.
 
 ## [0.12.0] - 2021-03-21
 
@@ -29,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to DataStore `1.0.0-alpha08`.
 - Upgrade to Kotlin `1.4.31`.
 - Upgrade to Wire `3.6.1`.
-- Upgrade FragmentKtx to `1.3.1`.
+- Upgrade to FragmentKtx `1.3.1`.
 
 ## [0.10.0] - 2021-02-18
 
