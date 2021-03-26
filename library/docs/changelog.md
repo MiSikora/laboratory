@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Kotlin `1.4.32`.
 - Upgrade to LifecycleViewmodelKtx `2.3.1`.
 - Upgrade to FragmentKtx `1.3.2`.
+- Upgrade to Wire `3.7.0`.
 
 ## [0.12.0] - 2021-03-21
 
