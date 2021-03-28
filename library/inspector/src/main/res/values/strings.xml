@@ -14,4 +14,5 @@
   <string name="io_mehow_laboratory_close_search">Close search</string>
   <string name="io_mehow_laboratory_feature_supervisor_prefix">"Turned on if "</string>
   <string name="io_mehow_laboratory_feature_supervisor_suffix">" is %1$s"</string>
+  <string name="io_mehow_laboratory_feature_not_found">Feature %1$s is hidden or unavailable</string>
 </resources>
