@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -37,6 +38,9 @@ internal class OptionViewGroup @JvmOverloads constructor(
     return chip.apply {
       text = model.option.name
       isChecked = model.isSelected
+      if (model.supervisedFeatures.isNotEmpty()) {
+        chipIcon = ContextCompat.getDrawable(context, R.drawable.io_mehow_laboratory_supervisor)
+      }
       isActivated = isEnabled
       this.isEnabled = isEnabled
       setOnCheckedChangeListener(createListener(model))
