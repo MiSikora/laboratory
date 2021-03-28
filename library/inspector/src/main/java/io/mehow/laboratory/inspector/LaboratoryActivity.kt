@@ -54,6 +54,7 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   private fun setUpViewPager() {
     val viewPager = findViewById<ViewPager2>(R.id.io_mehow_laboratory_view_pager).apply {
       adapter = SectionAdapter(this@LaboratoryActivity, sectionNames)
+      offscreenPageLimit = configuration.offscreenSectionCount
       disableScrollEffect()
     }
     observeNavigationEvents(viewPager)
@@ -98,7 +99,12 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   ) {
     internal val laboratory = builder.laboratory
     internal val featureFactories = builder.featureFactories
+    internal val sectionNames = featureFactories.keys
     internal val deprecation = DeprecationHandler(builder.phenotypeSelector, builder.alignmentSelector)
+    internal val offscreenSectionCount = when (val behavior = builder.offscreenSectionsBehavior) {
+      is Limited -> behavior.limit
+      is Unlimited -> featureFactories.size
+    }
 
     @Deprecated(
         message = "This method will be removed in 1.0.0. Use 'Configuration.create()' instead.",
@@ -112,7 +118,21 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
       this.featureFactories = featureFactories
     })
 
-    internal val sectionNames = featureFactories.keys
+    /**
+     * Behavior of feature sections that are not currently displayed.
+     */
+    public sealed class OffscreenSectionsBehavior {
+      /**
+       * All sections are always kept in memory. This makes navigation smoother but might result in slower load time
+       * of the inspector.
+       */
+      public object Unlimited : OffscreenSectionsBehavior()
+
+      /**
+       * Number of sections is limited.
+       */
+      public class Limited(public val limit: Int) : OffscreenSectionsBehavior()
+    }
 
     internal class Builder : LaboratoryStep, FeatureFactoriesStep, BuildingStep {
       lateinit var laboratory: Laboratory
@@ -137,6 +157,12 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
 
       override fun deprecationAlignmentSelector(selector: DeprecationAlignment.Selector): BuildingStep = apply {
         this.alignmentSelector = selector
+      }
+
+      internal var offscreenSectionsBehavior: OffscreenSectionsBehavior = Unlimited
+
+      override fun offscreenSectionBehavior(behavior: OffscreenSectionsBehavior): BuildingStep = apply {
+        this.offscreenSectionsBehavior = behavior
       }
 
       override fun build(): Configuration = Configuration(this)
@@ -192,6 +218,11 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
        * Sets how deprecated feature flags will be sorted in a displayed group.
        */
       public fun deprecationAlignmentSelector(selector: DeprecationAlignment.Selector): BuildingStep
+
+      /**
+       * Sets how many offscreen feature sections will be kept in memory.
+       */
+      public fun offscreenSectionBehavior(behavior: OffscreenSectionsBehavior): BuildingStep
 
       /**
        * Creates a new [Configuration] with provided parameters.
