@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.1] - 2021-03-28
+
 ### Added
 - Indication that an option is a supervisor. If an option supervises features it has an eye icon next to it. List of supervised features is available after long pressing a chip.
 - Navigation from supervised feature to supervisor.
@@ -310,7 +312,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.12.0...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.12.1...HEAD
+[0.12.1]: https://github.com/MiSikora/laboratory/releases/tag/0.12.1
 [0.12.0]: https://github.com/MiSikora/laboratory/releases/tag/0.12.0
 [0.11.0]: https://github.com/MiSikora/laboratory/releases/tag/0.11.0
 [0.10.0]: https://github.com/MiSikora/laboratory/releases/tag/0.10.0
