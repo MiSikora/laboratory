@@ -41,7 +41,7 @@ internal class InspectorViewModel(
   featureFactories: Map<String, FeatureFactory>,
   deprecationHandler: DeprecationHandler,
 ) : ViewModel() {
-  private val metadataFactory = FeatureMetadata.Factory(deprecationHandler)
+  private val metadataFactory = FeatureMetadata.Factory(deprecationHandler, featureFactories)
 
   private val initiatedSearchQueries = flow {
     emit(SearchQuery.Empty)
@@ -83,13 +83,14 @@ internal class InspectorViewModel(
 
   private class FeatureMetadata(
     private val feature: Class<Feature<*>>,
+    private val allFeatures: List<Class<Feature<*>>>,
     private val deprecationHandler: DeprecationHandler,
   ) {
     private val simpleReadableName = feature.name.substringAfterLast('.').replace('$', '.')
 
     private val options = feature.enumConstants!!.toList<Feature<*>>()
 
-    private val sourceMetadata = feature.source?.let { FeatureMetadata(it, deprecationHandler) }
+    private val sourceMetadata = feature.source?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
 
     private val deprecationLevel = feature.annotations
         .filterIsInstance<Deprecated>()
@@ -121,13 +122,21 @@ internal class InspectorViewModel(
     }
 
     private fun observeOptions(laboratory: Laboratory) = laboratory.observe(feature).map { selectedFeature ->
-      options.map { option -> OptionUiModel(option, isSelected = selectedFeature == option) }
+      options.map { option ->
+        val supervisedFeatures = allFeatures.filter { it.supervisorOption == option }
+        OptionUiModel(option, isSelected = selectedFeature == option, supervisedFeatures.toList())
+      }
     }
 
-    class Factory(private val deprecationHandler: DeprecationHandler) {
+    class Factory(
+      private val deprecationHandler: DeprecationHandler,
+      private val featureFactories: Map<String, FeatureFactory>,
+    ) {
+      private val allFeatures by lazy { featureFactories.values.flatMap { it.create() } }
+
       fun create(feature: Class<Feature<*>>) = feature
           .takeUnless { it.enumConstants.isNullOrEmpty() }
-          ?.let { FeatureMetadata(it, deprecationHandler) }
+          ?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
           ?.takeIf { it.deprecationPhenotype != DeprecationPhenotype.Hide }
     }
   }

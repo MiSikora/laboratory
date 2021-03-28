@@ -8,5 +8,7 @@
     android:textAppearance="?textAppearanceBody1"
     android:textColor="@color/io_mehow_laboratory_chip_text"
     app:chipBackgroundColor="@color/io_mehow_laboratory_chip_background"
+    app:chipIconTint="?colorPrimary"
+    app:chipIconVisible="true"
     style="@style/Widget.MaterialComponents.Chip.Choice"
     />
