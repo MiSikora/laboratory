@@ -132,7 +132,11 @@ internal class InspectorViewModel(
       private val deprecationHandler: DeprecationHandler,
       private val featureFactories: Map<String, FeatureFactory>,
     ) {
-      private val allFeatures by lazy { featureFactories.values.flatMap { it.create() } }
+      private val allFeatures by lazy {
+        featureFactories.values
+            .flatMap { it.create() }
+            .filter { it.enumConstants.isNotEmpty() }
+      }
 
       fun create(feature: Class<Feature<*>>) = feature
           .takeUnless { it.enumConstants.isNullOrEmpty() }

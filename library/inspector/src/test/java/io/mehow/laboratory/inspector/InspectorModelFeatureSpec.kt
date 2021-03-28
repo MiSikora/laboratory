@@ -188,6 +188,44 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
         cancel()
       }
     }
+
+    it("includes supervised features to options") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
+
+      viewModel.supervisedFeaturesFlow().first() shouldContainExactly listOf(
+          Child.A to emptyList(),
+          Child.B to emptyList(),
+          Parent.Enabled to listOf(Child::class.java),
+          Parent.Disabled to emptyList(),
+      )
+    }
+
+    it("includes supervised features to options from different sections") {
+      val parentFactory = object : FeatureFactory {
+        override fun create(): Set<Class<Feature<*>>> {
+          @Suppress("UNCHECKED_CAST")
+          return setOf(Parent::class.java) as Set<Class<Feature<*>>>
+        }
+      }
+      val childFactory = object : FeatureFactory {
+        override fun create(): Set<Class<Feature<*>>> {
+          @Suppress("UNCHECKED_CAST")
+          return setOf(Child::class.java) as Set<Class<Feature<*>>>
+        }
+      }
+
+      val viewModel = InspectorViewModel(
+          Laboratory.inMemory(),
+          searchQueries = emptyFlow(),
+          mapOf("Parent" to parentFactory, "Child" to childFactory),
+          DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
+      )
+
+      viewModel.supervisedFeaturesFlow("Parent").first() shouldContainExactly listOf(
+          Parent.Enabled to listOf(Child::class.java),
+          Parent.Disabled to emptyList(),
+      )
+    }
   }
 })
 

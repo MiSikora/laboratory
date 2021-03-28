@@ -49,6 +49,6 @@ internal class SourceViewGroup @JvmOverloads constructor(
   }
 
   interface OnSelectSourceListener {
-    fun onSelectSource(feature: Feature<*>)
+    fun onSelectSource(option: Feature<*>)
   }
 }

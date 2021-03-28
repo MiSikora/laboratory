@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Indication that an option is a supervisor. If an option supervises features it has an eye icon next to it. List of supervised features is available after long pressing a chip.
 - Navigation from supervised feature to supervisor.
+- Navigation from supervisor to supervised feature.
 - Amount of offscreen feature sections in inspector can be controlled with `LaboratoryActivity.Configuration.OffscreenSectionsBehavior`. Default is unlimited.
 
 ### Changed

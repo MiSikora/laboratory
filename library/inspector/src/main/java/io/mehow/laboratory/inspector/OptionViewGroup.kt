@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.CompoundButton
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.google.android.material.chip.Chip
@@ -17,13 +18,13 @@ internal class OptionViewGroup @JvmOverloads constructor(
   defStyle: Int = MaterialR.attr.chipGroupStyle,
 ) : ChipGroup(context, attrs, defStyle) {
   private val inflater = LayoutInflater.from(context)
-  private var listener: OnSelectFeatureListener? = null
+  private var listener: OptionGroupListener? = null
 
   init {
     isSelectionRequired = true
   }
 
-  fun setOnSelectFeatureListener(listener: OnSelectFeatureListener?) {
+  fun setOnSelectFeatureListener(listener: OptionGroupListener?) {
     this.listener = listener
   }
 
@@ -40,6 +41,7 @@ internal class OptionViewGroup @JvmOverloads constructor(
       isChecked = model.isSelected
       if (model.supervisedFeatures.isNotEmpty()) {
         chipIcon = ContextCompat.getDrawable(context, R.drawable.io_mehow_laboratory_supervisor)
+        setOnLongClickListener { showSupervisedFeaturesMenu(this, model.supervisedFeatures) }
       }
       isActivated = isEnabled
       this.isEnabled = isEnabled
@@ -50,7 +52,7 @@ internal class OptionViewGroup @JvmOverloads constructor(
   private fun createListener(model: OptionUiModel) = CompoundButton.OnCheckedChangeListener { chip, isChecked ->
     if (isChecked) {
       (chip as Chip).deselectOtherChips()
-      listener?.onSelectFeature(model.option)
+      listener?.onSelectOption(model.option)
     }
   }
 
@@ -63,7 +65,22 @@ internal class OptionViewGroup @JvmOverloads constructor(
 
   private fun removeOnCheckedChangeListener(chip: Chip) = chip.setOnCheckedChangeListener(null)
 
-  interface OnSelectFeatureListener {
-    fun onSelectFeature(feature: Feature<*>)
+  private fun showSupervisedFeaturesMenu(anchor: Chip, features: List<Class<Feature<*>>>): Boolean {
+    PopupMenu(context, anchor).apply {
+      features.forEachIndexed { index, feature ->
+        menu.add(0, index, index, feature.simpleName)
+      }
+      setOnMenuItemClickListener {
+        listener?.onSelectSupervisedFeature(features[it.order])
+        true
+      }
+    }.show()
+    return true
+  }
+
+  interface OptionGroupListener {
+    fun onSelectOption(option: Feature<*>)
+
+    fun onSelectSupervisedFeature(feature: Class<Feature<*>>)
   }
 }
