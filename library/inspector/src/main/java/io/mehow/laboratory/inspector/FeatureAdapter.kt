@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import io.mehow.laboratory.Feature
-import io.mehow.laboratory.inspector.OptionViewGroup.OnSelectFeatureListener
+import io.mehow.laboratory.inspector.OptionViewGroup.OptionGroupListener
 import io.mehow.laboratory.inspector.SourceViewGroup.OnSelectSourceListener
 
 internal class FeatureAdapter(
@@ -29,8 +29,10 @@ internal class FeatureAdapter(
     override fun getChangePayload(old: FeatureUiModel, new: FeatureUiModel) = Unit
   }
 
-  interface Listener : OnSelectFeatureListener, OnSelectSourceListener {
-    @JvmDefault override fun onSelectSource(feature: Feature<*>) = onSelectFeature(feature)
+  interface Listener : OptionGroupListener, OnSelectSourceListener {
+    @JvmDefault override fun onSelectSource(option: Feature<*>) = onSelectOption(option)
+
+    @JvmDefault override fun onSelectSupervisedFeature(feature: Class<Feature<*>>) = onGoToFeature(feature)
 
     fun onGoToFeature(feature: Class<Feature<*>>)
   }
