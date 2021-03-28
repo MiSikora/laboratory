@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Navigation from supervised feature to supervisor.
+
 ### Changed
 - Upgrade to Kotlin `1.4.32`.
 - Upgrade to LifecycleViewmodelKtx `2.3.1`.

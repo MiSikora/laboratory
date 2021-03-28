@@ -14,17 +14,23 @@ import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.time.milliseconds
@@ -42,7 +48,7 @@ internal class InspectorViewModel(
     emitAll(searchQueries)
   }.distinctUntilChanged()
 
-  private val groupFlows = featureFactories.mapValues { (_, featureFactory) ->
+  private val sectionFlows = featureFactories.mapValues { (_, featureFactory) ->
     flow {
       val groups = withContext(Dispatchers.Default) {
         featureFactory.create()
@@ -57,11 +63,23 @@ internal class InspectorViewModel(
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
   }
 
-  fun sectionFlow(sectionName: String) = groupFlows[sectionName] ?: emptyFlow()
+  fun sectionFlow(sectionName: String) = sectionFlows[sectionName] ?: emptyFlow()
 
   fun selectFeature(feature: Feature<*>) {
     viewModelScope.launch(start = UNDISPATCHED) { laboratory.setOption(feature) }
   }
+
+  private val mutableNavigationFlow = MutableSharedFlow<FeatureCoordinates>()
+
+  val featureCoordinatesFlow: Flow<FeatureCoordinates> get() = mutableNavigationFlow
+
+  suspend fun goTo(feature: Class<Feature<*>>) = sectionFlows.values.asFlow().withIndex()
+      .mapNotNull { (sectionIndex, sectionFlow) ->
+        val listIndex = sectionFlow.first().map(FeatureUiModel::type).indexOf(feature)
+        if (listIndex == -1) null else FeatureCoordinates(sectionIndex, listIndex)
+      }
+      .firstOrNull()
+      ?.also { mutableNavigationFlow.emit(it) }
 
   private class FeatureMetadata(
     private val feature: Class<Feature<*>>,

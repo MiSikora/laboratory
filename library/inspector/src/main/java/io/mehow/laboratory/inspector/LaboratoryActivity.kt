@@ -17,6 +17,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
+import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Limited
+import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Unlimited
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -26,7 +28,11 @@ import kotlinx.coroutines.launch
  */
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
 public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory_inspector) {
+  private val sectionNames = configuration.sectionNames.toList()
   private val searchViewModel by viewModels<SearchViewModel> { SearchViewModel.Factory }
+  private val inspectorViewModel by viewModels<InspectorViewModel> {
+    InspectorViewModel.Factory(configuration, searchViewModel)
+  }
 
   override fun onCreate(inState: Bundle?) {
     super.onCreate(inState)
@@ -46,11 +52,12 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   }
 
   private fun setUpViewPager() {
-    val sectionNames = configuration.sectionNames.toList()
     val viewPager = findViewById<ViewPager2>(R.id.io_mehow_laboratory_view_pager).apply {
-      adapter = GroupAdapter(this@LaboratoryActivity, sectionNames)
+      adapter = SectionAdapter(this@LaboratoryActivity, sectionNames)
       disableScrollEffect()
     }
+    observeNavigationEvents(viewPager)
+
     if (sectionNames.size <= 1) return
     val tabLayout = findViewById<TabLayout>(R.id.io_mehow_laboratory_tab_layout).apply {
       isVisible = true
@@ -59,6 +66,13 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
       tab.text = sectionNames[position]
     }.attach()
   }
+
+  private fun observeNavigationEvents(viewPager: ViewPager2) = inspectorViewModel.featureCoordinatesFlow
+      .onEach { (sectionIndex, featureIndex) ->
+        viewPager.currentItem = sectionIndex
+        (viewPager.adapter as SectionAdapter).awaitSectionFragment(sectionNames[sectionIndex]).scrollTo(featureIndex)
+      }
+      .launchIn(lifecycleScope)
 
   private fun resetFeatureFlags() = lifecycleScope.launch {
     val isCleared = configuration.laboratory.clear()

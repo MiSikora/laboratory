@@ -42,6 +42,7 @@ public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity
 	public abstract fun build ()Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration;
 	public abstract fun deprecationAlignmentSelector (Lio/mehow/laboratory/inspector/DeprecationAlignment$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
 	public abstract fun deprecationPhenotypeSelector (Lio/mehow/laboratory/inspector/DeprecationPhenotype$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
+	public abstract fun offscreenSectionBehavior (Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
 }
 
 public final class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$Companion {
@@ -55,5 +56,17 @@ public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity
 
 public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$LaboratoryStep {
 	public abstract fun laboratory (Lio/mehow/laboratory/Laboratory;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$FeatureFactoriesStep;
+}
+
+public abstract class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior {
+}
+
+public final class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior$Limited : io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior {
+	public fun <init> (I)V
+	public final fun getLimit ()I
+}
+
+public final class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior$Unlimited : io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior {
+	public static final field INSTANCE Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior$Unlimited;
 }
 
