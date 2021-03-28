@@ -19,6 +19,7 @@ import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Limited
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Unlimited
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -71,9 +72,17 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   private fun observeNavigationEvents(viewPager: ViewPager2) = inspectorViewModel.featureCoordinatesFlow
       .onEach { (sectionIndex, featureIndex) ->
         viewPager.currentItem = sectionIndex
-        (viewPager.adapter as SectionAdapter).awaitSectionFragment(sectionNames[sectionIndex]).scrollTo(featureIndex)
+        awaitSectionFragment(sectionNames[sectionIndex]).scrollTo(featureIndex)
       }
       .launchIn(lifecycleScope)
+
+  private suspend fun awaitSectionFragment(sectionName: String): SectionFragment = supportFragmentManager.fragments
+      .filterIsInstance<SectionFragment>()
+      .firstOrNull { it.sectionName == sectionName }
+      ?: run {
+        delay(100) // ¯\_(ツ)_/¯
+        awaitSectionFragment(sectionName)
+      }
 
   private fun resetFeatureFlags() = lifecycleScope.launch {
     val isCleared = configuration.laboratory.clear()

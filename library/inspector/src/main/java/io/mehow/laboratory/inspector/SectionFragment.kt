@@ -15,11 +15,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 internal class SectionFragment : Fragment(R.layout.io_mehow_laboratory_feature_group) {
+  val sectionName get() = requireStringArgument(sectionKey)
   val inspectorViewModel by activityViewModels<InspectorViewModel> {
     InspectorViewModel.Factory(LaboratoryActivity.configuration, searchViewModel)
   }
   private val searchViewModel by activityViewModels<SearchViewModel> { SearchViewModel.Factory }
-  private val sectionName get() = requireStringArgument(sectionKey)
 
   private lateinit var layoutManager: SmoothScrollingLinearLayoutManager
   private val featureAdapter = FeatureAdapter(object : FeatureAdapter.Listener {
