@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
 - Upgrade to KotlinPoet `1.8.0`.
 
 ## [0.12.1] - 2021-03-28
