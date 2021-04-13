@@ -81,7 +81,7 @@ public data class FeaturesCollision(
 
   public companion object {
     public fun fromFeatures(models: Nel<FeatureFlagModel>): FeaturesCollision {
-      return FeaturesCollision(models.map { @Kt41142 it.reflectionName })
+      return FeaturesCollision(models.map(FeatureFlagModel::reflectionName))
     }
   }
 }

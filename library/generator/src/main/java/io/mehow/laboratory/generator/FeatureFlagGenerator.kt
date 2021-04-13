@@ -40,11 +40,11 @@ internal class FeatureFlagGenerator(
       }
 
   private val defaultOptionProperty = feature.options.toList()
-      .single { @Kt41142 it.isDefault }
+      .single(FeatureFlagOption::isDefault)
       .let { option ->
         PropertySpec
             .builder(defaultOptionPropertyName, feature.className, OVERRIDE)
-            .apply { suppressDeprecation?.let { @Kt41142 addAnnotation(it) } }
+            .apply { suppressDeprecation?.let { addAnnotation(it) } }
             .getter(FunSpec.getterBuilder().addCode("return %L", option.name).build())
             .build()
       }
@@ -61,7 +61,7 @@ internal class FeatureFlagGenerator(
         .build()
   }
 
-  private val description: String? = feature.description.takeIf { @Kt41142 it.isNotBlank() }
+  private val description: String? = feature.description.takeIf(String::isNotBlank)
 
   private val kdoc = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
 
@@ -80,7 +80,7 @@ internal class FeatureFlagGenerator(
   }
 
   private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
-      .apply { deprecated?.let { @Kt41142 addAnnotation(it) } }
+      .apply { deprecated?.let { addAnnotation(it) } }
       .addModifiers(feature.visibility.modifier)
       .apply {
         var parametrizedType: TypeName = feature.className
@@ -101,9 +101,9 @@ internal class FeatureFlagGenerator(
           addProperty(sourceWithOverride)
         }
       }
-      .apply { kdoc?.let { @Kt41142 addKdoc(it) } }
-      .apply { descriptionProperty?.let { @Kt41142 addProperty(it) } }
-      .apply { supervisorOptionProperty?.let { @Kt41142 addProperty(it) } }
+      .apply { kdoc?.let { addKdoc(it) } }
+      .apply { descriptionProperty?.let { addProperty(it) } }
+      .apply { supervisorOptionProperty?.let { addProperty(it) } }
       .build()
 
   private val fileSpec = FileSpec.builder(feature.packageName, feature.name)

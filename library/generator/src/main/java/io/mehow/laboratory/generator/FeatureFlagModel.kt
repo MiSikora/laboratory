@@ -15,7 +15,7 @@ import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
 @Suppress("LongParameterList") // All properties are required for code generation.
-public class FeatureFlagModel private constructor(
+public class FeatureFlagModel internal constructor(
   internal val visibility: Visibility,
   internal val className: ClassName,
   internal val options: Nel<FeatureFlagOption>,
@@ -92,15 +92,15 @@ public class FeatureFlagModel private constructor(
     private fun validateOptions(): Either<GenerationFailure, Nel<FeatureFlagOption>> {
       return Nel.fromList(options)
           .toEither { NoFeatureValues(fqcn) }
-          .flatMap { @Kt41142 validateOptionNames(it) }
-          .flatMap { @Kt41142 validateDuplicates(it) }
-          .flatMap { @Kt41142 validateSingleDefault(it) }
+          .flatMap(::validateOptionNames)
+          .flatMap(::validateDuplicates)
+          .flatMap(::validateSingleDefault)
     }
 
     private fun validateOptionNames(
       options: Nel<FeatureFlagOption>,
     ): Either<GenerationFailure, Nel<FeatureFlagOption>> {
-      val invalidOptions = options.toList().map { @Kt41142 it.name }.filterNot(optionRegex::matches)
+      val invalidOptions = options.toList().map(FeatureFlagOption::name).filterNot(optionRegex::matches)
       return Nel.fromList(invalidOptions)
           .toEither { options }
           .swap()
@@ -110,7 +110,7 @@ public class FeatureFlagModel private constructor(
     private fun validateDuplicates(
       options: Nel<FeatureFlagOption>,
     ): Either<GenerationFailure, Nel<FeatureFlagOption>> {
-      val duplicates = options.toList().map { @Kt41142 it.name }.findDuplicates()
+      val duplicates = options.toList().map(FeatureFlagOption::name).findDuplicates()
       return Nel.fromList(duplicates.toList())
           .toEither { options }
           .swap()
@@ -121,9 +121,9 @@ public class FeatureFlagModel private constructor(
       options: Nel<FeatureFlagOption>,
     ): Either<GenerationFailure, Nel<FeatureFlagOption>> {
       val defaultProblems = options.toList()
-          .filter { @Kt41142 it.isDefault }
+          .filter(FeatureFlagOption::isDefault)
           .takeIf { it.size != 1 }
-          ?.map { @Kt41142 it.name }
+          ?.map(FeatureFlagOption::name)
       return if (defaultProblems == null) options.right()
       else Nel.fromList(defaultProblems)
           .map { MultipleFeatureDefaultValues(it, fqcn) }
@@ -147,7 +147,7 @@ public class FeatureFlagModel private constructor(
     }
 
     private fun validateSupervisor(): Either<GenerationFailure, Supervisor?> = supervisor?.build()
-        ?.flatMap { @Kt41142 validateSelfSupervision(it) }
+        ?.flatMap(::validateSelfSupervision)
         ?: Either.right(null)
 
     private fun validateSelfSupervision(
@@ -167,14 +167,14 @@ public class FeatureFlagModel private constructor(
 }
 
 public fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
-  return traverse(Either.applicative()) { @Kt41142 it.build() }
+  return traverse(Either.applicative(), FeatureFlagModel.Builder::build)
       .map { listKind -> listKind.fix() }
-      .flatMap { models -> models.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) } }
+      .flatMap { models -> models.checkForDuplicates(FeaturesCollision::fromFeatures) }
 }
 
-public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull { @Kt41142 it.source }
-    .map { @Kt41142 it.options }
+public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull(FeatureFlagModel::source)
+    .map(FeatureFlagModel::options)
     .flatMap { it.toList() }
-    .map { @Kt41142 it.name }
+    .map(FeatureFlagOption::name)
 
-public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> = mapNotNull { @Kt41142 it.source }
+public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> = mapNotNull(FeatureFlagModel::source)

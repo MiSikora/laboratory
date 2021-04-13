@@ -5,7 +5,7 @@ import arrow.core.extensions.fx
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
-public class FeatureFactoryModel private constructor(
+public class FeatureFactoryModel internal constructor(
   internal val visibility: Visibility,
   internal val className: ClassName,
   internal val features: List<FeatureFlagModel>,
@@ -29,7 +29,7 @@ public class FeatureFactoryModel private constructor(
       return Either.fx {
         val packageName = !validatePackageName(fqcn)
         val simpleName = !validateName(fqcn, name)
-        val features = !features.checkForDuplicates { @Kt41142 FeaturesCollision.fromFeatures(it) }
+        val features = !features.checkForDuplicates(FeaturesCollision::fromFeatures)
         FeatureFactoryModel(visibility, ClassName(packageName, simpleName), features)
       }
     }
