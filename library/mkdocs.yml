@@ -42,10 +42,10 @@ nav:
   - 'QA module': qa-module.md
   - 'Gradle plugin': gradle-plugin.md
   - 'API':
-      - 'laboratory': api/laboratory/laboratory/index.html
-      - 'gradle-plugin': api/gradle-plugin/gradle-plugin/index.html
-      - 'data-store': api/data-store/data-store/index.html
-      - 'inspector': api/inspector/inspector/index.html
-      - 'shared-preferences': api/shared-preferences/shared-preferences/index.html
+      - 'laboratory': api/laboratory/index.html
+      - 'gradle-plugin': api/gradle-plugin/index.html
+      - 'data-store': api/data-store/index.html
+      - 'inspector': api/inspector/index.html
+      - 'shared-preferences': api/shared-preferences/index.html
   - 'Changelog': changelog.md
   - 'Releasing': releasing.md
