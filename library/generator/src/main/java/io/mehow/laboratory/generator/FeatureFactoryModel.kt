@@ -1,7 +1,7 @@
 package io.mehow.laboratory.generator
 
 import arrow.core.Either
-import arrow.core.extensions.fx
+import arrow.core.computations.either
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
@@ -26,29 +26,25 @@ public class FeatureFactoryModel internal constructor(
   ) {
     public fun build(name: String): Either<GenerationFailure, FeatureFactoryModel> {
       val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
-      return Either.fx {
-        val packageName = !validatePackageName(fqcn)
-        val simpleName = !validateName(fqcn, name)
-        val features = !features.checkForDuplicates(FeaturesCollision::fromFeatures)
+      return either.eager {
+        val packageName = validatePackageName(fqcn).bind()
+        val simpleName = validateName(fqcn, name).bind()
+        val features = features.checkForDuplicates(FeaturesCollision::fromFeatures).bind()
         FeatureFactoryModel(visibility, ClassName(packageName, simpleName), features)
       }
     }
 
-    private fun validatePackageName(fqcn: String): Either<GenerationFailure, String> {
-      return Either.cond(
-          test = packageName.isEmpty() || packageName.matches(packageNameRegex),
-          ifTrue = { packageName },
-          ifFalse = { InvalidPackageName(fqcn) }
-      )
-    }
+    private fun validatePackageName(fqcn: String) = Either.conditionally(
+        packageName.isEmpty() || packageName.matches(packageNameRegex),
+        { InvalidPackageName(fqcn) },
+        { packageName },
+    )
 
-    private fun validateName(fqcn: String, name: String): Either<GenerationFailure, String> {
-      return Either.cond(
-          test = name.matches(nameRegex),
-          ifTrue = { name },
-          ifFalse = { InvalidFactoryName(name, fqcn) }
-      )
-    }
+    private fun validateName(fqcn: String, name: String) = Either.conditionally(
+        name.matches(nameRegex),
+        { InvalidFactoryName(name, fqcn) },
+        { name },
+    )
 
     private companion object {
       val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()

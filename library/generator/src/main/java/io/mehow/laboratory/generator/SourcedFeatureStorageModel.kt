@@ -1,11 +1,11 @@
 package io.mehow.laboratory.generator
 
 import arrow.core.Either
-import arrow.core.extensions.fx
+import arrow.core.computations.either
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
-public class SourcedFeatureStorageModel private constructor(
+public class SourcedFeatureStorageModel internal constructor(
   internal val visibility: Visibility,
   className: ClassName,
   internal val sourceNames: List<String>,
@@ -27,20 +27,16 @@ public class SourcedFeatureStorageModel private constructor(
     internal val name = "SourcedGeneratedFeatureStorage"
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
-    public fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> {
-      return Either.fx {
-        val packageName = !validatePackageName()
-        SourcedFeatureStorageModel(visibility, ClassName(packageName, name), sourceNames)
-      }
+    public fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> = either.eager {
+      val packageName = validatePackageName().bind()
+      SourcedFeatureStorageModel(visibility, ClassName(packageName, name), sourceNames)
     }
 
-    private fun validatePackageName(): Either<GenerationFailure, String> {
-      return Either.cond(
-          test = packageName.isEmpty() || packageName.matches(packageNameRegex),
-          ifTrue = { packageName },
-          ifFalse = { InvalidPackageName(fqcn) }
-      )
-    }
+    private fun validatePackageName() = Either.conditionally(
+        packageName.isEmpty() || packageName.matches(packageNameRegex),
+        { InvalidPackageName(fqcn) },
+        { packageName },
+    )
 
     private companion object {
       val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()

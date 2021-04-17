@@ -24,17 +24,17 @@ dependencies {
 }
 ```
 
-Enable Java 8 support.
+Enable Java 11 support.
 
 ```groovy
 android {
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_11
+    targetCompatibility JavaVersion.VERSION_11
   }
 
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "11"
     freeCompilerArgs += "-Xjvm-default=enable"
   }
 }

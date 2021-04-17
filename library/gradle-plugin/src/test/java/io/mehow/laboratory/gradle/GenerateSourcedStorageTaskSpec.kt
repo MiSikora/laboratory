@@ -1,7 +1,7 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.NonEmptyList
 import arrow.core.nel
+import arrow.core.nonEmptyListOf
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
@@ -215,7 +215,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidFeatureValues(NonEmptyList("!!!, ???"), "Feature").message
+    result.output shouldContain InvalidFeatureValues(nonEmptyListOf("!!!, ???"), "Feature").message
 
     val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
     feature.shouldNotExist()

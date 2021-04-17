@@ -2,6 +2,7 @@ package io.mehow.laboratory.gradle
 
 import arrow.core.Nel
 import arrow.core.nel
+import arrow.core.nonEmptyListOf
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
@@ -434,7 +435,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidFeatureValues(Nel("!!!, ???"), "Feature").message
+    result.output shouldContain InvalidFeatureValues(nonEmptyListOf("!!!, ???"), "Feature").message
 
     val feature = fixture.featureFile("Feature")
     feature.shouldNotExist()

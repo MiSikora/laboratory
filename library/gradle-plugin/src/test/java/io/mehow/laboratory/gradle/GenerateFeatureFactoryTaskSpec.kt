@@ -1,7 +1,7 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.NonEmptyList
 import arrow.core.nel
+import arrow.core.nonEmptyListOf
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
@@ -16,7 +16,6 @@ import io.mehow.laboratory.generator.NoFeatureValues
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import java.io.File
 
 internal class GenerateFeatureFactoryTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
@@ -168,7 +167,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateFeatureFactory")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidFeatureValues(NonEmptyList("!!!, ???"), "Feature").message
+    result.output shouldContain InvalidFeatureValues(nonEmptyListOf("!!!, ???"), "Feature").message
 
     val feature = fixture.featureFactoryFile("GeneratedFeatureFactory")
     feature.shouldNotExist()

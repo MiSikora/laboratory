@@ -55,8 +55,10 @@ ext.libs = [
     "kotest": [
         "runnerJunit5": "io.kotest:kotest-runner-junit5-jvm:${versions.kotest}",
         "assertions": "io.kotest:kotest-assertions-core-jvm:${versions.kotest}",
-        "assertionsArrow": "io.kotest:kotest-assertions-arrow:${versions.kotest}",
         "property": "io.kotest:kotest-property-jvm:${versions.kotest}",
+        "extensions": [
+            "assertionsArrow": "io.kotest.extensions:kotest-assertions-arrow:1.0.2",
+        ],
     ],
     "hyperion": [
         "core": "com.willowtreeapps.hyperion:hyperion-core:${versions.hyperion}",
@@ -78,7 +80,7 @@ ext.libs = [
         "gradlePluginId": "com.github.ben-manes.versions",
     ],
     "kotlinPoet": "com.squareup:kotlinpoet:1.8.0",
-    "arrow": "io.arrow-kt:arrow-core:0.10.5",
+    "arrow": "io.arrow-kt:arrow-core:0.13.1",
     "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:3.7.0",
     "turbine": "app.cash.turbine:turbine:0.4.1",
     "kyrie": "com.github.alexjlockwood:kyrie:0.2.1",

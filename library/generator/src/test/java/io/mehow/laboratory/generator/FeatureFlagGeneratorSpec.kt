@@ -1,9 +1,9 @@
 package io.mehow.laboratory.generator
 
-import arrow.core.Nel
 import arrow.core.getOrElse
 import arrow.core.identity
 import arrow.core.nel
+import arrow.core.nonEmptyListOf
 import io.kotest.assertions.arrow.either.shouldBeLeft
 import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.DescribeSpec
@@ -118,7 +118,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       it("cannot have blank names") {
         val blanks = Arb.stringPattern("([ ]{0,10})")
         checkAll(blanks, blanks, blanks) { optionA, optionB, optionC ->
-          val blankNames = Nel(optionA, optionB, optionC)
+          val blankNames = nonEmptyListOf(optionA, optionB, optionC)
           val builder = featureBuilder.copy(options = blankNames.toList().map(::FeatureFlagOption))
 
           val result = builder.build()
@@ -167,7 +167,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
 
           val result = builder.build()
 
-          result shouldBeLeft FeatureValuesCollision(Nel(name, nameC), builder.fqcn)
+          result shouldBeLeft FeatureValuesCollision(nonEmptyListOf(name, nameC), builder.fqcn)
         }
       }
     }
@@ -235,7 +235,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           )
           val result = builder.build()
 
-          result shouldBeLeft MultipleFeatureDefaultValues(Nel(first, third), builder.fqcn)
+          result shouldBeLeft MultipleFeatureDefaultValues(nonEmptyListOf(first, third), builder.fqcn)
         }
       }
 
@@ -374,7 +374,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           )
           val result = builder.build()
 
-          result shouldBeLeft MultipleFeatureDefaultValues(Nel(first, third), "${builder.fqcn}.Source")
+          result shouldBeLeft MultipleFeatureDefaultValues(nonEmptyListOf(first, third), "${builder.fqcn}.Source")
         }
       }
 

@@ -13,7 +13,6 @@ public final class io/mehow/laboratory/generator/Deprecation {
 }
 
 public final class io/mehow/laboratory/generator/FeatureFactoryModel {
-	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun generate (Ljava/lang/String;Ljava/io/File;)Ljava/io/File;
 }
 
@@ -28,7 +27,6 @@ public final class io/mehow/laboratory/generator/FeatureFactoryModel$Builder {
 }
 
 public final class io/mehow/laboratory/generator/FeatureFlagModel {
-	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Lcom/squareup/kotlinpoet/ClassName;Larrow/core/NonEmptyList;Lio/mehow/laboratory/generator/FeatureFlagModel;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Lio/mehow/laboratory/generator/Supervisor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun generate (Ljava/io/File;)Ljava/io/File;
 	public fun hashCode ()I
@@ -186,7 +184,6 @@ public final class io/mehow/laboratory/generator/SelfSupervision : io/mehow/labo
 }
 
 public final class io/mehow/laboratory/generator/SourcedFeatureStorageModel {
-	public synthetic fun <init> (Lio/mehow/laboratory/generator/Visibility;Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun generate (Ljava/io/File;)Ljava/io/File;
 }
 
@@ -201,7 +198,6 @@ public final class io/mehow/laboratory/generator/SourcedFeatureStorageModel$Buil
 }
 
 public final class io/mehow/laboratory/generator/Supervisor {
-	public synthetic fun <init> (Lio/mehow/laboratory/generator/FeatureFlagModel;Lio/mehow/laboratory/generator/FeatureFlagOption;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class io/mehow/laboratory/generator/Supervisor$Builder {

@@ -2,15 +2,12 @@ package io.mehow.laboratory.generator
 
 import arrow.core.Either
 import arrow.core.Nel
-import arrow.core.extensions.either.applicative.applicative
-import arrow.core.extensions.either.applicative.map
-import arrow.core.extensions.fx
-import arrow.core.extensions.list.traverse.traverse
-import arrow.core.fix
+import arrow.core.computations.either
 import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import arrow.core.traverseEither
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
@@ -52,41 +49,35 @@ public class FeatureFlagModel internal constructor(
   ) {
     internal val fqcn = ClassName(packageName, names).canonicalName
 
-    public fun build(): Either<GenerationFailure, FeatureFlagModel> {
-      return Either.fx {
-        val packageName = !validatePackageName()
-        val names = !validateName()
-        val options = !validateOptions()
-        val nestedSource = createNestedSource()?.bind()
-        val supervisor = !validateSupervisor()
-        FeatureFlagModel(
-            visibility = visibility,
-            className = ClassName(packageName, names),
-            options = options,
-            source = nestedSource,
-            description = description,
-            deprecation = deprecation,
-            supervisor = supervisor,
-        )
-      }
-    }
-
-    private fun validatePackageName(): Either<GenerationFailure, String> {
-      return Either.cond(
-          test = packageName.isEmpty() || packageName.matches(packageNameRegex),
-          ifTrue = { packageName },
-          ifFalse = { InvalidPackageName(fqcn) }
+    public fun build(): Either<GenerationFailure, FeatureFlagModel> = either.eager {
+      val packageName = validatePackageName().bind()
+      val names = validateName().bind()
+      val options = validateOptions().bind()
+      val nestedSource = createNestedSource()?.bind()
+      val supervisor = validateSupervisor().bind()
+      FeatureFlagModel(
+          visibility = visibility,
+          className = ClassName(packageName, names),
+          options = options,
+          source = nestedSource,
+          description = description,
+          deprecation = deprecation,
+          supervisor = supervisor,
       )
     }
 
-    private fun validateName(): Either<GenerationFailure, List<String>> {
-      return names.traverse(Either.applicative()) { name ->
-        Either.cond(
-            test = name.matches(nameRegex),
-            ifTrue = { name },
-            ifFalse = { InvalidFeatureName(name, fqcn) }
-        )
-      }.map { listKind -> listKind.fix() }
+    private fun validatePackageName() = Either.conditionally(
+        packageName.isEmpty() || packageName.matches(packageNameRegex),
+        { InvalidPackageName(fqcn) },
+        { packageName },
+    )
+
+    private fun validateName() = names.traverseEither { name ->
+      Either.conditionally(
+          name.matches(nameRegex),
+          { InvalidFeatureName(name, fqcn) },
+          { name },
+      )
     }
 
     private fun validateOptions(): Either<GenerationFailure, Nel<FeatureFlagOption>> {
@@ -131,31 +122,27 @@ public class FeatureFlagModel internal constructor(
           .left()
     }
 
-    private fun createNestedSource(): Either<GenerationFailure, FeatureFlagModel>? {
-      return sourceOptions
-          .filterNot { it.name.equals("local", ignoreCase = true) }
-          .takeIf { it.isNotEmpty() }
-          ?.let { options ->
-            val isDefaultValue = options.none(FeatureFlagOption::isDefault)
-            return@let Builder(
-                visibility = visibility,
-                packageName = packageName,
-                names = names + "Source",
-                options = Nel(FeatureFlagOption("Local", isDefaultValue), options).toList(),
-            )
-          }?.build()
-    }
+    private fun createNestedSource() = sourceOptions
+        .filterNot { it.name.equals("local", ignoreCase = true) }
+        .takeIf { it.isNotEmpty() }
+        ?.let { options ->
+          val isDefaultValue = options.none(FeatureFlagOption::isDefault)
+          return@let Builder(
+              visibility = visibility,
+              packageName = packageName,
+              names = names + "Source",
+              options = Nel(FeatureFlagOption("Local", isDefaultValue), options).toList(),
+          )
+        }?.build()
 
-    private fun validateSupervisor(): Either<GenerationFailure, Supervisor?> = supervisor?.build()
+    private fun validateSupervisor() = supervisor?.build()
         ?.flatMap(::validateSelfSupervision)
-        ?: Either.right(null)
+        ?: null.right()
 
-    private fun validateSelfSupervision(
-      supervisor: Supervisor,
-    ): Either<GenerationFailure, Supervisor> = Either.cond(
-        test = supervisor.featureFlag.className.canonicalName != fqcn,
-        ifTrue = { supervisor },
-        ifFalse = { SelfSupervision(supervisor.featureFlag.toString()) }
+    private fun validateSelfSupervision(supervisor: Supervisor) = Either.conditionally(
+        supervisor.featureFlag.className.canonicalName != fqcn,
+        { SelfSupervision(supervisor.featureFlag.toString()) },
+        { supervisor },
     )
 
     private companion object {
@@ -166,11 +153,10 @@ public class FeatureFlagModel internal constructor(
   }
 }
 
-public fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
-  return traverse(Either.applicative(), FeatureFlagModel.Builder::build)
-      .map { listKind -> listKind.fix() }
-      .flatMap { models -> models.checkForDuplicates(FeaturesCollision::fromFeatures) }
-}
+public fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> =
+  traverseEither(FeatureFlagModel.Builder::build).flatMap { models ->
+    models.checkForDuplicates(FeaturesCollision::fromFeatures)
+  }
 
 public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull(FeatureFlagModel::source)
     .map(FeatureFlagModel::options)
