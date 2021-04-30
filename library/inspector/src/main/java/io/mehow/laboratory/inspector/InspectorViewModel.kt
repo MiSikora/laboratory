@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.time.milliseconds
 
+@Suppress("LongParameterList")
 internal class InspectorViewModel(
   private val laboratory: Laboratory,
   private val searchQueries: Flow<SearchQuery>,
