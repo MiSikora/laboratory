@@ -12,6 +12,7 @@ import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.TextToken.Link
 import io.mehow.laboratory.inspector.TextToken.Regular
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 
@@ -219,6 +220,7 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
           searchQueries = emptyFlow(),
           mapOf("Parent" to parentFactory, "Child" to childFactory),
           DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
+          Dispatchers.Unconfined,
       )
 
       viewModel.supervisedFeaturesFlow("Parent").first() shouldContainExactly listOf(

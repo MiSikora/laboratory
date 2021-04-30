@@ -10,6 +10,7 @@ import io.mehow.laboratory.inspector.DeprecationAlignment.Regular
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Hide
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Show
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Strikethrough
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlin.DeprecationLevel.ERROR
@@ -150,4 +151,9 @@ private enum class NotDeprecated : Feature<NotDeprecated> {
 @Suppress("TestFunctionName")
 private fun InspectorViewModel(
   deprecationHandler: DeprecationHandler,
-) = InspectorViewModel(Laboratory.inMemory(), emptyFlow(), DeprecatedFeatureFactory, deprecationHandler)
+) = InspectorViewModel(
+    Laboratory.inMemory(),
+    emptyFlow(),
+    DeprecatedFeatureFactory,
+    deprecationHandler,
+)
