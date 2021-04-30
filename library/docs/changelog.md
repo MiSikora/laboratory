@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to KotlinPoet `1.8.0`.
 - Upgrade to RecyclerView `1.2.0`.
 - Upgrade to Hyperion `0.9.32`.
+- Upgrade to FragmentKtx `1.3.3`.
 
 ## [0.12.1] - 2021-03-28
 
