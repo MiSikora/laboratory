@@ -7,7 +7,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 
 internal fun TestConfiguration.setMainDispatcher(
-  dispatcher: CoroutineDispatcher = Dispatchers.Default,
+  dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
 ) {
   beforeSpec { Dispatchers.setMain(dispatcher) }
   afterSpec { Dispatchers.resetMain() }

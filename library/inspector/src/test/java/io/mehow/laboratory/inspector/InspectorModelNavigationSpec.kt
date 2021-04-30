@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -25,7 +26,7 @@ internal class InspectorViewModelNavigationSpec : DescribeSpec({
       viewModel.goTo(SectionTwoFeature::class.java as Class<Feature<*>>) shouldBe FeatureCoordinates(1, 0)
     }
 
-    it("are not found when feature is registered") {
+    it("are not found when feature is not registered") {
       val viewModel = InspectorViewModel()
 
       viewModel.goTo(UnregisteredFeature::class.java as Class<Feature<*>>) shouldBe null
@@ -126,4 +127,5 @@ private fun InspectorViewModel(
     searchFlow,
     featureFactories,
     DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
+    Dispatchers.Unconfined,
 )

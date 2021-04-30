@@ -10,6 +10,7 @@ import io.mehow.laboratory.description
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import io.mehow.laboratory.source
 import io.mehow.laboratory.supervisorOption
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -35,11 +36,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.time.milliseconds
 
+@Suppress("LongParameterList")
 internal class InspectorViewModel(
   private val laboratory: Laboratory,
   private val searchQueries: Flow<SearchQuery>,
   featureFactories: Map<String, FeatureFactory>,
   deprecationHandler: DeprecationHandler,
+  private val computationDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
   private val metadataFactory = FeatureMetadata.Factory(deprecationHandler, featureFactories)
 
@@ -50,7 +53,7 @@ internal class InspectorViewModel(
 
   private val sectionFlows = featureFactories.mapValues { (_, featureFactory) ->
     flow {
-      val groups = withContext(Dispatchers.Default) {
+      val groups = withContext(computationDispatcher) {
         featureFactory.create()
             .mapNotNull(metadataFactory::create)
             .map { it.observeGroup(laboratory) }
@@ -58,7 +61,7 @@ internal class InspectorViewModel(
       }
       val searchedGroups = combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
           .map { it.sortedWith(FeatureUiModel.NaturalComparator) }
-          .flowOn(Dispatchers.Default)
+          .flowOn(computationDispatcher)
       emitAll(searchedGroups)
     }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
   }
@@ -157,6 +160,7 @@ internal class InspectorViewModel(
           searchViewModel.uiModels.debounce(200.milliseconds).map { it.query },
           configuration.featureFactories,
           configuration.deprecation,
+          Dispatchers.Default,
       ) as T
     }
   }

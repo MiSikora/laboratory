@@ -2,6 +2,7 @@ package io.mehow.laboratory.inspector
 
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -42,6 +43,7 @@ internal fun InspectorViewModel(
     searchQueries,
     mapOf(InspectorViewModel.defaultSection to featureFactory),
     deprecationHandler,
+    Dispatchers.Unconfined,
 )
 
 internal fun InspectorViewModel.sectionFlow() = sectionFlow(InspectorViewModel.defaultSection)
