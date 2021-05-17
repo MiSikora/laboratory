@@ -46,20 +46,20 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
    * }
    * ```
    */
-  @JvmDefault public val source: Class<Feature<*>>? get() = null
+  public val source: Class<Feature<*>>? get() = null
 
   /**
    * Description of the feature flag that can be used for more contextual information. Markdown formatted links
    * will be picked up by the QA module and represented as hyperlinks.
    */
-  @JvmDefault public val description: String get() = ""
+  public val description: String get() = ""
 
   /**
    * Option of another feature flag that controls value of this child flag. When supervisor feature flag
    * has an option different from this value then the child does not produce values other than the default one.
    * Option can still be set via `Laboratory` but it will not be exposed as long as a feature flag is not supervised.
    */
-  @JvmDefault public val supervisorOption: Feature<*>? get() = null
+  public val supervisorOption: Feature<*>? get() = null
 }
 
 /**

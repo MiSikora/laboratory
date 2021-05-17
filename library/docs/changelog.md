@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Drop deprecated `@JvmDefault` and switch to [JVM default modes](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-m3-generating-default-methods-in-interfaces/).
+- Upgrade to Kotlin `1.5.0`.
+- Upgrade to Coroutines `1.5.0`.
+- Upgrade to AGP `4.2.1`.
 - Upgrade to KotlinPoet `1.8.0`.
 - Upgrade to RecyclerView `1.2.0`.
 - Upgrade to Hyperion `0.9.32`.

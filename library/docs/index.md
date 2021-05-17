@@ -68,12 +68,12 @@ android {
 }
 ```
 
-Also, you have to enable [default methods generation](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-default/) by Kotlin compiler. You can do this by adding a compiler flag in a `build.gradle` file.
+Also, you have to enable [default methods generation](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-m3-generating-default-methods-in-interfaces/) by Kotlin compiler. You can do this by adding a compiler flag in a `build.gradle` file.
 
 ```groovy
 android {
   kotlinOptions {
-    freeCompilerArgs += "-Xjvm-default=enable"
+    freeCompilerArgs += "-Xjvm-default=all"
   }
 }
 ```
