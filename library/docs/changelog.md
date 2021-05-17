@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2021-05-17
+
 ### Changed
 - Drop deprecated `@JvmDefault` and switch to [JVM default modes](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-m3-generating-default-methods-in-interfaces/).
 - Upgrade to Kotlin `1.5.0`.
@@ -323,7 +325,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.12.1...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.13.0...HEAD
+[0.13.0]: https://github.com/MiSikora/laboratory/releases/tag/0.13.0
 [0.12.1]: https://github.com/MiSikora/laboratory/releases/tag/0.12.1
 [0.12.0]: https://github.com/MiSikora/laboratory/releases/tag/0.12.0
 [0.11.0]: https://github.com/MiSikora/laboratory/releases/tag/0.11.0
