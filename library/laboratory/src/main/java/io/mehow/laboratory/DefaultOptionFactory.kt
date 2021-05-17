@@ -17,7 +17,6 @@ public interface DefaultOptionFactory {
    * Creates a new [DefaultOptionFactory] that will first look for a default value in this factory and then in the
    * other factory.
    */
-  @JvmDefault
   public operator fun plus(factory: DefaultOptionFactory): DefaultOptionFactory = object : DefaultOptionFactory {
     override fun <T : Feature<T>> create(
       feature: T,

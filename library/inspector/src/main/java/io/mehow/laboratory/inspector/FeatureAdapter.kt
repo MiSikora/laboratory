@@ -30,9 +30,9 @@ internal class FeatureAdapter(
   }
 
   interface Listener : OptionGroupListener, OnSelectSourceListener {
-    @JvmDefault override fun onSelectSource(option: Feature<*>) = onSelectOption(option)
+    override fun onSelectSource(option: Feature<*>) = onSelectOption(option)
 
-    @JvmDefault override fun onSelectSupervisedFeature(feature: Class<Feature<*>>) = onGoToFeature(feature)
+    override fun onSelectSupervisedFeature(feature: Class<Feature<*>>) = onGoToFeature(feature)
 
     fun onGoToFeature(feature: Class<Feature<*>>)
   }
