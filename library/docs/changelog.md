@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Upgrade to FragmentKtx `1.3.4`.
+
 ## [0.13.0] - 2021-05-17
 
 ### Changed
