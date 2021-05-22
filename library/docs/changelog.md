@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Upgrade to FragmentKtx `1.3.4`.
 - Upgrade to CoreKtx `1.5.0`.
 - Upgrade to AppCompat `1.3.0`.
 
