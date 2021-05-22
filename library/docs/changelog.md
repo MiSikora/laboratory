@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade to CoreKtx `1.5.0`.
+- Upgrade to AppCompat `1.3.0`.
 
 ## [0.13.0] - 2021-05-17
 
