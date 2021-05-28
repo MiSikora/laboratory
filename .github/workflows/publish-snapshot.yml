@@ -24,7 +24,7 @@ jobs:
           java-version: 16
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v2.1.6
         with:
           path: |
             ~/.gradle/caches/
