@@ -42,7 +42,7 @@ internal class SourcedFeatureStorageGenerator(
       .returns(FeatureStorage::class)
       .addParameter(localSourceParam, FeatureStorage::class)
       .apply {
-        val parameterNames = sourceNames.map { "${it.decapitalize(Locale.ROOT)}Source" }
+        val parameterNames = sourceNames.map { "${it.replaceFirstChar { char -> char.lowercase(Locale.ROOT) }}Source" }
         for (name in parameterNames) {
           addParameter(name, FeatureStorage::class)
         }
@@ -79,7 +79,7 @@ internal class SourcedFeatureStorageGenerator(
         val functionReturnClassName = sources.drop(1).firstOrNull() ?: buildingStepClassName
         val functionName = currentSourceClassName.simpleName
             .removeSuffix(stepSuffix)
-            .decapitalize(Locale.ROOT) + "Source"
+            .replaceFirstChar { it.lowercase(Locale.ROOT) } + "Source"
 
         TypeSpec.interfaceBuilder(currentSourceClassName)
             .addModifiers(storage.visibility.modifier)
