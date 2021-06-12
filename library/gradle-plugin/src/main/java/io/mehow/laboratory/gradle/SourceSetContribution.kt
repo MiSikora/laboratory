@@ -4,7 +4,6 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -16,6 +15,7 @@ import org.jetbrains.kotlin.gradle.plugin.KOTLIN_DSL_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
+import java.util.Locale
 
 internal fun TaskProvider<out Task>.contributeToSourceSets(dir: File, project: Project) {
   makeKotlinDependOnTask(project)
@@ -44,7 +44,7 @@ private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Proje
     }
     kotlinSourceSet.srcDir(dir.toRelativeString(project.projectDir))
     variant.addJavaSourceFoldersToModel(dir)
-    project.tasks.named("generate${variant.name.capitalize()}Sources").configure {
+    project.tasks.named("generate${variant.name.capitalize(Locale.ROOT)}Sources").configure {
       it.dependsOn(this)
     }
   }
