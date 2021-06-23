@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to RecyclerView `1.2.1`.
 - Upgrade to FragmentKtx `1.3.5`.
 - Upgrade to DataStore `1.0.0-beta02`.
+- Upgrade to KotlinPoet `1.9.0`.
 
 ### Changed
 - Upgrade to FragmentKtx `1.3.4`.
