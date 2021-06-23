@@ -77,7 +77,7 @@ ext.libs = [
         "gradlePlugin": "com.github.ben-manes:gradle-versions-plugin:0.38.0",
         "gradlePluginId": "com.github.ben-manes.versions",
     ],
-    "kotlinPoet": "com.squareup:kotlinpoet:1.8.0",
+    "kotlinPoet": "com.squareup:kotlinpoet:1.9.0",
     "arrow": "io.arrow-kt:arrow-core:0.10.5",
     "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:3.7.0",
     "turbine": "app.cash.turbine:turbine:0.5.2",
