@@ -16,9 +16,9 @@ internal class SharedPreferencesFeatureStorage(
 ) : FeatureStorage {
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = callbackFlow {
     val listener = OnSharedPreferenceChangeListener { _, key ->
-      if (key == feature.name) offer(getStringSafe(key))
+      if (key == feature.name) trySend(getStringSafe(key))
     }
-    offer(getStringSafe(feature.name))
+    trySend(getStringSafe(feature.name))
     preferences.registerOnSharedPreferenceChangeListener(listener)
     awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
   }.conflate()

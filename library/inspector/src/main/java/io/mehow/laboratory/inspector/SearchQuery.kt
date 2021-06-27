@@ -6,7 +6,7 @@ internal class SearchQuery(input: String) {
   private val parts = input.replace(whiteSpaceRegex, " ")
       .split(' ')
       .flatMap { it.replace(searchNoiseRegex, "").splitToParts() }
-      .map { it.toLowerCase(Locale.ROOT) }
+      .map { it.lowercase(Locale.ROOT) }
   private val joinedParts = parts.joinToString("")
 
   fun isNotEmpty() = parts.isNotEmpty()
