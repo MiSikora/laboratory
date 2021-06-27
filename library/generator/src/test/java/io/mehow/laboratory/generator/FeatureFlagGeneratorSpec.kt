@@ -523,8 +523,8 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
             .map { mask -> mask != 0 }
             .mapIndexed { index, mask ->
-              val char = "local"[index].toString()
-              if (mask) char else char.capitalize(Locale.ROOT)
+              val chars = "local"[index].toString()
+              if (mask) chars else chars.replaceFirstChar { char -> char.titlecase(Locale.ROOT) }
             }.joinToString(separator = "")
       }
 

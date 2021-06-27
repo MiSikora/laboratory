@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.time.milliseconds
+import kotlin.time.Duration
 
 @Suppress("LongParameterList")
 internal class InspectorViewModel(
@@ -138,7 +138,7 @@ internal class InspectorViewModel(
       private val allFeatures by lazy {
         featureFactories.values
             .flatMap { it.create() }
-            .filter { it.enumConstants.isNotEmpty() }
+            .filterNot { it.enumConstants.isNullOrEmpty() }
       }
 
       fun create(feature: Class<Feature<*>>) = feature
@@ -157,7 +157,7 @@ internal class InspectorViewModel(
       @Suppress("UNCHECKED_CAST") @OptIn(FlowPreview::class)
       return InspectorViewModel(
           configuration.laboratory,
-          searchViewModel.uiModels.debounce(200.milliseconds).map { it.query },
+          searchViewModel.uiModels.debounce(Duration.milliseconds(200)).map { it.query },
           configuration.featureFactories,
           configuration.deprecation,
           Dispatchers.Default,
