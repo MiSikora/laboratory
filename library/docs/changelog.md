@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.1] - 2021-06-27
+
 ### Changed
 - Upgrade to Kotlin `1.5.20`.
 - Upgrade to RecyclerView `1.2.1`.
@@ -337,7 +339,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.13.0...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.13.1...HEAD
+[0.13.1]: https://github.com/MiSikora/laboratory/releases/tag/0.13.1
 [0.13.0]: https://github.com/MiSikora/laboratory/releases/tag/0.13.0
 [0.12.1]: https://github.com/MiSikora/laboratory/releases/tag/0.12.1
 [0.12.0]: https://github.com/MiSikora/laboratory/releases/tag/0.12.0
