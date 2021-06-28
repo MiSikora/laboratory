@@ -19,7 +19,6 @@
         <package name="" withSubpackages="true" static="true" />
       </value>
     </option>
-    <option name="RIGHT_MARGIN" value="120" />
     <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
     <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
     <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
@@ -233,9 +232,6 @@
         <option name="INDENT_SIZE" value="2" />
         <option name="TAB_SIZE" value="2" />
       </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="SQL">
-      <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
     </codeStyleSettings>
     <codeStyleSettings language="TypeScript">
       <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />

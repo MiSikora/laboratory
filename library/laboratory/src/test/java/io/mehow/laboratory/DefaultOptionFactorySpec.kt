@@ -5,14 +5,14 @@ import io.kotest.matchers.shouldBe
 
 internal class DefaultOptionFactorySpec : DescribeSpec({
   val firstFactory = object : DefaultOptionFactory {
-    override fun <T : Feature<T>> create(feature: T): Feature<*>? = when (feature) {
+    override fun <T : Feature<out T>> create(feature: T): Feature<*>? = when (feature) {
       is FirstFeature -> FirstFeature.B
       else -> null
     }
   }
 
   val secondFactory = object : DefaultOptionFactory {
-    override fun <T : Feature<T>> create(feature: T): Feature<*>? = when (feature) {
+    override fun <T : Feature<out T>> create(feature: T): Feature<*>? = when (feature) {
       is FirstFeature -> FirstFeature.C
       is SecondFeature -> SecondFeature.C
       else -> null
