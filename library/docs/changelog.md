@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `OptionFactory` interface that creates feature options based on a feature key and an option name.
+
 ### Changed
 - Make `Feature` and other related classes covariant.
 - `FeatureStorage` functions are no longer parameterized over `Feature`. They accept raw class type instead.
