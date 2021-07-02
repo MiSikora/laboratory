@@ -91,3 +91,12 @@ public abstract interface class io/mehow/laboratory/Laboratory$FeatureStorageSte
 	public abstract fun featureStorage (Lio/mehow/laboratory/FeatureStorage;)Lio/mehow/laboratory/Laboratory$BuildingStep;
 }
 
+public abstract interface class io/mehow/laboratory/OptionFactory {
+	public static final field Companion Lio/mehow/laboratory/OptionFactory$Companion;
+	public abstract fun create (Ljava/lang/String;Ljava/lang/String;)Lio/mehow/laboratory/Feature;
+	public fun plus (Lio/mehow/laboratory/OptionFactory;)Lio/mehow/laboratory/OptionFactory;
+}
+
+public final class io/mehow/laboratory/OptionFactory$Companion {
+}
+
