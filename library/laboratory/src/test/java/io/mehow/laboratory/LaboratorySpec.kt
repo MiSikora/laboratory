@@ -145,7 +145,7 @@ internal class LaboratorySpec : DescribeSpec({
 
   describe("default options factory") {
     val factory = object : DefaultOptionFactory {
-      override fun <T : Feature<T>> create(feature: T) = when (feature) {
+      override fun <T : Feature<out T>> create(feature: T) = when (feature) {
         is SomeFeature -> OtherFeature.C // Intentional wrong class for test
         is OtherFeature -> OtherFeature.C
         else -> null

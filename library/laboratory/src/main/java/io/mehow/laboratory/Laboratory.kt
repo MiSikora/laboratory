@@ -31,13 +31,13 @@ public class Laboratory internal constructor(
   /**
    * Observes any changes to the input [Feature].
    */
-  public inline fun <reified T : Feature<T>> observe(): Flow<T> = observe(T::class.java)
+  public inline fun <reified T : Feature<out T>> observe(): Flow<T> = observe(T::class.java)
 
   /**
    * Observes any changes to the input [Feature].
    */
   @Suppress("UNCHECKED_CAST")
-  public fun <T : Feature<T>> observe(
+  public fun <T : Feature<out T>> observe(
     feature: Class<T>,
   ): Flow<T> = observeRaw(feature as Class<Feature<*>>) as Flow<T>
 
@@ -59,20 +59,20 @@ public class Laboratory internal constructor(
   /**
    * Returns the current option of the input [Feature].
    */
-  public suspend inline fun <reified T : Feature<T>> experiment(): T = experiment(T::class.java)
+  public suspend inline fun <reified T : Feature<out T>> experiment(): T = experiment(T::class.java)
 
   @BlockingIoCall
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'blocking().experiment()' instead.",
       replaceWith = ReplaceWith("blocking().experiment()"),
   )
-  public inline fun <reified T : Feature<T>> experimentBlocking(): T = blocking().experiment()
+  public inline fun <reified T : Feature<out T>> experimentBlocking(): T = blocking().experiment()
 
   /**
    * Returns the current option of the input [Feature].
    */
   @Suppress("UNCHECKED_CAST")
-  public suspend fun <T : Feature<T>> experiment(
+  public suspend fun <T : Feature<out T>> experiment(
     feature: Class<T>,
   ): T = experimentRaw(feature as Class<Feature<*>>) as T
 
@@ -91,19 +91,22 @@ public class Laboratory internal constructor(
       message = "This method will be removed in 1.0.0. Use 'blocking().experiment()' instead.",
       replaceWith = ReplaceWith("blocking().experiment(feature)"),
   )
-  public fun <T : Feature<T>> experimentBlocking(feature: Class<T>): T = blocking().experiment(feature)
+  public fun <T : Feature<out T>> experimentBlocking(feature: Class<T>): T = blocking().experiment(feature)
 
   /**
    * Checks if a [Feature] is set to the input [option].
    */
-  public suspend fun <T : Feature<T>> experimentIs(option: T): Boolean = experiment(option::class.java) == option
+  @Suppress("UNCHECKED_CAST")
+  public suspend fun <T : Feature<out T>> experimentIs(option: T): Boolean = experimentRaw(
+      option::class.java as Class<Feature<*>>
+  ) == option
 
   @BlockingIoCall
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'blocking().experimentIs()' instead.",
       replaceWith = ReplaceWith("blocking().experimentIs(option)"),
   )
-  public fun <T : Feature<T>> experimentIsBlocking(option: T): Boolean = blocking().experimentIs(option)
+  public fun <T : Feature<out T>> experimentIsBlocking(option: T): Boolean = blocking().experimentIs(option)
 
   /**
    * Sets a [Feature] to have the input [option].
@@ -174,7 +177,7 @@ public class Laboratory internal constructor(
   )
   public fun clearBlocking(): Boolean = blocking().clear()
 
-  private fun <T : Feature<T>> getDefaultOption(
+  private fun <T : Feature<out T>> getDefaultOption(
     feature: Class<T>,
   ) = defaultOptionFactory?.create(feature) ?: feature.defaultOption
 
