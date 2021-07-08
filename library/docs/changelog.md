@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Material `1.4.0`.
 - Upgrade to CoreKtx `1.6.0`.
 - Upgrade to DataStore `1.0.0-rc01`.
+- Upgrade to AGP `4.2.2`.
 
 ## [0.13.1] - 2021-06-27
 
