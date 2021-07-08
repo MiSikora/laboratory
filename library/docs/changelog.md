@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Make `Feature` and other classes covariant.
+- Upgrade to Material `1.4.0`.
 
 ## [0.13.1] - 2021-06-27
 
