@@ -14,7 +14,7 @@ public class BlockingLaboratory internal constructor(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public inline fun <reified T : Feature<T>> experiment(): T = experiment(T::class.java)
+  public inline fun <reified T : Feature<out T>> experiment(): T = experiment(T::class.java)
 
   /**
    * Returns the current option of the input [Feature]. Warning – this call can block the calling thread.
@@ -22,7 +22,7 @@ public class BlockingLaboratory internal constructor(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<T>> experiment(feature: Class<T>): T = runBlocking { laboratory.experiment(feature) }
+  public fun <T : Feature<out T>> experiment(feature: Class<T>): T = runBlocking { laboratory.experiment(feature) }
 
   /**
    * Checks if a [Feature] is set to the input [option]. Warning – this call can block the calling thread.
@@ -30,7 +30,7 @@ public class BlockingLaboratory internal constructor(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<T>> experimentIs(option: T): Boolean = runBlocking { laboratory.experimentIs(option) }
+  public fun <T : Feature<out T>> experimentIs(option: T): Boolean = runBlocking { laboratory.experimentIs(option) }
 
   /**
    * Sets a [Feature] to have the input [option]. Warning – this call can block the calling thread.

@@ -111,7 +111,7 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
 
     it("resets feature flags to default options declared in factory") {
       val defaultOptionFactory = object : DefaultOptionFactory {
-        override fun <T : Feature<T>> create(feature: T): Feature<*>? = when (feature) {
+        override fun <T : Feature<out T>> create(feature: T): Feature<*>? = when (feature) {
           is First -> First.A
           is Second -> Second.A
           else -> null

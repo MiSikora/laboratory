@@ -104,11 +104,12 @@ internal class InspectorViewModel(
 
     private val deprecationPlacement = deprecationLevel?.let(deprecationHandler::getAlignment)
 
+    @Suppress("UNCHECKED_CAST")
     fun observeGroup(laboratory: Laboratory): Flow<FeatureUiModel> {
       val featureEmissions = observeOptions(laboratory)
       val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
       val supervisorEmissions = feature.supervisorOption
-          ?.let { laboratory.observe(it::class.java) }
+          ?.let { laboratory.observe(it::class.java as Class<Feature<*>>) }
           ?: flowOf(null)
       return combine(featureEmissions, sourceEmissions, supervisorEmissions) { features, sources, supervisor ->
         FeatureUiModel(

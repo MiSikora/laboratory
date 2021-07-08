@@ -67,7 +67,7 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
  *
  * @see Feature.defaultOption
  */
-public val <T : Feature<T>> Class<T>.defaultOption: T
+public val <T : Feature<out T>> Class<T>.defaultOption: T
   get() = firstOption.defaultOption
 
 /**
@@ -97,7 +97,8 @@ public val Class<Feature<*>>.supervisorOption: Feature<*>?
 /**
  * All available options of a feature flag.
  */
-public val <T : Feature<T>> Class<T>.options: Array<T> get() = enumConstants
+public val <T : Feature<out T>> Class<T>.options: Array<T>
+  get() = enumConstants
 
-internal val <T : Feature<T>> Class<T>.firstOption
+internal val <T : Feature<out T>> Class<T>.firstOption
   get() = options.firstOrNull() ?: error("$canonicalName must have at least one option")

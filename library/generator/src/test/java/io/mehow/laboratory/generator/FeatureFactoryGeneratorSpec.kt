@@ -219,7 +219,6 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
     }
 
     it("is optimized in case of no features") {
-      setOf(1).map { }
       val tempDir = createTempDirectory().toFile()
       val builder = factoryBuilder.copy(features = emptyList())
 
