@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Make `Feature` and other classes covariant.
+- Upgrade to Kotlin `1.5.21`.
 - Upgrade to Material `1.4.0`.
 - Upgrade to CoreKtx `1.6.0`.
 - Upgrade to DataStore `1.0.0-rc01`.
