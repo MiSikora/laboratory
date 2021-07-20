@@ -138,7 +138,7 @@ val themeLocalValue = laboratory.experiment<Theme>()
 val success = laboratory.setOption(Theme.Source.Azure)
 
 // Check option of Theme in Azure FeatureStorage
-val themeAzureValue laboratory.experiment<Theme>()
+val themeAzureValue = laboratory.experiment<Theme>()
 ```
 
 !!! info
@@ -171,7 +171,7 @@ val sourcedFeatureStorage = FeatureStorage.sourced(
 )
 
 // During application initialisation
-val laboratory = Laboratory.create(firebaseStorage)
+val laboratory = Laboratory.create(sourcedFeatureStorage)
 remoteService.observeShowAdsFlag()
     // Some custom mapping between a service option and a feature flag
     .map { showAds: Boolean ->
