@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to CoreKtx `1.6.0`.
 - Upgrade to DataStore `1.0.0-rc01`.
 - Upgrade to AGP `4.2.2`.
-- Upgrade to Hyperion `0.9.33`.
+- Upgrade to Hyperion `0.9.33`. 
+- Upgrade to AppCompat `1.3.1`.
 
 ## [0.13.1] - 2021-06-27
 
