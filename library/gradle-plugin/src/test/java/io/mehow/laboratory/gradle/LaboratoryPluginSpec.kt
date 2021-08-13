@@ -5,7 +5,6 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.GradleRunner
-import java.io.File
 
 internal class LaboratoryPluginSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner
