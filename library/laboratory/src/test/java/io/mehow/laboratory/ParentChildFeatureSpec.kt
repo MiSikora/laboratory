@@ -41,13 +41,13 @@ internal class ParentChildFeatureSpec : DescribeSpec({
       laboratory.setOption(FirstChildFeature.B)
 
       laboratory.observe<FirstChildFeature>().test {
-        expectItem() shouldBe FirstChildFeature.B
+        awaitItem() shouldBe FirstChildFeature.B
 
         laboratory.setOption(ParentFeature.B)
-        expectItem() shouldBe FirstChildFeature.A
+        awaitItem() shouldBe FirstChildFeature.A
 
         laboratory.setOption(ParentFeature.A)
-        expectItem() shouldBe FirstChildFeature.B
+        awaitItem() shouldBe FirstChildFeature.B
 
         cancel()
       }
@@ -57,7 +57,7 @@ internal class ParentChildFeatureSpec : DescribeSpec({
       val laboratory = Laboratory.inMemory()
 
       laboratory.observe<FirstChildFeature>().test {
-        expectItem() shouldBe FirstChildFeature.A
+        awaitItem() shouldBe FirstChildFeature.A
 
         laboratory.setOption(ParentFeature.B)
         expectNoEvents()
@@ -85,13 +85,13 @@ internal class ParentChildFeatureSpec : DescribeSpec({
       laboratory.setOption(ParentFeature.B)
 
       laboratory.observe<SecondChildFeature>().test {
-        expectItem() shouldBe SecondChildFeature.B
+        awaitItem() shouldBe SecondChildFeature.B
 
         laboratory.setOption(GrandParentFeature.B)
-        expectItem() shouldBe SecondChildFeature.A
+        awaitItem() shouldBe SecondChildFeature.A
 
         laboratory.setOption(GrandParentFeature.A)
-        expectItem() shouldBe SecondChildFeature.B
+        awaitItem() shouldBe SecondChildFeature.B
 
         cancel()
       }

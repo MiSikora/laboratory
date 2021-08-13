@@ -98,19 +98,19 @@ internal class LaboratorySpec : DescribeSpec({
       val laboratory = Laboratory.inMemory()
 
       laboratory.observe<SomeFeature>().test {
-        expectItem() shouldBe SomeFeature.B
+        awaitItem() shouldBe SomeFeature.B
 
         laboratory.setOption(SomeFeature.A)
-        expectItem() shouldBe SomeFeature.A
+        awaitItem() shouldBe SomeFeature.A
 
         laboratory.setOption(SomeFeature.C)
-        expectItem() shouldBe SomeFeature.C
+        awaitItem() shouldBe SomeFeature.C
 
         laboratory.setOption(SomeFeature.C)
         expectNoEvents()
 
         laboratory.setOption(SomeFeature.B)
-        expectItem() shouldBe SomeFeature.B
+        awaitItem() shouldBe SomeFeature.B
 
         cancel()
       }
@@ -175,10 +175,10 @@ internal class LaboratorySpec : DescribeSpec({
           .defaultOptionFactory(factory)
           .build()
       laboratory.observe<OtherFeature>().test {
-        expectItem() shouldBe OtherFeature.C
+        awaitItem() shouldBe OtherFeature.C
 
         laboratory.setOption(OtherFeature.B)
-        expectItem() shouldBe OtherFeature.B
+        awaitItem() shouldBe OtherFeature.B
       }
     }
 

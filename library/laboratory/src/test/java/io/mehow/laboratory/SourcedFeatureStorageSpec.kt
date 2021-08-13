@@ -39,13 +39,13 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
 
       it("observes changes of a default feature source") {
         sourcedLaboratory.observe<SecondFeature>().test {
-          expectItem() shouldBe SecondFeature.A
+          awaitItem() shouldBe SecondFeature.A
 
           remoteLaboratoryB.setOption(SecondFeature.B)
-          expectItem() shouldBe SecondFeature.B
+          awaitItem() shouldBe SecondFeature.B
 
           remoteLaboratoryB.setOption(SecondFeature.C)
-          expectItem() shouldBe SecondFeature.C
+          awaitItem() shouldBe SecondFeature.C
 
           cancel()
         }
@@ -65,25 +65,25 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       remoteLaboratoryB.setOption(SecondFeature.C)
 
       sourcedLaboratory.observe<SecondFeature>().test {
-        expectItem() shouldBe SecondFeature.C
+        awaitItem() shouldBe SecondFeature.C
 
         sourcedLaboratory.setOption(SecondFeature.Source.Local)
-        expectItem() shouldBe SecondFeature.A
+        awaitItem() shouldBe SecondFeature.A
 
         localLaboratory.setOption(SecondFeature.C)
-        expectItem() shouldBe SecondFeature.C
+        awaitItem() shouldBe SecondFeature.C
 
         sourcedLaboratory.setOption(SecondFeature.Source.RemoteA)
-        expectItem() shouldBe SecondFeature.B
+        awaitItem() shouldBe SecondFeature.B
 
         remoteLaboratoryA.setOption(SecondFeature.A)
-        expectItem() shouldBe SecondFeature.A
+        awaitItem() shouldBe SecondFeature.A
 
         sourcedLaboratory.setOption(SecondFeature.Source.RemoteB)
-        expectItem() shouldBe SecondFeature.C
+        awaitItem() shouldBe SecondFeature.C
 
         remoteLaboratoryB.setOption(SecondFeature.B)
-        expectItem() shouldBe SecondFeature.B
+        awaitItem() shouldBe SecondFeature.B
 
         cancel()
       }
@@ -94,7 +94,7 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       remoteLaboratoryA.setOption(SecondFeature.C)
 
       sourcedLaboratory.observe<SecondFeature>().test {
-        expectItem() shouldBe SecondFeature.A
+        awaitItem() shouldBe SecondFeature.A
 
         sourcedLaboratory.setOption(FirstFeature.Source.Local)
         expectNoEvents()
@@ -109,10 +109,10 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     context("for empty source") {
       it("falls back to observing a local storage") {
         sourcedLaboratory.observe<EmptySourceFeature>().test {
-          expectItem() shouldBe EmptySourceFeature.A
+          awaitItem() shouldBe EmptySourceFeature.A
 
           localLaboratory.setOption(EmptySourceFeature.B)
-          expectItem() shouldBe EmptySourceFeature.B
+          awaitItem() shouldBe EmptySourceFeature.B
 
           cancel()
         }
@@ -134,10 +134,10 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
         sourcedLaboratory = Laboratory.create(sourcedStorage)
 
         sourcedLaboratory.observe<FirstFeature>().test {
-          expectItem() shouldBe FirstFeature.A
+          awaitItem() shouldBe FirstFeature.A
 
           localLaboratory.setOption(FirstFeature.B)
-          expectItem() shouldBe FirstFeature.B
+          awaitItem() shouldBe FirstFeature.B
 
           cancel()
         }
@@ -159,10 +159,10 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
     context("for unsourced feature") {
       it("falls back to observing a local storage") {
         sourcedLaboratory.observe<UnsourcedFeature>().test {
-          expectItem() shouldBe UnsourcedFeature.A
+          awaitItem() shouldBe UnsourcedFeature.A
 
           localLaboratory.setOption(UnsourcedFeature.B)
-          expectItem() shouldBe UnsourcedFeature.B
+          awaitItem() shouldBe UnsourcedFeature.B
 
           cancel()
         }
@@ -178,13 +178,13 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
 
     it("controls local features") {
       sourcedLaboratory.observe<FirstFeature>().test {
-        expectItem() shouldBe FirstFeature.A
+        awaitItem() shouldBe FirstFeature.A
 
         sourcedLaboratory.setOption(FirstFeature.B)
-        expectItem() shouldBe FirstFeature.B
+        awaitItem() shouldBe FirstFeature.B
 
         sourcedLaboratory.setOption(FirstFeature.C)
-        expectItem() shouldBe FirstFeature.C
+        awaitItem() shouldBe FirstFeature.C
       }
     }
 

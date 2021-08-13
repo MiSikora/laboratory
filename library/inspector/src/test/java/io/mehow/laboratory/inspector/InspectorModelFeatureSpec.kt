@@ -77,13 +77,13 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
       val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
       viewModel.observeSelectedFeatures().test {
-        expectItem() shouldContainExactly listOf(First.C, Second.B)
+        awaitItem() shouldContainExactly listOf(First.C, Second.B)
 
         viewModel.selectFeature(First.B)
-        expectItem() shouldContainExactly listOf(First.B, Second.B)
+        awaitItem() shouldContainExactly listOf(First.B, Second.B)
 
         viewModel.selectFeature(Second.C)
-        expectItem() shouldContainExactly listOf(First.B, Second.C)
+        awaitItem() shouldContainExactly listOf(First.B, Second.C)
 
         cancel()
       }
@@ -93,7 +93,7 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
       val viewModel = InspectorViewModel(Laboratory.inMemory(), AllFeatureFactory)
 
       viewModel.observeSelectedFeaturesAndSources().test {
-        expectItem() shouldContainExactly listOf(
+        awaitItem() shouldContainExactly listOf(
             First.C to null,
             Second.B to null,
             Sourced.A to Sourced.Source.Local
@@ -101,7 +101,7 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
 
         viewModel.selectFeature(Sourced.Source.Remote)
 
-        expectItem() shouldContainExactly listOf(
+        awaitItem() shouldContainExactly listOf(
             First.C to null,
             Second.B to null,
             Sourced.A to Sourced.Source.Remote
@@ -124,16 +124,16 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
       val viewModel = InspectorViewModel(laboratory, NoSourceFeatureFactory)
 
       viewModel.observeSelectedFeatures().test {
-        expectItem() shouldContainExactly listOf(First.A, Second.A)
+        awaitItem() shouldContainExactly listOf(First.A, Second.A)
 
         viewModel.selectFeature(First.B)
-        expectItem() shouldContainExactly listOf(First.B, Second.A)
+        awaitItem() shouldContainExactly listOf(First.B, Second.A)
 
         viewModel.selectFeature(Second.B)
-        expectItem() shouldContainExactly listOf(First.B, Second.B)
+        awaitItem() shouldContainExactly listOf(First.B, Second.B)
 
         laboratory.clear()
-        expectItemEventually { it shouldContainExactly listOf(First.A, Second.A) }
+        awaitItemEventually { it shouldContainExactly listOf(First.A, Second.A) }
 
         cancel()
       }
@@ -159,13 +159,13 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
       val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
 
       viewModel.observeSelectedFeaturesAndEnabledState().test {
-        expectItem() shouldContainExactly listOf(
+        awaitItem() shouldContainExactly listOf(
             Child.A to false,
             Parent.Disabled to true,
         )
 
         viewModel.selectFeature(Parent.Enabled)
-        expectItemEventually {
+        awaitItemEventually {
           it shouldContainExactly listOf(
               Child.A to true,
               Parent.Enabled to true,
@@ -173,13 +173,13 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
         }
 
         viewModel.selectFeature(Child.B)
-        expectItem() shouldContainExactly listOf(
+        awaitItem() shouldContainExactly listOf(
             Child.B to true,
             Parent.Enabled to true,
         )
 
         viewModel.selectFeature(Parent.Disabled)
-        expectItemEventually {
+        awaitItemEventually {
           it shouldContainExactly listOf(
               Child.A to false,
               Parent.Disabled to true,

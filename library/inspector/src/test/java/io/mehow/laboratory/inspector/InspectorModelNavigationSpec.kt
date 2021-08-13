@@ -54,7 +54,7 @@ internal class InspectorViewModelNavigationSpec : DescribeSpec({
         expectNoEvents()
 
         viewModel.goTo(SectionOneFeatureA::class.java as Class<Feature<*>>)
-        expectItem() shouldBe FeatureCoordinates(0, 0)
+        awaitItem() shouldBe FeatureCoordinates(0, 0)
 
         cancel()
       }

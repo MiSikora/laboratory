@@ -48,13 +48,13 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("RegularNameFeature"))
-        expectItem() shouldContainExactly listOf(RegularNameFeature::class)
+        awaitItem() shouldContainExactly listOf(RegularNameFeature::class)
 
         searchFlow.emit(SearchQuery("Numbered1NameFeature"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class)
 
         searchFlow.emit(SearchQuery("SourcedFeature"))
-        expectItem() shouldContainExactly listOf(SourcedFeature::class)
+        awaitItem() shouldContainExactly listOf(SourcedFeature::class)
 
         cancel()
       }
@@ -66,10 +66,11 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Name Feature"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class, RegularNameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class,
+            RegularNameFeature::class)
 
         searchFlow.emit(SearchQuery("Numbered 1Name Feature"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class)
 
         cancel()
       }
@@ -84,7 +85,7 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("???"))
-        expectItem() shouldContainExactly emptyList()
+        awaitItem() shouldContainExactly emptyList()
 
         cancel()
       }
@@ -96,10 +97,11 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Disabled"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class, RegularNameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class,
+            RegularNameFeature::class)
 
         searchFlow.emit(SearchQuery("Howdy"))
-        expectItem() shouldContainExactly listOf(SourcedFeature::class)
+        awaitItem() shouldContainExactly listOf(SourcedFeature::class)
 
         cancel()
       }
@@ -111,7 +113,7 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Remote"))
-        expectItem() shouldContainExactly listOf(SourcedFeature::class)
+        awaitItem() shouldContainExactly listOf(SourcedFeature::class)
 
         cancel()
       }
@@ -123,16 +125,17 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("me ture"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class, RegularNameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class,
+            RegularNameFeature::class)
 
         searchFlow.emit(SearchQuery("ature"))
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("ed ture"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class, SourcedFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class, SourcedFeature::class)
 
         searchFlow.emit(SearchQuery("cal"))
-        expectItem() shouldContainExactly listOf(SourcedFeature::class)
+        awaitItem() shouldContainExactly listOf(SourcedFeature::class)
 
         cancel()
       }
@@ -144,10 +147,10 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("Enabled Disabled"))
-        expectItem() shouldContainExactly listOf(RegularNameFeature::class)
+        awaitItem() shouldContainExactly listOf(RegularNameFeature::class)
 
         searchFlow.emit(SearchQuery("Disabled Enabled"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class)
 
         cancel()
       }
@@ -159,13 +162,14 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("enabled"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class, RegularNameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class,
+            RegularNameFeature::class)
 
         searchFlow.emit(SearchQuery("feature"))
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("local"))
-        expectItem() shouldContainExactly listOf(SourcedFeature::class)
+        awaitItem() shouldContainExactly listOf(SourcedFeature::class)
 
         cancel()
       }
@@ -177,10 +181,10 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
         expectAllFeatureFlags()
 
         searchFlow.emit(SearchQuery("arnamefea"))
-        expectItem() shouldContainExactly listOf(RegularNameFeature::class)
+        awaitItem() shouldContainExactly listOf(RegularNameFeature::class)
 
         searchFlow.emit(SearchQuery("d1na"))
-        expectItem() shouldContainExactly listOf(Numbered1NameFeature::class)
+        awaitItem() shouldContainExactly listOf(Numbered1NameFeature::class)
 
         cancel()
       }
@@ -244,7 +248,7 @@ private fun InspectorViewModel(
 )
 
 private suspend fun FlowTurbine<List<KClass<out Feature<*>>>>.expectAllFeatureFlags() {
-  expectItem() shouldContainExactly listOf(
+  awaitItem() shouldContainExactly listOf(
       Numbered1NameFeature::class,
       RegularNameFeature::class,
       SourcedFeature::class,
