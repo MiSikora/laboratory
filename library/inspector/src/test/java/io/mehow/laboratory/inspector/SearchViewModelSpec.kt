@@ -29,10 +29,10 @@ internal class SearchViewModelSpec : DescribeSpec({
         expectIdleModel()
 
         viewModel.sendEvent(ToggleSearchMode)
-        expectItem() shouldBe UiModel(Active, SearchQuery.Empty)
+        awaitItem() shouldBe UiModel(Active, SearchQuery.Empty)
 
         viewModel.sendEvent(ToggleSearchMode)
-        expectItem() shouldBe UiModel(Idle, Companion.Empty)
+        awaitItem() shouldBe UiModel(Idle, Companion.Empty)
 
         cancel()
       }
@@ -44,13 +44,13 @@ internal class SearchViewModelSpec : DescribeSpec({
         expectIdleModel()
 
         viewModel.sendEvent(ToggleSearchMode)
-        expectItem()
+        awaitItem()
 
         viewModel.sendEvent(UpdateQuery("Hello"))
-        expectItem() shouldBe UiModel(Active, SearchQuery("Hello"))
+        awaitItem() shouldBe UiModel(Active, SearchQuery("Hello"))
 
         viewModel.sendEvent(UpdateQuery("World"))
-        expectItem() shouldBe UiModel(Active, SearchQuery("World"))
+        awaitItem() shouldBe UiModel(Active, SearchQuery("World"))
 
         cancel()
       }
@@ -74,10 +74,10 @@ internal class SearchViewModelSpec : DescribeSpec({
         expectIdleModel()
 
         viewModel.sendEvent(ToggleSearchMode)
-        expectItem()
+        awaitItem()
 
         viewModel.sendEvent(UpdateQuery("Hello"))
-        expectItem() shouldBe UiModel(Active, SearchQuery("Hello"))
+        awaitItem() shouldBe UiModel(Active, SearchQuery("Hello"))
 
         viewModel.sendEvent(ToggleSearchMode)
         expectIdleModel()
@@ -89,5 +89,5 @@ internal class SearchViewModelSpec : DescribeSpec({
 })
 
 private suspend fun FlowTurbine<UiModel>.expectIdleModel() {
-  expectItem() shouldBe UiModel(Idle, SearchQuery.Empty)
+  awaitItem() shouldBe UiModel(Idle, SearchQuery.Empty)
 }

@@ -34,16 +34,16 @@ internal class SharedPreferencesFeaturesStorageTest {
 
   @Test fun observesFeatureFlagChanges() = runBlocking {
     storage.observeFeatureName(FeatureA::class.java).test {
-      expectItem() shouldBe null
+      awaitItem() shouldBe null
 
       storage.setOption(FeatureA.B)
-      expectItem() shouldBe FeatureA.B.name
+      awaitItem() shouldBe FeatureA.B.name
 
       storage.setOption(FeatureA.B)
       expectNoEvents()
 
       storage.setOption(FeatureA.A)
-      expectItem() shouldBe FeatureA.A.name
+      awaitItem() shouldBe FeatureA.A.name
     }
   }
 
@@ -56,13 +56,13 @@ internal class SharedPreferencesFeaturesStorageTest {
 
   @Test fun informsObserversAfterClearingFeatureFlags() = runBlocking {
     storage.observeFeatureName(FeatureA::class.java).test {
-      expectItem() shouldBe null
+      awaitItem() shouldBe null
 
       storage.setOption(FeatureA.B)
-      expectItem() shouldBe FeatureA.B.name
+      awaitItem() shouldBe FeatureA.B.name
 
       storage.clear()
-      expectItem() shouldBe null
+      awaitItem() shouldBe null
     }
   }
 }

@@ -4,13 +4,13 @@ import app.cash.turbine.FlowTurbine
 import kotlinx.coroutines.withTimeout
 import kotlin.time.Duration
 
-internal suspend fun <T> FlowTurbine<T>.expectItemEventually(
+internal suspend fun <T> FlowTurbine<T>.awaitItemEventually(
   timeout: Duration = this.timeout,
   assertion: (T) -> Unit,
 ) = withTimeout(timeout) {
   while (true) {
     val isMatch = try {
-      assertion(expectItem())
+      assertion(awaitItem())
       true
     } catch (_: Throwable) {
       false

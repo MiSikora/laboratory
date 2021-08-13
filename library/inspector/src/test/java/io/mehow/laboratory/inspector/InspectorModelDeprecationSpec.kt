@@ -10,7 +10,6 @@ import io.mehow.laboratory.inspector.DeprecationAlignment.Regular
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Hide
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Show
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Strikethrough
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlin.DeprecationLevel.ERROR
