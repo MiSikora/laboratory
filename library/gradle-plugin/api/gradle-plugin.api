@@ -48,7 +48,7 @@ public class io/mehow/laboratory/gradle/FeatureFlagsTask : org/gradle/api/Defaul
 	public final fun generateFeatureFlags ()V
 }
 
-public class io/mehow/laboratory/gradle/LaboratoryExtension {
+public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
 	public fun <init> ()V
 	public final fun feature (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public final fun featureFactory ()V
