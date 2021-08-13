@@ -18,7 +18,9 @@ public class LaboratoryPlugin : Plugin<Project> {
   private lateinit var extension: LaboratoryExtension
 
   override fun apply(project: Project) {
-    extension = project.extensions.create(pluginName, LaboratoryExtension::class.java)
+    extension = project.extensions.create(pluginName, LaboratoryExtension::class.java).apply {
+      this.project = project
+    }
     project.setUpKotlinProject()
     project.setUpAndroidProject()
   }

@@ -3,7 +3,6 @@ package io.mehow.laboratory.gradle
 import arrow.core.NonEmptyList
 import arrow.core.nel
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.shouldBe
@@ -17,7 +16,6 @@ import io.mehow.laboratory.generator.NoFeatureValues
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import java.io.File
 
 internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner

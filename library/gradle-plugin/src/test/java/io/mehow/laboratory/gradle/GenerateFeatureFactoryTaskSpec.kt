@@ -16,7 +16,6 @@ import io.mehow.laboratory.generator.NoFeatureValues
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import java.io.File
 
 internal class GenerateFeatureFactoryTaskSpec : StringSpec({
   lateinit var gradleRunner: GradleRunner

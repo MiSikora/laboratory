@@ -2,12 +2,13 @@ package io.mehow.laboratory.gradle
 
 import groovy.lang.Closure
 import org.gradle.api.Action
-import org.gradle.util.ConfigureUtil
+import org.gradle.api.Project
 
 /**
  * An entry point for configuration of feature flags code generation.
  */
-public open class LaboratoryExtension {
+@Suppress("UnnecessaryAbstractClass") // Created by Gradle
+public abstract class LaboratoryExtension {
   /**
    * Sets package name for any factories or feature flags defined in this extension.
    * Package names can be individually overwritten in each generating block
@@ -17,6 +18,8 @@ public open class LaboratoryExtension {
   private val mutableFeatureInputs = mutableListOf<FeatureFlagInput>()
 
   internal val featureInputs: List<FeatureFlagInput> = mutableFeatureInputs
+
+  internal lateinit var project: Project
 
   /**
    * Generates a new feature in this module.
@@ -45,7 +48,7 @@ public open class LaboratoryExtension {
           |}
         """.trimMargin())
 
-    feature(name) { input -> ConfigureUtil.configure(closure, input) }
+    feature(name) { input -> project.configure(input, closure) }
   }
 
   internal var factoryInput: FeatureFactoryInput? = null
