@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to AppCompat `1.3.1`.
 - Upgrade to ConstraintLayout `2.1.0`.
 
+### Deprecated
+- `FeatureStorage.Companion.sharedPreferences(Context)` function. Use overload that accepts `SharedPreferences` instead.
+
 ## [0.13.1] - 2021-06-27
 
 ### Changed

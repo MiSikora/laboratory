@@ -63,6 +63,9 @@ public fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPrefere
 /**
  * Creates a [FeatureStorage] that is backed by [SharedPreferences] with a [fileName] in [private mode][MODE_PRIVATE].
  */
+@Deprecated(
+    "This function will be removed in 1.0.0. Use FeatureStorage.sharedPreferences(SharedPreferences) instead.",
+)
 public fun FeatureStorage.Companion.sharedPreferences(context: Context, fileName: String): FeatureStorage {
   val preferences = context.getSharedPreferences(fileName, MODE_PRIVATE)
   return sharedPreferences(preferences)

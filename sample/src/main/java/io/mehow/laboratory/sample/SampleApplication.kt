@@ -29,10 +29,10 @@ class SampleApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    localStorage = FeatureStorage.sharedPreferences(this, "localFeatures")
-    firebaseStorage = FeatureStorage.sharedPreferences(this, "firebaseFeatures")
-    awsStorage = FeatureStorage.sharedPreferences(this, "awsFeatures")
-    azureStorage = FeatureStorage.sharedPreferences(this, "azureStorage")
+    localStorage = FeatureStorage.sharedPreferences(getSharedPreferences("localFeatures", MODE_PRIVATE))
+    firebaseStorage = FeatureStorage.sharedPreferences(getSharedPreferences("firebaseFeatures", MODE_PRIVATE))
+    awsStorage = FeatureStorage.sharedPreferences(getSharedPreferences("awsFeatures", MODE_PRIVATE))
+    azureStorage = FeatureStorage.sharedPreferences(getSharedPreferences("azureStorage", MODE_PRIVATE))
     val sourcedStorage = FeatureStorage.sourcedBuilder(localStorage)
         .awsSource(awsStorage)
         .azureSource(azureStorage)
