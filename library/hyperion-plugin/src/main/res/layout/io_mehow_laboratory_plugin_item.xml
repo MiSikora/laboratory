@@ -8,15 +8,16 @@
     android:gravity="center_vertical"
     android:minHeight="131dp"
     android:orientation="horizontal"
-    android:padding="@dimen/hype_plugin_padding"
+    android:padding="12dp"
     >
 
   <androidx.appcompat.widget.AppCompatImageView
-      android:layout_width="@dimen/hype_plugin_icon_size"
-      android:layout_height="@dimen/hype_plugin_icon_size"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
       android:layout_marginEnd="28dp"
       android:duplicateParentState="true"
       app:srcCompat="@drawable/io_mehow_laboratory_icon"
+      app:tint="#8e8e93"
       />
 
   <LinearLayout
@@ -31,7 +32,7 @@
         android:layout_gravity="center_vertical"
         android:duplicateParentState="true"
         android:text="@string/io_mehow_laboratory_plugin_label"
-        android:textColor="@color/hype_plugin_color_selector"
+        android:textColor="#8e8e93"
         android:textSize="16sp"
         />
 
@@ -41,7 +42,7 @@
         android:layout_gravity="center_vertical"
         android:duplicateParentState="true"
         android:text="@string/io_mehow_laboratory_plugin_subtitle"
-        android:textColor="@color/hype_plugin_color_selector"
+        android:textColor="#8e8e93"
         />
   </LinearLayout>
 
