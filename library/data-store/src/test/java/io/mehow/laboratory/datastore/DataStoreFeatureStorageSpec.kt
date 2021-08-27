@@ -1,5 +1,6 @@
 package io.mehow.laboratory.datastore
 
+import androidx.datastore.core.DataStoreFactory
 import app.cash.turbine.test
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.engine.spec.tempfile
@@ -12,7 +13,7 @@ import okio.ByteString.Companion.decodeHex
 internal class DataStoreFeatureStorageSpec : StringSpec({
   "stored feature flag option is available as experiment" {
     val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore { tempFile }
+    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
     val laboratory = Laboratory.create(storage)
 
     storage.setOption(FeatureA.B)
@@ -22,7 +23,7 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
 
   "corrupted file yields default experiment" {
     val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore { tempFile }
+    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
     val laboratory = Laboratory.create(storage)
 
     // Represents a map<string, int> with a key of Feature::class.java.name and value of 1.
@@ -36,7 +37,7 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
 
   "observes feature flag changes" {
     val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore { tempFile }
+    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
 
     storage.observeFeatureName(FeatureA::class.java).test {
       awaitItem() shouldBe null
@@ -56,7 +57,7 @@ internal class DataStoreFeatureStorageSpec : StringSpec({
 
   "clears feature flag options" {
     val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore { tempFile }
+    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
     val laboratory = Laboratory.create(storage)
 
     storage.setOption(FeatureA.B)

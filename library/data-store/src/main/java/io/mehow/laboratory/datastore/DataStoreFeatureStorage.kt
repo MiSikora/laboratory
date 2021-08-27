@@ -51,6 +51,9 @@ public fun FeatureStorage.Companion.dataStore(dataStore: DataStore<FeatureFlags>
 /**
  * Creates a [FeatureStorage] that is backed by [DataStore] with a file taken from [fileProvider].
  */
+@Deprecated(
+    "This function will be removed in 1.0.0. Use FeatureStorage.dataStore(DataStore) instead.",
+)
 public fun FeatureStorage.Companion.dataStore(fileProvider: () -> File): FeatureStorage {
   return dataStore(DataStoreFactory.create(FeatureFlagsSerializer, produceFile = fileProvider))
 }
@@ -58,6 +61,9 @@ public fun FeatureStorage.Companion.dataStore(fileProvider: () -> File): Feature
 /**
  * Creates a [FeatureStorage] that is backed by [DataStore] with a file in an apps default directory.
  */
+@Deprecated(
+    "This function will be removed in 1.0.0. Use FeatureStorage.dataStore(DataStore) instead.",
+)
 public fun FeatureStorage.Companion.dataStore(context: Context, fileName: String): FeatureStorage {
-  return dataStore { File(context.filesDir, "datastore/$fileName") }
+  return dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { File(context.filesDir, "datastore/$fileName") })
 }

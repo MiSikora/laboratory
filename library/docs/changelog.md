@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 - `FeatureStorage.Companion.sharedPreferences(Context)` function. Use overload that accepts `SharedPreferences` instead.
+- `FeatureStorage.Companion.dataStore(() -> File)` function. Use overload that accepts `DataStore` instead.
+- `FeatureStorage.Companion.dataStore(Context, String)` function. Use overload that accepts `DataStore` instead.
 
 ## [0.13.1] - 2021-06-27
 
