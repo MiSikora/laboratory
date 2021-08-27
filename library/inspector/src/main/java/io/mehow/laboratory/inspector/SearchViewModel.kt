@@ -8,6 +8,7 @@ import io.mehow.laboratory.inspector.SearchMode.Idle
 import io.mehow.laboratory.inspector.SearchViewModel.Event.HideSearch
 import io.mehow.laboratory.inspector.SearchViewModel.Event.ToggleSearchMode
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 internal class SearchViewModel : ViewModel() {
   private val uiModelChanges = MutableSharedFlow<(UiModel) -> UiModel>()
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   private val sharedUiModels = uiModelChanges.scan(
       initial = UiModel(Idle, SearchQuery.Empty),
       operation = { currentModel, updateModel -> updateModel(currentModel) }

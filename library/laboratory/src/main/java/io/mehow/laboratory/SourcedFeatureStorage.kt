@@ -12,11 +12,13 @@ internal class SourcedFeatureStorage(
 ) : FeatureStorage {
   private val localLaboratory = Laboratory.create(localSource)
 
-  @ExperimentalCoroutinesApi
   override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = feature.observeSource()
       .map { source -> remoteSources[source.name] ?: localSource }
       .onEmpty { emit(localSource) }
-      .flatMapLatest { storage -> storage.observeFeatureName(feature) }
+      .let {
+        @OptIn(ExperimentalCoroutinesApi::class)
+        it.flatMapLatest { storage -> storage.observeFeatureName(feature) }
+      }
 
   override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String? {
     val storage = feature.getSource()?.let { remoteSources[it.name] } ?: localSource
