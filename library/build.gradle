@@ -53,7 +53,6 @@ allprojects {
     kotlinOptions {
       jvmTarget = "1.8"
       freeCompilerArgs += [
-          // TODO: https://youtrack.jetbrains.com/issue/KT-47476
           "-progressive",
           "-Xjvm-default=all",
           "-Xopt-in=kotlin.RequiresOptIn",
