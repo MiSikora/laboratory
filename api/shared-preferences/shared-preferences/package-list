@@ -1,0 +1,6 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:io.mehow.laboratory.sharedpreferences////PointingToDeclaration/shared-preferences/io.mehow.laboratory.sharedpreferences/index.html
+$dokka.location:io.mehow.laboratory.sharedpreferences//sharedPreferences/io.mehow.laboratory.FeatureStorage.Companion#android.content.SharedPreferences/PointingToDeclaration/shared-preferences/io.mehow.laboratory.sharedpreferences/shared-preferences.html
+io.mehow.laboratory.sharedpreferences
+
