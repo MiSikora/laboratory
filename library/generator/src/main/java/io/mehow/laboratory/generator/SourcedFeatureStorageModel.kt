@@ -1,7 +1,7 @@
 package io.mehow.laboratory.generator
 
 import arrow.core.Either
-import arrow.core.extensions.fx
+import arrow.core.computations.either
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
@@ -28,14 +28,14 @@ public class SourcedFeatureStorageModel private constructor(
     internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
 
     public fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> {
-      return Either.fx {
-        val packageName = !validatePackageName()
+      return either.eager {
+        val packageName = validatePackageName().bind()
         SourcedFeatureStorageModel(visibility, ClassName(packageName, name), sourceNames)
       }
     }
 
     private fun validatePackageName(): Either<GenerationFailure, String> {
-      return Either.cond(
+      return Either.conditionally(
           test = packageName.isEmpty() || packageName.matches(packageNameRegex),
           ifTrue = { packageName },
           ifFalse = { InvalidPackageName(fqcn) }

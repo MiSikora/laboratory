@@ -4,8 +4,7 @@ import arrow.core.Nel
 import arrow.core.getOrElse
 import arrow.core.identity
 import arrow.core.nel
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
+import arrow.core.nonEmptyListOf
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -118,7 +117,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       it("cannot have blank names") {
         val blanks = Arb.stringPattern("([ ]{0,10})")
         checkAll(blanks, blanks, blanks) { optionA, optionB, optionC ->
-          val blankNames = Nel(optionA, optionB, optionC)
+          val blankNames = nonEmptyListOf(optionA, optionB, optionC)
           val builder = featureBuilder.copy(options = blankNames.toList().map(::FeatureFlagOption))
 
           val result = builder.build()
@@ -167,7 +166,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
 
           val result = builder.build()
 
-          result shouldBeLeft FeatureValuesCollision(Nel(name, nameC), builder.fqcn)
+          result shouldBeLeft FeatureValuesCollision(nonEmptyListOf(name, nameC), builder.fqcn)
         }
       }
     }
@@ -235,7 +234,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           )
           val result = builder.build()
 
-          result shouldBeLeft MultipleFeatureDefaultValues(Nel(first, third), builder.fqcn)
+          result shouldBeLeft MultipleFeatureDefaultValues(nonEmptyListOf(first, third), builder.fqcn)
         }
       }
 
@@ -374,7 +373,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           )
           val result = builder.build()
 
-          result shouldBeLeft MultipleFeatureDefaultValues(Nel(first, third), "${builder.fqcn}.Source")
+          result shouldBeLeft MultipleFeatureDefaultValues(nonEmptyListOf(first, third), "${builder.fqcn}.Source")
         }
       }
 
@@ -397,7 +396,6 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         }
       }
     }
-
   }
 
   describe("generated feature flag") {
@@ -406,23 +404,21 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
 
       val outputFile = featureBuilder.build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |
+        |internal enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |}
+        |
+      """.trimMargin("|")
     }
 
     it("can be public") {
@@ -431,23 +427,21 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
 
       val outputFile = builder.build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |
-            |public enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |
+        |public enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |}
+        |
+      """.trimMargin("|")
     }
 
     it("can have source parameter") {
@@ -457,37 +451,35 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           .copy(sourceOptions = listOf(FeatureFlagOption("Remote")))
           .build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import java.lang.Class
-            |import kotlin.Suppress
-            |
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |
-            |  @Suppress("UNCHECKED_CAST")
-            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
-            |
-            |  internal enum class Source : Feature<Source> {
-            |    Local,
-            |    Remote,
-            |    ;
-            |
-            |    public override val defaultOption: Source
-            |      get() = Local
-            |  }
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import java.lang.Class
+        |import kotlin.Suppress
+        |
+        |internal enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  @Suppress("UNCHECKED_CAST")
+        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |
+        |  internal enum class Source : Feature<Source> {
+        |    Local,
+        |    Remote,
+        |    ;
+        |
+        |    public override val defaultOption: Source
+        |      get() = Local
+        |  }
+        |}
+        |
+      """.trimMargin("|")
     }
 
     it("does not have source parameter if only source is Local") {
@@ -497,23 +489,21 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           .copy(sourceOptions = listOf(FeatureFlagOption("Local")))
           .build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |
+        |internal enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |}
+        |
+      """.trimMargin("|")
     }
 
     it("filters out any custom local source") {
@@ -532,37 +522,35 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           .copy(sourceOptions = (localPermutations + "Remote").map(::FeatureFlagOption))
           .build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import java.lang.Class
-            |import kotlin.Suppress
-            |
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |
-            |  @Suppress("UNCHECKED_CAST")
-            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
-            |
-            |  internal enum class Source : Feature<Source> {
-            |    Local,
-            |    Remote,
-            |    ;
-            |
-            |    public override val defaultOption: Source
-            |      get() = Local
-            |  }
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import java.lang.Class
+        |import kotlin.Suppress
+        |
+        |internal enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  @Suppress("UNCHECKED_CAST")
+        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |
+        |  internal enum class Source : Feature<Source> {
+        |    Local,
+        |    Remote,
+        |    ;
+        |
+        |    public override val defaultOption: Source
+        |      get() = Local
+        |  }
+        |}
+        |
+      """.trimMargin("|")
     }
 
     it("allows to set not Local default default for source") {
@@ -572,37 +560,35 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           .copy(sourceOptions = listOf(FeatureFlagOption("Remote", isDefault = true)))
           .build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import java.lang.Class
-            |import kotlin.Suppress
-            |
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |
-            |  @Suppress("UNCHECKED_CAST")
-            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
-            |
-            |  internal enum class Source : Feature<Source> {
-            |    Local,
-            |    Remote,
-            |    ;
-            |
-            |    public override val defaultOption: Source
-            |      get() = Remote
-            |  }
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import java.lang.Class
+        |import kotlin.Suppress
+        |
+        |internal enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  @Suppress("UNCHECKED_CAST")
+        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |
+        |  internal enum class Source : Feature<Source> {
+        |    Local,
+        |    Remote,
+        |    ;
+        |
+        |    public override val defaultOption: Source
+        |      get() = Remote
+        |  }
+        |}
+        |
+      """.trimMargin("|")
     }
 
     it("source visibility follows feature visibility") {
@@ -612,37 +598,35 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           .copy(visibility = Public, sourceOptions = listOf(FeatureFlagOption("Remote")))
           .build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import java.lang.Class
-            |import kotlin.Suppress
-            |
-            |public enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |
-            |  @Suppress("UNCHECKED_CAST")
-            |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
-            |
-            |  public enum class Source : Feature<Source> {
-            |    Local,
-            |    Remote,
-            |    ;
-            |
-            |    public override val defaultOption: Source
-            |      get() = Local
-            |  }
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import java.lang.Class
+        |import kotlin.Suppress
+        |
+        |public enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  @Suppress("UNCHECKED_CAST")
+        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |
+        |  public enum class Source : Feature<Source> {
+        |    Local,
+        |    Remote,
+        |    ;
+        |
+        |    public override val defaultOption: Source
+        |      get() = Local
+        |  }
+        |}
+        |
+      """.trimMargin("|")
     }
 
     context("description") {
@@ -653,29 +637,27 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             .copy(description = "Feature description")
             .build().map { model -> model.generate(tempDir) }
 
-        outputFile shouldBeRight { file ->
-          file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import kotlin.String
-            |
-            |/**
-            | * Feature description
-            | */
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |
-            |  public override val description: String = "Feature description"
-            |}
-            |
-          """.trimMargin("|")
-        }
+        outputFile.shouldBeRight().readText() shouldBe """
+          |package io.mehow
+          |
+          |import io.mehow.laboratory.Feature
+          |import kotlin.String
+          |
+          |/**
+          | * Feature description
+          | */
+          |internal enum class FeatureA : Feature<FeatureA> {
+          |  First,
+          |  Second,
+          |  ;
+          |
+          |  public override val defaultOption: FeatureA
+          |    get() = First
+          |
+          |  public override val description: String = "Feature description"
+          |}
+          |
+        """.trimMargin("|")
       }
 
       it("does not break hyperlinks") {
@@ -686,32 +668,30 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
                 description = "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc.")
             .build().map { model -> model.generate(tempDir) }
 
-        outputFile shouldBeRight { file ->
-          file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import kotlin.String
-            |
-            |/**
-            | * Some
-            | * [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/)
-            | * in the KDoc.
-            | */
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |
-            |  public override val description: String =
-            |      "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc."
-            |}
-            |
-          """.trimMargin("|")
-        }
+        outputFile.shouldBeRight().readText() shouldBe """
+          |package io.mehow
+          |
+          |import io.mehow.laboratory.Feature
+          |import kotlin.String
+          |
+          |/**
+          | * Some
+          | * [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/)
+          | * in the KDoc.
+          | */
+          |internal enum class FeatureA : Feature<FeatureA> {
+          |  First,
+          |  Second,
+          |  ;
+          |
+          |  public override val defaultOption: FeatureA
+          |    get() = First
+          |
+          |  public override val description: String =
+          |      "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc."
+          |}
+          |
+        """.trimMargin("|")
       }
     }
 
@@ -723,31 +703,29 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             .copy(deprecation = Deprecation(message = "Deprecation message"))
             .build().map { model -> model.generate(tempDir) }
 
-        outputFile shouldBeRight { file ->
-          file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import kotlin.Deprecated
-            |import kotlin.DeprecationLevel
-            |import kotlin.Suppress
-            |
-            |@Deprecated(
-            |  message = "Deprecation message",
-            |  level = DeprecationLevel.WARNING
-            |)
-            |internal enum class FeatureA : Feature<@Suppress("DEPRECATION") FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  @Suppress("DEPRECATION")
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |}
-            |
-          """.trimMargin("|")
-        }
+        outputFile.shouldBeRight().readText() shouldBe """
+          |package io.mehow
+          |
+          |import io.mehow.laboratory.Feature
+          |import kotlin.Deprecated
+          |import kotlin.DeprecationLevel
+          |import kotlin.Suppress
+          |
+          |@Deprecated(
+          |  message = "Deprecation message",
+          |  level = DeprecationLevel.WARNING
+          |)
+          |internal enum class FeatureA : Feature<@Suppress("DEPRECATION") FeatureA> {
+          |  First,
+          |  Second,
+          |  ;
+          |
+          |  @Suppress("DEPRECATION")
+          |  public override val defaultOption: FeatureA
+          |    get() = First
+          |}
+          |
+        """.trimMargin("|")
       }
 
       enumValues<DeprecationLevel>().forEach { level ->
@@ -763,8 +741,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             ERROR, HIDDEN -> "DEPRECATION_ERROR"
           }
 
-          outputFile shouldBeRight { file ->
-            file.readText() shouldBe """
+          outputFile.shouldBeRight().readText() shouldBe """
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
@@ -787,7 +764,6 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             |}
             |
           """.trimMargin("|")
-          }
         }
       }
     }
@@ -803,26 +779,24 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           .copy(supervisor = Supervisor.Builder(parent, option))
           .build().map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import io.mehow.parent.Parent
-            |
-            |internal enum class FeatureA : Feature<FeatureA> {
-            |  First,
-            |  Second,
-            |  ;
-            |
-            |  public override val defaultOption: FeatureA
-            |    get() = First
-            |
-            |  public override val supervisorOption: Feature<*> = Parent.First
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import io.mehow.parent.Parent
+        |
+        |internal enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  public override val supervisorOption: Feature<*> = Parent.First
+        |}
+        |
+      """.trimMargin("|")
     }
   }
 })

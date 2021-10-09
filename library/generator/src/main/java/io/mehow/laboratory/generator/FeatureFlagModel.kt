@@ -2,15 +2,12 @@ package io.mehow.laboratory.generator
 
 import arrow.core.Either
 import arrow.core.Nel
-import arrow.core.extensions.either.applicative.applicative
-import arrow.core.extensions.either.applicative.map
-import arrow.core.extensions.fx
-import arrow.core.extensions.list.traverse.traverse
-import arrow.core.fix
+import arrow.core.computations.either
 import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.core.left
 import arrow.core.right
+import arrow.core.traverseEither
 import com.squareup.kotlinpoet.ClassName
 import java.io.File
 
@@ -34,7 +31,8 @@ public class FeatureFlagModel internal constructor(
     return File(outputDir, "$name.kt")
   }
 
-  override fun equals(other: Any?): Boolean = other is FeatureFlagModel && reflectionName == other.reflectionName
+  override fun equals(other: Any?): Boolean =
+    other is FeatureFlagModel && reflectionName == other.reflectionName
 
   override fun hashCode(): Int = reflectionName.hashCode()
 
@@ -53,12 +51,12 @@ public class FeatureFlagModel internal constructor(
     internal val fqcn = ClassName(packageName, names).canonicalName
 
     public fun build(): Either<GenerationFailure, FeatureFlagModel> {
-      return Either.fx {
-        val packageName = !validatePackageName()
-        val names = !validateName()
-        val options = !validateOptions()
+      return either.eager {
+        val packageName = validatePackageName().bind()
+        val names = validateName().bind()
+        val options = validateOptions().bind()
         val nestedSource = createNestedSource()?.bind()
-        val supervisor = !validateSupervisor()
+        val supervisor = validateSupervisor().bind()
         FeatureFlagModel(
             visibility = visibility,
             className = ClassName(packageName, names),
@@ -72,7 +70,7 @@ public class FeatureFlagModel internal constructor(
     }
 
     private fun validatePackageName(): Either<GenerationFailure, String> {
-      return Either.cond(
+      return Either.conditionally(
           test = packageName.isEmpty() || packageName.matches(packageNameRegex),
           ifTrue = { packageName },
           ifFalse = { InvalidPackageName(fqcn) }
@@ -80,13 +78,13 @@ public class FeatureFlagModel internal constructor(
     }
 
     private fun validateName(): Either<GenerationFailure, List<String>> {
-      return names.traverse(Either.applicative()) { name ->
-        Either.cond(
+      return names.traverseEither { name ->
+        Either.conditionally(
             test = name.matches(nameRegex),
             ifTrue = { name },
             ifFalse = { InvalidFeatureName(name, fqcn) }
         )
-      }.map { listKind -> listKind.fix() }
+      }
     }
 
     private fun validateOptions(): Either<GenerationFailure, Nel<FeatureFlagOption>> {
@@ -100,7 +98,8 @@ public class FeatureFlagModel internal constructor(
     private fun validateOptionNames(
       options: Nel<FeatureFlagOption>,
     ): Either<GenerationFailure, Nel<FeatureFlagOption>> {
-      val invalidOptions = options.toList().map(FeatureFlagOption::name).filterNot(optionRegex::matches)
+      val invalidOptions =
+        options.toList().map(FeatureFlagOption::name).filterNot(optionRegex::matches)
       return Nel.fromList(invalidOptions)
           .toEither { options }
           .swap()
@@ -146,20 +145,23 @@ public class FeatureFlagModel internal constructor(
           }?.build()
     }
 
-    private fun validateSupervisor(): Either<GenerationFailure, Supervisor?> = supervisor?.build()
-        ?.flatMap(::validateSelfSupervision)
-        ?: Either.right(null)
+    private fun validateSupervisor(): Either<GenerationFailure, Supervisor?> {
+      return supervisor?.build()
+          ?.flatMap(::validateSelfSupervision)
+          ?: null.right()
+    }
 
     private fun validateSelfSupervision(
       supervisor: Supervisor,
-    ): Either<GenerationFailure, Supervisor> = Either.cond(
+    ): Either<GenerationFailure, Supervisor> = Either.conditionally(
         test = supervisor.featureFlag.className.canonicalName != fqcn,
         ifTrue = { supervisor },
         ifFalse = { SelfSupervision(supervisor.featureFlag.toString()) }
     )
 
     private companion object {
-      val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
+      val packageNameRegex =
+        """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
       val nameRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
       val optionRegex = """^[a-zA-Z][a-zA-Z_\d]*""".toRegex()
     }
@@ -167,9 +169,9 @@ public class FeatureFlagModel internal constructor(
 }
 
 public fun List<FeatureFlagModel.Builder>.buildAll(): Either<GenerationFailure, List<FeatureFlagModel>> {
-  return traverse(Either.applicative(), FeatureFlagModel.Builder::build)
-      .map { listKind -> listKind.fix() }
-      .flatMap { models -> models.checkForDuplicates(FeaturesCollision::fromFeatures) }
+  return traverseEither(FeatureFlagModel.Builder::build).flatMap { models ->
+    models.checkForDuplicates(FeaturesCollision::fromFeatures)
+  }
 }
 
 public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull(FeatureFlagModel::source)
@@ -177,4 +179,5 @@ public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull(Featu
     .flatMap { it.toList() }
     .map(FeatureFlagOption::name)
 
-public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> = mapNotNull(FeatureFlagModel::source)
+public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> =
+  mapNotNull(FeatureFlagModel::source)

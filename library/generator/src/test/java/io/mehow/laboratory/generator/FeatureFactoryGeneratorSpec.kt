@@ -3,8 +3,6 @@ package io.mehow.laboratory.generator
 import arrow.core.getOrElse
 import arrow.core.identity
 import arrow.core.nel
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -158,30 +156,28 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
           .build("GeneratedFeatureFactory")
           .map { model -> model.generate("generated", tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import io.mehow.laboratory.FeatureFactory
-            |import java.lang.Class
-            |import kotlin.Suppress
-            |import kotlin.collections.Set
-            |import kotlin.collections.setOf
-            |
-            |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
-            |
-            |private object GeneratedFeatureFactory : FeatureFactory {
-            |  @Suppress("UNCHECKED_CAST")
-            |  public override fun create() = setOf(
-            |    Class.forName("io.mehow.FeatureA"),
-            |    Class.forName("io.mehow.FeatureB"),
-            |    Class.forName("io.mehow.c.FeatureA")
-            |  ) as Set<Class<Feature<*>>>
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import io.mehow.laboratory.FeatureFactory
+        |import java.lang.Class
+        |import kotlin.Suppress
+        |import kotlin.collections.Set
+        |import kotlin.collections.setOf
+        |
+        |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+        |
+        |private object GeneratedFeatureFactory : FeatureFactory {
+        |  @Suppress("UNCHECKED_CAST")
+        |  public override fun create() = setOf(
+        |    Class.forName("io.mehow.FeatureA"),
+        |    Class.forName("io.mehow.FeatureB"),
+        |    Class.forName("io.mehow.c.FeatureA")
+        |  ) as Set<Class<Feature<*>>>
+        |}
+        |
+      """.trimMargin()
     }
 
     it("can be public") {
@@ -192,30 +188,28 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
           .build("GeneratedFeatureFactory")
           .map { model -> model.generate("generated", tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import io.mehow.laboratory.FeatureFactory
-            |import java.lang.Class
-            |import kotlin.Suppress
-            |import kotlin.collections.Set
-            |import kotlin.collections.setOf
-            |
-            |public fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
-            |
-            |private object GeneratedFeatureFactory : FeatureFactory {
-            |  @Suppress("UNCHECKED_CAST")
-            |  public override fun create() = setOf(
-            |    Class.forName("io.mehow.FeatureA"),
-            |    Class.forName("io.mehow.FeatureB"),
-            |    Class.forName("io.mehow.c.FeatureA")
-            |  ) as Set<Class<Feature<*>>>
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import io.mehow.laboratory.FeatureFactory
+        |import java.lang.Class
+        |import kotlin.Suppress
+        |import kotlin.collections.Set
+        |import kotlin.collections.setOf
+        |
+        |public fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+        |
+        |private object GeneratedFeatureFactory : FeatureFactory {
+        |  @Suppress("UNCHECKED_CAST")
+        |  public override fun create() = setOf(
+        |    Class.forName("io.mehow.FeatureA"),
+        |    Class.forName("io.mehow.FeatureB"),
+        |    Class.forName("io.mehow.c.FeatureA")
+        |  ) as Set<Class<Feature<*>>>
+        |}
+        |
+      """.trimMargin("|")
     }
 
     it("is optimized in case of no features") {
@@ -226,23 +220,21 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
           .build("GeneratedFeatureFactory")
           .map { model -> model.generate("generated", tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.Feature
-            |import io.mehow.laboratory.FeatureFactory
-            |import java.lang.Class
-            |import kotlin.collections.emptySet
-            |
-            |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
-            |
-            |private object GeneratedFeatureFactory : FeatureFactory {
-            |  public override fun create() = emptySet<Class<Feature<*>>>()
-            |}
-            |
-          """.trimMargin("|")
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import io.mehow.laboratory.FeatureFactory
+        |import java.lang.Class
+        |import kotlin.collections.emptySet
+        |
+        |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
+        |
+        |private object GeneratedFeatureFactory : FeatureFactory {
+        |  public override fun create() = emptySet<Class<Feature<*>>>()
+        |}
+        |
+      """.trimMargin("|")
     }
   }
 })

@@ -1,8 +1,6 @@
 package io.mehow.laboratory.generator
 
 import arrow.core.identity
-import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -66,65 +64,63 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
           .build()
           .map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.FeatureStorage
-            |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-            |import kotlin.Deprecated
-            |import kotlin.String
-            |import kotlin.collections.Map
-            |import kotlin.collections.emptyMap
-            |import kotlin.collections.mapOf
-            |import kotlin.collections.plus
-            |import kotlin.to
-            |
-            |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep =
-            |    Builder(localSource, emptyMap())
-            |
-            |internal interface FirebaseStep {
-            |  public fun firebaseSource(source: FeatureStorage): S3Step
-            |}
-            |
-            |internal interface S3Step {
-            |  public fun s3Source(source: FeatureStorage): BuildingStep
-            |}
-            |
-            |internal interface BuildingStep {
-            |  public fun build(): FeatureStorage
-            |}
-            |
-            |private data class Builder(
-            |  private val localSource: FeatureStorage,
-            |  private val remoteSources: Map<String, FeatureStorage>
-            |) : FirebaseStep, S3Step, BuildingStep {
-            |  public override fun firebaseSource(source: FeatureStorage): S3Step = copy(
-            |    remoteSources = remoteSources + ("Firebase" to source)
-            |  )
-            |
-            |  public override fun s3Source(source: FeatureStorage): BuildingStep = copy(
-            |    remoteSources = remoteSources + ("S3" to source)
-            |  )
-            |
-            |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-            |}
-            |
-            |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-            |internal fun FeatureStorage.Companion.sourcedGenerated(
-            |  localSource: FeatureStorage,
-            |  firebaseSource: FeatureStorage,
-            |  s3Source: FeatureStorage
-            |): FeatureStorage = sourced(
-            |  localSource,
-            |  mapOf(
-            |    "Firebase" to firebaseSource,
-            |    "S3" to s3Source
-            |  )
-            |)
-            |
-        """.trimMargin()
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.FeatureStorage
+        |import io.mehow.laboratory.FeatureStorage.Companion.sourced
+        |import kotlin.Deprecated
+        |import kotlin.String
+        |import kotlin.collections.Map
+        |import kotlin.collections.emptyMap
+        |import kotlin.collections.mapOf
+        |import kotlin.collections.plus
+        |import kotlin.to
+        |
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep =
+        |    Builder(localSource, emptyMap())
+        |
+        |internal interface FirebaseStep {
+        |  public fun firebaseSource(source: FeatureStorage): S3Step
+        |}
+        |
+        |internal interface S3Step {
+        |  public fun s3Source(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>
+        |) : FirebaseStep, S3Step, BuildingStep {
+        |  public override fun firebaseSource(source: FeatureStorage): S3Step = copy(
+        |    remoteSources = remoteSources + ("Firebase" to source)
+        |  )
+        |
+        |  public override fun s3Source(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("S3" to source)
+        |  )
+        |
+        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        |
+        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+        |internal fun FeatureStorage.Companion.sourcedGenerated(
+        |  localSource: FeatureStorage,
+        |  firebaseSource: FeatureStorage,
+        |  s3Source: FeatureStorage
+        |): FeatureStorage = sourced(
+        |  localSource,
+        |  mapOf(
+        |    "Firebase" to firebaseSource,
+        |    "S3" to s3Source
+        |  )
+        |)
+        |
+      """.trimMargin()
     }
 
     it("can be public") {
@@ -134,65 +130,63 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
           .build()
           .map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.FeatureStorage
-            |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-            |import kotlin.Deprecated
-            |import kotlin.String
-            |import kotlin.collections.Map
-            |import kotlin.collections.emptyMap
-            |import kotlin.collections.mapOf
-            |import kotlin.collections.plus
-            |import kotlin.to
-            |
-            |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep =
-            |    Builder(localSource, emptyMap())
-            |
-            |public interface FirebaseStep {
-            |  public fun firebaseSource(source: FeatureStorage): S3Step
-            |}
-            |
-            |public interface S3Step {
-            |  public fun s3Source(source: FeatureStorage): BuildingStep
-            |}
-            |
-            |public interface BuildingStep {
-            |  public fun build(): FeatureStorage
-            |}
-            |
-            |private data class Builder(
-            |  private val localSource: FeatureStorage,
-            |  private val remoteSources: Map<String, FeatureStorage>
-            |) : FirebaseStep, S3Step, BuildingStep {
-            |  public override fun firebaseSource(source: FeatureStorage): S3Step = copy(
-            |    remoteSources = remoteSources + ("Firebase" to source)
-            |  )
-            |
-            |  public override fun s3Source(source: FeatureStorage): BuildingStep = copy(
-            |    remoteSources = remoteSources + ("S3" to source)
-            |  )
-            |
-            |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-            |}
-            |
-            |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-            |public fun FeatureStorage.Companion.sourcedGenerated(
-            |  localSource: FeatureStorage,
-            |  firebaseSource: FeatureStorage,
-            |  s3Source: FeatureStorage
-            |): FeatureStorage = sourced(
-            |  localSource,
-            |  mapOf(
-            |    "Firebase" to firebaseSource,
-            |    "S3" to s3Source
-            |  )
-            |)
-            |
-        """.trimMargin()
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.FeatureStorage
+        |import io.mehow.laboratory.FeatureStorage.Companion.sourced
+        |import kotlin.Deprecated
+        |import kotlin.String
+        |import kotlin.collections.Map
+        |import kotlin.collections.emptyMap
+        |import kotlin.collections.mapOf
+        |import kotlin.collections.plus
+        |import kotlin.to
+        |
+        |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep =
+        |    Builder(localSource, emptyMap())
+        |
+        |public interface FirebaseStep {
+        |  public fun firebaseSource(source: FeatureStorage): S3Step
+        |}
+        |
+        |public interface S3Step {
+        |  public fun s3Source(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |public interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>
+        |) : FirebaseStep, S3Step, BuildingStep {
+        |  public override fun firebaseSource(source: FeatureStorage): S3Step = copy(
+        |    remoteSources = remoteSources + ("Firebase" to source)
+        |  )
+        |
+        |  public override fun s3Source(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("S3" to source)
+        |  )
+        |
+        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        |
+        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+        |public fun FeatureStorage.Companion.sourcedGenerated(
+        |  localSource: FeatureStorage,
+        |  firebaseSource: FeatureStorage,
+        |  s3Source: FeatureStorage
+        |): FeatureStorage = sourced(
+        |  localSource,
+        |  mapOf(
+        |    "Firebase" to firebaseSource,
+        |    "S3" to s3Source
+        |  )
+        |)
+        |
+      """.trimMargin()
     }
 
     it("ignores duplicate source names") {
@@ -202,75 +196,73 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
           .build()
           .map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.FeatureStorage
-            |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-            |import kotlin.Deprecated
-            |import kotlin.String
-            |import kotlin.collections.Map
-            |import kotlin.collections.emptyMap
-            |import kotlin.collections.mapOf
-            |import kotlin.collections.plus
-            |import kotlin.to
-            |
-            |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BarStep =
-            |    Builder(localSource, emptyMap())
-            |
-            |public interface BarStep {
-            |  public fun barSource(source: FeatureStorage): BazStep
-            |}
-            |
-            |public interface BazStep {
-            |  public fun bazSource(source: FeatureStorage): FooStep
-            |}
-            |
-            |public interface FooStep {
-            |  public fun fooSource(source: FeatureStorage): BuildingStep
-            |}
-            |
-            |public interface BuildingStep {
-            |  public fun build(): FeatureStorage
-            |}
-            |
-            |private data class Builder(
-            |  private val localSource: FeatureStorage,
-            |  private val remoteSources: Map<String, FeatureStorage>
-            |) : BarStep, BazStep, FooStep, BuildingStep {
-            |  public override fun barSource(source: FeatureStorage): BazStep = copy(
-            |    remoteSources = remoteSources + ("Bar" to source)
-            |  )
-            |
-            |  public override fun bazSource(source: FeatureStorage): FooStep = copy(
-            |    remoteSources = remoteSources + ("Baz" to source)
-            |  )
-            |
-            |  public override fun fooSource(source: FeatureStorage): BuildingStep = copy(
-            |    remoteSources = remoteSources + ("Foo" to source)
-            |  )
-            |
-            |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-            |}
-            |
-            |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-            |public fun FeatureStorage.Companion.sourcedGenerated(
-            |  localSource: FeatureStorage,
-            |  fooSource: FeatureStorage,
-            |  barSource: FeatureStorage,
-            |  bazSource: FeatureStorage
-            |): FeatureStorage = sourced(
-            |  localSource,
-            |  mapOf(
-            |    "Foo" to fooSource,
-            |    "Bar" to barSource,
-            |    "Baz" to bazSource
-            |  )
-            |)
-            |
-        """.trimMargin()
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.FeatureStorage
+        |import io.mehow.laboratory.FeatureStorage.Companion.sourced
+        |import kotlin.Deprecated
+        |import kotlin.String
+        |import kotlin.collections.Map
+        |import kotlin.collections.emptyMap
+        |import kotlin.collections.mapOf
+        |import kotlin.collections.plus
+        |import kotlin.to
+        |
+        |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BarStep =
+        |    Builder(localSource, emptyMap())
+        |
+        |public interface BarStep {
+        |  public fun barSource(source: FeatureStorage): BazStep
+        |}
+        |
+        |public interface BazStep {
+        |  public fun bazSource(source: FeatureStorage): FooStep
+        |}
+        |
+        |public interface FooStep {
+        |  public fun fooSource(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |public interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>
+        |) : BarStep, BazStep, FooStep, BuildingStep {
+        |  public override fun barSource(source: FeatureStorage): BazStep = copy(
+        |    remoteSources = remoteSources + ("Bar" to source)
+        |  )
+        |
+        |  public override fun bazSource(source: FeatureStorage): FooStep = copy(
+        |    remoteSources = remoteSources + ("Baz" to source)
+        |  )
+        |
+        |  public override fun fooSource(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("Foo" to source)
+        |  )
+        |
+        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        |
+        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+        |public fun FeatureStorage.Companion.sourcedGenerated(
+        |  localSource: FeatureStorage,
+        |  fooSource: FeatureStorage,
+        |  barSource: FeatureStorage,
+        |  bazSource: FeatureStorage
+        |): FeatureStorage = sourced(
+        |  localSource,
+        |  mapOf(
+        |    "Foo" to fooSource,
+        |    "Bar" to barSource,
+        |    "Baz" to bazSource
+        |  )
+        |)
+        |
+      """.trimMargin()
     }
 
     it("ignores local source name") {
@@ -289,53 +281,51 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
           .build()
           .map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.FeatureStorage
-            |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-            |import kotlin.Deprecated
-            |import kotlin.String
-            |import kotlin.collections.Map
-            |import kotlin.collections.emptyMap
-            |import kotlin.collections.mapOf
-            |import kotlin.collections.plus
-            |import kotlin.to
-            |
-            |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FooStep =
-            |    Builder(localSource, emptyMap())
-            |
-            |public interface FooStep {
-            |  public fun fooSource(source: FeatureStorage): BuildingStep
-            |}
-            |
-            |public interface BuildingStep {
-            |  public fun build(): FeatureStorage
-            |}
-            |
-            |private data class Builder(
-            |  private val localSource: FeatureStorage,
-            |  private val remoteSources: Map<String, FeatureStorage>
-            |) : FooStep, BuildingStep {
-            |  public override fun fooSource(source: FeatureStorage): BuildingStep = copy(
-            |    remoteSources = remoteSources + ("Foo" to source)
-            |  )
-            |
-            |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-            |}
-            |
-            |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-            |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage,
-            |    fooSource: FeatureStorage): FeatureStorage = sourced(
-            |  localSource,
-            |  mapOf(
-            |    "Foo" to fooSource
-            |  )
-            |)
-            |
-        """.trimMargin()
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.FeatureStorage
+        |import io.mehow.laboratory.FeatureStorage.Companion.sourced
+        |import kotlin.Deprecated
+        |import kotlin.String
+        |import kotlin.collections.Map
+        |import kotlin.collections.emptyMap
+        |import kotlin.collections.mapOf
+        |import kotlin.collections.plus
+        |import kotlin.to
+        |
+        |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FooStep =
+        |    Builder(localSource, emptyMap())
+        |
+        |public interface FooStep {
+        |  public fun fooSource(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |public interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>
+        |) : FooStep, BuildingStep {
+        |  public override fun fooSource(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("Foo" to source)
+        |  )
+        |
+        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        |
+        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+        |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage,
+        |    fooSource: FeatureStorage): FeatureStorage = sourced(
+        |  localSource,
+        |  mapOf(
+        |    "Foo" to fooSource
+        |  )
+        |)
+        |
+      """.trimMargin()
     }
 
     it("can have only local source") {
@@ -345,40 +335,38 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
           .build()
           .map { model -> model.generate(tempDir) }
 
-      outputFile shouldBeRight { file ->
-        file.readText() shouldBe """
-            |package io.mehow
-            |
-            |import io.mehow.laboratory.FeatureStorage
-            |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-            |import kotlin.Deprecated
-            |import kotlin.String
-            |import kotlin.collections.Map
-            |import kotlin.collections.emptyMap
-            |
-            |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-            |    Builder(localSource, emptyMap())
-            |
-            |public interface BuildingStep {
-            |  public fun build(): FeatureStorage
-            |}
-            |
-            |private data class Builder(
-            |  private val localSource: FeatureStorage,
-            |  private val remoteSources: Map<String, FeatureStorage>
-            |) : BuildingStep {
-            |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-            |}
-            |
-            |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-            |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage =
-            |    sourced(
-            |  localSource,
-            |  emptyMap()
-            |)
-            |
-        """.trimMargin()
-      }
+      outputFile.shouldBeRight().readText() shouldBe """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.FeatureStorage
+        |import io.mehow.laboratory.FeatureStorage.Companion.sourced
+        |import kotlin.Deprecated
+        |import kotlin.String
+        |import kotlin.collections.Map
+        |import kotlin.collections.emptyMap
+        |
+        |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
+        |    Builder(localSource, emptyMap())
+        |
+        |public interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>
+        |) : BuildingStep {
+        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        |
+        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
+        |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage =
+        |    sourced(
+        |  localSource,
+        |  emptyMap()
+        |)
+        |
+      """.trimMargin()
     }
   }
 })

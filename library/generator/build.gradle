@@ -17,7 +17,6 @@ dependencies {
 
   testImplementation libs.kotest.runnerJunit5
   testImplementation libs.kotest.assertions
-  testImplementation libs.kotest.assertionsArrow
   testImplementation libs.kotest.property
 }
 
