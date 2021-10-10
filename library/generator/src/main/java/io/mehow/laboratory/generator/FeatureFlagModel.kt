@@ -21,6 +21,7 @@ public class FeatureFlagModel internal constructor(
   internal val description: String,
   internal val deprecation: Deprecation?,
   internal val supervisor: Supervisor?,
+  internal val key: String?,
 ) {
   @Deprecated("This method will be removed in 1.0.0. Use prepare instead.")
   public fun generate(file: File): File {
@@ -46,6 +47,7 @@ public class FeatureFlagModel internal constructor(
     internal val description: String = "",
     internal val deprecation: Deprecation? = null,
     internal val supervisor: Supervisor.Builder? = null,
+    internal val key: String? = null,
   ) {
     public fun build(): Either<GenerationFailure, FeatureFlagModel> {
       return either.eager {
@@ -60,6 +62,7 @@ public class FeatureFlagModel internal constructor(
             description = description,
             deprecation = deprecation,
             supervisor = supervisor,
+            key = key,
         )
       }
     }
@@ -112,10 +115,9 @@ public class FeatureFlagModel internal constructor(
   }
 }
 
-public fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull(FeatureFlagModel::source)
+public fun List<FeatureFlagModel>.sourceNames(): List<String> = sourceModels()
     .map(FeatureFlagModel::options)
     .flatMap { it.toList() }
     .map(FeatureFlagOption::name)
 
-public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> =
-  mapNotNull(FeatureFlagModel::source)
+public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> = mapNotNull(FeatureFlagModel::source)
