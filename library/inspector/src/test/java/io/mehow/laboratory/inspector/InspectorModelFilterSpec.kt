@@ -193,12 +193,11 @@ internal class InspectorViewModelFilterSpec : DescribeSpec({
 })
 
 private object SearchFeatureFactory : FeatureFactory {
-  @Suppress("UNCHECKED_CAST")
-  override fun create(): Set<Class<Feature<*>>> = setOf(
+  override fun create(): Set<Class<out Feature<*>>> = setOf(
       RegularNameFeature::class.java,
       Numbered1NameFeature::class.java,
       SourcedFeature::class.java,
-  ) as Set<Class<Feature<*>>>
+  )
 }
 
 private enum class RegularNameFeature : Feature<RegularNameFeature> {

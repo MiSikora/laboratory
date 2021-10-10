@@ -73,17 +73,14 @@ internal class InspectorViewModelNavigationSpec : DescribeSpec({
 })
 
 private object SectionAFactory : FeatureFactory {
-  override fun create(): Set<Class<Feature<*>>> {
-    @Suppress("UNCHECKED_CAST")
-    return setOf(SectionOneFeatureA::class.java, SectionOneFeatureB::class.java) as Set<Class<Feature<*>>>
-  }
+  override fun create(): Set<Class<out Feature<*>>> = setOf(
+      SectionOneFeatureA::class.java,
+      SectionOneFeatureB::class.java,
+  )
 }
 
 private object SectionBFactory : FeatureFactory {
-  override fun create(): Set<Class<Feature<*>>> {
-    @Suppress("UNCHECKED_CAST")
-    return setOf(SectionTwoFeature::class.java) as Set<Class<Feature<*>>>
-  }
+  override fun create() = setOf(SectionTwoFeature::class.java)
 }
 
 private enum class SectionOneFeatureA : Feature<SectionOneFeatureA> {

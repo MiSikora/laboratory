@@ -22,7 +22,7 @@ public class BlockingLaboratory internal constructor(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<out T>> experiment(feature: Class<T>): T = runBlocking { laboratory.experiment(feature) }
+  public fun <T : Feature<out T>> experiment(feature: Class<out T>): T = runBlocking { laboratory.experiment(feature) }
 
   /**
    * Checks if a [Feature] is set to the input [option]. Warning – this call can block the calling thread.

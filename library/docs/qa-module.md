@@ -40,14 +40,13 @@ LaboratoryActivity.configure(
 LaboratoryActivity.start(context)
 
 object CustomFeatureFactory : FeatureFactory {
-  @Suppress("UNCHECKED_CAST")
-  public override fun create() = setOf(
+  public override fun create(): Set<Class<out Feature<*>>> = setOf(
     AllowScreenshots::class.java,
     Authentication::class.java,
     PowerSource::class.java,
     DistanceAlgorithm::class.java,
     LogType::class.java,
-  ) as Set<Class<Feature<*>>>
+  )
 }
 
 enum class AllowScreenshots : Feature<AllowScreenshots> {
@@ -67,8 +66,7 @@ enum class Authentication : Feature<Authentication> {
 
   public override val defaultOption get() = Password
 
-  @Suppress("UNCHECKED_CAST")
-  override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java
 
   enum class Source : Feature<Source> {
     Local,

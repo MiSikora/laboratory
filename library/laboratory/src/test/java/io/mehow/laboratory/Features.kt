@@ -8,8 +8,7 @@ internal enum class FirstFeature : Feature<FirstFeature> {
 
   override val defaultOption get() = A
 
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java
 
   enum class Source : Feature<Source> {
     Local,
@@ -28,8 +27,7 @@ internal enum class SecondFeature : Feature<SecondFeature> {
 
   override val defaultOption get() = A
 
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java
 
   enum class Source : Feature<Source> {
     Local,
@@ -49,8 +47,7 @@ internal enum class EmptySourceFeature : Feature<EmptySourceFeature> {
 
   override val defaultOption get() = A
 
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java
 
   internal enum class Source : Feature<Source>
 }

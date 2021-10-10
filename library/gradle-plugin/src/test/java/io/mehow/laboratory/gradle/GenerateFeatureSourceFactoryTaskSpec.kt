@@ -36,7 +36,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin("|")
   }
@@ -60,7 +60,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |  public override fun create() = setOf(
       |    Class.forName("io.mehow.first.FeatureA${"\${'$'}"}Source"),
       |    Class.forName("io.mehow.second.FeatureB${"\${'$'}"}Source")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -152,7 +152,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    Class.forName("FeatureA${"\${'$'}"}Source"),
       |    Class.forName("FeatureB${"\${'$'}"}Source"),
       |    Class.forName("RootFeature${"\${'$'}"}Source")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -176,7 +176,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |  public override fun create() = setOf(
       |    Class.forName("FeatureB${"\${'$'}"}Source"),
       |    Class.forName("RootFeature${"\${'$'}"}Source")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -196,7 +196,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin("|")
   }
@@ -221,7 +221,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    Class.forName("Child${"\${'$'}"}Source"),
       |    Class.forName("Grandparent${"\${'$'}"}Source"),
       |    Class.forName("Parent${"\${'$'}"}Source")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }

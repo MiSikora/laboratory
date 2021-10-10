@@ -29,15 +29,15 @@ internal class SourcedFeatureStorage(
 
   override suspend fun clear() = localSource.clear()
 
-  private fun <T : Feature<*>> Class<T>.observeSource() = validatedSource()
+  private fun <T : Feature<*>> Class<out T>.observeSource() = validatedSource()
       ?.let { localLaboratory.observe(it) }
       ?: emptyFlow()
 
-  private suspend fun <T : Feature<*>> Class<T>.getSource() = validatedSource()
+  private suspend fun <T : Feature<*>> Class<out T>.getSource() = validatedSource()
       ?.let { localLaboratory.experiment(it) }
 
-  private fun <T : Feature<*>> Class<T>.validatedSource() = enumConstants
-      ?.firstOrNull()
+  private fun <T : Feature<*>> Class<out T>.validatedSource() = options
+      .firstOrNull()
       ?.source
-      ?.takeUnless { it.enumConstants.isNullOrEmpty() }
+      ?.takeUnless { it.options.isEmpty() }
 }

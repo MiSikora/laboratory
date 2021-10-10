@@ -4,7 +4,7 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.supervisorOption
 
 internal data class FeatureUiModel(
-  val type: Class<Feature<*>>,
+  val type: Class<out Feature<*>>,
   val name: String,
   val description: List<TextToken>,
   val models: List<OptionUiModel>,

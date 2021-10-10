@@ -12,6 +12,12 @@ android {
 
   compileSdkVersion versions.androidBuild.compileSdk
 
+  compileOptions {
+    kotlinOptions.freeCompilerArgs += [
+        "-Xopt-in=kotlin.RequiresOptIn",
+    ]
+  }
+
   signingConfigs {
     config {
       keyAlias "mehow-io"

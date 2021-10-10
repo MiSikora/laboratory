@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.WildcardTypeName
 import io.mehow.laboratory.Feature
 import kotlin.DeprecationLevel.ERROR
 import kotlin.DeprecationLevel.HIDDEN
@@ -48,15 +49,10 @@ internal class FeatureFlagGenerator(
             .build()
       }
 
-  private val suppressCast = AnnotationSpec.builder(Suppress::class)
-      .addMember("%S", "UNCHECKED_CAST")
-      .build()
-
   private val sourceProperty = feature.source?.let { nestedSource ->
     nestedSource to PropertySpec
         .builder(sourcePropertyName, featureClassType, OVERRIDE)
-        .addAnnotation(suppressCast)
-        .initializer("%T::class.java as %T", nestedSource.className, featureClassType)
+        .initializer("%T::class.java", nestedSource.className)
         .build()
   }
 
@@ -118,6 +114,6 @@ internal class FeatureFlagGenerator(
     const val supervisorOptionPropertyName = "supervisorOption"
 
     val featureType = Feature::class(STAR)
-    val featureClassType = Class::class(featureType)
+    val featureClassType = Class::class(WildcardTypeName.producerOf(featureType))
   }
 }

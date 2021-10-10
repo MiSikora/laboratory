@@ -9,6 +9,7 @@ import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.WildcardTypeName
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.joinToCode
 import io.mehow.laboratory.Feature
@@ -63,7 +64,7 @@ internal class FeatureFactoryGenerator(
   fun fileSpec() = factoryFile
 
   private companion object {
-    val featureType = Class::class(Feature::class(STAR))
+    val featureType = Class::class(WildcardTypeName.producerOf(Feature::class(STAR)))
     val factoryReturnType = Set::class(featureType)
   }
 }

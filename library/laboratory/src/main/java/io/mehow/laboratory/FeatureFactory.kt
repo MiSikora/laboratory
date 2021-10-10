@@ -8,7 +8,7 @@ public interface FeatureFactory {
   /**
    * Returns set of all available feature flags.
    */
-  public fun create(): Set<Class<Feature<*>>>
+  public fun create(): Set<Class<out Feature<*>>>
 
   /**
    * Creates a new [FeatureFactory] that will return a combined set of this factory and the other factory.

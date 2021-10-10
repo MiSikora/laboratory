@@ -82,8 +82,7 @@ internal enum class LocationTracking : LocationTracking<Authentication> {
 
   public override val defaultOption get() = Disabled
 
-  @Suppress("UNCHECKED_CAST")
-  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+  public override val source = Source::class.java
 
   internal enum class Source : Feature<Source> {
     Local,

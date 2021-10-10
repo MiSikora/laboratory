@@ -25,7 +25,7 @@ internal class SectionFragment : Fragment(R.layout.io_mehow_laboratory_feature_g
   private val featureAdapter = FeatureAdapter(object : FeatureAdapter.Listener {
     override fun onSelectOption(option: Feature<*>) = inspectorViewModel.selectFeature(option)
 
-    override fun onGoToFeature(feature: Class<Feature<*>>) {
+    override fun onGoToFeature(feature: Class<out Feature<*>>) {
       lifecycleScope.launch {
         val coordinates = inspectorViewModel.goTo(feature)
         if (coordinates == null) {

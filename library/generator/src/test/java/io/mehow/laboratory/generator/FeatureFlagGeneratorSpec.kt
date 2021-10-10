@@ -183,7 +183,6 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.Feature
         |import java.lang.Class
-        |import kotlin.Suppress
         |
         |internal enum class FeatureA : Feature<FeatureA> {
         |  First,
@@ -193,8 +192,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  public override val defaultOption: FeatureA
         |    get() = First
         |
-        |  @Suppress("UNCHECKED_CAST")
-        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |  public override val source: Class<out Feature<*>> = Source::class.java
         |
         |  internal enum class Source : Feature<Source> {
         |    Local,
@@ -252,7 +250,6 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.Feature
         |import java.lang.Class
-        |import kotlin.Suppress
         |
         |internal enum class FeatureA : Feature<FeatureA> {
         |  First,
@@ -262,8 +259,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  public override val defaultOption: FeatureA
         |    get() = First
         |
-        |  @Suppress("UNCHECKED_CAST")
-        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |  public override val source: Class<out Feature<*>> = Source::class.java
         |
         |  internal enum class Source : Feature<Source> {
         |    Local,
@@ -289,7 +285,6 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.Feature
         |import java.lang.Class
-        |import kotlin.Suppress
         |
         |internal enum class FeatureA : Feature<FeatureA> {
         |  First,
@@ -299,8 +294,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  public override val defaultOption: FeatureA
         |    get() = First
         |
-        |  @Suppress("UNCHECKED_CAST")
-        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |  public override val source: Class<out Feature<*>> = Source::class.java
         |
         |  internal enum class Source : Feature<Source> {
         |    Local,
@@ -326,7 +320,6 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.Feature
         |import java.lang.Class
-        |import kotlin.Suppress
         |
         |public enum class FeatureA : Feature<FeatureA> {
         |  First,
@@ -336,8 +329,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  public override val defaultOption: FeatureA
         |    get() = First
         |
-        |  @Suppress("UNCHECKED_CAST")
-        |  public override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
+        |  public override val source: Class<out Feature<*>> = Source::class.java
         |
         |  public enum class Source : Feature<Source> {
         |    Local,
