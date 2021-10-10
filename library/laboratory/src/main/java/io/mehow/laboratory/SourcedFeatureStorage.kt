@@ -12,7 +12,7 @@ internal class SourcedFeatureStorage(
 ) : FeatureStorage {
   private val localLaboratory = Laboratory.create(localSource)
 
-  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = feature.observeSource()
+  override fun observeFeatureName(feature: Class<out Feature<*>>) = feature.observeSource()
       .map { source -> remoteSources[source.name] ?: localSource }
       .onEmpty { emit(localSource) }
       .let {
@@ -20,12 +20,12 @@ internal class SourcedFeatureStorage(
         it.flatMapLatest { storage -> storage.observeFeatureName(feature) }
       }
 
-  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String? {
+  override suspend fun getFeatureName(feature: Class<out Feature<*>>): String? {
     val storage = feature.getSource()?.let { remoteSources[it.name] } ?: localSource
     return storage.getFeatureName(feature)
   }
 
-  override suspend fun <T : Feature<*>> setOptions(vararg options: T) = localSource.setOptions(*options)
+  override suspend fun setOptions(vararg options: Feature<*>) = localSource.setOptions(*options)
 
   override suspend fun clear() = localSource.clear()
 

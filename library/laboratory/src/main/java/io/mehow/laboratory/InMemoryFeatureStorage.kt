@@ -7,20 +7,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 internal class InMemoryFeatureStorage : FeatureStorage {
-  private val featureFlow = MutableStateFlow(emptyMap<Class<*>, String>())
+  private val featureFlow = MutableStateFlow(emptyMap<Class<out Feature<*>>, String>())
 
-  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = featureFlow
+  override fun observeFeatureName(feature: Class<out Feature<*>>) = featureFlow
       .map { it[feature] }
       .distinctUntilChanged()
 
-  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = featureFlow.map { it[feature] }.first()
+  override suspend fun getFeatureName(feature: Class<out Feature<*>>) = featureFlow.map { it[feature] }.first()
 
   override suspend fun clear(): Boolean {
     featureFlow.update { emptyMap() }
     return true
   }
 
-  override suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean {
+  override suspend fun setOptions(vararg options: Feature<*>): Boolean {
     val newFeatures = options.associate { it.javaClass to it.name }
     featureFlow.update { it + newFeatures }
     return true
