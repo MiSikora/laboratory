@@ -12,23 +12,23 @@ import kotlinx.coroutines.flow.flowOf
 
 internal class LaboratorySpec : DescribeSpec({
   val throwingStorage = object : FeatureStorage {
-    override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = fail("Unexpected call")
-    override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = fail("Unexpected call")
-    override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+    override fun observeFeatureName(feature: Class<out Feature<*>>) = fail("Unexpected call")
+    override suspend fun getFeatureName(feature: Class<out Feature<*>>) = fail("Unexpected call")
+    override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
     override suspend fun clear() = fail("Unexpected call")
   }
 
   val nullStorage = object : FeatureStorage {
-    override fun <T : Feature<*>> observeFeatureName(feature: Class<T>): Flow<String?> = flowOf(null)
-    override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String? = null
-    override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+    override fun observeFeatureName(feature: Class<out Feature<*>>): Flow<String?> = flowOf(null)
+    override suspend fun getFeatureName(feature: Class<out Feature<*>>): String? = null
+    override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
     override suspend fun clear() = fail("Unexpected call")
   }
 
   val emptyStorage = object : FeatureStorage {
-    override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = flowOf("")
-    override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = ""
-    override suspend fun <T : Feature<*>> setOptions(vararg options: T) = fail("Unexpected call")
+    override fun observeFeatureName(feature: Class<out Feature<*>>) = flowOf("")
+    override suspend fun getFeatureName(feature: Class<out Feature<*>>) = ""
+    override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
     override suspend fun clear() = fail("Unexpected call")
   }
 

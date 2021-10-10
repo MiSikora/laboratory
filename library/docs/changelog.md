@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Make `Feature` and other classes covariant.
+- `FeatureStorage` functions are no longer parameterized over `Feature`. They accept raw class type instead.
 - Generator and Gradle plugin no longer validate package names, duplicates and other things that are checked by compiler.
 - Model builders accept now `ClassName` in constructor.
 - Upgrade to Kotlin `1.5.21`.

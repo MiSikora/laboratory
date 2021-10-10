@@ -10,13 +10,13 @@ public interface FeatureStorage {
    * Observes changes to currently selected feature flag name.
    * If feature flag is not available, it should emit `null`.
    */
-  public fun <T : Feature<*>> observeFeatureName(feature: Class<T>): Flow<String?>
+  public fun observeFeatureName(feature: Class<out Feature<*>>): Flow<String?>
 
   /**
    * Returns the current value of a selected feature flag name.
    * If feature flag is not available, it should return `null`.
    */
-  public suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>): String?
+  public suspend fun getFeatureName(feature: Class<out Feature<*>>): String?
 
   /**
    * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
@@ -24,7 +24,7 @@ public interface FeatureStorage {
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean
+  public suspend fun setOptions(vararg options: Feature<*>): Boolean
 
   /**
    * Removes all stored feature flag options.
@@ -35,20 +35,20 @@ public interface FeatureStorage {
       message = "This method will be removed in 1.0.0. Use 'setOptions()' instead.",
       replaceWith = ReplaceWith("setOptions(*options)"),
   )
-  public suspend fun <T : Feature<*>> setFeatures(vararg options: T): Boolean = setOptions(*options)
+  public suspend fun setFeatures(vararg options: Feature<*>): Boolean = setOptions(*options)
 
   /**
    * Sets a [Feature] to have the input [option].
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setOption(option: T): Boolean = setOptions(option)
+  public suspend fun setOption(option: Feature<*>): Boolean = setOptions(option)
 
   @Deprecated(
       message = "This method will be removed in 1.0.0. Use 'setOption()' instead.",
       replaceWith = ReplaceWith("setOption(option)"),
   )
-  public suspend fun <T : Feature<*>> setFeature(option: T): Boolean = setOption(option)
+  public suspend fun setFeature(option: Feature<*>): Boolean = setOption(option)
 
   public companion object {
     /**

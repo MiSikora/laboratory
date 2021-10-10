@@ -12,21 +12,22 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 
+@ExperimentalCoroutinesApi
 internal class SharedPreferencesFeatureStorage(
   private val preferences: SharedPreferences,
 ) : FeatureStorage {
-  override fun <T : Feature<*>> observeFeatureName(feature: Class<T>) = callbackFlow {
+  override fun observeFeatureName(feature: Class<out Feature<*>>) = callbackFlow {
     val listener = OnSharedPreferenceChangeListener { _, key ->
-      if (key == feature.name) @OptIn(ExperimentalCoroutinesApi::class) trySend(getStringSafe(key))
+      if (key == feature.name) trySend(getStringSafe(key))
     }
-    @OptIn(ExperimentalCoroutinesApi::class) trySend(getStringSafe(feature.name))
+    send(getStringSafe(feature.name))
     preferences.registerOnSharedPreferenceChangeListener(listener)
-    @OptIn(ExperimentalCoroutinesApi::class) awaitClose {
+    awaitClose {
       preferences.unregisterOnSharedPreferenceChangeListener(listener)
     }
   }.conflate()
 
-  override suspend fun <T : Feature<*>> getFeatureName(feature: Class<T>) = getStringSafe(feature.name)
+  override suspend fun getFeatureName(feature: Class<out Feature<*>>) = getStringSafe(feature.name)
 
   private fun getStringSafe(key: String) = try {
     preferences.getString(key, null)
@@ -34,7 +35,7 @@ internal class SharedPreferencesFeatureStorage(
     null
   }
 
-  override suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean {
+  override suspend fun setOptions(vararg options: Feature<*>): Boolean {
     preferences.edit {
       for (option in options) {
         putString(option.javaClass.name, option.name)
@@ -56,6 +57,7 @@ internal class SharedPreferencesFeatureStorage(
 /**
  * Creates a [FeatureStorage] that is backed by [SharedPreferences].
  */
+@ExperimentalCoroutinesApi
 public fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
   return SharedPreferencesFeatureStorage(preferences)
 }
@@ -66,6 +68,7 @@ public fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPrefere
 @Deprecated(
     "This function will be removed in 1.0.0. Use FeatureStorage.sharedPreferences(SharedPreferences) instead.",
 )
+@ExperimentalCoroutinesApi
 public fun FeatureStorage.Companion.sharedPreferences(context: Context, fileName: String): FeatureStorage {
   val preferences = context.getSharedPreferences(fileName, MODE_PRIVATE)
   return sharedPreferences(preferences)
