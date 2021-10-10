@@ -1,5 +1,6 @@
 package io.mehow.laboratory.gradle
 
+import com.squareup.kotlinpoet.ClassName
 import io.mehow.laboratory.generator.FeatureFactoryModel
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.Visibility.Internal
@@ -34,11 +35,9 @@ public class FeatureFactoryInput internal constructor(
     projectFilter = filter
   }
 
-  internal fun toBuilder(features: List<FeatureFlagModel>): FeatureFactoryModel.Builder {
-    return FeatureFactoryModel.Builder(
-        visibility = if (isPublic) Public else Internal,
-        packageName = packageName ?: packageNameProvider(),
-        features = features,
-    )
-  }
+  internal fun toBuilder(features: List<FeatureFlagModel>, simpleName: String) = FeatureFactoryModel.Builder(
+      visibility = if (isPublic) Public else Internal,
+      className = ClassName(packageName ?: packageNameProvider(), simpleName),
+      features = features,
+  )
 }

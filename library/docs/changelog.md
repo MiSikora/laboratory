@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Make `Feature` and other classes covariant.
+- Generator and Gradle plugin no longer validate package names, duplicates and other things that are checked by compiler.
+- Model builders accept now `ClassName` in constructor.
 - Upgrade to Kotlin `1.5.21`.
 - Upgrade to Material `1.4.0`.
 - Upgrade to CoreKtx `1.6.0`.
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FeatureStorage.Companion.sharedPreferences(Context)` function. Use overload that accepts `SharedPreferences` instead.
 - `FeatureStorage.Companion.dataStore(() -> File)` function. Use overload that accepts `DataStore` instead.
 - `FeatureStorage.Companion.dataStore(Context, String)` function. Use overload that accepts `DataStore` instead.
+- `generate()` methods on generation models. Use `prepare()` and operate on `FileSpec` directly instead.
 
 ## [0.13.1] - 2021-06-27
 

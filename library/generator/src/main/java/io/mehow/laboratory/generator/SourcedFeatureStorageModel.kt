@@ -1,49 +1,34 @@
 package io.mehow.laboratory.generator
 
 import arrow.core.Either
-import arrow.core.computations.either
+import arrow.core.right
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
 import java.io.File
 
-public class SourcedFeatureStorageModel private constructor(
+public class SourcedFeatureStorageModel internal constructor(
   internal val visibility: Visibility,
-  className: ClassName,
+  internal val className: ClassName,
   internal val sourceNames: List<String>,
 ) {
-  internal val packageName = className.packageName
-  internal val name = className.simpleName
-
+  @Deprecated("This method will be removed in 1.0.0. Use prepare instead.")
   public fun generate(file: File): File {
-    SourcedFeatureStorageGenerator(this).generate(file)
-    val outputDir = file.toPath().resolve(packageName.replace(".", "/")).toFile()
-    return File(outputDir, "$name.kt")
+    prepare().writeTo(file)
+    val outputDir = file.toPath().resolve(className.packageName.replace(".", "/")).toFile()
+    return File(outputDir, "${className.simpleName}.kt")
   }
 
+  public fun prepare(): FileSpec = SourcedFeatureStorageGenerator(this).fileSpec()
+
   public data class Builder(
-    internal val visibility: Visibility,
-    internal val packageName: String,
+    private val visibility: Visibility,
+    private val className: ClassName,
     internal val sourceNames: List<String>,
   ) {
-    internal val name = "SourcedGeneratedFeatureStorage"
-    internal val fqcn = if (packageName.isEmpty()) name else "$packageName.$name"
-
-    public fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> {
-      return either.eager {
-        val packageName = validatePackageName().bind()
-        SourcedFeatureStorageModel(visibility, ClassName(packageName, name), sourceNames)
-      }
-    }
-
-    private fun validatePackageName(): Either<GenerationFailure, String> {
-      return Either.conditionally(
-          test = packageName.isEmpty() || packageName.matches(packageNameRegex),
-          ifTrue = { packageName },
-          ifFalse = { InvalidPackageName(fqcn) }
-      )
-    }
-
-    private companion object {
-      val packageNameRegex = """^(?:[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)(?:\.[a-zA-Z]+(?:\d*[a-zA-Z_]*)*)*${'$'}""".toRegex()
-    }
+    public fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> = SourcedFeatureStorageModel(
+        visibility,
+        className,
+        sourceNames,
+    ).right()
   }
 }

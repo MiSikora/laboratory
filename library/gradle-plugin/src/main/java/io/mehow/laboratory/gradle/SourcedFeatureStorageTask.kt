@@ -1,7 +1,8 @@
 package io.mehow.laboratory.gradle
 
 import arrow.core.identity
-import io.mehow.laboratory.generator.buildAll
+import arrow.core.traverseEither
+import io.mehow.laboratory.generator.FeatureFlagModel.Builder
 import io.mehow.laboratory.generator.sourceNames
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Internal
@@ -14,7 +15,7 @@ public open class SourcedFeatureStorageTask : DefaultTask() {
   @get:Internal internal lateinit var codeGenDir: File
 
   @TaskAction public fun generateSourcedFeatureStorage() {
-    val sourceNames = features.flatMap(FeatureFlagInput::toBuilders).buildAll().fold(
+    val sourceNames = features.flatMap(FeatureFlagInput::toBuilders).traverseEither(Builder::build).fold(
         ifLeft = { failure -> error(failure.message) },
         ifRight = ::identity
     ).sourceNames().distinct()
@@ -23,7 +24,7 @@ public open class SourcedFeatureStorageTask : DefaultTask() {
         ifLeft = { failure -> error(failure.message) },
         ifRight = { sourcedFeatureStorageModel ->
           codeGenDir.deleteRecursively()
-          sourcedFeatureStorageModel.generate(codeGenDir)
+          sourcedFeatureStorageModel.prepare().writeTo(codeGenDir)
         }
     )
   }

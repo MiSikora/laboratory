@@ -13,14 +13,13 @@ import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.joinToCode
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
-import java.io.File
 
 internal class FeatureFactoryGenerator(
   factory: FeatureFactoryModel,
   functionName: String,
 ) {
   private val featureClasses = factory.features
-      .map(FeatureFlagModel::reflectionName)
+      .map { it.className.reflectionName() }
       .sorted()
       .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
       .joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
@@ -56,12 +55,12 @@ internal class FeatureFactoryGenerator(
       .addStatement("return %N", factoryType)
       .build()
 
-  private val factoryFile = FileSpec.builder(factory.packageName, factory.name)
+  private val factoryFile = FileSpec.builder(factory.className.packageName, factory.className.simpleName)
       .addFunction(factoryExtension)
       .addType(factoryType)
       .build()
 
-  fun generate(file: File) = factoryFile.writeTo(file)
+  fun fileSpec() = factoryFile
 
   private companion object {
     val featureType = Class::class(Feature::class(STAR))

@@ -1,19 +1,12 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.nel
-import arrow.core.nonEmptyListOf
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.mehow.laboratory.generator.FeatureValuesCollision
-import io.mehow.laboratory.generator.FeaturesCollision
-import io.mehow.laboratory.generator.InvalidFeatureName
-import io.mehow.laboratory.generator.InvalidFeatureValues
-import io.mehow.laboratory.generator.InvalidPackageName
-import io.mehow.laboratory.generator.NoFeatureValues
-import io.mehow.laboratory.generator.SelfSupervision
+import io.mehow.laboratory.generator.GenerationFailure.NoOption
+import io.mehow.laboratory.generator.GenerationFailure.SelfSupervision
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -410,69 +403,9 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
-    result.output shouldContain NoFeatureValues("Feature").message
+    result.output shouldContain NoOption("Feature").message
 
     val feature = fixture.featureFile("Feature")
-    feature.shouldNotExist()
-  }
-
-  "fails for features with colliding options" {
-    val fixture = "feature-flag-option-colliding".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
-    result.output shouldContain FeatureValuesCollision("First".nel(), "Feature").message
-
-    val feature = fixture.featureFile("Feature")
-    feature.shouldNotExist()
-  }
-
-  "fails for features with corrupted options" {
-    val fixture = "feature-flag-option-corrupted".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidFeatureValues(nonEmptyListOf("!!!, ???"), "Feature").message
-
-    val feature = fixture.featureFile("Feature")
-    feature.shouldNotExist()
-  }
-
-  "fails for features with corrupted names" {
-    val fixture = "feature-flag-name-corrupted".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidFeatureName("!!!", "!!!").message
-
-    val feature = fixture.featureFile("!!!")
-    feature.shouldNotExist()
-  }
-
-  "fails for features with corrupted package names" {
-    val fixture = "feature-flag-package-name-corrupted".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidPackageName("!!!.Feature").message
-
-    val feature = fixture.featureFile("!!!.Feature")
-    feature.shouldNotExist()
-  }
-
-  "fails for features with colliding namespaces" {
-    val fixture = "feature-flag-namespace-colliding".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateFeatureFlags")!!.outcome shouldBe FAILED
-    result.output shouldContain FeaturesCollision("io.mehow.Feature".nel()).message
-
-    val feature = fixture.featureFile("io.mehow.Feature")
     feature.shouldNotExist()
   }
 

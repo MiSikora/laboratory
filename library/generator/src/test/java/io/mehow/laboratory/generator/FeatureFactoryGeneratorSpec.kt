@@ -1,162 +1,42 @@
 package io.mehow.laboratory.generator
 
-import arrow.core.getOrElse
-import arrow.core.identity
-import arrow.core.nel
+import com.squareup.kotlinpoet.ClassName
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.shouldBe
-import io.kotest.property.Arb
-import io.kotest.property.arbitrary.int
-import io.kotest.property.arbitrary.stringPattern
-import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
-import kotlin.io.path.createTempDirectory
 
 internal class FeatureFactoryGeneratorSpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(
       visibility = Internal,
-      packageName = "io.mehow",
-      names = listOf("FeatureA"),
+      className = ClassName("io.mehow", "FeatureA"),
       options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-  ).build().getOrElse { error("Should be right") }
+  ).build().shouldBeRight()
 
   val featureB = FeatureFlagModel.Builder(
       visibility = Internal,
-      packageName = "io.mehow",
-      names = listOf("FeatureB"),
+      className = ClassName("io.mehow", "FeatureB"),
       options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-  ).build().getOrElse { error("Should be right") }
+  ).build().shouldBeRight()
 
   val featureC = FeatureFlagModel.Builder(
       visibility = Internal,
-      packageName = "io.mehow.c",
-      names = listOf("FeatureA"),
+      className = ClassName("io.mehow.c", "FeatureA"),
       options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-  ).build().getOrElse { error("Should be right") }
+  ).build().shouldBeRight()
 
   val factoryBuilder = FeatureFactoryModel.Builder(
       visibility = Internal,
-      packageName = "io.mehow",
+      className = ClassName("io.mehow", "GeneratedFeatureFactory"),
       features = listOf(featureA, featureB, featureC),
   )
 
-  describe("feature factory model") {
-    context("package name") {
-      it("can be empty") {
-        val builder = factoryBuilder.copy(packageName = "")
-
-        val result = builder.build("GeneratedFeatureFactory")
-
-        result.shouldBeRight()
-      }
-
-      it("can be valid java package name") {
-        val packagePart = Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")
-        val packageCount = Arb.int(1..10)
-        checkAll(packagePart, packageCount) { part, count ->
-          val packageName = List(count, ::identity).joinToString(".") {
-            part.take(1) + part.drop(1).toList().shuffled().joinToString("")
-          }
-          val builder = factoryBuilder.copy(packageName = packageName)
-
-          val result = builder.build("GeneratedFeatureFactory")
-
-          result.shouldBeRight()
-        }
-      }
-
-      it("cannot contain characters that are not alphanumeric or underscores") {
-        checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { packageName ->
-          val builder = factoryBuilder.copy(packageName = packageName)
-
-          val result = builder.build("GeneratedFeatureFactory")
-
-          result shouldBeLeft InvalidPackageName("${packageName}.GeneratedFeatureFactory")
-        }
-      }
-    }
-
-    context("name") {
-      it("cannot be blank") {
-        checkAll(Arb.stringPattern("([ ]{0,10})")) { name ->
-          val result = factoryBuilder.build(name)
-
-          result shouldBeLeft InvalidFactoryName(name, "${factoryBuilder.packageName}.${name}")
-        }
-      }
-
-      it("cannot start with an underscore") {
-        checkAll(Arb.stringPattern("[_]([a-zA-Z0-9_]{0,10})")) { name ->
-          val result = factoryBuilder.build(name)
-
-          result shouldBeLeft InvalidFactoryName(name, "${factoryBuilder.packageName}.${name}")
-        }
-      }
-
-      it("cannot contain characters that are not alphanumeric or underscores") {
-        checkAll(Arb.stringPattern("[^a-zA-Z0-9_]")) { name ->
-          val result = factoryBuilder.build(name)
-
-          result shouldBeLeft InvalidFactoryName(name, "${factoryBuilder.packageName}.${name}")
-        }
-      }
-
-      it("can contain alphanumeric characters or underscores") {
-        checkAll(Arb.stringPattern("[a-zA-Z]([a-zA-Z0-9_]{0,10})")) { name ->
-          val result = factoryBuilder.build(name)
-
-          result.shouldBeRight()
-        }
-      }
-    }
-
-    context("options") {
-      it("can be empty") {
-        val builder = factoryBuilder.copy(features = emptyList())
-
-        val result = builder.build("GeneratedFeatureFactory")
-
-        result.shouldBeRight()
-      }
-
-      it("cannot have duplicates") {
-        val builderA = factoryBuilder.copy(
-            features = listOf(featureA, featureA, featureB, featureC)
-        )
-        val resultA = builderA.build("GeneratedFeatureFactory")
-        resultA shouldBeLeft FeaturesCollision(featureA.reflectionName.nel())
-
-        val builderB = factoryBuilder.copy(
-            features = listOf(featureA, featureB, featureB, featureC)
-        )
-        val resultB = builderB.build("GeneratedFeatureFactory")
-        resultB shouldBeLeft FeaturesCollision(featureB.reflectionName.nel())
-
-        val builderC = factoryBuilder.copy(
-            features = listOf(featureA, featureB, featureC, featureC)
-        )
-        val resultC = builderC.build("GeneratedFeatureFactory")
-        resultC shouldBeLeft FeaturesCollision(featureC.reflectionName.nel())
-      }
-
-      it("can have unique features") {
-        val result = factoryBuilder.build("GeneratedFeatureFactory")
-
-        result.shouldBeRight()
-      }
-    }
-  }
-
   describe("generated feature flag factory") {
     it("can be internal") {
-      val tempDir = createTempDirectory().toFile()
+      val fileSpec = factoryBuilder
+          .build()
+          .map { model -> model.prepare("generated").toString() }
 
-      val outputFile = factoryBuilder
-          .build("GeneratedFeatureFactory")
-          .map { model -> model.generate("generated", tempDir) }
-
-      outputFile.shouldBeRight().readText() shouldBe """
+      fileSpec shouldBeRight """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
@@ -181,14 +61,11 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
     }
 
     it("can be public") {
-      val tempDir = createTempDirectory().toFile()
-      val builder = factoryBuilder.copy(visibility = Public)
+      val fileSpec = factoryBuilder.copy(visibility = Public)
+          .build()
+          .map { model -> model.prepare("generated").toString() }
 
-      val outputFile = builder
-          .build("GeneratedFeatureFactory")
-          .map { model -> model.generate("generated", tempDir) }
-
-      outputFile.shouldBeRight().readText() shouldBe """
+      fileSpec shouldBeRight """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
@@ -213,14 +90,11 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
     }
 
     it("is optimized in case of no features") {
-      val tempDir = createTempDirectory().toFile()
-      val builder = factoryBuilder.copy(features = emptyList())
+      val fileSpec = factoryBuilder.copy(features = emptyList())
+          .build()
+          .map { model -> model.prepare("generated").toString() }
 
-      val outputFile = builder
-          .build("GeneratedFeatureFactory")
-          .map { model -> model.generate("generated", tempDir) }
-
-      outputFile.shouldBeRight().readText() shouldBe """
+      fileSpec shouldBeRight """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature

@@ -1,6 +1,7 @@
 package io.mehow.laboratory.gradle
 
 import arrow.core.getOrHandle
+import com.squareup.kotlinpoet.ClassName
 import io.mehow.laboratory.generator.Deprecation
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.FeatureFlagOption
@@ -117,8 +118,7 @@ public class FeatureFlagInput internal constructor(
 
   private fun toBuilder() = FeatureFlagModel.Builder(
       visibility = if (isPublic) Public else Internal,
-      packageName = packageName ?: packageNameProvider(),
-      names = listOf(name),
+      className = ClassName(packageName ?: packageNameProvider(), name),
       options = options,
       sourceOptions = sources,
       description = description.orEmpty(),

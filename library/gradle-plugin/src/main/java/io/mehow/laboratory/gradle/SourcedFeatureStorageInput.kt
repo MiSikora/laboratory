@@ -1,5 +1,6 @@
 package io.mehow.laboratory.gradle
 
+import com.squareup.kotlinpoet.ClassName
 import io.mehow.laboratory.generator.SourcedFeatureStorageModel
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
@@ -33,11 +34,9 @@ public class SourcedFeatureStorageInput internal constructor(
     projectFilter = filter
   }
 
-  internal fun toBuilder(sourceNames: List<String>): SourcedFeatureStorageModel.Builder {
-    return SourcedFeatureStorageModel.Builder(
-        visibility = if (isPublic) Public else Internal,
-        packageName = packageName ?: packageNameProvider(),
-        sourceNames = sourceNames,
-    )
-  }
+  internal fun toBuilder(sourceNames: List<String>) = SourcedFeatureStorageModel.Builder(
+      visibility = if (isPublic) Public else Internal,
+      className = ClassName(packageName ?: packageNameProvider(), "SourcedGeneratedFeatureStorage"),
+      sourceNames = sourceNames,
+  )
 }

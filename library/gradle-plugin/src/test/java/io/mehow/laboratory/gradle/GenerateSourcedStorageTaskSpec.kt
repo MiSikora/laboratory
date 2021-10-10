@@ -7,12 +7,7 @@ import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.mehow.laboratory.generator.FeatureValuesCollision
-import io.mehow.laboratory.generator.FeaturesCollision
-import io.mehow.laboratory.generator.InvalidFeatureName
-import io.mehow.laboratory.generator.InvalidFeatureValues
-import io.mehow.laboratory.generator.InvalidPackageName
-import io.mehow.laboratory.generator.NoFeatureValues
+import io.mehow.laboratory.generator.GenerationFailure.NoOption
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -173,85 +168,13 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     factory.readText() shouldContain "public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage)"
   }
 
-  "fails for corrupted storage package name" {
-    val fixture = "sourced-storage-package-name-corrupted".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidPackageName("!!!.SourcedGeneratedFeatureStorage").message
-
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
-  }
-
   "fails for feature flags with no options" {
     val fixture = "sourced-storage-feature-flag-option-missing".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain NoFeatureValues("Feature").message
-
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
-  }
-
-  "fails for feature flags with colliding options" {
-    val fixture = "sourced-storage-feature-flag-option-colliding".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain FeatureValuesCollision("First".nel(), "Feature").message
-
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
-  }
-
-  "fails for feature flags with corrupted options" {
-    val fixture = "sourced-storage-feature-flag-option-corrupted".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidFeatureValues(nonEmptyListOf("!!!, ???"), "Feature").message
-
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
-  }
-
-  "fails for feature flags with corrupted names" {
-    val fixture = "sourced-storage-feature-flag-name-corrupted".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidFeatureName("!!!", "!!!").message
-
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
-  }
-
-  "fails for feature flags with corrupted package names" {
-    val fixture = "sourced-storage-feature-flag-package-name-corrupted".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain InvalidPackageName("!!!.Feature").message
-
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
-  }
-
-  "fails for feature flags with colliding namespaces" {
-    val fixture = "sourced-storage-feature-flag-namespace-colliding".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain FeaturesCollision("io.mehow.Feature".nel()).message
+    result.output shouldContain NoOption("Feature").message
 
     val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
     feature.shouldNotExist()
@@ -377,18 +300,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |  )
       |)
     """.trimMargin("|")
-  }
-
-  "fails for features with colliding namespaces between modules" {
-    val fixture = "sourced-storage-multi-module-namespace-colliding".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
-
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain FeaturesCollision("Feature".nel()).message
-
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
   }
 
   "generates storage for Android project" {

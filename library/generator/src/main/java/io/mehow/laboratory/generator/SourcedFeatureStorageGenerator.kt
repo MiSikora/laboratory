@@ -16,7 +16,6 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.joinToCode
 import io.mehow.laboratory.FeatureStorage
-import java.io.File
 import java.util.Locale
 
 internal class SourcedFeatureStorageGenerator(
@@ -59,7 +58,7 @@ internal class SourcedFeatureStorageGenerator(
       .addAnnotation(deprecated)
       .build()
 
-  private val buildingStepClassName = ClassName(storage.packageName, "BuildingStep")
+  private val buildingStepClassName = ClassName(storage.className.packageName, "BuildingStep")
 
   private val buildingStepType = TypeSpec.interfaceBuilder(buildingStepClassName)
       .addModifiers(storage.visibility.modifier)
@@ -71,7 +70,7 @@ internal class SourcedFeatureStorageGenerator(
 
   private val remoteStepClassNames = sourceNames.distinct()
       .sorted()
-      .map { ClassName(storage.packageName, it + stepSuffix) }
+      .map { ClassName(storage.className.packageName, it + stepSuffix) }
 
   private val remoteStepTypes = remoteStepClassNames
       .windowed(size = 2, step = 1, partialWindows = true) { sources ->
@@ -91,7 +90,7 @@ internal class SourcedFeatureStorageGenerator(
             .build()
       }
 
-  private val builderType = TypeSpec.classBuilder(ClassName(storage.packageName, "Builder"))
+  private val builderType = TypeSpec.classBuilder(ClassName(storage.className.simpleName, "Builder"))
       .addModifiers(PRIVATE, DATA)
       .addSuperinterfaces(remoteStepClassNames + buildingStepClassName)
       .primaryConstructor(FunSpec.constructorBuilder()
@@ -137,7 +136,7 @@ internal class SourcedFeatureStorageGenerator(
       .addStatement("return %N(%L, %M())", builderType, localSourceParam, emptyMap)
       .build()
 
-  private val storageFile = FileSpec.builder(storage.packageName, storage.name)
+  private val storageFile = FileSpec.builder(storage.className.packageName, storage.className.simpleName)
       .addFunction(storageBuilderExtension)
       .apply {
         for (type in remoteStepTypes) {
@@ -149,7 +148,7 @@ internal class SourcedFeatureStorageGenerator(
       .addFunction(storageFactoryExtension)
       .build()
 
-  fun generate(file: File) = storageFile.writeTo(file)
+  fun fileSpec() = storageFile
 
   private companion object {
     const val stepSuffix = "Step"

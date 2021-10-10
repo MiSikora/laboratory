@@ -10,7 +10,6 @@ import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import io.mehow.laboratory.Feature
-import java.io.File
 import kotlin.DeprecationLevel.ERROR
 import kotlin.DeprecationLevel.HIDDEN
 import kotlin.DeprecationLevel.WARNING
@@ -106,11 +105,11 @@ internal class FeatureFlagGenerator(
       .apply { supervisorOptionProperty?.let { addProperty(it) } }
       .build()
 
-  private val fileSpec = FileSpec.builder(feature.packageName, feature.name)
+  private val fileSpec = FileSpec.builder(feature.className.packageName, feature.className.simpleName)
       .addType(typeSpec)
       .build()
 
-  fun generate(output: File) = fileSpec.writeTo(output)
+  fun fileSpec() = fileSpec
 
   private companion object {
     const val defaultOptionPropertyName = "defaultOption"
