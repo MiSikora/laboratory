@@ -35,7 +35,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin("|")
   }
@@ -58,7 +58,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |  public override fun create() = setOf(
       |    Class.forName("io.mehow.first.FeatureA"),
       |    Class.forName("io.mehow.second.FeatureB")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -149,7 +149,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |    Class.forName("FeatureA"),
       |    Class.forName("FeatureB"),
       |    Class.forName("RootFeature")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -172,7 +172,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |  public override fun create() = setOf(
       |    Class.forName("FeatureB"),
       |    Class.forName("RootFeature")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }
@@ -191,7 +191,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<Feature<*>>>()
+      |  public override fun create() = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin("|")
   }
@@ -215,7 +215,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |    Class.forName("Child"),
       |    Class.forName("Grandparent"),
       |    Class.forName("Parent")
-      |  ) as Set<Class<Feature<*>>>
+      |  ) as Set<Class<out Feature<*>>>
       |}
     """.trimMargin("|")
   }

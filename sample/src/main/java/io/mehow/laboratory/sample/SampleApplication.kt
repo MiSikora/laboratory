@@ -11,7 +11,10 @@ import io.mehow.laboratory.a.Authentication
 import io.mehow.laboratory.b.PowerSource
 import io.mehow.laboratory.c.DistanceAlgorithm
 import io.mehow.laboratory.inspector.LaboratoryActivity
+import io.mehow.laboratory.options
 import io.mehow.laboratory.sharedpreferences.sharedPreferences
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -27,6 +30,7 @@ class SampleApplication : Application() {
   lateinit var laboratory: Laboratory
     private set
 
+  @OptIn(ExperimentalCoroutinesApi::class)
   override fun onCreate() {
     super.onCreate()
     localStorage = FeatureStorage.sharedPreferences(getSharedPreferences("localFeatures", MODE_PRIVATE))
@@ -57,9 +61,10 @@ class SampleApplication : Application() {
     awsStorage.observeRemoteFeature<Authentication>()
   }
 
+  @OptIn(DelicateCoroutinesApi::class)
   private inline fun <reified T : Feature<T>> FeatureStorage.observeRemoteFeature() = GlobalScope.launch {
     val laboratory = Laboratory.create(this@observeRemoteFeature)
-    val featureValues = T::class.java.enumConstants!!
+    val featureValues = T::class.java.options
     while (isActive) {
       delay(10_000)
       val nextFeatureValue = featureValues[Random.nextInt(featureValues.size)]

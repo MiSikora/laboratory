@@ -5,13 +5,11 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 
 internal class FeatureFactorySpec : DescribeSpec({
   val firstFactory = object : FeatureFactory {
-    @Suppress("UNCHECKED_CAST")
-    override fun create(): Set<Class<Feature<*>>> = setOf(FirstFeature::class.java) as Set<Class<Feature<*>>>
+    override fun create(): Set<Class<out Feature<*>>> = setOf(FirstFeature::class.java)
   }
 
   val secondFactory = object : FeatureFactory {
-    @Suppress("UNCHECKED_CAST")
-    override fun create(): Set<Class<Feature<*>>> = setOf(OtherFeature::class.java) as Set<Class<Feature<*>>>
+    override fun create(): Set<Class<out Feature<*>>> = setOf(OtherFeature::class.java)
   }
 
   describe("feature factory") {

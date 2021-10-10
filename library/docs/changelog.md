@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Make `Feature` and other classes covariant.
+- Make `Feature` and other related classes covariant.
 - `FeatureStorage` functions are no longer parameterized over `Feature`. They accept raw class type instead.
 - Generator and Gradle plugin no longer validate package names, duplicates and other things that are checked by compiler.
 - Model builders accept now `ClassName` in constructor.
+- Mark `SharedPreferencesFeatureStorage` with `ExperimentalCoroutinesApi` annotation.
 - Upgrade to Kotlin `1.5.21`.
 - Upgrade to Material `1.4.0`.
 - Upgrade to CoreKtx `1.6.0`.

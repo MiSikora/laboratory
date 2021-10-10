@@ -32,8 +32,7 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
    *
    *   override val defaultOption get() = FirstValue
    *
-   *   @Suppress("UNCHECKED_CAST")
-   *   override val source = Source::class.java as Class<Feature<*>>
+   *   override val source = Source::class.java
    *
    *   enum class Source : Feature<Source> {
    *     Local,
@@ -46,7 +45,7 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
    * }
    * ```
    */
-  public val source: Class<Feature<*>>? get() = null
+  public val source: Class<out Feature<*>>? get() = null
 
   /**
    * Description of the feature flag that can be used for more contextual information. Markdown formatted links
@@ -67,7 +66,7 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
  *
  * @see Feature.defaultOption
  */
-public val <T : Feature<out T>> Class<T>.defaultOption: T
+public val <T : Feature<out T>> Class<out T>.defaultOption: T
   get() = firstOption.defaultOption
 
 /**
@@ -75,7 +74,7 @@ public val <T : Feature<out T>> Class<T>.defaultOption: T
  *
  * @see Feature.source
  */
-public val Class<Feature<*>>.source: Class<Feature<*>>?
+public val Class<out Feature<*>>.source: Class<out Feature<*>>?
   get() = firstOption.source
 
 /**
@@ -83,7 +82,7 @@ public val Class<Feature<*>>.source: Class<Feature<*>>?
  *
  * @see Feature.description
  */
-public val Class<Feature<*>>.description: String
+public val Class<out Feature<*>>.description: String
   get() = firstOption.description
 
 /**
@@ -91,14 +90,14 @@ public val Class<Feature<*>>.description: String
  *
  * @see Feature.supervisorOption
  */
-public val Class<Feature<*>>.supervisorOption: Feature<*>?
+public val Class<out Feature<*>>.supervisorOption: Feature<*>?
   get() = firstOption.supervisorOption
 
 /**
  * All available options of a feature flag.
  */
-public val <T : Feature<out T>> Class<T>.options: Array<T>
+public val <T : Feature<out T>> Class<out T>.options: Array<out T>
   get() = enumConstants
 
-internal val <T : Feature<out T>> Class<T>.firstOption
+internal val <T : Feature<out T>> Class<out T>.firstOption: T
   get() = options.firstOrNull() ?: error("$canonicalName must have at least one option")

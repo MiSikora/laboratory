@@ -8,6 +8,7 @@ import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.description
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
+import io.mehow.laboratory.options
 import io.mehow.laboratory.source
 import io.mehow.laboratory.supervisorOption
 import kotlinx.coroutines.CoroutineDispatcher
@@ -76,7 +77,7 @@ internal class InspectorViewModel(
 
   val featureCoordinatesFlow: Flow<FeatureCoordinates> get() = mutableNavigationFlow
 
-  suspend fun goTo(feature: Class<Feature<*>>) = sectionFlows.values.asFlow().withIndex()
+  suspend fun goTo(feature: Class<out Feature<*>>) = sectionFlows.values.asFlow().withIndex()
       .mapNotNull { (sectionIndex, sectionFlow) ->
         val listIndex = sectionFlow.first().map(FeatureUiModel::type).indexOf(feature)
         if (listIndex == -1) null else FeatureCoordinates(sectionIndex, listIndex)
@@ -85,13 +86,13 @@ internal class InspectorViewModel(
       ?.also { mutableNavigationFlow.emit(it) }
 
   private class FeatureMetadata(
-    private val feature: Class<Feature<*>>,
-    private val allFeatures: List<Class<Feature<*>>>,
+    private val feature: Class<out Feature<*>>,
+    private val allFeatures: List<Class<out Feature<*>>>,
     private val deprecationHandler: DeprecationHandler,
   ) {
     private val simpleReadableName = feature.name.substringAfterLast('.').replace('$', '.')
 
-    private val options = feature.enumConstants!!.toList<Feature<*>>()
+    private val options = feature.options.toList()
 
     private val sourceMetadata = feature.source?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
 
@@ -109,7 +110,7 @@ internal class InspectorViewModel(
       val featureEmissions = observeOptions(laboratory)
       val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
       val supervisorEmissions = feature.supervisorOption
-          ?.let { laboratory.observe(it::class.java as Class<Feature<*>>) }
+          ?.let { laboratory.observe(it::class.java) }
           ?: flowOf(null)
       return combine(featureEmissions, sourceEmissions, supervisorEmissions) { features, sources, supervisor ->
         FeatureUiModel(
@@ -139,11 +140,11 @@ internal class InspectorViewModel(
       private val allFeatures by lazy {
         featureFactories.values
             .flatMap { it.create() }
-            .filterNot { it.enumConstants.isNullOrEmpty() }
+            .filterNot { it.options.isEmpty() }
       }
 
-      fun create(feature: Class<Feature<*>>) = feature
-          .takeUnless { it.enumConstants.isNullOrEmpty() }
+      fun create(feature: Class<out Feature<*>>) = feature
+          .takeUnless { it.options.isEmpty() }
           ?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
           ?.takeIf { it.deprecationPhenotype != DeprecationPhenotype.Hide }
     }

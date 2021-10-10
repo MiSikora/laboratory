@@ -76,7 +76,7 @@ internal class LaboratorySpec : DescribeSpec({
         val storage = FeatureStorage.inMemory()
         val laboratory = Laboratory.create(storage)
 
-        for (value in feature.enumConstants) {
+        for (value in feature.options) {
           storage.setOption(value)
 
           laboratory.experiment(feature) shouldBe value
@@ -86,7 +86,7 @@ internal class LaboratorySpec : DescribeSpec({
       it("can directly change the feature") {
         val laboratory = Laboratory.inMemory()
 
-        for (value in feature.enumConstants) {
+        for (value in feature.options) {
           laboratory.setOption(value)
 
           laboratory.experiment(feature) shouldBe value

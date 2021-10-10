@@ -203,16 +203,10 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
 
     it("includes supervised features to options from different sections") {
       val parentFactory = object : FeatureFactory {
-        override fun create(): Set<Class<Feature<*>>> {
-          @Suppress("UNCHECKED_CAST")
-          return setOf(Parent::class.java) as Set<Class<Feature<*>>>
-        }
+        override fun create() = setOf(Parent::class.java)
       }
       val childFactory = object : FeatureFactory {
-        override fun create(): Set<Class<Feature<*>>> {
-          @Suppress("UNCHECKED_CAST")
-          return setOf(Child::class.java) as Set<Class<Feature<*>>>
-        }
+        override fun create() = setOf(Child::class.java)
       }
 
       val viewModel = InspectorViewModel(
@@ -232,30 +226,26 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
 })
 
 private object NoSourceFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<Feature<*>>> {
-    @Suppress("UNCHECKED_CAST")
-    return setOf(Second::class.java, First::class.java, Empty::class.java) as Set<Class<Feature<*>>>
-  }
+  override fun create(): Set<Class<out Feature<*>>> = setOf(
+      Second::class.java,
+      First::class.java,
+      Empty::class.java,
+  )
 }
 
 private object SourcedFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<Feature<*>>> {
-    @Suppress("UNCHECKED_CAST")
-    return setOf(Sourced::class.java) as Set<Class<Feature<*>>>
-  }
+  override fun create() = setOf(Sourced::class.java)
 }
 
 private object AllFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<Feature<*>>> {
-    return NoSourceFeatureFactory.create() + SourcedFeatureFactory.create()
-  }
+  override fun create() = NoSourceFeatureFactory.create() + SourcedFeatureFactory.create()
 }
 
 private object SupervisedFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<Feature<*>>> {
-    @Suppress("UNCHECKED_CAST")
-    return setOf(Parent::class.java, Child::class.java) as Set<Class<Feature<*>>>
-  }
+  override fun create(): Set<Class<out Feature<*>>> = setOf(
+      Parent::class.java,
+      Child::class.java,
+  )
 }
 
 private enum class First : Feature<First> {
@@ -290,8 +280,7 @@ private enum class Sourced : Feature<Sourced> {
 
   override val defaultOption get() = A
 
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
+  override val source = Source::class.java
 
   enum class Source : Feature<Source> {
     Local,

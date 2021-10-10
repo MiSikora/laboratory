@@ -54,7 +54,7 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |    Class.forName("io.mehow.FeatureA"),
         |    Class.forName("io.mehow.FeatureB"),
         |    Class.forName("io.mehow.c.FeatureA")
-        |  ) as Set<Class<Feature<*>>>
+        |  ) as Set<Class<out Feature<*>>>
         |}
         |
       """.trimMargin()
@@ -83,7 +83,7 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |    Class.forName("io.mehow.FeatureA"),
         |    Class.forName("io.mehow.FeatureB"),
         |    Class.forName("io.mehow.c.FeatureA")
-        |  ) as Set<Class<Feature<*>>>
+        |  ) as Set<Class<out Feature<*>>>
         |}
         |
       """.trimMargin("|")
@@ -105,7 +105,7 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
         |
         |private object GeneratedFeatureFactory : FeatureFactory {
-        |  public override fun create() = emptySet<Class<Feature<*>>>()
+        |  public override fun create() = emptySet<Class<out Feature<*>>>()
         |}
         |
       """.trimMargin("|")

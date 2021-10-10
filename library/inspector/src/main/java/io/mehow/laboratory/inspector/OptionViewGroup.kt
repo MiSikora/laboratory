@@ -65,7 +65,7 @@ internal class OptionViewGroup @JvmOverloads constructor(
 
   private fun removeOnCheckedChangeListener(chip: Chip) = chip.setOnCheckedChangeListener(null)
 
-  private fun showSupervisedFeaturesMenu(anchor: Chip, features: List<Class<Feature<*>>>): Boolean {
+  private fun showSupervisedFeaturesMenu(anchor: Chip, features: List<Class<out Feature<*>>>): Boolean {
     PopupMenu(context, anchor).apply {
       features.forEachIndexed { index, feature ->
         menu.add(0, index, index, feature.simpleName)
@@ -81,6 +81,6 @@ internal class OptionViewGroup @JvmOverloads constructor(
   interface OptionGroupListener {
     fun onSelectOption(option: Feature<*>)
 
-    fun onSelectSupervisedFeature(feature: Class<Feature<*>>)
+    fun onSelectSupervisedFeature(feature: Class<out Feature<*>>)
   }
 }

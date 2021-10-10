@@ -38,7 +38,7 @@ public class Laboratory internal constructor(
    */
   @Suppress("UNCHECKED_CAST")
   public fun <T : Feature<out T>> observe(
-    feature: Class<T>,
+    feature: Class<out T>,
   ): Flow<T> = observeRaw(feature as Class<Feature<*>>) as Flow<T>
 
   private fun observeRaw(feature: Class<Feature<*>>): Flow<Feature<*>> {
@@ -73,7 +73,7 @@ public class Laboratory internal constructor(
    */
   @Suppress("UNCHECKED_CAST")
   public suspend fun <T : Feature<out T>> experiment(
-    feature: Class<T>,
+    feature: Class<out T>,
   ): T = experimentRaw(feature as Class<Feature<*>>) as T
 
   private suspend fun experimentRaw(feature: Class<Feature<*>>): Feature<*> {
@@ -91,7 +91,7 @@ public class Laboratory internal constructor(
       message = "This method will be removed in 1.0.0. Use 'blocking().experiment()' instead.",
       replaceWith = ReplaceWith("blocking().experiment(feature)"),
   )
-  public fun <T : Feature<out T>> experimentBlocking(feature: Class<T>): T = blocking().experiment(feature)
+  public fun <T : Feature<out T>> experimentBlocking(feature: Class<out T>): T = blocking().experiment(feature)
 
   /**
    * Checks if a [Feature] is set to the input [option].
@@ -178,7 +178,7 @@ public class Laboratory internal constructor(
   public fun clearBlocking(): Boolean = blocking().clear()
 
   private fun <T : Feature<out T>> getDefaultOption(
-    feature: Class<T>,
+    feature: Class<out T>,
   ) = defaultOptionFactory?.create(feature) ?: feature.defaultOption
 
   public companion object {
