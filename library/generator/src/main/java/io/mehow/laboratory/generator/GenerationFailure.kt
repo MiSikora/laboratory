@@ -37,4 +37,14 @@ public interface GenerationFailure {
     override val message: String
       get() = "Feature flag $fqcn cannot be supervisor of itself."
   }
+
+  public data class DuplicateKeys(
+    private val duplicates: Map<String, List<String>>,
+  ) : GenerationFailure {
+    override val message: String
+      get() = """
+        |Feature flags must have unique keys. Found following duplicates:
+        | - ${duplicates.toList().joinToString(separator = "\n - ") { (key, fqcns) -> "$key: $fqcns" }}
+      """.trimMargin()
+  }
 }
