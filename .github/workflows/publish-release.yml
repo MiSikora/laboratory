@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v2.3.1
         with:
           distribution: adopt
-          java-version: 16
+          java-version: 11
 
       - name: Cache Gradle Dirs
         uses: actions/cache@v2.1.6
