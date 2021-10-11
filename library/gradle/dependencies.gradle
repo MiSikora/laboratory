@@ -1,5 +1,5 @@
 ext.versions = [
-    "coroutines": "1.5.1",
+    "coroutines": "1.5.2",
     "kotest": "4.6.3",
     "androidxTest": "1.4.0",
     "hyperion": "0.9.33",
