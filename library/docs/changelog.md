@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2021-10-11
+
 ### Added
 - Better integration with remote sources, like Firebase, via `OptionFactory` interface. It creates feature options based on a feature key and an option name.
 - Code generation of option factory via Gradle plugin.
@@ -369,7 +371,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.13.1...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.14.0...HEAD
+[0.14.0]: https://github.com/MiSikora/laboratory/releases/tag/0.14.0
 [0.13.1]: https://github.com/MiSikora/laboratory/releases/tag/0.13.1
 [0.13.0]: https://github.com/MiSikora/laboratory/releases/tag/0.13.0
 [0.12.1]: https://github.com/MiSikora/laboratory/releases/tag/0.12.1
