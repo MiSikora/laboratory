@@ -49,3 +49,4 @@ jobs:
         env:
           CONFIG_FILE: ./library/mkdocs.yml
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXTRA_PACKAGES: mkdocs-video

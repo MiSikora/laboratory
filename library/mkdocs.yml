@@ -35,6 +35,7 @@ plugins:
   - search
   - minify:
       minify_html: true
+  - mkdocs-video
 
 nav:
   - 'Quick start': index.md
