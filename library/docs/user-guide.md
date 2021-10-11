@@ -11,6 +11,9 @@ Feature flags are nothing more than enums that implement the `Feature` interface
 enum class SomeFeature : Feature<SomeFeature>
 ```
 
+!!! tip
+    Check [the samples](https://github.com/MiSikora/laboratory/tree/trunk/samples) to learn by example.
+
 ## I/O
 
 `Laboratory` is nothing more than a high-level API over the `FeatureStorage` interface responsible for persisting feature flags. All implementations that are provided by this library rely on a feature flag package name and an enum name.

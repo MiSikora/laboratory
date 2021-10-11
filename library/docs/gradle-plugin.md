@@ -379,6 +379,8 @@ The generation of an option factory is useful when you want to control local fea
 !!! tip
     Check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/samples/firebase) with demo Firebase integration.
 
+![type:video](https://www.youtube.com/embed/yNm2DUcZ0L4)
+
 ```
 apply plugin: "io.mehow.laboratory"
 
