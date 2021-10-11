@@ -268,3 +268,59 @@ laboratory.setOption(ChristmasTheme.Enabled)
 laboratory.experimentIs(Greeting.HoHoHo) // true
 laboratory.experimentIs(Background.Reindeer) // true
 ```
+
+## Listening to remote change
+
+Feature flags can be synced with a remote source with a help of `OptionFactory`. Below is a sample setup using Firebase.
+
+```kotlin
+enum class ChristmasTheme : Feature<ChristmasTheme> {
+  Enabled,
+  Disabled,
+  ;
+
+  public val override val defaultOption get() = Disabled
+}
+
+enum class ShowAds : Feature<ShowAds> {
+  Enabled,
+  Disabled;
+
+  public override val defaultOption get() = Disabled
+}
+
+object CustomOptionFactory : OptionFactory {
+  private val optionMapping = mapOf<String, (String) -> Feature<*>?>(
+    "ChristmasTheme" to { name -> ChristmasTheme::class.java.options.firstOrNull { it.name == name } },
+    "ShowAds" to { name -> ShowAds::class.java.options.firstOrNull { it.name == name } },
+  )
+
+  override fun create(key: String, name: String) = optionMapping[key]?.invoke(name)
+}
+
+class App : Application {
+  override fun onCreate() {
+    val firebaseStorage = FeatureStorage.inMemory()
+    // Get a reference to a node where feature flags are kept
+    val database = FirebaseDatabase.getInstance().reference.child("featureFlags")
+
+    val featureFlagListener = object : ValueEventListener {
+      override fun onDataChange(snapshot: DataSnapshot) {
+        val newOptions = (snapshot.value as? Map<*, *>)
+            .orEmpty()
+            .mapNotNull { (key, value) ->
+              val stringKey = key as? String ?: return@mapNotNull null
+              val stringValue = value as? String ?: return@mapNotNull null
+              CustomOptionFactory.create(stringKey, stringValue)
+            }
+        // Be cautious with using GlobalScope.
+        GlobalScope.launch { firebaseStorage.setOptions(*newOptions.toTypedArray()) }
+      }
+
+      override fun onCancelled(error: DatabaseError) = Unit
+    }
+
+    database.child("featureFlags").addValueEventListener(featureFlagListener)
+  }
+}
+```
