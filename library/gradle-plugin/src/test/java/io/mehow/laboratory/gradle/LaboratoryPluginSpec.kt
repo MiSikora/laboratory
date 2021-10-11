@@ -146,4 +146,34 @@ internal class LaboratoryPluginSpec : StringSpec({
 
     result.task(":generateFeatureSourceFactory").shouldNotBeNull()
   }
+
+  "does not register option factory for project without option factory extension" {
+    val fixture = "plugin-option-factory-missing".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+        .withArguments("--stacktrace")
+        .build()
+
+    result.task(":generateOptionFactory").shouldBeNull()
+  }
+
+  "fails for project without option factory extension with option factory argument" {
+    val fixture = "plugin-option-factory-missing".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+        .withArguments("generateOptionFactory", "--stacktrace")
+        .buildAndFail()
+
+    result.task(":generateOptionFactory").shouldBeNull()
+  }
+
+  "registers option factory for project with option factory extension" {
+    val fixture = "plugin-option-factory-present".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture)
+        .withArguments("generateOptionFactory", "--stacktrace")
+        .build()
+
+    result.task(":generateOptionFactory").shouldNotBeNull()
+  }
 })

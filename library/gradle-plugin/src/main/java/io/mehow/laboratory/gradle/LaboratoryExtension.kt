@@ -115,4 +115,24 @@ public abstract class LaboratoryExtension {
       return@let input
     }
   }
+
+  internal var optionFactoryInput: OptionFactoryInput? = null
+    private set
+
+  /**
+   * Generates a new option factory in this module. All features that can be created by this factory must
+   * be visible to it during compilation.
+   */
+  public fun optionFactory(): Unit = optionFactory { }
+
+  /**
+   * Generates a new option factory in this module. All features that can be created by this factory must
+   * be visible to it during compilation.
+   */
+  public fun optionFactory(action: Action<OptionFactoryInput>) {
+    optionFactoryInput = OptionFactoryInput { packageName }.let { input ->
+      action.execute(input)
+      return@let input
+    }
+  }
 }

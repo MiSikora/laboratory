@@ -1,0 +1,18 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  optionFactory {
+    projectFilter { project ->
+      project.name != "feature-a"
+    }
+  }
+
+  feature("RootFeature") {
+    key = "Key Root"
+
+    withDefaultOption("First")
+  }
+}

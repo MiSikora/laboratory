@@ -1,0 +1,14 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  optionFactory()
+
+  feature("RootFeature") {
+    key = "Key Root"
+
+    withDefaultOption("First")
+  }
+}

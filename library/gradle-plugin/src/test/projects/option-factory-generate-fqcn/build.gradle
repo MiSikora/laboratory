@@ -1,0 +1,21 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  optionFactory()
+
+  FeatureA {
+    packageName = "io.mehow.first"
+
+    withDefaultOption("FirstA")
+    withOption("SecondA")
+  }
+
+  FeatureB {
+    packageName = "io.mehow.second"
+
+    withDefaultOption("FirstB")
+  }
+}
