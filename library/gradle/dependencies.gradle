@@ -43,7 +43,7 @@ ext.libs = [
         "gradlePlugin": "com.google.gms:google-services:4.3.10",
     ],
     "kotlin": [
-        "gradlePlugin": "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21",
+        "gradlePlugin": "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31",
         "x": [
             "coroutinesCore": "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
             "coroutinesAndroid": "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}",

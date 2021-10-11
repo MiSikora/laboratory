@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generator and Gradle plugin no longer validate package names, duplicates and other things that are checked by compiler.
 - Model builders accept now `ClassName` in constructor.
 - Mark `SharedPreferencesFeatureStorage` with `ExperimentalCoroutinesApi` annotation.
-- Upgrade to Kotlin `1.5.21`.
+- Upgrade to Kotlin `1.5.31`.
 - Upgrade to Material `1.4.0`.
 - Upgrade to CoreKtx `1.6.0`.
 - Upgrade to DataStore `1.0.0`.
