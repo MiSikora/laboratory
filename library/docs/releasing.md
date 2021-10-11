@@ -23,10 +23,10 @@ $ pip --version
 pip 20.2.4
 ```
 
-Install MkDocs and Material Theme.
+Install MkDocs, Material Theme and MkDocs Video.
 
 ```sh
-$ pip install mkdocs mkdocs-material
+$ pip install mkdocs mkdocs-material mkdocs-video
 $ mkdocs --version
 mkdocs, version 1.1.2
 ```
