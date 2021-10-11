@@ -41,7 +41,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  public override val defaultOption: Feature
       |    get() = First
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates multiple feature flags" {
@@ -63,7 +63,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  public override val defaultOption: FeatureA
       |    get() = FirstA
       |}
-    """.trimMargin("|")
+    """.trimMargin()
 
     val featureB = fixture.featureFile("FeatureB")
     featureB.shouldExist()
@@ -77,7 +77,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  public override val defaultOption: FeatureB
       |    get() = FirstB
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates a single feature flag with source" {
@@ -111,7 +111,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |      get() = Local
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates an internal feature flag with source" {
@@ -145,7 +145,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |      get() = Local
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates a public feature flag with source" {
@@ -179,7 +179,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |      get() = Local
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates multiple feature flags with sources" {
@@ -213,7 +213,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |      get() = Local
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
 
     val featureB = fixture.featureFile("FeatureB")
     featureB.shouldExist()
@@ -227,7 +227,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  public override val defaultOption: FeatureB
       |    get() = First
       |}
-    """.trimMargin("|")
+    """.trimMargin()
 
     val featureC = fixture.featureFile("FeatureC")
     featureC.shouldExist()
@@ -253,7 +253,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |      get() = RemoteA
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "uses implicit package name" {
@@ -372,7 +372,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  public override val defaultOption: FeatureA
       |    get() = First
       |}
-    """.trimMargin("|")
+    """.trimMargin()
 
     val featureB = fixture.featureFile("FeatureB")
     featureB.shouldExist()
@@ -386,7 +386,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  public override val defaultOption: FeatureB
       |    get() = First
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "fails for features with no options" {
@@ -419,7 +419,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  public override val defaultOption: Feature
       |    get() = First
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates feature flag with a description" {
@@ -445,7 +445,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |
       |  public override val description: String = "Feature description"
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates feature flag from Groovy DSL" {
@@ -489,7 +489,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  }
       |}
       |
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates deprecated feature flag" {
@@ -508,7 +508,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  level = DeprecationLevel.WARNING
       |)
       |public enum class Feature : io.mehow.laboratory.Feature<@Suppress("DEPRECATION") Feature>
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates deprecated feature flag with specified deprecation level" {
@@ -527,7 +527,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  level = DeprecationLevel.HIDDEN
       |)
       |public enum class Feature : io.mehow.laboratory.Feature<@Suppress("DEPRECATION_ERROR") Feature>
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates supervised child feature flag" {
@@ -550,7 +550,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |
       |  public override val supervisorOption: Feature<*> = Parent.ParentOption
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates supervised grandchild feature flag" {
@@ -573,7 +573,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |
       |  public override val supervisorOption: Feature<*> = Parent.ParentOption
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates supervised multiple children feature flags" {
@@ -596,7 +596,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |
       |  public override val supervisorOption: Feature<*> = Parent.FirstParentOption
       |}
-    """.trimMargin("|")
+    """.trimMargin()
 
     val second = fixture.featureFile("SecondChild")
     second.shouldExist()
@@ -611,7 +611,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |
       |  public override val supervisorOption: Feature<*> = Parent.SecondParentOption
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "supervised feature flag uses explicit package name" {

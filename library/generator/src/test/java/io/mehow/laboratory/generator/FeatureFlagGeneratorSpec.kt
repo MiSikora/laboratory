@@ -147,7 +147,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |    get() = First
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     it("can be public") {
@@ -169,7 +169,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |    get() = First
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     it("can have source parameter") {
@@ -204,7 +204,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  }
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     it("does not have source parameter if only source is Local") {
@@ -227,7 +227,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |    get() = First
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     it("filters out any custom local source") {
@@ -271,7 +271,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  }
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     it("allows to set not Local default default for source") {
@@ -306,7 +306,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  }
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     it("source visibility follows feature visibility") {
@@ -341,7 +341,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  }
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     context("description") {
@@ -371,7 +371,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |  public override val description: String = "Feature description"
           |}
           |
-        """.trimMargin("|")
+        """.trimMargin()
       }
 
       it("does not break hyperlinks") {
@@ -403,7 +403,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |      "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc."
           |}
           |
-        """.trimMargin("|")
+        """.trimMargin()
       }
     }
 
@@ -436,7 +436,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |    get() = First
           |}
           |
-        """.trimMargin("|")
+        """.trimMargin()
       }
 
       enumValues<DeprecationLevel>().forEach { level ->
@@ -473,7 +473,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             |    get() = First
             |}
             |
-          """.trimMargin("|")
+          """.trimMargin()
         }
       }
     }
@@ -504,7 +504,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  public override val supervisorOption: Feature<*> = Parent.First
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
   }
 })

@@ -86,7 +86,7 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |  ) as Set<Class<out Feature<*>>>
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
 
     it("is optimized in case of no features") {
@@ -108,7 +108,7 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |  public override fun create() = emptySet<Class<out Feature<*>>>()
         |}
         |
-      """.trimMargin("|")
+      """.trimMargin()
     }
   }
 })

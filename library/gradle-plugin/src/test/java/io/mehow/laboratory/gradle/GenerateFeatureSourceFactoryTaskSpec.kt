@@ -38,7 +38,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  public override fun create() = emptySet<Class<out Feature<*>>>()
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates factory with feature flags" {
@@ -62,7 +62,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    Class.forName("io.mehow.second.FeatureB${"\${'$'}"}Source")
       |  ) as Set<Class<out Feature<*>>>
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "uses implicit package name" {
@@ -154,7 +154,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    Class.forName("RootFeature${"\${'$'}"}Source")
       |  ) as Set<Class<out Feature<*>>>
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates factory with feature flags from not excluded modules" {
@@ -178,7 +178,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    Class.forName("RootFeature${"\${'$'}"}Source")
       |  ) as Set<Class<out Feature<*>>>
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates factory for Android project" {
@@ -198,7 +198,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  public override fun create() = emptySet<Class<out Feature<*>>>()
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates factory with supervised feature flag sources" {
@@ -223,6 +223,6 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    Class.forName("Parent${"\${'$'}"}Source")
       |  ) as Set<Class<out Feature<*>>>
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 })

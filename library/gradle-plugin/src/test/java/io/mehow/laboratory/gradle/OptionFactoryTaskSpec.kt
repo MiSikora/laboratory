@@ -226,7 +226,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |    else -> null
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates factory with feature flags from not excluded modules" {
@@ -255,7 +255,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |    else -> null
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates factory for Android project" {
@@ -274,7 +274,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |private object GeneratedOptionFactory : OptionFactory {
       |  public override fun create(key: String, name: String): Feature<*>? = null
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "fails to generate factory for feature flags with duplicate keys in different modules" {
@@ -317,6 +317,6 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |    else -> null
       |  }
       |}
-    """.trimMargin("|")
+    """.trimMargin()
   }
 })

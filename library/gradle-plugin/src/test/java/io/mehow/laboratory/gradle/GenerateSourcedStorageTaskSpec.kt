@@ -54,7 +54,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |  localSource,
       |  emptyMap()
       |)
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates storage with sources" {
@@ -110,7 +110,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |    "RemoteB" to remoteBSource
       |  )
       |)
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "uses implicit package name" {
@@ -243,7 +243,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |    "RemoteB" to remoteBSource
       |  )
       |)
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates storage with names from not excluded modules" {
@@ -299,7 +299,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |    "RemoteB" to remoteBSource
       |  )
       |)
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates storage for Android project" {
@@ -333,7 +333,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |  localSource,
       |  emptyMap()
       |)
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "ignores any custom variant of local sources" {
@@ -367,7 +367,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |  localSource,
       |  emptyMap()
       |)
-    """.trimMargin("|")
+    """.trimMargin()
   }
 
   "generates storage with supervised feature flag sources" {
@@ -433,6 +433,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |    "Child" to childSource
       |  )
       |)
-    """.trimMargin("|")
+    """.trimMargin()
   }
 })
