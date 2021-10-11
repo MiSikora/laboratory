@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.withStyledAttributes
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import com.github.alexjlockwood.kyrie.KyrieDrawable
+import io.mehow.laboratory.inspector.kyrie.KyrieDrawable
 
 internal class KyrieImageView @JvmOverloads constructor(
   context: Context,
