@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Hyperion `0.9.33`.
 - Upgrade to FragmentKtx `1.3.6`.
 - Upgrade to AppCompat `1.3.1`.
-- Upgrade to ConstraintLayout `2.1.0`.
+- Upgrade to ConstraintLayout `2.1.1`.
 - Upgrade to ArrowKt `1.0.0`.
 
 ### Deprecated
