@@ -14,8 +14,8 @@ ext.versions = [
 ext.libs = [
     "android": [
         "gradlePlugin": [
-            "api": "com.android.tools.build:gradle:4.2.2",
-            "project": "com.android.tools.build:gradle:7.1.0-alpha13",
+            "api": "com.android.tools.build:gradle:7.0.3",
+            "project": "com.android.tools.build:gradle:7.0.3",
         ],
         "x": [
             "coreKtx": "androidx.core:core-ktx:1.6.0",
@@ -86,5 +86,4 @@ ext.libs = [
     "arrow": "io.arrow-kt:arrow-core:1.0.0",
     "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:3.7.0",
     "turbine": "app.cash.turbine:turbine:0.6.1",
-    "kyrie": "com.github.alexjlockwood:kyrie:0.2.1",
 ]
