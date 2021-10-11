@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to ConstraintLayout `2.1.1`.
 - Upgrade to ArrowKt `1.0.0`.
 - Upgrade to Coroutines `1.5.2`.
+- Upgrade to KotlinPoet `1.10.1`.
 
 ### Deprecated
 - `FeatureStorage.Companion.sharedPreferences(Context)` function. Use overload that accepts `SharedPreferences` instead.
