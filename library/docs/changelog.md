@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `OptionFactory` interface that creates feature options based on a feature key and an option name.
+- Code generation of option factory via Gradle plugin.
 
 ### Changed
 - Make `Feature` and other related classes covariant.

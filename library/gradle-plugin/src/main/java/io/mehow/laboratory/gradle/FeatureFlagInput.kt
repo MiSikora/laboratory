@@ -30,9 +30,14 @@ public class FeatureFlagInput internal constructor(
   public var packageName: String? = null
 
   /**
-   * Sets description of the generated feature flag. Overwrites any previously set values.
+   * Sets description of the generated feature flag.
    */
   public var description: String? = null
+
+  /**
+   * Sets a custom key that will be used for generated option factory.
+   */
+  public var key: String? = null
 
   private val options: MutableList<FeatureFlagOption> = mutableListOf()
 
@@ -121,6 +126,7 @@ public class FeatureFlagInput internal constructor(
       className = ClassName(packageName ?: packageNameProvider(), name),
       options = options,
       sourceOptions = sources,
+      key = key,
       description = description.orEmpty(),
       deprecation = deprecation,
       supervisor = supervisor?.invoke(),

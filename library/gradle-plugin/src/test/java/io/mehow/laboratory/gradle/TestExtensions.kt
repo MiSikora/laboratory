@@ -13,6 +13,8 @@ internal fun File.sourcedStorageFile(fqcn: String) = codeGenFile("sourced-storag
 
 internal fun File.featureSourceStorageFile(fqcn: String) = codeGenFile("feature-source-factory", fqcn)
 
+internal fun File.optionFactoryFile(fqcn: String) = codeGenFile("option-factory", fqcn)
+
 private fun File.codeGenFile(dir: String, fqcn: String) = File(
     this,
     "build/generated/laboratory/code/$dir/${fqcn.replace(".", "/")}.kt"

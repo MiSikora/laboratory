@@ -28,9 +28,11 @@ public final class io/mehow/laboratory/gradle/FeatureFlagInput {
 	public final fun deprecated (Ljava/lang/String;Lio/mehow/laboratory/gradle/DeprecationLevel;)V
 	public static synthetic fun deprecated$default (Lio/mehow/laboratory/gradle/FeatureFlagInput;Ljava/lang/String;Lio/mehow/laboratory/gradle/DeprecationLevel;ILjava/lang/Object;)V
 	public final fun getDescription ()Ljava/lang/String;
+	public final fun getKey ()Ljava/lang/String;
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun isPublic ()Z
 	public final fun setDescription (Ljava/lang/String;)V
+	public final fun setKey (Ljava/lang/String;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public final fun setPublic (Z)V
 	public final fun withDefaultOption (Ljava/lang/String;)V
@@ -57,6 +59,8 @@ public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
 	public final fun featureSourceFactory (Lorg/gradle/api/Action;)V
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun methodMissing (Ljava/lang/String;Ljava/lang/Object;)V
+	public final fun optionFactory ()V
+	public final fun optionFactory (Lorg/gradle/api/Action;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public final fun sourcedStorage ()V
 	public final fun sourcedStorage (Lorg/gradle/api/Action;)V
@@ -66,6 +70,19 @@ public final class io/mehow/laboratory/gradle/LaboratoryPlugin : org/gradle/api/
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
 	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public final class io/mehow/laboratory/gradle/OptionFactoryInput {
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun isPublic ()Z
+	public final fun projectFilter (Ljava/util/function/Predicate;)V
+	public final fun setPackageName (Ljava/lang/String;)V
+	public final fun setPublic (Z)V
+}
+
+public class io/mehow/laboratory/gradle/OptionFactoryTask : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	public final fun generateSourcedFeatureStorage ()V
 }
 
 public final class io/mehow/laboratory/gradle/SourcedFeatureStorageInput {

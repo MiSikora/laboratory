@@ -61,6 +61,7 @@ public class LaboratoryPlugin : Plugin<Project> {
     registerFeatureFactoryTask()
     registerSourcedFeatureStorageTask()
     registerFeatureSourcesFactoryTask()
+    registerOptionFactoryTask()
   }
 
   private fun Project.registerFeaturesTask() = afterEvaluate {
@@ -123,6 +124,22 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.factoryClassName = "GeneratedFeatureSourceFactory"
       task.factoryFunctionName = "featureSourceGenerated"
       task.featureModelsMapper = { it.sourceModels() }
+    }
+    findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
+    addSourceSets(factoryTask, codeGenDir)
+  }
+
+  private fun Project.registerOptionFactoryTask() = afterEvaluate {
+    val factoryInput = extension.optionFactoryInput ?: return@afterEvaluate
+
+    val codeGenDir = File("${project.buildDir}/generated/laboratory/code/option-factory")
+    val featureInputs = mutableListOf<FeatureFlagInput>()
+    val factoryTask = registerTask<OptionFactoryTask>("generateOptionFactory") { task ->
+      task.group = pluginName
+      task.description = "Generate Laboratory option factory."
+      task.factory = factoryInput
+      task.features = featureInputs
+      task.codeGenDir = codeGenDir
     }
     findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
     addSourceSets(factoryTask, codeGenDir)
