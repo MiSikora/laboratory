@@ -1,0 +1,103 @@
+plugins {
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "io.mehow.laboratory"
+}
+
+android {
+  compileSdkVersion versions.androidBuild.compileSdk
+
+  signingConfigs {
+    config {
+      keyAlias "mehow-io"
+      keyPassword "mehow-io"
+      storeFile file("../mehow-io.keystore")
+      storePassword "mehow-io"
+    }
+  }
+
+  defaultConfig {
+    applicationId "io.mehow.laboratory.sample.supervision"
+
+    minSdkVersion versions.androidBuild.minSdk
+    targetSdkVersion versions.androidBuild.targetSdk
+
+    versionCode 1
+    versionName "1.0.0"
+
+    signingConfig signingConfigs.config
+  }
+
+  buildFeatures {
+    viewBinding true
+  }
+
+  buildTypes.debug.setMatchingFallbacks "release"
+
+  variantFilter {
+    setIgnore it.name != "debug"
+  }
+
+  compileOptions {
+    kotlinOptions.freeCompilerArgs += [
+        "-Xjvm-default=all",
+    ]
+  }
+}
+
+laboratory {
+  packageName = "io.mehow.laboratory.sample.supervision"
+
+  // Filters are needed because otherwise feature flags from other samples would be included.
+  featureFactory {
+    projectFilter { it == project }
+  }
+
+  feature("Theming") {
+    withDefaultOption("Default")
+
+    withOption("Christmas") { christmas ->
+      christmas.feature("ChristmasGreeting") { greeting ->
+        greeting.withDefaultOption("Disabled")
+        greeting.withOption("Hello")
+        greeting.withOption("HoHoHo")
+      }
+
+      christmas.feature("ChristmasBackground") { background ->
+        background.withDefaultOption("Disabled")
+        background.withOption("Reindeer")
+        background.withOption("Snowman")
+      }
+    }
+
+    withOption("Halloween") { halloween ->
+      halloween.feature("SpookyMusic") { spookyMusic ->
+        spookyMusic.withDefaultOption("Disabled")
+        spookyMusic.withOption("Graveyard")
+        spookyMusic.withOption("HauntedHouse")
+        spookyMusic.withOption("OldCastle")
+      }
+
+      halloween.feature("WitchChance") { witchChance ->
+        witchChance.withDefaultOption("Chance00")
+        witchChance.withOption("Chance20")
+        witchChance.withOption("Chance50")
+        witchChance.withOption("Chance100")
+      }
+
+      halloween.feature("CandyArt") { candy ->
+        candy.withDefaultOption("Disabled")
+        candy.withOption("ChocolateGhost")
+        candy.withOption("MarshmallowGhost")
+      }
+    }
+  }
+}
+
+dependencies {
+  implementation libs.kotlin.x.coroutinesAndroid
+  implementation libs.android.material
+  implementation libs.hyperion.core
+  implementation libs.laboratory.dataStore
+  implementation libs.laboratory.hyperionPlugin
+}

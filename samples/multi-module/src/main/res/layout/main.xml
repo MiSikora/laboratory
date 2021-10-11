@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:ignore="HardcodedText"
+    >
+
+  <com.google.android.material.button.MaterialButton
+      android:id="@+id/launchLaboratory"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Launch laboratory"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/authentication"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/logType"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/showAds"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/camera"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/livestreamPreview"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/recordingQuality"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/recordingDirectory"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/videoFilter"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/motionDetection"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+  <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/nightMode"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+      />
+
+</LinearLayout>

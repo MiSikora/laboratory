@@ -1,0 +1,88 @@
+plugins {
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "io.mehow.laboratory"
+}
+
+android {
+  compileSdkVersion versions.androidBuild.compileSdk
+
+  signingConfigs {
+    config {
+      keyAlias "mehow-io"
+      keyPassword "mehow-io"
+      storeFile file("../mehow-io.keystore")
+      storePassword "mehow-io"
+    }
+  }
+
+  defaultConfig {
+    applicationId "io.mehow.laboratory.sample.basic"
+
+    minSdkVersion versions.androidBuild.minSdk
+    targetSdkVersion versions.androidBuild.targetSdk
+
+    versionCode 1
+    versionName "1.0.0"
+
+    signingConfig signingConfigs.config
+  }
+
+  buildFeatures {
+    viewBinding true
+  }
+
+  buildTypes.debug.setMatchingFallbacks "release"
+
+  variantFilter {
+    setIgnore it.name != "debug"
+  }
+
+  compileOptions {
+    kotlinOptions.freeCompilerArgs += [
+        "-Xjvm-default=all",
+    ]
+  }
+}
+
+laboratory {
+  packageName = "io.mehow.laboratory.sample.basic"
+
+  // Filters are needed because otherwise feature flags from other samples would be included.
+  featureFactory {
+    projectFilter { it == project }
+  }
+
+  LogType {
+    deprecated("Sample deprecation")
+
+    withDefaultOption("Info")
+    withOption("Verbose")
+    withOption("Debug")
+    withOption("Warning")
+    withOption("Error")
+  }
+
+  ReportRootedDevice {
+    description =
+        "Reports during [cold start](https://developer.android.com/topic/performance/vitals/launch-time#cold) whether device is rooted"
+
+    withDefaultOption("Disabled")
+    withOption("Enabled")
+  }
+
+  Authentication {
+    withDefaultOption("Password")
+    withOption("Fingerprint")
+    withOption("Retina")
+    withOption("Face")
+  }
+}
+
+dependencies {
+  implementation libs.kotlin.x.coroutinesAndroid
+  implementation libs.android.material
+  implementation libs.hyperion.core
+  implementation libs.laboratory.dataStore
+  implementation libs.laboratory.hyperionPlugin
+}

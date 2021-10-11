@@ -8,11 +8,14 @@ Under the hood, the Gradle plugin uses [KotlinPoet](https://square.github.io/kot
     The Gradle plugin automatically adds the `laboratory` artifact to dependencies.
 
 !!! tip
-    The best way to understand the Gradle plugin is to check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/sample). It uses most of the Gradle plugin features that most of the applications need.
+    The best way to understand the Gradle plugin is to check [the samples](https://github.com/MiSikora/laboratory/tree/trunk/samples). It uses most of the Gradle plugin features that most of the applications need.
 
 ## Feature flags
 
 Feature flags are added to the generation process with a `feature()` function, which uses the `generateFeatureFlags` Gradle task. Here is a sample configuration.
+
+!!! tip
+    Check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/samples/basic) with demo configuration.
 
 ```groovy
 apply plugin: "io.mehow.laboratory"
@@ -99,6 +102,9 @@ internal enum class LocationTracking : LocationTracking<Authentication> {
 
 Gradle plugin supports generation of [supervised feature flags](user-guide.md#feature-flag-supervision).
 
+!!! tip
+    Check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/samples/supervision) with demo configuration.
+
 ```groovy
 laboratory {
   feature("ChristmasTheme") {
@@ -158,6 +164,9 @@ DSL for supervised feature flags is recursive allowing to nest them in `withOpti
 ## Feature flags storage
 
 If your feature flags use multiple sources, you can configure the Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage` builder.
+
+!!! tip
+    Check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/samples/firebase) with demo Firebase integration.
 
 ```groovy
 apply plugin: "io.mehow.laboratory"
@@ -260,6 +269,9 @@ private data class Builder(
 ## Feature flags factory
 
 The generation of feature flags factory is useful if you use the [QA module](qa-module.md).
+
+!!! tip
+    Check [the samples](https://github.com/MiSikora/laboratory/tree/trunk/samples/) with demo configurations.
 
 ```
 apply plugin: "io.mehow.laboratory"
@@ -364,6 +376,9 @@ private object GeneratedFeatureSourceFactory : FeatureFactory {
 
 The generation of an option factory is useful when you want to control local feature flag options remotely. Option factory aggregates all feature flags and recognizes them either by a fully qualified class name or an optional `key` property on a feature flag. Keys must be unique and cannot match fully qualified class names of other feature flags.
 
+!!! tip
+    Check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/samples/firebase) with demo Firebase integration.
+
 ```
 apply plugin: "io.mehow.laboratory"
 
@@ -426,6 +441,9 @@ private object GeneratedOptionFactory : OptionFactory {
 ## Multi-module support
 
 The Gradle plugin was written with support for multi-module projects in mind.
+
+!!! tip
+    Check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/samples/multi-module) with demo configuration.
 
 ```
 .

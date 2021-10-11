@@ -1,0 +1,60 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+compileKotlin {
+  kotlinOptions {
+    freeCompilerArgs += [
+        "-Xjvm-default=all",
+    ]
+  }
+}
+
+laboratory {
+  packageName = "io.mehow.laboratory.smaple.multimodule.c"
+
+  featureFactory {
+    isPublic = true
+    projectFilter { it == project }
+  }
+
+  feature("Camera") {
+    withDefaultOption("Disabled")
+
+    withOption("Enabled") { camera ->
+      camera.feature("LivestreamPreview") { livestream ->
+        livestream.withDefaultOption("Enabled")
+        livestream.withOption("Disabled")
+      }
+
+      camera.feature("RecordingQuality") { quality ->
+        quality.withDefaultOption("SD")
+        quality.withOption("HD")
+        quality.withOption("QHD")
+      }
+
+      camera.feature("RecordingDirectory") { directory ->
+        directory.withDefaultOption("Internal")
+        directory.withOption("External")
+      }
+
+      camera.feature("VideoFilter") { filter ->
+        filter.withDefaultOption("NoFilter")
+        filter.withOption("Retro")
+        filter.withOption("Sepia")
+        filter.withOption("EightBit")
+      }
+
+      camera.feature("MotionDetection") { motion ->
+        motion.withDefaultOption("Enabled")
+        motion.withOption("Disabled")
+      }
+
+      camera.feature("NightMode") { nightMode ->
+        nightMode.withDefaultOption("Enabled")
+        nightMode.withOption("Disabled")
+      }
+    }
+  }
+}

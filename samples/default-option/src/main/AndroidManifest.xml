@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="io.mehow.laboratory.sample.defaultoption">
+
+  <application
+      android:name=".Application"
+      android:label="Default Option"
+      android:supportsRtl="true"
+      android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+      tools:ignore="AllowBackup,MissingApplicationIcon">
+
+    <activity
+        android:name=".Activity"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+
+  </application>
+
+</manifest>

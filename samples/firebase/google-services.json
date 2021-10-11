@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "851249949580",
+    "project_id": "laboratory-sample",
+    "storage_bucket": "laboratory-sample.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851249949580:android:3ba6dee5e056a2e74804a9",
+        "android_client_info": {
+          "package_name": "io.mehow.laboratory.sample.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851249949580-i1ls4r7hsomkkon4fpjpdj1dlagctu4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.mehow.laboratory.sample.firebase",
+            "certificate_hash": "232d7fb12884c4872303c219d51b0f69f524e739"
+          }
+        },
+        {
+          "client_id": "851249949580-2sf7joehcm5emmkmut2g436bith99f4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQpuW6WWiyH-ZHsmFUACfm6N_pY91h3PU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "851249949580-2sf7joehcm5emmkmut2g436bith99f4p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

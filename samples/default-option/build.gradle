@@ -1,0 +1,80 @@
+plugins {
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "io.mehow.laboratory"
+}
+
+android {
+  compileSdkVersion versions.androidBuild.compileSdk
+
+  signingConfigs {
+    config {
+      keyAlias "mehow-io"
+      keyPassword "mehow-io"
+      storeFile file("../mehow-io.keystore")
+      storePassword "mehow-io"
+    }
+  }
+
+  defaultConfig {
+    applicationId "io.mehow.laboratory.sample.defaultoption"
+
+    minSdkVersion versions.androidBuild.minSdk
+    targetSdkVersion versions.androidBuild.targetSdk
+
+    versionCode 1
+    versionName "1.0.0"
+
+    signingConfig signingConfigs.config
+  }
+
+  buildTypes {
+    debug {
+      applicationIdSuffix ".debug"
+    }
+  }
+
+  buildFeatures {
+    viewBinding true
+  }
+
+  buildTypes.debug.setMatchingFallbacks "release"
+
+  compileOptions {
+    kotlinOptions.freeCompilerArgs += [
+        "-Xjvm-default=all",
+    ]
+  }
+}
+
+laboratory {
+  packageName = "io.mehow.laboratory.sample.defaultoption"
+
+  // Filters are needed because otherwise feature flags from other samples would be included.
+  featureFactory {
+    projectFilter { it == project }
+  }
+
+  ShowAds {
+    withDefaultOption("Enabled")
+    withOption("Disabled")
+  }
+
+  ReportRootedDevice {
+    withDefaultOption("Enabled")
+    withOption("Disabled")
+  }
+
+  RequiredFingerprint {
+    withDefaultOption("Enabled")
+    withOption("Disabled")
+  }
+}
+
+dependencies {
+  implementation libs.kotlin.x.coroutinesAndroid
+  implementation libs.android.material
+  implementation libs.hyperion.core
+  implementation libs.laboratory.dataStore
+  implementation libs.laboratory.hyperionPlugin
+}

@@ -1,0 +1,23 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+compileKotlin {
+  kotlinOptions {
+    freeCompilerArgs += [
+        "-Xjvm-default=all",
+    ]
+  }
+}
+
+laboratory {
+  packageName = "io.mehow.laboratory.smaple.multimodule.a"
+
+  Authentication {
+    withDefaultOption("Password")
+    withOption("Fingerpint")
+    withOption("Retina")
+    withOption("Face")
+  }
+}
