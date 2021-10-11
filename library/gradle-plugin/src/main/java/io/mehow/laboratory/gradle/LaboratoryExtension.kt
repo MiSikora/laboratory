@@ -2,6 +2,7 @@ package io.mehow.laboratory.gradle
 
 import groovy.lang.Closure
 import org.gradle.api.Action
+import org.gradle.api.GradleException
 import org.gradle.api.Project
 
 /**
@@ -38,7 +39,7 @@ public abstract class LaboratoryExtension {
    */
   public fun methodMissing(name: String, args: Any) {
     val closure = (args as? Array<*>)?.getOrNull(0) as? Closure<*>
-        ?: error("""
+        ?: throw GradleException("""
           |Expected a closure for a feature flag:
           |
           |laboratory {

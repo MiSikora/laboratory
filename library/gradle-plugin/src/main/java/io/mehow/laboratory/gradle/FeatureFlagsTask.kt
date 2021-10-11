@@ -3,6 +3,7 @@ package io.mehow.laboratory.gradle
 import arrow.core.traverseEither
 import io.mehow.laboratory.generator.FeatureFlagModel.Builder
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -13,7 +14,7 @@ public open class FeatureFlagsTask : DefaultTask() {
 
   @TaskAction public fun generateFeatureFlags() {
     features.flatMap(FeatureFlagInput::toBuilders).traverseEither(Builder::build).fold(
-        ifLeft = { failure -> error(failure.message) },
+        ifLeft = { failure -> throw GradleException(failure.message) },
         ifRight = { featureFlagModels ->
           codeGenDir.deleteRecursively()
           for (model in featureFlagModels) {

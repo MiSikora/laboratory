@@ -85,7 +85,7 @@ public class FeatureFlagInput internal constructor(
     options += option
     val packageNameProvider = { packageName ?: packageNameProvider() }
     val supervisorBuilder = {
-      val supervisor = toBuilder().build().getOrHandle { error(it.message) }
+      val supervisor = toBuilder().build().getOrHandle { throw GradleException(it.message) }
       Supervisor.Builder(supervisor, option)
     }
     childFeatureInputs += ChildFeatureFlagsInput(packageNameProvider, supervisorBuilder).let { input ->

@@ -5,6 +5,7 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.DomainObjectSet
+import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
@@ -63,7 +64,7 @@ private val BaseExtension.variants: DomainObjectSet<out BaseVariant>
   get() = when (this) {
     is AppExtension -> applicationVariants
     is LibraryExtension -> libraryVariants
-    else -> error("Unknown Android plugin $this")
+    else -> throw GradleException("Unknown Android plugin $this")
   }
 
 private val Any.kotlin: SourceDirectorySet?
