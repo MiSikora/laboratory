@@ -28,7 +28,6 @@ allprojects {
   repositories {
     mavenCentral()
     google()
-    jcenter()
   }
 
   group GROUP
@@ -124,7 +123,7 @@ tasks.withType(Detekt).configureEach {
   parallel true
   config.setFrom(rootProject.files("detekt-config.yml"))
   setSource(files(projectDir))
-  exclude "**/test/**", "**/androidTest/**"
+  exclude "**/test/**", "**/androidTest/**" , "**/kyrie/**"
   exclude subprojects.collect { "${rootDir.toPath().relativize(it.buildDir.toPath())}/" }
   reports {
     xml {

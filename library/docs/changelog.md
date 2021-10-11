@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FeatureStorage.Companion.dataStore(Context, String)` function. Use overload that accepts `DataStore` instead.
 - `generate()` methods on generation models. Use `prepare()` and operate on `FileSpec` directly instead.
 
+### Removed
+- Dependency on Kyrie.
+- Dependency on JCenter.
+
 ## [0.13.1] - 2021-06-27
 
 ### Changed
