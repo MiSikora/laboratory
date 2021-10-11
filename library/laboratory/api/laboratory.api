@@ -10,8 +10,12 @@ public final class io/mehow/laboratory/BlockingLaboratory {
 }
 
 public abstract interface class io/mehow/laboratory/DefaultOptionFactory {
+	public static final field Companion Lio/mehow/laboratory/DefaultOptionFactory$Companion;
 	public abstract fun create (Lio/mehow/laboratory/Feature;)Lio/mehow/laboratory/Feature;
 	public fun plus (Lio/mehow/laboratory/DefaultOptionFactory;)Lio/mehow/laboratory/DefaultOptionFactory;
+}
+
+public final class io/mehow/laboratory/DefaultOptionFactory$Companion {
 }
 
 public abstract interface class io/mehow/laboratory/Feature : java/lang/Comparable {

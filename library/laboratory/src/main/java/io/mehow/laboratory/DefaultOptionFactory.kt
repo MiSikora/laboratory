@@ -22,4 +22,6 @@ public interface DefaultOptionFactory {
       feature: T,
     ) = this@DefaultOptionFactory.create(feature) ?: factory.create(feature)
   }
+
+  public companion object
 }
