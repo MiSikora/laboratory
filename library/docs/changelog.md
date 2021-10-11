@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to CoreKtx `1.6.0`.
 - Upgrade to DataStore `1.0.0`.
 - Upgrade to AGP `4.2.2`.
-- Upgrade to Hyperion `0.9.33`.
+- Upgrade to Hyperion `0.9.34`.
 - Upgrade to FragmentKtx `1.3.6`.
 - Upgrade to AppCompat `1.3.1`.
 - Upgrade to ConstraintLayout `2.1.1`.
