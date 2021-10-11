@@ -10,6 +10,7 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import io.mehow.laboratory.gradle.DeprecationLevel.Warning
 import org.gradle.api.Action
+import org.gradle.api.GradleException
 
 /**
  * Representation of a generated feature flag. It must have at least one value and exactly one default value.
@@ -129,7 +130,7 @@ public class FeatureFlagInput internal constructor(
       key = key,
       description = description.orEmpty(),
       deprecation = deprecation,
-      supervisor = supervisor?.invoke(),
+      supervisor = supervisor?.invoke()?.build()?.getOrHandle { throw GradleException(it.message) },
   )
 
   internal fun toBuilders(): List<FeatureFlagModel.Builder> =

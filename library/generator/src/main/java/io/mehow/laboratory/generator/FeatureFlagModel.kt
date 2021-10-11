@@ -4,7 +4,6 @@ import arrow.core.Either
 import arrow.core.Nel
 import arrow.core.computations.either
 import arrow.core.flatMap
-import arrow.core.right
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import io.mehow.laboratory.generator.GenerationFailure.InvalidDefaultOption
@@ -46,14 +45,14 @@ public class FeatureFlagModel internal constructor(
     internal val sourceOptions: List<FeatureFlagOption> = emptyList(),
     internal val description: String = "",
     internal val deprecation: Deprecation? = null,
-    internal val supervisor: Supervisor.Builder? = null,
+    internal val supervisor: Supervisor? = null,
     internal val key: String? = null,
   ) {
     public fun build(): Either<GenerationFailure, FeatureFlagModel> {
       return either.eager {
         val options = validateOptions().bind()
         val nestedSource = createNestedSource()?.bind()
-        val supervisor = validateSupervisor().bind()
+        val supervisor = supervisor?.validateSelfSupervision()?.bind()
         FeatureFlagModel(
             visibility = visibility,
             className = className,
@@ -99,18 +98,10 @@ public class FeatureFlagModel internal constructor(
           }?.build()
     }
 
-    private fun validateSupervisor(): Either<GenerationFailure, Supervisor?> {
-      return supervisor?.build()
-          ?.flatMap(::validateSelfSupervision)
-          ?: null.right()
-    }
-
-    private fun validateSelfSupervision(
-      supervisor: Supervisor,
-    ): Either<GenerationFailure, Supervisor> = Either.conditionally(
-        test = supervisor.featureFlag.className.reflectionName() != className.reflectionName(),
-        ifTrue = { supervisor },
-        ifFalse = { SelfSupervision(supervisor.featureFlag.toString()) }
+    private fun Supervisor.validateSelfSupervision(): Either<GenerationFailure, Supervisor> = Either.conditionally(
+        test = featureFlag.className.reflectionName() != className.reflectionName(),
+        ifTrue = { this },
+        ifFalse = { SelfSupervision(featureFlag.toString()) }
     )
   }
 }

@@ -89,37 +89,9 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
     }
 
     context("supervisor option") {
-      it("must be present in parent") {
-        checkAll(Arb.stringPattern("[a-z](0)([a-z]{0,10})")) { optionName ->
-          val option = FeatureFlagOption(optionName, isDefault = true)
-          val className = ClassName(featureBuilder.className.packageName, "Parent")
-          val parent = featureBuilder.copy(className = className, options = listOf(option))
-              .build()
-              .shouldBeRight()
-          val child = featureBuilder.copy(supervisor = Supervisor.Builder(parent, option))
-
-          val result = child.build()
-
-          result.shouldBeRight()
-        }
-      }
-
-      it("cannot be absent in parent") {
-        checkAll(Arb.stringPattern("[a-z](0)([a-z]{0,10})")) { optionName ->
-          val className = ClassName(featureBuilder.className.packageName, "Parent")
-          val parent = featureBuilder.copy(className = className).build().shouldBeRight()
-          val option = FeatureFlagOption(optionName)
-          val builder = featureBuilder.copy(supervisor = Supervisor.Builder(parent, option))
-
-          val result = builder.build()
-
-          result shouldBeLeft MissingOption(parent.toString(), optionName)
-        }
-      }
-
       it("cannot supervise itself") {
         val parent = featureBuilder.build().shouldBeRight()
-        val supervisor = Supervisor.Builder(parent, parent.options.head)
+        val supervisor = Supervisor.Builder(parent, parent.options.head).build().shouldBeRight()
         val builder = featureBuilder.copy(supervisor = supervisor)
 
         val result = builder.build()
@@ -483,7 +455,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       val option = FeatureFlagOption("First")
 
       val fileSpec = featureBuilder
-          .copy(supervisor = Supervisor.Builder(parent, option))
+          .copy(supervisor = Supervisor.Builder(parent, option).build().shouldBeRight())
           .build()
           .map { model -> model.prepare().toString() }
 

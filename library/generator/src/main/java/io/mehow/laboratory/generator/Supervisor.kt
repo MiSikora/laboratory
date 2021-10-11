@@ -11,7 +11,7 @@ public class Supervisor internal constructor(
     private val featureFlag: FeatureFlagModel,
     private val option: FeatureFlagOption,
   ) {
-    internal fun build(): Either<GenerationFailure, Supervisor> = Either.conditionally(
+    public fun build(): Either<GenerationFailure, Supervisor> = Either.conditionally(
         test = featureFlag.options.map(FeatureFlagOption::name).contains(option.name),
         ifTrue = { Supervisor(featureFlag, option) },
         ifFalse = { MissingOption(featureFlag.toString(), option.name) }
