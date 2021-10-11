@@ -360,6 +360,69 @@ private object GeneratedFeatureSourceFactory : FeatureFactory {
 }
 ```
 
+## Feature flag option factory
+
+The generation of an option factory is useful when you want to control local feature flag options remotely. Option factory aggregates all feature flags and recognizes them either by a fully qualified class name or an optional `key` property on a feature flag. Keys must be unique and cannot match fully qualified class names of other feature flags.
+
+```
+apply plugin: "io.mehow.laboratory"
+
+laboratory {
+  packageName = "io.mehow.laboratory.sample"
+
+  featureFactory()
+
+  feature("FeatureA") {
+    key = "FeatureA"
+
+    withOption("Enabled")
+    withDefaultOption("Disabled")
+  }
+
+  feature("FeatureB") {
+    withOption("Enabled")
+    withDefaultOption("Disabled")
+  }
+
+  feature("FeatureC") {
+    withOption("Enabled")
+    withDefaultOption("Disabled")
+  }
+}
+```
+
+This uses the `generateOptionFactory` Gradle task that generates the code below.
+
+```kotlin
+package io.mehow.laboratory.sample
+
+import io.mehow.laboratory.Feature
+import io.mehow.laboratory.OptionFactory
+
+internal fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
+
+private object GeneratedOptionFactory : OptionFactory {
+  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+    "FeatureA" -> when (name) {
+      "Enabled" -> FeatureA.Enabled
+      "Disabled" -> FeatureA.Disabled
+      else -> null
+    }
+    "io.mehow.laboratory.sample.FeatureB" -> when (name) {
+      "Enabled" -> FeatureB.Enabled
+      "Disabled" -> FeatureB.Disabled
+      else -> null
+    }
+    "io.mehow.laboratory.sample.FeatureC" -> when (name) {
+      "Enabled" -> FeatureC.Enabled
+      "Disabled" -> FeatureC.Disabled
+      else -> null
+    }
+    else -> null
+  }
+}
+```
+
 ## Multi-module support
 
 The Gradle plugin was written with support for multi-module projects in mind.
@@ -484,6 +547,9 @@ laboratory {
 
   // Informs plugin to create 'enum class SomeFeature' during the generation period.
   feature("SomeFeature") {
+    // Used for option factory lookup. No value by default.
+    key = "SomeFeatureKey"
+
     // Overrides globally declared namespace. No value by default.
     packageName = "io.mehow.sample.feature"
 
@@ -534,6 +600,7 @@ laboratory {
   // An alternative syntax for adding features with Groovy DSL. It is available only for top level features.
   // Supervised features do not use this syntax.
   SomeFeature {
+    key = "SomeFeatureKey"
     packageName = "io.mehow.sample.feature"
     description = "Feature descritpion"
     isPublic = false
@@ -557,7 +624,19 @@ laboratory {
     projectFilter { project -> false }
   }
 
-  // Configures feature flags factory useful for the QA module configuration.
+  // Configures option factory. Useful for integration with remote service such as Firebase.
+  optionFactory {
+    // Overrides globally declared namespace. No value by default.
+    packageName = "io.mehow.sample.factory"
+
+    // Sets visibility of a factory extension function to be either 'public' or 'internal'. 'false' by default.
+    isPublic = true
+
+    // Contributes features to this factory only if they match the condition. Includes all projects by default.
+    projectFilter { project -> false }
+  }
+
+  // Configures feature flags factory. Useful for the QA module configuration.
   featureFactory {
     // Overrides globally declared namespace. No value by default.
     packageName = "io.mehow.sample.factory"
