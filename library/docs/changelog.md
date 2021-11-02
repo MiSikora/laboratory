@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade Android target and compile SDK to 31.
+- Upgrade to LifecycleViewmodelKtx `2.4.0`.
 
 ## [0.14.0] - 2021-10-11
 
