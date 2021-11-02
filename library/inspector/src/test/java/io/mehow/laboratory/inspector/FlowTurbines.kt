@@ -2,12 +2,11 @@ package io.mehow.laboratory.inspector
 
 import app.cash.turbine.FlowTurbine
 import kotlinx.coroutines.withTimeout
-import kotlin.time.Duration
 
 internal suspend fun <T> FlowTurbine<T>.awaitItemEventually(
-  timeout: Duration = this.timeout,
+  timeoutMs: Long = this.timeoutMs,
   assertion: (T) -> Unit,
-) = withTimeout(timeout) {
+) = withTimeout(timeoutMs) {
   while (true) {
     val isMatch = try {
       assertion(awaitItem())
