@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Upgrade Android target and compile SDK to 31.
+
 ## [0.14.0] - 2021-10-11
 
 ### Added

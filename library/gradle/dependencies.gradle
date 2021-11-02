@@ -6,8 +6,8 @@ ext.versions = [
     "detekt": "1.18.1",
     "androidBuild": [
         "minSdk": 21,
-        "compileSdk": 30,
-        "targetSdk": 30,
+        "compileSdk": 31,
+        "targetSdk": 31,
     ],
 ]
 
