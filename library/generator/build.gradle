@@ -18,6 +18,7 @@ dependencies {
   testImplementation libs.kotest.runnerJunit5
   testImplementation libs.kotest.assertions
   testImplementation libs.kotest.property
+  testImplementation libs.kotest.arrow
 }
 
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"

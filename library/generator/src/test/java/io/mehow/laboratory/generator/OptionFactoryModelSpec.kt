@@ -1,6 +1,8 @@
 package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.ClassName
+import io.kotest.assertions.arrow.core.shouldBeLeft
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.stringPattern

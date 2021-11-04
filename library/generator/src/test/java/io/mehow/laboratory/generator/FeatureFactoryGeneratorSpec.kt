@@ -1,6 +1,7 @@
 package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.ClassName
+import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.DescribeSpec
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
