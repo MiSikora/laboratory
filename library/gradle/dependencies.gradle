@@ -62,7 +62,7 @@ ext.libs = [
         "runnerJunit5": "io.kotest:kotest-runner-junit5-jvm:${versions.kotest}",
         "assertions": "io.kotest:kotest-assertions-core-jvm:${versions.kotest}",
         "property": "io.kotest:kotest-property-jvm:${versions.kotest}",
-        "arrow": "io.kotest.extensions:kotest-assertions-arrow:1.1.1",
+        "arrow": "io.kotest.extensions:kotest-assertions-arrow:1.1.0",
     ],
     "hyperion": [
         "core": "com.willowtreeapps.hyperion:hyperion-core:${versions.hyperion}",
