@@ -37,7 +37,7 @@ ext.libs = [
         "material": "com.google.android.material:material:1.4.0",
     ],
     "firebase": [
-        "databaseKtx": "com.google.firebase:firebase-database-ktx:20.0.2",
+        "databaseKtx": "com.google.firebase:firebase-database-ktx:20.0.3",
     ],
     "googleServices": [
         "gradlePlugin": "com.google.gms:google-services:4.3.10",
