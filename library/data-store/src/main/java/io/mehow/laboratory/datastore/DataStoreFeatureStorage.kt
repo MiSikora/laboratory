@@ -15,18 +15,18 @@ internal class DataStoreFeatureStorage(
 ) : FeatureStorage {
   override fun observeFeatureName(feature: Class<out Feature<*>>) = dataStore
       .data
-      .map { it.value[feature.name] }
+      .map { it.options[feature.name] }
 
   override suspend fun getFeatureName(feature: Class<out Feature<*>>) = try {
-    dataStore.data.first().value[feature.name]
+    dataStore.data.first().options[feature.name]
   } catch (_: IOException) {
     null
   }
 
   override suspend fun setOptions(vararg options: Feature<*>) = try {
     dataStore.updateData { flags ->
-      val updatedFeatures = flags.value + options.associate { it.javaClass.name to it.name }
-      return@updateData flags.copy(value = updatedFeatures)
+      val updatedFeatures = flags.options + options.associate { it.javaClass.name to it.name }
+      return@updateData flags.copy(options = updatedFeatures)
     }
     true
   } catch (_: IOException) {

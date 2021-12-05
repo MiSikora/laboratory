@@ -27,7 +27,7 @@ public final class io/mehow/laboratory/datastore/FeatureFlags : com/squareup/wir
 	public final fun copy (Ljava/util/Map;Lokio/ByteString;)Lio/mehow/laboratory/datastore/FeatureFlags;
 	public static synthetic fun copy$default (Lio/mehow/laboratory/datastore/FeatureFlags;Ljava/util/Map;Lokio/ByteString;ILjava/lang/Object;)Lio/mehow/laboratory/datastore/FeatureFlags;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getValue ()Ljava/util/Map;
+	public final fun getOptions ()Ljava/util/Map;
 	public fun hashCode ()I
 	public synthetic fun newBuilder ()Lcom/squareup/wire/Message$Builder;
 	public synthetic fun newBuilder ()Ljava/lang/Void;
