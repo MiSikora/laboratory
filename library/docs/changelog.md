@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to LifecycleViewmodelKtx `2.4.0`.
 - Upgrade to KotlinPoet `1.10.2`.
 - Upgrade to Wire `3.7.1`.
+- Upgrade to Kotlin `1.6.0`.
 
 ## [0.14.0] - 2021-10-11
 
