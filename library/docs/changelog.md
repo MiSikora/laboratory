@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade Android target and compile SDK to 31.
 - Upgrade to LifecycleViewmodelKtx `2.4.0`.
 - Upgrade to KotlinPoet `1.10.2`.
-- Upgrade to Wire `3.7.1`.
+- Upgrade to Wire `4.0.0`.
 - Upgrade to Kotlin `1.6.0`.
 - Upgrade to ConstraintLayout `2.1.2`.
 - Upgrade to FragmentKtx `1.4.0`.
