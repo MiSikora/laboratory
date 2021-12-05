@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Wire `3.7.1`.
 - Upgrade to Kotlin `1.6.0`.
 - Upgrade to ConstraintLayout `2.1.2`.
+- Upgrade to FragmentKtx `1.4.0`.
 
 ## [0.14.0] - 2021-10-11
 
