@@ -37,11 +37,9 @@ public final class io/mehow/laboratory/gradle/FeatureFlagInput {
 	public final fun withDefaultOption (Ljava/lang/String;)V
 	public final fun withDefaultOption (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public final fun withDefaultSource (Ljava/lang/String;)V
-	public final fun withDefaultValue (Ljava/lang/String;)V
 	public final fun withOption (Ljava/lang/String;)V
 	public final fun withOption (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public final fun withSource (Ljava/lang/String;)V
-	public final fun withValue (Ljava/lang/String;)V
 }
 
 public class io/mehow/laboratory/gradle/FeatureFlagsTask : org/gradle/api/DefaultTask {

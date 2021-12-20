@@ -31,24 +31,12 @@ public interface FeatureStorage {
    */
   public suspend fun clear(): Boolean
 
-  @Deprecated(
-      message = "This method will be removed in 1.0.0. Use 'setOptions()' instead.",
-      replaceWith = ReplaceWith("setOptions(*options)"),
-  )
-  public suspend fun setFeatures(vararg options: Feature<*>): Boolean = setOptions(*options)
-
   /**
    * Sets a [Feature] to have the input [option].
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
   public suspend fun setOption(option: Feature<*>): Boolean = setOptions(option)
-
-  @Deprecated(
-      message = "This method will be removed in 1.0.0. Use 'setOption()' instead.",
-      replaceWith = ReplaceWith("setOption(option)"),
-  )
-  public suspend fun setFeature(option: Feature<*>): Boolean = setOption(option)
 
   public companion object {
     /**

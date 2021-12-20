@@ -53,12 +53,6 @@ public class FeatureFlagInput internal constructor(
   public fun withOption(name: String, action: Action<ChildFeatureFlagsInput>): Unit =
     withOption(name, isDefault = false, action)
 
-  @Deprecated(
-      message = "This method will be removed in 1.0.0. Use 'withOption()' instead.",
-      replaceWith = ReplaceWith("withOption(value)"),
-  )
-  public fun withValue(value: String): Unit = withOption(value)
-
   /**
    * Adds a feature value that will be used as a default value.
    * Exactly one value must be set with this method.
@@ -71,12 +65,6 @@ public class FeatureFlagInput internal constructor(
    */
   public fun withDefaultOption(name: String, action: Action<ChildFeatureFlagsInput>): Unit =
     withOption(name, isDefault = true, action)
-
-  @Deprecated(
-      message = "This method will be removed in 1.0.0. Use 'withDefaultOption()' instead.",
-      replaceWith = ReplaceWith("withDefaultOption(value)"),
-  )
-  public fun withDefaultValue(value: String): Unit = withDefaultOption(value)
 
   private val childFeatureInputs = mutableListOf<ChildFeatureFlagsInput>()
 

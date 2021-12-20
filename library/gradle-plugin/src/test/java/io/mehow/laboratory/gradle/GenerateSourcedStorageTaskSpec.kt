@@ -48,12 +48,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
       |
-      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-      |internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
-      |    = sourced(
-      |  localSource,
-      |  emptyMap()
-      |)
     """.trimMargin()
   }
 
@@ -97,19 +91,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
-      |
-      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-      |internal fun FeatureStorage.Companion.sourcedGenerated(
-      |  localSource: FeatureStorage,
-      |  remoteASource: FeatureStorage,
-      |  remoteBSource: FeatureStorage
-      |): FeatureStorage = sourced(
-      |  localSource,
-      |  mapOf(
-      |    "RemoteA" to remoteASource,
-      |    "RemoteB" to remoteBSource
-      |  )
-      |)
     """.trimMargin()
   }
 
@@ -228,21 +209,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
-      |
-      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-      |internal fun FeatureStorage.Companion.sourcedGenerated(
-      |  localSource: FeatureStorage,
-      |  remoteSource: FeatureStorage,
-      |  remoteASource: FeatureStorage,
-      |  remoteBSource: FeatureStorage
-      |): FeatureStorage = sourced(
-      |  localSource,
-      |  mapOf(
-      |    "Remote" to remoteSource,
-      |    "RemoteA" to remoteASource,
-      |    "RemoteB" to remoteBSource
-      |  )
-      |)
     """.trimMargin()
   }
 
@@ -286,19 +252,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
-      |
-      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-      |internal fun FeatureStorage.Companion.sourcedGenerated(
-      |  localSource: FeatureStorage,
-      |  remoteSource: FeatureStorage,
-      |  remoteBSource: FeatureStorage
-      |): FeatureStorage = sourced(
-      |  localSource,
-      |  mapOf(
-      |    "Remote" to remoteSource,
-      |    "RemoteB" to remoteBSource
-      |  )
-      |)
     """.trimMargin()
   }
 
@@ -326,13 +279,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |) : BuildingStep {
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
-      |
-      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-      |internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
-      |    = sourced(
-      |  localSource,
-      |  emptyMap()
-      |)
     """.trimMargin()
   }
 
@@ -360,13 +306,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |) : BuildingStep {
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
-      |
-      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-      |internal fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage
-      |    = sourced(
-      |  localSource,
-      |  emptyMap()
-      |)
     """.trimMargin()
   }
 
@@ -418,21 +357,6 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
-      |
-      |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-      |internal fun FeatureStorage.Companion.sourcedGenerated(
-      |  localSource: FeatureStorage,
-      |  grandparentSource: FeatureStorage,
-      |  parentSource: FeatureStorage,
-      |  childSource: FeatureStorage
-      |): FeatureStorage = sourced(
-      |  localSource,
-      |  mapOf(
-      |    "Grandparent" to grandparentSource,
-      |    "Parent" to parentSource,
-      |    "Child" to childSource
-      |  )
-      |)
     """.trimMargin()
   }
 })

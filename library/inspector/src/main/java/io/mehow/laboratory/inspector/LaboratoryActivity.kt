@@ -115,18 +115,6 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
       is Unlimited -> featureFactories.size
     }
 
-    @Deprecated(
-        message = "This method will be removed in 1.0.0. Use 'Configuration.create()' instead.",
-        replaceWith = ReplaceWith("Configuration.create(laboratory, featureFactories)")
-    )
-    public constructor(
-      laboratory: Laboratory,
-      featureFactories: Map<String, FeatureFactory>,
-    ) : this(Builder().apply {
-      this.laboratory = laboratory
-      this.featureFactories = featureFactories
-    })
-
     /**
      * Behavior of feature sections that are not currently displayed.
      */

@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Groovy DSL introduced in [0.9.0] for adding feature flags.
 - `projectFilter` properties from Gradle plugin. Use explicit dependencies instead.
+- Deprecated API.
 
 ## [0.14.0] - 2021-10-11
 
