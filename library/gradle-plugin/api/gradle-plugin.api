@@ -58,7 +58,6 @@ public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
 	public final fun featureSourceFactory ()V
 	public final fun featureSourceFactory (Lorg/gradle/api/Action;)V
 	public final fun getPackageName ()Ljava/lang/String;
-	public final fun methodMissing (Ljava/lang/String;Ljava/lang/Object;)V
 	public final fun optionFactory ()V
 	public final fun optionFactory (Lorg/gradle/api/Action;)V
 	public final fun setPackageName (Ljava/lang/String;)V

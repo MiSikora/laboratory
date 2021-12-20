@@ -448,50 +448,6 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     """.trimMargin()
   }
 
-  "generates feature flag from Groovy DSL" {
-    val fixture = "feature-flag-generate-groovy-dsl".toFixture()
-
-    val result = gradleRunner.withProjectDir(fixture).build()
-
-    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
-
-    val feature = fixture.featureFile("io.mehow.example.Feature")
-    feature.shouldExist()
-
-    feature.readText() shouldBe """
-      |package io.mehow.example
-      |
-      |import java.lang.Class
-      |import kotlin.String
-      |
-      |/**
-      | * Feature description
-      | */
-      |public enum class Feature : io.mehow.laboratory.Feature<Feature> {
-      |  First,
-      |  Second,
-      |  ;
-      |
-      |  public override val defaultOption: Feature
-      |    get() = First
-      |
-      |  public override val source: Class<out io.mehow.laboratory.Feature<*>> = Source::class.java
-      |
-      |  public override val description: String = "Feature description"
-      |
-      |  public enum class Source : io.mehow.laboratory.Feature<Source> {
-      |    Local,
-      |    Remote,
-      |    ;
-      |
-      |    public override val defaultOption: Source
-      |      get() = Local
-      |  }
-      |}
-      |
-    """.trimMargin()
-  }
-
   "generates deprecated feature flag" {
     val fixture = "feature-flag-generate-deprecated".toFixture()
 

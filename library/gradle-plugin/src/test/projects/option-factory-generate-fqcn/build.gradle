@@ -6,14 +6,14 @@ plugins {
 laboratory {
   optionFactory()
 
-  FeatureA {
+  feature("FeatureA") {
     packageName = "io.mehow.first"
 
     withDefaultOption("FirstA")
     withOption("SecondA")
   }
 
-  FeatureB {
+  feature("FeatureB") {
     packageName = "io.mehow.second"
 
     withDefaultOption("FirstB")

@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to FragmentKtx `1.4.0`.
 - Upgrade to AppCompat `1.4.0`.
 
+### Removed
+- Groovy DSL introduced in [0.9.0] for adding feature flags.
+
 ## [0.14.0] - 2021-10-11
 
 ### Added
