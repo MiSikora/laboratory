@@ -119,6 +119,10 @@ public abstract class LaboratoryExtension {
     }
   }
 
+  /**
+   * Includes a [project] during feature flags contribution to [featureFactory], [featureSourcesFactory],
+   * [sourcedStorage] or [optionFactory]. Included project must have Laboratory plugin applied.
+   */
   public fun dependency(project: Project) {
     this.project.evaluationDependsOn(project.path)
     val laboratoryExtension = requireNotNull(project.extensions.findByType(LaboratoryExtension::class.java)) {
