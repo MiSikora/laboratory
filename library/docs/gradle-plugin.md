@@ -273,7 +273,7 @@ The generation of feature flags factory is useful if you use the [QA module](qa-
 !!! tip
     Check [the samples](https://github.com/MiSikora/laboratory/tree/trunk/samples/) with demo configurations.
 
-```
+```groovy
 apply plugin: "io.mehow.laboratory"
 
 laboratory {
@@ -381,7 +381,7 @@ The generation of an option factory is useful when you want to control local fea
 
 ![type:video](https://www.youtube.com/embed/yNm2DUcZ0L4)
 
-```
+```groovy
 apply plugin: "io.mehow.laboratory"
 
 laboratory {
