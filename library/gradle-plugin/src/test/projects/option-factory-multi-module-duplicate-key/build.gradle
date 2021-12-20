@@ -11,4 +11,7 @@ laboratory {
 
     withDefaultOption("First")
   }
+
+  dependency(project(":feature-a"))
+  dependency(project(":feature-b"))
 }

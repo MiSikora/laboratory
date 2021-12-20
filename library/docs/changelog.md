@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Multi-module setup no longer includes other modules implicitly. Instead each module needs to be included via `dependency` function in Gradle.
+    ```groovy
+    laboratory {
+      featureFactory()
+
+      // Before, these were included implicitly.
+      dependency(project(":module-a"))
+      dependency(project(":module-b"))
+    }
+    ```
 - Upgrade Android target and compile SDK to 31.
 - Upgrade to LifecycleViewmodelKtx `2.4.0`.
 - Upgrade to KotlinPoet `1.10.2`.
@@ -18,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Groovy DSL introduced in [0.9.0] for adding feature flags.
+- `projectFilter` properties from Gradle plugin. Use explicit dependencies instead.
 
 ## [0.14.0] - 2021-10-11
 

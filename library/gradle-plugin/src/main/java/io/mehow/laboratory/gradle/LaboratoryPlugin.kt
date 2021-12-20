@@ -8,7 +8,6 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.TaskProvider
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.function.Predicate
 
 private const val pluginName = "laboratory"
 
@@ -79,18 +78,16 @@ public class LaboratoryPlugin : Plugin<Project> {
     val factoryInput = extension.factoryInput ?: return@afterEvaluate
 
     val codeGenDir = File("${project.buildDir}/generated/laboratory/code/feature-factory")
-    val featureInputs = mutableListOf<FeatureFlagInput>()
     val factoryTask = registerTask<FeatureFactoryTask>("generateFeatureFactory") { task ->
       task.group = pluginName
       task.description = "Generate Laboratory feature factory."
       task.factory = factoryInput
-      task.features = featureInputs
+      task.features = extension.factoryFeatureInputs
       task.codeGenDir = codeGenDir
       task.factoryClassName = "GeneratedFeatureFactory"
       task.factoryFunctionName = "featureGenerated"
       task.featureModelsMapper = { it }
     }
-    findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
     addSourceSets(factoryTask, codeGenDir)
   }
 
@@ -98,15 +95,13 @@ public class LaboratoryPlugin : Plugin<Project> {
     val storageInput = extension.storageInput ?: return@afterEvaluate
 
     val codeGenDir = File("${project.buildDir}/generated/laboratory/code/sourced-storage")
-    val featureInputs = mutableListOf<FeatureFlagInput>()
     val storageTask = registerTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage") { task ->
       task.group = pluginName
       task.description = "Generate Laboratory sourced feature storage."
       task.storage = storageInput
-      task.features = featureInputs
+      task.features = extension.factoryFeatureInputs
       task.codeGenDir = codeGenDir
     }
-    findAllFeatures(storageInput.projectFilter) { featureInputs.addAll(it) }
     addSourceSets(storageTask, codeGenDir)
   }
 
@@ -114,18 +109,16 @@ public class LaboratoryPlugin : Plugin<Project> {
     val factoryInput = extension.featureSourcesFactory ?: return@afterEvaluate
 
     val codeGenDir = File("${project.buildDir}/generated/laboratory/code/feature-source-factory")
-    val featureInputs = mutableListOf<FeatureFlagInput>()
     val factoryTask = registerTask<FeatureFactoryTask>("generateFeatureSourceFactory") { task ->
       task.group = pluginName
       task.description = "Generate Laboratory feature sources factory."
       task.factory = factoryInput
-      task.features = featureInputs
+      task.features = extension.factoryFeatureInputs
       task.codeGenDir = codeGenDir
       task.factoryClassName = "GeneratedFeatureSourceFactory"
       task.factoryFunctionName = "featureSourceGenerated"
       task.featureModelsMapper = { it.sourceModels() }
     }
-    findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
     addSourceSets(factoryTask, codeGenDir)
   }
 
@@ -133,33 +126,14 @@ public class LaboratoryPlugin : Plugin<Project> {
     val factoryInput = extension.optionFactoryInput ?: return@afterEvaluate
 
     val codeGenDir = File("${project.buildDir}/generated/laboratory/code/option-factory")
-    val featureInputs = mutableListOf<FeatureFlagInput>()
     val factoryTask = registerTask<OptionFactoryTask>("generateOptionFactory") { task ->
       task.group = pluginName
       task.description = "Generate Laboratory option factory."
       task.factory = factoryInput
-      task.features = featureInputs
+      task.features = extension.factoryFeatureInputs
       task.codeGenDir = codeGenDir
     }
-    findAllFeatures(factoryInput.projectFilter) { featureInputs.addAll(it) }
     addSourceSets(factoryTask, codeGenDir)
-  }
-
-  private fun Project.findAllFeatures(
-    projectFilter: Predicate<Project>,
-    onFeatureInputsFound: (List<FeatureFlagInput>) -> Unit,
-  ) {
-    rootProject.allprojects { project ->
-      if (projectFilter.test(project)) {
-        project.plugins.withType(LaboratoryPlugin::class.java).configureEach { labPlugin ->
-          val pluginFeatures = labPlugin.extension.featureInputs
-          onFeatureInputsFound(pluginFeatures)
-          if (pluginFeatures.isEmpty()) {
-            project.afterEvaluate { onFeatureInputsFound(labPlugin.extension.featureInputs) }
-          }
-        }
-      }
-    }
   }
 
   private fun Project.addLaboratoryDependency() {

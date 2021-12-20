@@ -18,6 +18,10 @@ public abstract class LaboratoryExtension {
 
   internal val featureInputs: List<FeatureFlagInput> = mutableFeatureInputs
 
+  private val mutableDependencies = mutableListOf<FeatureFlagInput>()
+
+  internal val factoryFeatureInputs get() = featureInputs + mutableDependencies
+
   internal lateinit var project: Project
 
   /**
@@ -113,5 +117,13 @@ public abstract class LaboratoryExtension {
       action.execute(input)
       return@let input
     }
+  }
+
+  public fun dependency(project: Project) {
+    this.project.evaluationDependsOn(project.path)
+    val laboratoryExtension = requireNotNull(project.extensions.findByType(LaboratoryExtension::class.java)) {
+      "Cannot depend on a project without laboratory plugin"
+    }
+    mutableDependencies += laboratoryExtension.featureInputs
   }
 }

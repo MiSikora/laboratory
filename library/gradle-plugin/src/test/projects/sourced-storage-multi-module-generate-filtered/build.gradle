@@ -4,15 +4,13 @@ plugins {
 }
 
 laboratory {
-  sourcedStorage {
-    projectFilter { project ->
-      project.name != "feature-a"
-    }
-  }
+  sourcedStorage()
 
   feature("RootFeature") {
     withDefaultOption("First")
 
     withSource("Remote")
   }
+
+  dependency(project(":feature-b"))
 }

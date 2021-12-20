@@ -13,7 +13,6 @@ public final class io/mehow/laboratory/gradle/DeprecationLevel : java/lang/Enum 
 public final class io/mehow/laboratory/gradle/FeatureFactoryInput {
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun isPublic ()Z
-	public final fun projectFilter (Ljava/util/function/Predicate;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public final fun setPublic (Z)V
 }
@@ -52,6 +51,7 @@ public class io/mehow/laboratory/gradle/FeatureFlagsTask : org/gradle/api/Defaul
 
 public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
 	public fun <init> ()V
+	public final fun dependency (Lorg/gradle/api/Project;)V
 	public final fun feature (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public final fun featureFactory ()V
 	public final fun featureFactory (Lorg/gradle/api/Action;)V
@@ -74,7 +74,6 @@ public final class io/mehow/laboratory/gradle/LaboratoryPlugin : org/gradle/api/
 public final class io/mehow/laboratory/gradle/OptionFactoryInput {
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun isPublic ()Z
-	public final fun projectFilter (Ljava/util/function/Predicate;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public final fun setPublic (Z)V
 }
@@ -87,7 +86,6 @@ public class io/mehow/laboratory/gradle/OptionFactoryTask : org/gradle/api/Defau
 public final class io/mehow/laboratory/gradle/SourcedFeatureStorageInput {
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun isPublic ()Z
-	public final fun projectFilter (Ljava/util/function/Predicate;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public final fun setPublic (Z)V
 }

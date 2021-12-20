@@ -50,16 +50,9 @@ android {
 laboratory {
   packageName = "io.mehow.laboratory.sample.firebase"
 
-  // Filters are needed because otherwise feature flags from other samples would be included.
-  sourcedStorage {
-    projectFilter { it == project }
-  }
-  optionFactory {
-    projectFilter { it == project }
-  }
-  featureFactory {
-    projectFilter { it == project }
-  }
+  sourcedStorage()
+  optionFactory()
+  featureFactory()
 
   feature("LogType") {
     key = "LogType"

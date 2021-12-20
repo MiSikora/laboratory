@@ -48,10 +48,7 @@ android {
 laboratory {
   packageName = "io.mehow.laboratory.sample.basic"
 
-  // Filters are needed because otherwise feature flags from other samples would be included.
-  featureFactory {
-    projectFilter { it == project }
-  }
+  featureFactory()
 
   feature("LogType") {
     deprecated("Sample deprecation")

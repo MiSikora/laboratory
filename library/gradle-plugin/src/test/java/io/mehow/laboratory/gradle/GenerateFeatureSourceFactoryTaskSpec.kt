@@ -157,7 +157,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
     """.trimMargin()
   }
 
-  "generates factory with feature flags from not excluded modules" {
+  "generates factory with feature flags only from included modules" {
     val fixture = "source-factory-multi-module-generate-filtered".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()
