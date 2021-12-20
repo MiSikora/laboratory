@@ -159,7 +159,7 @@ enum class Background : Feature<Background> {
 }
 ```
 
-DSL for supervised feature flags is recursive allowing to nest them in `withOption()` and `withDefaultOption()` function.
+DSL for supervised feature flags is recursive allowing to nest them in `withOption()` and `withDefaultOption()` functions.
 
 ## Feature flags storage
 
