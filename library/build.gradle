@@ -36,10 +36,6 @@ allprojects {
   tasks.withType(Test).configureEach {
     testLogging {
       events "skipped", "failed", "passed"
-      showExceptions true
-      exceptionFormat "full"
-      showCauses true
-      showStackTraces true
     }
   }
 
