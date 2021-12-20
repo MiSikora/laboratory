@@ -1,8 +1,6 @@
 package io.mehow.laboratory.generator
 
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
@@ -14,7 +12,6 @@ import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.joinToCode
 import io.mehow.laboratory.FeatureStorage
 import java.util.Locale
 
@@ -27,36 +24,11 @@ internal class SourcedFeatureStorageGenerator(
 
   private val sourced = MemberName(FeatureStorage.Companion::class.asClassName(), "sourced")
 
-  private val mapOf = MemberName(kotlinCollectionsSpace, "mapOf")
-
   private val emptyMap = MemberName(kotlinCollectionsSpace, "emptyMap")
 
   private val mapPlus = MemberName(kotlinCollectionsSpace, PLUS)
 
   private val infixTo = MemberName("kotlin", "to")
-
-  private val storageFactoryExtension = FunSpec.builder("sourcedGenerated")
-      .addModifiers(storage.visibility.modifier)
-      .receiver(FeatureStorage.Companion::class)
-      .returns(FeatureStorage::class)
-      .addParameter(localSourceParam, FeatureStorage::class)
-      .apply {
-        val parameterNames = sourceNames.map { "${it.replaceFirstChar { char -> char.lowercase(Locale.ROOT) }}Source" }
-        for (name in parameterNames) {
-          addParameter(name, FeatureStorage::class)
-        }
-
-        if (sourceNames.isNotEmpty()) {
-          val remoteSources = sourceNames.zip(parameterNames) { name, parameterName ->
-            CodeBlock.of("%S %M %L", name, infixTo, parameterName)
-          }.joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
-          addStatement("return %M(\n⇥%L,\n%M(%L)⇤\n)", sourced, localSourceParam, mapOf, remoteSources)
-        } else {
-          addStatement("return %M(\n⇥%L,\n%M()⇤\n)", sourced, localSourceParam, emptyMap)
-        }
-      }
-      .addAnnotation(deprecated)
-      .build()
 
   private val buildingStepClassName = ClassName(storage.className.packageName, "BuildingStep")
 
@@ -145,7 +117,6 @@ internal class SourcedFeatureStorageGenerator(
       }
       .addType(buildingStepType)
       .addType(builderType)
-      .addFunction(storageFactoryExtension)
       .build()
 
   fun fileSpec() = storageFile
@@ -154,10 +125,6 @@ internal class SourcedFeatureStorageGenerator(
     const val stepSuffix = "Step"
     const val localSourceParam = "localSource"
     const val remoteSourcesParam = "remoteSources"
-
-    val deprecated = AnnotationSpec.builder(Deprecated::class)
-        .addMember("\"This method will be removed in 1.0.0. Use sourcedBuilder instead.\"")
-        .build()
 
     const val kotlinCollectionsSpace = "kotlin.collections"
   }

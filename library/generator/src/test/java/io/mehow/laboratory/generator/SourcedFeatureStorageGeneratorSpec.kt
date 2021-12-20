@@ -24,11 +24,9 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.FeatureStorage
         |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-        |import kotlin.Deprecated
         |import kotlin.String
         |import kotlin.collections.Map
         |import kotlin.collections.emptyMap
-        |import kotlin.collections.mapOf
         |import kotlin.collections.plus
         |import kotlin.to
         |
@@ -62,19 +60,6 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
-        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-        |internal fun FeatureStorage.Companion.sourcedGenerated(
-        |  localSource: FeatureStorage,
-        |  firebaseSource: FeatureStorage,
-        |  s3Source: FeatureStorage
-        |): FeatureStorage = sourced(
-        |  localSource,
-        |  mapOf(
-        |    "Firebase" to firebaseSource,
-        |    "S3" to s3Source
-        |  )
-        |)
-        |
       """.trimMargin()
     }
 
@@ -88,11 +73,9 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.FeatureStorage
         |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-        |import kotlin.Deprecated
         |import kotlin.String
         |import kotlin.collections.Map
         |import kotlin.collections.emptyMap
-        |import kotlin.collections.mapOf
         |import kotlin.collections.plus
         |import kotlin.to
         |
@@ -126,19 +109,6 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
-        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-        |public fun FeatureStorage.Companion.sourcedGenerated(
-        |  localSource: FeatureStorage,
-        |  firebaseSource: FeatureStorage,
-        |  s3Source: FeatureStorage
-        |): FeatureStorage = sourced(
-        |  localSource,
-        |  mapOf(
-        |    "Firebase" to firebaseSource,
-        |    "S3" to s3Source
-        |  )
-        |)
-        |
       """.trimMargin()
     }
 
@@ -152,11 +122,9 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.FeatureStorage
         |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-        |import kotlin.Deprecated
         |import kotlin.String
         |import kotlin.collections.Map
         |import kotlin.collections.emptyMap
-        |import kotlin.collections.mapOf
         |import kotlin.collections.plus
         |import kotlin.to
         |
@@ -198,21 +166,6 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
-        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-        |public fun FeatureStorage.Companion.sourcedGenerated(
-        |  localSource: FeatureStorage,
-        |  fooSource: FeatureStorage,
-        |  barSource: FeatureStorage,
-        |  bazSource: FeatureStorage
-        |): FeatureStorage = sourced(
-        |  localSource,
-        |  mapOf(
-        |    "Foo" to fooSource,
-        |    "Bar" to barSource,
-        |    "Baz" to bazSource
-        |  )
-        |)
-        |
       """.trimMargin()
     }
 
@@ -235,11 +188,9 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.FeatureStorage
         |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-        |import kotlin.Deprecated
         |import kotlin.String
         |import kotlin.collections.Map
         |import kotlin.collections.emptyMap
-        |import kotlin.collections.mapOf
         |import kotlin.collections.plus
         |import kotlin.to
         |
@@ -265,15 +216,6 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
-        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-        |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage,
-        |    fooSource: FeatureStorage): FeatureStorage = sourced(
-        |  localSource,
-        |  mapOf(
-        |    "Foo" to fooSource
-        |  )
-        |)
-        |
       """.trimMargin()
     }
 
@@ -287,7 +229,6 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |
         |import io.mehow.laboratory.FeatureStorage
         |import io.mehow.laboratory.FeatureStorage.Companion.sourced
-        |import kotlin.Deprecated
         |import kotlin.String
         |import kotlin.collections.Map
         |import kotlin.collections.emptyMap
@@ -305,13 +246,6 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |) : BuildingStep {
         |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
-        |
-        |@Deprecated("This method will be removed in 1.0.0. Use sourcedBuilder instead.")
-        |public fun FeatureStorage.Companion.sourcedGenerated(localSource: FeatureStorage): FeatureStorage =
-        |    sourced(
-        |  localSource,
-        |  emptyMap()
-        |)
         |
       """.trimMargin()
     }

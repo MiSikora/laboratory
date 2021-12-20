@@ -1,21 +1,5 @@
-public final class io/mehow/laboratory/datastore/Builder {
-	public final fun build ()Lio/mehow/laboratory/FeatureStorage;
-	public final fun coroutineScope (Lkotlinx/coroutines/CoroutineScope;)Lio/mehow/laboratory/datastore/Builder;
-	public final fun corruptionHandler (Landroidx/datastore/core/handlers/ReplaceFileCorruptionHandler;)Lio/mehow/laboratory/datastore/Builder;
-	public final fun featureSerializer (Landroidx/datastore/core/Serializer;)Lio/mehow/laboratory/datastore/Builder;
-	public final fun migrations (Ljava/lang/Iterable;)Lio/mehow/laboratory/datastore/Builder;
-	public final fun migrations ([Landroidx/datastore/core/DataMigration;)Lio/mehow/laboratory/datastore/Builder;
-}
-
-public final class io/mehow/laboratory/datastore/BuilderKt {
-	public static final fun dataStoreBuilder (Lio/mehow/laboratory/FeatureStorage$Companion;Landroid/content/Context;Ljava/lang/String;)Lio/mehow/laboratory/datastore/Builder;
-	public static final fun dataStoreBuilder (Lio/mehow/laboratory/FeatureStorage$Companion;Lkotlin/jvm/functions/Function0;)Lio/mehow/laboratory/datastore/Builder;
-}
-
 public final class io/mehow/laboratory/datastore/DataStoreFeatureStorageKt {
-	public static final fun dataStore (Lio/mehow/laboratory/FeatureStorage$Companion;Landroid/content/Context;Ljava/lang/String;)Lio/mehow/laboratory/FeatureStorage;
 	public static final fun dataStore (Lio/mehow/laboratory/FeatureStorage$Companion;Landroidx/datastore/core/DataStore;)Lio/mehow/laboratory/FeatureStorage;
-	public static final fun dataStore (Lio/mehow/laboratory/FeatureStorage$Companion;Lkotlin/jvm/functions/Function0;)Lio/mehow/laboratory/FeatureStorage;
 }
 
 public final class io/mehow/laboratory/datastore/FeatureFlags : com/squareup/wire/Message {

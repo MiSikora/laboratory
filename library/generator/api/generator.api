@@ -13,7 +13,6 @@ public final class io/mehow/laboratory/generator/Deprecation {
 }
 
 public final class io/mehow/laboratory/generator/FeatureFactoryModel {
-	public final fun generate (Ljava/lang/String;Ljava/io/File;)Ljava/io/File;
 	public final fun prepare (Ljava/lang/String;)Lcom/squareup/kotlinpoet/FileSpec;
 }
 
@@ -29,7 +28,6 @@ public final class io/mehow/laboratory/generator/FeatureFactoryModel$Builder {
 
 public final class io/mehow/laboratory/generator/FeatureFlagModel {
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun generate (Ljava/io/File;)Ljava/io/File;
 	public fun hashCode ()I
 	public final fun prepare ()Lcom/squareup/kotlinpoet/FileSpec;
 	public fun toString ()Ljava/lang/String;
@@ -134,7 +132,6 @@ public final class io/mehow/laboratory/generator/OptionFactoryModel$Builder {
 }
 
 public final class io/mehow/laboratory/generator/SourcedFeatureStorageModel {
-	public final fun generate (Ljava/io/File;)Ljava/io/File;
 	public final fun prepare ()Lcom/squareup/kotlinpoet/FileSpec;
 }
 

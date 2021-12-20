@@ -1,7 +1,5 @@
 package io.mehow.laboratory.sharedpreferences
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
@@ -60,16 +58,4 @@ internal class SharedPreferencesFeatureStorage(
 @ExperimentalCoroutinesApi
 public fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
   return SharedPreferencesFeatureStorage(preferences)
-}
-
-/**
- * Creates a [FeatureStorage] that is backed by [SharedPreferences] with a [fileName] in [private mode][MODE_PRIVATE].
- */
-@Deprecated(
-    "This function will be removed in 1.0.0. Use FeatureStorage.sharedPreferences(SharedPreferences) instead.",
-)
-@ExperimentalCoroutinesApi
-public fun FeatureStorage.Companion.sharedPreferences(context: Context, fileName: String): FeatureStorage {
-  val preferences = context.getSharedPreferences(fileName, MODE_PRIVATE)
-  return sharedPreferences(preferences)
 }

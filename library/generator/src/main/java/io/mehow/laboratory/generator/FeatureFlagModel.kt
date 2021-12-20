@@ -9,7 +9,6 @@ import com.squareup.kotlinpoet.FileSpec
 import io.mehow.laboratory.generator.GenerationFailure.InvalidDefaultOption
 import io.mehow.laboratory.generator.GenerationFailure.NoOption
 import io.mehow.laboratory.generator.GenerationFailure.SelfSupervision
-import java.io.File
 
 @Suppress("LongParameterList") // All properties are required for code generation.
 public class FeatureFlagModel internal constructor(
@@ -22,13 +21,6 @@ public class FeatureFlagModel internal constructor(
   internal val supervisor: Supervisor?,
   internal val key: String?,
 ) {
-  @Deprecated("This method will be removed in 1.0.0. Use prepare instead.")
-  public fun generate(file: File): File {
-    prepare().writeTo(file)
-    val outputDir = file.toPath().resolve(className.packageName.replace(".", "/")).toFile()
-    return File(outputDir, "${className.simpleName}.kt")
-  }
-
   public fun prepare(): FileSpec = FeatureFlagGenerator(this).fileSpec()
 
   override fun equals(other: Any?): Boolean =

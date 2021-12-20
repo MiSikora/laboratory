@@ -35,7 +35,6 @@ public final class io/mehow/laboratory/inspector/LaboratoryActivity$Companion {
 
 public final class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration {
 	public static final field Companion Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$Companion;
-	public fun <init> (Lio/mehow/laboratory/Laboratory;Ljava/util/Map;)V
 }
 
 public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep {
