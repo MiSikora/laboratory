@@ -55,17 +55,17 @@ laboratory {
     projectFilter { it == project }
   }
 
-  ShowAds {
+  feature("ShowAds") {
     withDefaultOption("Enabled")
     withOption("Disabled")
   }
 
-  ReportRootedDevice {
+  feature("ReportRootedDevice") {
     withDefaultOption("Enabled")
     withOption("Disabled")
   }
 
-  RequiredFingerprint {
+  feature("RequiredFingerprint") {
     withDefaultOption("Enabled")
     withOption("Disabled")
   }

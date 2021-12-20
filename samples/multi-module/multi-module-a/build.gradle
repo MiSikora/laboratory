@@ -14,7 +14,7 @@ compileKotlin {
 laboratory {
   packageName = "io.mehow.laboratory.smaple.multimodule.a"
 
-  Authentication {
+  feature("Authentication") {
     withDefaultOption("Password")
     withOption("Fingerpint")
     withOption("Retina")
