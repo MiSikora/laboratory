@@ -61,7 +61,7 @@ laboratory {
     projectFilter { it == project }
   }
 
-  LogType {
+  feature("LogType") {
     key = "LogType"
 
     withDefaultOption("Info")
@@ -73,7 +73,7 @@ laboratory {
     withDefaultSource("Firebase")
   }
 
-  ReportRootedDevice {
+  feature("ReportRootedDevice") {
     key = "ReportRootedDevice"
 
     withDefaultOption("Disabled")
@@ -82,7 +82,7 @@ laboratory {
     withDefaultSource("Firebase")
   }
 
-  Authentication {
+  feature("Authentication") {
     key = "Authentication"
 
     withDefaultOption("Password")
