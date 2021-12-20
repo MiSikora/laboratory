@@ -529,6 +529,9 @@ laboratory {
   packageName = "com.sample"
   sourcedStorage()
   featureFactory()
+
+  dependency(project(":module-a"))
+  dependency(project(":module-b"))
 }
 
 dependencies {
@@ -536,25 +539,7 @@ dependencies {
 }
 ```
 
-This setup shows that each module can define its feature flags that do not have to be exposed outside. In this scenario, `module-app` is responsible only for gluing together all feature flags so that `Laboratory` instances are aware of feature flag sources and the [QA module](qa-module.md). It should then deliver the correct `Laboratory` to modules via dependency injection.
-
-Gradle plugin discovers all feature flags and their sources that are a part of the same project. There might be some rare cases when you'd like to exclude some modules from contributing its feature flags to the `featureFactory()` or `sourcedStorage()`. This can be achieved with project filtering.
-
-```groovy
-apply plugin: "io.mehow.laboratory"
-
-laboratory {
-  featureFactory {
-    projectFilter { project -> project.name != "module-a" }
-  }
-
-  sourcedStorage {
-    projectFilter { project -> project.name != "module-a" }
-  }
-}
-```
-
-This way, `:module-a` will not contribute its feature flags to the generation of a feature factory and feature storage.
+This setup shows that each module can define its feature flags that do not have to be exposed outside. In this scenario, `module-app` is responsible only for gluing together all feature flags so that `Laboratory` instances are aware of feature flag sources and the [QA module](qa-module.md). It should then deliver the correct `Laboratory` to modules via dependency injection. In order to include feature flags during generation of factories, their modules need to be added with `dependency` function.
 
 ## Full configuration
 
@@ -624,9 +609,6 @@ laboratory {
 
     // Sets visibility of a storage extension function to be either 'public' or 'internal'. 'false' by default.
     isPublic = true
-
-    // Contributes sources to this storage only if they match the condition. Includes all projects by default.
-    projectFilter { project -> false }
   }
 
   // Configures option factory. Useful for integration with remote service such as Firebase.
@@ -636,9 +618,6 @@ laboratory {
 
     // Sets visibility of a factory extension function to be either 'public' or 'internal'. 'false' by default.
     isPublic = true
-
-    // Contributes features to this factory only if they match the condition. Includes all projects by default.
-    projectFilter { project -> false }
   }
 
   // Configures feature flags factory. Useful for the QA module configuration.
@@ -648,9 +627,6 @@ laboratory {
 
     // Sets visibility of a factory extension function to be either 'public' or 'internal'. 'false' by default.
     isPublic = true
-
-    // Contributes features to this factory only if they match the condition. Includes all projects by default.
-    projectFilter { project -> false }
   }
 
   // Configures feature flag sources factory.
@@ -660,9 +636,9 @@ laboratory {
 
     // Sets visibility of a factory extension function to be either 'public' or 'internal'. 'false' by default.
     isPublic = true
-
-    // Contributes features to this factory only if they match the condition. Includes all projects by default.
-    projectFilter { project -> false }
   }
+
+  // Includes feature flags that are used for generation of feature factories, sourced storage and option factory.
+  dependency(project(":some-project"))
 }
 ```

@@ -48,9 +48,10 @@ android {
 laboratory {
   packageName = "io.mehow.laboratory.sample.multimodule"
 
-  featureFactory {
-    projectFilter { it.name == "multi-module-a" || it.name == "multi-module-b" }
-  }
+  featureFactory()
+
+  dependency(project(":samples:multi-module:multi-module-a"))
+  dependency(project(":samples:multi-module:multi-module-b"))
 }
 
 dependencies {

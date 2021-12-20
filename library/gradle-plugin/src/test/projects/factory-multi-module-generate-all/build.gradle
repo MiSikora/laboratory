@@ -9,4 +9,7 @@ laboratory {
   feature("RootFeature") {
     withDefaultOption("First")
   }
+
+  dependency(project(":feature-a"))
+  dependency(project(":feature-b"))
 }

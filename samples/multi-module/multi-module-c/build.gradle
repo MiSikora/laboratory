@@ -16,7 +16,6 @@ laboratory {
 
   featureFactory {
     isPublic = true
-    projectFilter { it == project }
   }
 
   feature("Camera") {

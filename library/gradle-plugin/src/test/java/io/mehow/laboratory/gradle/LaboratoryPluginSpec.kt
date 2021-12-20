@@ -1,9 +1,13 @@
 package io.mehow.laboratory.gradle
 
+import io.kotest.assertions.shouldFail
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.throwable.shouldHaveMessage
 import org.gradle.testkit.runner.GradleRunner
 
 internal class LaboratoryPluginSpec : StringSpec({
@@ -175,5 +179,13 @@ internal class LaboratoryPluginSpec : StringSpec({
         .build()
 
     result.task(":generateOptionFactory").shouldNotBeNull()
+  }
+
+  "fails for including dependency without laboratory plugin" {
+    val fixture = "plugin-dependency-plugin-missing".toFixture()
+
+    val exception = shouldThrowAny { gradleRunner.withProjectDir(fixture).build() }
+
+    exception.message shouldContain "Cannot depend on a project without laboratory plugin"
   }
 })

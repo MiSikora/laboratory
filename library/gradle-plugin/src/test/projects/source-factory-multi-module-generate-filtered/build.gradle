@@ -4,15 +4,13 @@ plugins {
 }
 
 laboratory {
-  featureSourceFactory {
-    projectFilter { project ->
-      project.name != "feature-a"
-    }
-  }
+  featureSourceFactory()
 
   feature("RootFeature") {
     withDefaultOption("First")
 
     withSource("Remote")
   }
+
+  dependency(project(":feature-b"))
 }

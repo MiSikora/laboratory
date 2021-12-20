@@ -4,15 +4,13 @@ plugins {
 }
 
 laboratory {
-  optionFactory {
-    projectFilter { project ->
-      project.name != "feature-a"
-    }
-  }
+  optionFactory()
 
   feature("RootFeature") {
     key = "Key Root"
 
     withDefaultOption("First")
   }
+
+  dependency(project(":feature-b"))
 }

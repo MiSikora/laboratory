@@ -246,7 +246,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     """.trimMargin()
   }
 
-  "generates storage with names from not excluded modules" {
+  "generates storage with names only from included modules" {
     val fixture = "sourced-storage-multi-module-generate-filtered".toFixture()
 
     val result = gradleRunner.withProjectDir(fixture).build()

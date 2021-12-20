@@ -11,4 +11,7 @@ laboratory {
 
     withSource("Remote")
   }
+
+  dependency(project(":feature-a"))
+  dependency(project(":feature-b"))
 }

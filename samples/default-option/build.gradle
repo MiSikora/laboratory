@@ -50,10 +50,7 @@ android {
 laboratory {
   packageName = "io.mehow.laboratory.sample.defaultoption"
 
-  // Filters are needed because otherwise feature flags from other samples would be included.
-  featureFactory {
-    projectFilter { it == project }
-  }
+  featureFactory()
 
   feature("ShowAds") {
     withDefaultOption("Enabled")
