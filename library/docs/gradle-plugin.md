@@ -617,21 +617,6 @@ laboratory {
     }
   }
 
-  // An alternative syntax for adding features with Groovy DSL. It is available only for top level features.
-  // Supervised features do not use this syntax.
-  SomeFeature {
-    key = "SomeFeatureKey"
-    packageName = "io.mehow.sample.feature"
-    description = "Feature descritpion"
-    isPublic = false
-
-    withDefaultOption("ValueA")
-    withOption("ValueB")
-
-    withSource("Firebase")
-    withSource("Aws")
-  }
-
   // Configures feature flags storage. Useful when feature flags have multiple sources.
   sourcedStorage {
     // Overrides globally declared namespace. No value by default.

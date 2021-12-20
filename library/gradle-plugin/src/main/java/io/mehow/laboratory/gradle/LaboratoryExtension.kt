@@ -1,8 +1,6 @@
 package io.mehow.laboratory.gradle
 
-import groovy.lang.Closure
 import org.gradle.api.Action
-import org.gradle.api.GradleException
 import org.gradle.api.Project
 
 /**
@@ -30,26 +28,6 @@ public abstract class LaboratoryExtension {
       action.execute(input)
       return@let input
     }
-  }
-
-  /**
-   * Generates a new feature in this module.
-   *
-   * This is a trick from Groovy – https://groovy-lang.org/metaprogramming.html#_methodmissing.
-   */
-  public fun methodMissing(name: String, args: Any) {
-    val closure = (args as? Array<*>)?.getOrNull(0) as? Closure<*>
-        ?: throw GradleException("""
-          |Expected a closure for a feature flag:
-          |
-          |laboratory {
-          |  $name {
-          |    withDefaultOption("SampleValue")
-          |  }
-          |}
-        """.trimMargin())
-
-    feature(name) { input -> project.configure(input, closure) }
   }
 
   internal var factoryInput: FeatureFactoryInput? = null

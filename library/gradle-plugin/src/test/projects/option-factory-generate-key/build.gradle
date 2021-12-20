@@ -6,7 +6,7 @@ plugins {
 laboratory {
   optionFactory()
 
-  FeatureA {
+  feature("FeatureA") {
     key = "Key A"
     packageName = "io.mehow.first"
 
@@ -14,7 +14,7 @@ laboratory {
     withOption("SecondA")
   }
 
-  FeatureB {
+  feature("FeatureB") {
     key = "Key B"
     packageName = "io.mehow.second"
 
