@@ -387,7 +387,7 @@ apply plugin: "io.mehow.laboratory"
 laboratory {
   packageName = "io.mehow.laboratory.sample"
 
-  featureFactory()
+  optionFactory()
 
   feature("FeatureA") {
     key = "FeatureA"

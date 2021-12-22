@@ -372,8 +372,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Laboratory` exposes a blocking way of reading and writing feature flags. It requires an [opt-in](https://kotlinlang.org/docs/reference/opt-in-requirements.html) `BlockingIoCall` annotation.
 
 ### Changed
-- `laboratory-android` artifact is now `laboratory-shared-preferences artifact`.
-- `laboratory-shared-preferences` artifact (old `laboratory-android)` is no longer automatically applied by Gradle plugin in Android modules.
+- `laboratory-android` artifact is now `laboratory-shared-preferences` artifact.
+- `laboratory-shared-preferences` artifact (old `laboratory-android`) is no longer automatically applied by Gradle plugin in Android modules.
 - Upgrade to Kotlin `1.4.10`.
 - Upgrade to CoreKtx `1.3.2`.
 - Upgrade to Wire `3.4.0`.
@@ -382,8 +382,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2020-09-05
 ### Added
 - `Laboratory.observe()` function to observe feature flag changes via [`Flow`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/).
-- Support for [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) with the `laboratory-date-store` artifact.
-- `Laboratory` and `FeatureStorage` returns a boolean information whether writes are successful.
+- Support for [`DataStore`](https://developer.android.com/topic/libraries/architecture/datastore) with the `laboratory-data-store` artifact.
+- `Laboratory` and `FeatureStorage` return a boolean information whether writes are successful.
 - `Feature` interface that is used to define feature flags.
 - Wire `3.2.2` dependency to `laboratory-data-store`.
 
@@ -404,7 +404,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release.
 
 [Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.0-rc1...HEAD
-[1.0.0-rc1]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0
+[1.0.0-rc1]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0-rc1
 [0.14.0]: https://github.com/MiSikora/laboratory/releases/tag/0.14.0
 [0.13.1]: https://github.com/MiSikora/laboratory/releases/tag/0.13.1
 [0.13.0]: https://github.com/MiSikora/laboratory/releases/tag/0.13.0
