@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc1] - 2021-12-22
+
 ### Added
 - Multi-module setup no longer includes other modules implicitly. Instead each module needs to be included via `dependency` function in Gradle.
     ```groovy
@@ -401,7 +403,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/0.14.0...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.0-rc1...HEAD
+[1.0.0-rc1]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0
 [0.14.0]: https://github.com/MiSikora/laboratory/releases/tag/0.14.0
 [0.13.1]: https://github.com/MiSikora/laboratory/releases/tag/0.13.1
 [0.13.0]: https://github.com/MiSikora/laboratory/releases/tag/0.13.0
