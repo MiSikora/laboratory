@@ -45,7 +45,12 @@ private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Proje
     }
     kotlinSourceSet.srcDir(dir.toRelativeString(project.projectDir))
     variant.addJavaSourceFoldersToModel(dir)
-    project.tasks.named("generate${variant.name.capitalize(Locale.ROOT)}Sources").configure {
+
+    fun String.titleCaseFirstChar() = replaceFirstChar {
+      if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
+    }
+
+    project.tasks.named("generate${variant.name.titleCaseFirstChar()}Sources").configure {
       it.dependsOn(this)
     }
   }
