@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Added
 - Multi-module setup no longer includes other modules implicitly. Instead each module needs to be included via `dependency` function in Gradle.
     ```groovy
     laboratory {
@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       dependency(project(":module-b"))
     }
     ```
+
+### Changed
 - Upgrade Android target and compile SDK to 31.
 - Upgrade to LifecycleViewmodelKtx `2.4.0`.
 - Upgrade to KotlinPoet `1.10.2`.
