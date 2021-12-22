@@ -11,7 +11,14 @@ import kotlinx.coroutines.flow.map
 public class Laboratory internal constructor(
   builder: Builder,
 ) {
-  private val storage = builder.storage
+  private val storage = builder.storage.let { storage ->
+    val optionFactory = builder.defaultOptionFactory
+    if (optionFactory != null && storage is SourcedFeatureStorage) {
+      storage.withDefaultOptionFactory(optionFactory)
+    } else {
+      storage
+    }
+  }
   private val defaultOptionFactory = builder.defaultOptionFactory?.let(::SafeDefaultOptionFactory)
   private val blockingLaboratory = BlockingLaboratory(this)
 
@@ -70,7 +77,9 @@ public class Laboratory internal constructor(
     val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
 
     val parent = feature.supervisorOption ?: return activeOption
-    return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) defaultOption else activeOption
+    return if (activeOption.supervisorOption != experimentRaw(
+            parent.javaClass)
+    ) defaultOption else activeOption
   }
 
   /**
@@ -94,7 +103,8 @@ public class Laboratory internal constructor(
    *
    * @return `true` if the option was set successfully, `false` otherwise.
    */
-  public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean = storage.setOptions(*options)
+  public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean =
+    storage.setOptions(*options)
 
   /**
    * Removes all stored feature flag options.
@@ -118,7 +128,8 @@ public class Laboratory internal constructor(
      *
      * @param storage [FeatureStorage] delegate that will persist all feature flags.
      */
-    public fun create(storage: FeatureStorage): Laboratory = builder().featureStorage(storage).build()
+    public fun create(storage: FeatureStorage): Laboratory =
+      builder().featureStorage(storage).build()
 
     /**
      * Creates a builder that allows to customize [Laboratory].

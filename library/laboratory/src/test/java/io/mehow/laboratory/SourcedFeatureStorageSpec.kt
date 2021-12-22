@@ -9,12 +9,13 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
   lateinit var remoteLaboratoryA: Laboratory
   lateinit var remoteLaboratoryB: Laboratory
   lateinit var sourcedLaboratory: Laboratory
+  lateinit var sourcedStorage: FeatureStorage
 
   beforeTest {
     val localStorage = FeatureStorage.inMemory()
     val remoteStorageA = FeatureStorage.inMemory()
     val remoteStorageB = FeatureStorage.inMemory()
-    val sourcedStorage = SourcedFeatureStorage(
+    sourcedStorage = SourcedFeatureStorage(
         localStorage,
         mapOf(
             "RemoteA" to remoteStorageA,
@@ -198,6 +199,23 @@ internal class SourcedFeatureStorageSpec : DescribeSpec({
       localLaboratory.experimentIs(FirstFeature.A)
       remoteLaboratoryA.experimentIs(FirstFeature.B)
       sourcedLaboratory.experimentIs(FirstFeature.A)
+    }
+
+    it("uses default options override for sources") {
+      val defaultOptionFactory = object : DefaultOptionFactory {
+        override fun <T : Feature<out T>> create(feature: T) = when (feature) {
+          is FirstFeature.Source -> FirstFeature.Source.RemoteA
+          else -> null
+        }
+      }
+      val laboratory = Laboratory.Builder()
+          .featureStorage(sourcedStorage)
+          .defaultOptionFactory(defaultOptionFactory)
+          .build()
+
+      remoteLaboratoryA.setOption(FirstFeature.C)
+
+      laboratory.experiment<FirstFeature>() shouldBe FirstFeature.C
     }
   }
 })

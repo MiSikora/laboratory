@@ -9,8 +9,12 @@ import kotlinx.coroutines.flow.onEmpty
 internal class SourcedFeatureStorage(
   private val localSource: FeatureStorage,
   private val remoteSources: Map<String, FeatureStorage>,
+  defaultOptionFactory: DefaultOptionFactory? = null,
 ) : FeatureStorage {
-  private val localLaboratory = Laboratory.create(localSource)
+  private val localLaboratory = Laboratory.builder()
+      .featureStorage(localSource)
+      .let { builder -> defaultOptionFactory?.let(builder::defaultOptionFactory) ?: builder }
+      .build()
 
   override fun observeFeatureName(feature: Class<out Feature<*>>) = feature.observeSource()
       .map { source -> remoteSources[source.name] ?: localSource }
@@ -40,4 +44,10 @@ internal class SourcedFeatureStorage(
       .firstOrNull()
       ?.source
       ?.takeUnless { it.options.isEmpty() }
+
+  fun withDefaultOptionFactory(factory: DefaultOptionFactory) = SourcedFeatureStorage(
+      localSource,
+      remoteSources,
+      factory,
+  )
 }

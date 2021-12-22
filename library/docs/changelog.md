@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `projectFilter` properties from Gradle plugin. Use explicit dependencies instead.
 - Deprecated API.
 
+### Fixed
+- Overrides of sources in `DefaultOptionFactory` are now respected by `Laboratory` - [#220](https://github.com/MiSikora/laboratory/issues/220).
+
 ## [0.14.0] - 2021-10-11
 
 ### Added
