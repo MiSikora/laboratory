@@ -82,8 +82,7 @@ internal class OptionFactoryModelSpec : DescribeSpec({
         val result = builder.build()
 
         result shouldBeLeft DuplicateKeys(mapOf(
-            "$packageName.$simpleName" to listOf("$packageName.$simpleName",
-                "io.mehow.SomeFeatureName"),
+            "$packageName.$simpleName" to listOf("$packageName.$simpleName", "io.mehow.SomeFeatureName"),
         ))
       }
     }
