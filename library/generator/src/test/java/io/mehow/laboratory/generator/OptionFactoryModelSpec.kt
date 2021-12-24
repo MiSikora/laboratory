@@ -8,6 +8,9 @@ import io.kotest.property.checkAll
 import io.mehow.laboratory.generator.GenerationFailure.DuplicateKeys
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import kotlin.DeprecationLevel.ERROR
+import kotlin.DeprecationLevel.HIDDEN
+import kotlin.DeprecationLevel.WARNING
 
 internal class OptionFactoryModelSpec : DescribeSpec({
   val featureA = FeatureFlagModel.Builder(
@@ -71,14 +74,16 @@ internal class OptionFactoryModelSpec : DescribeSpec({
         val builder = factoryBuilder.copy(
             features = listOf(
                 featureA.copy(className = ClassName(packageName, simpleName), key = null),
-                featureA.copy(className = ClassName("io.mehow", "SomeFeatureName"), key = "$packageName.$simpleName"),
+                featureA.copy(className = ClassName("io.mehow", "SomeFeatureName"),
+                    key = "$packageName.$simpleName"),
             ).map { it.build().shouldBeRight() }
         )
 
         val result = builder.build()
 
         result shouldBeLeft DuplicateKeys(mapOf(
-            "$packageName.$simpleName" to listOf("$packageName.$simpleName", "io.mehow.SomeFeatureName"),
+            "$packageName.$simpleName" to listOf("$packageName.$simpleName",
+                "io.mehow.SomeFeatureName"),
         ))
       }
     }
@@ -177,6 +182,69 @@ internal class OptionFactoryModelSpec : DescribeSpec({
         |
         |private object GeneratedOptionFactory : OptionFactory {
         |  public override fun create(key: String, name: String): Feature<*>? = null
+        |}
+        |
+      """.trimMargin()
+    }
+
+    it("suppresses usage of deprecated features") {
+      val features = listOf(
+          featureA,
+          featureA.copy(
+              deprecation = Deprecation("message", WARNING),
+              className = ClassName("io.mehow", "FeatureB"),
+              key = "FeatureB",
+          ),
+          featureA.copy(
+              deprecation = Deprecation("message", ERROR),
+              className = ClassName("io.mehow", "FeatureC"),
+              key = "FeatureC",
+          ),
+          featureA.copy(
+              deprecation = Deprecation("message", HIDDEN),
+              className = ClassName("io.mehow", "FeatureD"),
+              key = "FeatureD",
+          ),
+      ).map { it.build().shouldBeRight() }
+
+      val fileSpec = factoryBuilder.copy(features = features)
+          .build()
+          .map { model -> model.prepare().toString() }
+
+      fileSpec shouldBeRight """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import io.mehow.laboratory.OptionFactory
+        |import kotlin.String
+        |import kotlin.Suppress
+        |
+        |internal fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
+        |
+        |private object GeneratedOptionFactory : OptionFactory {
+        |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+        |    "FeatureA" -> when (name) {
+        |      "OneA" -> FeatureA.OneA
+        |      "OneB" -> FeatureA.OneB
+        |      else -> null
+        |    }
+        |    "FeatureB" -> @Suppress("DEPRECATION") when (name) {
+        |      "OneA" -> FeatureB.OneA
+        |      "OneB" -> FeatureB.OneB
+        |      else -> null
+        |    }
+        |    "FeatureC" -> @Suppress("DEPRECATION_ERROR") when (name) {
+        |      "OneA" -> FeatureC.OneA
+        |      "OneB" -> FeatureC.OneB
+        |      else -> null
+        |    }
+        |    "FeatureD" -> @Suppress("DEPRECATION_ERROR") when (name) {
+        |      "OneA" -> FeatureD.OneA
+        |      "OneB" -> FeatureD.OneB
+        |      else -> null
+        |    }
+        |    else -> null
+        |  }
         |}
         |
       """.trimMargin()

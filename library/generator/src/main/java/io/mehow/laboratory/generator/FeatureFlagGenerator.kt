@@ -13,9 +13,6 @@ import com.squareup.kotlinpoet.WildcardTypeName
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.generator.TextToken.Link
 import io.mehow.laboratory.generator.TextToken.Regular
-import kotlin.DeprecationLevel.ERROR
-import kotlin.DeprecationLevel.HIDDEN
-import kotlin.DeprecationLevel.WARNING
 
 @Suppress("StringLiteralDuplication")
 internal class FeatureFlagGenerator(
@@ -28,18 +25,7 @@ internal class FeatureFlagGenerator(
         .build()
   }
 
-  private val suppressDeprecation = feature.deprecation
-      ?.let {
-        when (it.level) {
-          WARNING -> "DEPRECATION"
-          ERROR, HIDDEN -> "DEPRECATION_ERROR"
-        }
-      }
-      ?.let { name ->
-        AnnotationSpec.builder(Suppress::class)
-            .addMember("%S", name)
-            .build()
-      }
+  private val suppressDeprecation = feature.deprecation?.suppressSpec
 
   private val defaultOptionProperty = feature.options.toList()
       .single(FeatureFlagOption::isDefault)

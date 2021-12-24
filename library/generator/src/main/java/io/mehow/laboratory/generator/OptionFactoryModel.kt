@@ -51,11 +51,17 @@ public class OptionFactoryModel internal constructor(
 private class OptionFactoryGenerator(
   private val model: OptionFactoryModel,
 ) {
-  private val nameMatcher = model.features.associate { it.className to it.options }
-      .mapValues { (className, options) ->
-        options
+  private val nameMatcher = model.features.associateBy { it.className }
+      .mapValues { (className, feature) ->
+        val whenExpression = feature.options
             .map { CodeBlock.of("%S·->·%T.%L", it.name, className, it.name) }
             .joinToCode(prefix = "when·(name)·{\n⇥", separator = "\n", suffix = "\nelse·->·null⇤\n}")
+        val deprecation = feature.deprecation?.suppressSpec
+        if (deprecation != null) {
+          CodeBlock.of("%L·%L", deprecation, whenExpression)
+        } else {
+         whenExpression
+        }
       }
 
   private val keyMatcher = model.features

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Handle usage of deprecated features in a generated `OptionFactory`.
+
 ## [1.0.0-rc1] - 2021-12-22
 
 ### Added
