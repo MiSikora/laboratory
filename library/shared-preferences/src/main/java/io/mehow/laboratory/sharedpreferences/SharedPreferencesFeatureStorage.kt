@@ -41,11 +41,11 @@ internal class SharedPreferencesFeatureStorage(
   }
 
   override suspend fun clear(): Boolean {
-    val editor = preferences.edit()
-    for (key in preferences.all.keys) {
-      editor.remove(key)
+    preferences.edit {
+      for (key in preferences.all.keys) {
+        remove(key)
+      }
     }
-    editor.apply()
     return true
   }
 }
