@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- `SharedPreferencesFeatureStorage` no marked as experimental due to coroutines.
 - Upgrade Kotlin to `1.6.10`.
 - Upgrade to Coroutines `1.6.0`.
 - Upgrade Wire to `4.0.1`.

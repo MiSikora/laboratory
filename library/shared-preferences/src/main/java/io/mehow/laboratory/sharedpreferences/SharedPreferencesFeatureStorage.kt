@@ -5,12 +5,10 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.core.content.edit
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 
-@ExperimentalCoroutinesApi
 internal class SharedPreferencesFeatureStorage(
   private val preferences: SharedPreferences,
 ) : FeatureStorage {
@@ -55,7 +53,6 @@ internal class SharedPreferencesFeatureStorage(
 /**
  * Creates a [FeatureStorage] that is backed by [SharedPreferences].
  */
-@ExperimentalCoroutinesApi
 public fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
   return SharedPreferencesFeatureStorage(preferences)
 }
