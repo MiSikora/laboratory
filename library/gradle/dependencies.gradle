@@ -1,6 +1,6 @@
 ext.versions = [
     "coroutines": "1.6.0",
-    "kotest": "4.6.3",
+    "kotest": "5.0.3",
     "androidxTest": "1.4.0",
     "hyperion": "0.9.34",
     "detekt": "1.19.0",
@@ -62,6 +62,9 @@ ext.libs = [
         "runnerJunit5": "io.kotest:kotest-runner-junit5-jvm:${versions.kotest}",
         "assertions": "io.kotest:kotest-assertions-core-jvm:${versions.kotest}",
         "property": "io.kotest:kotest-property-jvm:${versions.kotest}",
+        "extensions": [
+            "arrow": "io.kotest.extensions:kotest-assertions-arrow-jvm:1.2.1",
+        ],
     ],
     "hyperion": [
         "core": "com.willowtreeapps.hyperion:hyperion-core:${versions.hyperion}",
