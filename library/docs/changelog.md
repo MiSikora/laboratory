@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Upgrade Wire to `4.0.1`.
+
 ### Fixed
 - Handle usage of deprecated features in a generated `OptionFactory`.
 
