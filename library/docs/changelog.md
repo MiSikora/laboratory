@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade Kotlin to `1.6.10`.
+- Upgrade to Coroutines `1.6.0`.
 - Upgrade Wire to `4.0.1`.
 - Upgrade Arrow to `1.0.1`.
 

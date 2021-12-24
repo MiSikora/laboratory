@@ -7,7 +7,6 @@ import com.google.firebase.database.ValueEventListener
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.OptionFactory
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.launchIn
@@ -24,7 +23,6 @@ class FirebaseSynchronizer(
       .onEach { featureStorage.setOptions(*it.toTypedArray()) }
       .launchIn(scope)
 
-  @OptIn(ExperimentalCoroutinesApi::class)
   private fun DatabaseReference.asKeyValueFlow() = callbackFlow {
     val listener = object : ValueEventListener {
       override fun onDataChange(snapshot: DataSnapshot) {
