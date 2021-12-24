@@ -112,7 +112,7 @@ formatting:
   ImportOrdering:
     active: true
   Indentation:
-    active: false # TODO: https://github.com/pinterest/ktlint/issues/854
+    active: false # TODO: Turn on when fixed in KtLint
     indentSize: 2
     continuationIndentSize: 4
   NoBlankLineBeforeRbrace:
@@ -276,7 +276,7 @@ style:
     active: true
   UnderscoresInNumericLiterals:
     active: true
-    acceptableDecimalLength: 3
+    acceptableLength: 3
   UnnecessaryAbstractClass:
     active: true
   UnnecessaryApply:
