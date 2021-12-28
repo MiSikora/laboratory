@@ -106,7 +106,6 @@ Here is the list of all available artifacts that Laboratory library provides.
 - **`io.mehow.laboratory:laboratory-inspector:1.0.0-rc1`**: QA module that allows users to preview all features and change them at runtime from one place.
 - **`io.mehow.laboratory:laboratory-hyperion-plugin:1.0.0-rc1`**: QA module that integrates `laboratory-inspector` with [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).
 - **`io.mehow.laboratory:laboratory-gradle-plugin:1.0.0-rc1`**: Gradle plugin for feature flags generation and other quality of life improvements. It is highly recommended to use it instead of manual class management.
-- **`io.mehow.laboratory:laboratory-generator:1.0.0-rc1`**: Low-level generator of feature flags and any additional classes. You should use this module only if you plan to build your generation mechanism similar to the Gradle plugin.
 
 ## License
 
