@@ -4,22 +4,21 @@ import com.squareup.kotlinpoet.ClassName
 import io.kotest.core.spec.style.DescribeSpec
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import io.mehow.laboratory.generator.test.shouldSpecify
 import java.util.Locale
 
 internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
-  val storageBuilder = SourcedFeatureStorageModel.Builder(
-      visibility = Public,
-      className = ClassName("io.mehow", "SourcedGeneratedFeatureStorage"),
-      sourceNames = listOf("Firebase", "S3"),
-  )
-
   describe("generated feature storage") {
     it("can be internal") {
-      val fileSpec = storageBuilder.copy(visibility = Internal)
-          .build()
-          .map { model -> model.prepare().toString() }
+      val model = SourcedFeatureStorageModel(
+          ClassName("io.mehow", "SourcedGeneratedFeatureStorage"),
+          sourceNames = listOf("Firebase", "S3"),
+          visibility = Internal,
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.FeatureStorage
@@ -64,11 +63,15 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
     }
 
     it("can be public") {
-      val fileSpec = storageBuilder.copy(visibility = Public)
-          .build()
-          .map { model -> model.prepare().toString() }
+      val model = SourcedFeatureStorageModel(
+          ClassName("io.mehow", "SourcedGeneratedFeatureStorage"),
+          sourceNames = listOf("Firebase", "S3"),
+          visibility = Public,
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.FeatureStorage
@@ -113,11 +116,14 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
     }
 
     it("ignores duplicate source names") {
-      val fileSpec = storageBuilder.copy(sourceNames = listOf("Foo", "Bar", "Baz", "Foo", "Baz", "Foo"))
-          .build()
-          .map { model -> model.prepare().toString() }
+      val model = SourcedFeatureStorageModel(
+          ClassName("io.mehow", "SourcedGeneratedFeatureStorage"),
+          sourceNames = listOf("Foo", "Bar", "Baz", "Foo", "Baz", "Foo"),
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.FeatureStorage
@@ -128,22 +134,22 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |import kotlin.collections.plus
         |import kotlin.to
         |
-        |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BarStep =
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BarStep =
         |    Builder(localSource, emptyMap())
         |
-        |public interface BarStep {
+        |internal interface BarStep {
         |  public fun barSource(source: FeatureStorage): BazStep
         |}
         |
-        |public interface BazStep {
+        |internal interface BazStep {
         |  public fun bazSource(source: FeatureStorage): FooStep
         |}
         |
-        |public interface FooStep {
+        |internal interface FooStep {
         |  public fun fooSource(source: FeatureStorage): BuildingStep
         |}
         |
-        |public interface BuildingStep {
+        |internal interface BuildingStep {
         |  public fun build(): FeatureStorage
         |}
         |
@@ -178,12 +184,15 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
               if (mask) chars else chars.replaceFirstChar { char -> char.titlecase(Locale.ROOT) }
             }.joinToString(separator = "")
       }
+      val model = SourcedFeatureStorageModel(
+          ClassName("io.mehow", "SourcedGeneratedFeatureStorage"),
+          sourceNames = localPermutations + "Foo",
+          visibility = Public,
+      )
 
-      val fileSpec = storageBuilder.copy(sourceNames = localPermutations + "Foo")
-          .build()
-          .map { model -> model.prepare().toString() }
+      val fileSpec = model.prepare()
 
-      fileSpec shouldBeRight """
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.FeatureStorage
@@ -220,11 +229,15 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
     }
 
     it("can have only local source") {
-      val fileSpec = storageBuilder.copy(sourceNames = emptyList())
-          .build()
-          .map { model -> model.prepare().toString() }
+      val model = SourcedFeatureStorageModel(
+          ClassName("io.mehow", "SourcedGeneratedFeatureStorage"),
+          sourceNames = emptyList(),
+          visibility = Public,
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.FeatureStorage

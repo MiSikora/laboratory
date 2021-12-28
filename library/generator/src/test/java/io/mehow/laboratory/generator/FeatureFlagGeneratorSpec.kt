@@ -1,36 +1,32 @@
 package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.ClassName
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.stringPattern
 import io.kotest.property.checkAll
-import io.mehow.laboratory.generator.GenerationFailure.InvalidDefaultOption
-import io.mehow.laboratory.generator.GenerationFailure.MissingOption
-import io.mehow.laboratory.generator.GenerationFailure.NoOption
-import io.mehow.laboratory.generator.GenerationFailure.SelfSupervision
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import io.mehow.laboratory.generator.test.shouldSpecify
 import java.util.Locale
 import kotlin.DeprecationLevel.ERROR
 import kotlin.DeprecationLevel.HIDDEN
 import kotlin.DeprecationLevel.WARNING
 
 internal class FeatureFlagGeneratorSpec : DescribeSpec({
-  val featureBuilder = FeatureFlagModel.Builder(
-      visibility = Internal,
-      className = ClassName("io.mehow", "FeatureA"),
-      options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-  )
-
   describe("feature flag model") {
     context("options") {
       it("cannot be empty") {
-        val builder = featureBuilder.copy(options = emptyList())
+        val exception = shouldThrow<IllegalArgumentException> {
+          FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              options = emptyList(),
+          )
+        }
 
-        val result = builder.build()
-
-        result shouldBeLeft NoOption(builder.className.canonicalName)
+        exception shouldHaveMessage "io.mehow.FeatureA must have at least one option"
       }
     }
 
@@ -40,12 +36,14 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             Arb.stringPattern("[a-z](0)([a-z]{0,10})"),
             Arb.stringPattern("[a-z](1)([a-z]{0,10})"),
         ) { first, second ->
-          val builder = featureBuilder.copy(
-              options = listOf(FeatureFlagOption(first), FeatureFlagOption(second))
-          )
-          val result = builder.build()
+          val exception = shouldThrow<IllegalArgumentException> {
+            FeatureFlagModel(
+                ClassName("io.mehow", "FeatureA"),
+                listOf(FeatureFlagOption(first), FeatureFlagOption(second)),
+            )
+          }
 
-          result shouldBeLeft InvalidDefaultOption(builder.className.canonicalName, emptyList())
+          exception shouldHaveMessage "io.mehow.FeatureA must have exactly one default option"
         }
       }
 
@@ -55,57 +53,53 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             Arb.stringPattern("[a-z](1)([a-z]{0,10})"),
             Arb.stringPattern("[a-z](2)([a-z]{0,10})"),
         ) { first, second, third ->
-          val builder = featureBuilder.copy(
-              options = listOf(
-                  FeatureFlagOption(first, isDefault = true),
-                  FeatureFlagOption(second),
-                  FeatureFlagOption(third, isDefault = true),
-              )
-          )
-          val result = builder.build()
+          val exception = shouldThrow<IllegalArgumentException> {
+            FeatureFlagModel(
+                ClassName("io.mehow", "FeatureA"),
+                listOf(
+                    FeatureFlagOption(first, isDefault = true),
+                    FeatureFlagOption(second),
+                    FeatureFlagOption(third, isDefault = true),
+                ),
+            )
+          }
 
-          result shouldBeLeft InvalidDefaultOption(builder.className.canonicalName, listOf(first, third))
-        }
-      }
-
-      it("can have one option") {
-        checkAll(
-            Arb.stringPattern("[a-z](0)([a-z]{0,10})"),
-            Arb.stringPattern("[a-z](1)([a-z]{0,10})"),
-            Arb.stringPattern("[a-z](2)([a-z]{0,10})"),
-        ) { first, second, third ->
-          val builder = featureBuilder.copy(
-              options = listOf(
-                  FeatureFlagOption(first),
-                  FeatureFlagOption(second),
-                  FeatureFlagOption(third, isDefault = true),
-              )
-          )
-          val result = builder.build()
-
-          result.shouldBeRight()
+          exception shouldHaveMessage "io.mehow.FeatureA must have exactly one default option"
         }
       }
     }
 
     context("supervisor option") {
       it("cannot supervise itself") {
-        val parent = featureBuilder.build().shouldBeRight()
-        val supervisor = Supervisor.Builder(parent, parent.options.head).build().shouldBeRight()
-        val builder = featureBuilder.copy(supervisor = supervisor)
+        val model = FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("First", isDefault = true)),
+        )
 
-        val result = builder.build()
+        val exception = shouldThrow<IllegalArgumentException> {
+          FeatureFlagModel(
+              model.className,
+              model.options,
+              supervisor = Supervisor(model, model.options.first()),
+          )
+        }
 
-        result shouldBeLeft SelfSupervision(parent.toString())
+        exception shouldHaveMessage "io.mehow.FeatureA cannot supervise itself"
       }
     }
   }
 
   describe("generated feature flag") {
     it("can be internal") {
-      val fileSpec = featureBuilder.build().map { model -> model.prepare().toString() }
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          visibility = Internal,
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
@@ -123,11 +117,15 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
     }
 
     it("can be public") {
-      val builder = featureBuilder.copy(visibility = Public)
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          visibility = Public,
+      )
 
-      val fileSpec = builder.build().map { model -> model.prepare().toString() }
+      val fileSpec = model.prepare()
 
-      fileSpec shouldBeRight """
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
@@ -144,55 +142,21 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       """.trimMargin()
     }
 
-    it("can have source parameter") {
-      val fileSpec = featureBuilder
-          .copy(sourceOptions = listOf(FeatureFlagOption("Remote")))
-          .build()
-          .map { model -> model.prepare().toString() }
+    it("can have single option") {
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          listOf(FeatureFlagOption("First", isDefault = true)),
+      )
 
-      fileSpec shouldBeRight """
-        |package io.mehow
-        |
-        |import io.mehow.laboratory.Feature
-        |import java.lang.Class
-        |
-        |internal enum class FeatureA : Feature<FeatureA> {
-        |  First,
-        |  Second,
-        |  ;
-        |
-        |  public override val defaultOption: FeatureA
-        |    get() = First
-        |
-        |  public override val source: Class<out Feature<*>> = Source::class.java
-        |
-        |  internal enum class Source : Feature<Source> {
-        |    Local,
-        |    Remote,
-        |    ;
-        |
-        |    public override val defaultOption: Source
-        |      get() = Local
-        |  }
-        |}
-        |
-      """.trimMargin()
-    }
+      val fileSpec = model.prepare()
 
-    it("does not have source parameter if only source is Local") {
-      val fileSpec = featureBuilder
-          .copy(sourceOptions = listOf(FeatureFlagOption("Local")))
-          .build()
-          .map { model -> model.prepare().toString() }
-
-      fileSpec shouldBeRight """
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
         |
-        |internal enum class FeatureA : Feature<FeatureA> {
+        |public enum class FeatureA : Feature<FeatureA> {
         |  First,
-        |  Second,
         |  ;
         |
         |  public override val defaultOption: FeatureA
@@ -202,92 +166,16 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       """.trimMargin()
     }
 
-    it("filters out any custom local source") {
-      val localPermutations = (0b00000..0b11111).map {
-        listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
-            .map { mask -> mask != 0 }
-            .mapIndexed { index, mask ->
-              val chars = "local"[index].toString()
-              if (mask) chars else chars.replaceFirstChar { char -> char.titlecase(Locale.ROOT) }
-            }.joinToString(separator = "")
-      }
+    it("can have source") {
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          sourceOptions = listOf(FeatureFlagOption("Remote")),
+      )
 
-      val fileSpec = featureBuilder
-          .copy(sourceOptions = (localPermutations + "Remote").map(::FeatureFlagOption))
-          .build()
-          .map { model -> model.prepare().toString() }
+      val fileSpec = model.prepare()
 
-      fileSpec shouldBeRight """
-        |package io.mehow
-        |
-        |import io.mehow.laboratory.Feature
-        |import java.lang.Class
-        |
-        |internal enum class FeatureA : Feature<FeatureA> {
-        |  First,
-        |  Second,
-        |  ;
-        |
-        |  public override val defaultOption: FeatureA
-        |    get() = First
-        |
-        |  public override val source: Class<out Feature<*>> = Source::class.java
-        |
-        |  internal enum class Source : Feature<Source> {
-        |    Local,
-        |    Remote,
-        |    ;
-        |
-        |    public override val defaultOption: Source
-        |      get() = Local
-        |  }
-        |}
-        |
-      """.trimMargin()
-    }
-
-    it("allows to set not Local default default for source") {
-      val fileSpec = featureBuilder
-          .copy(sourceOptions = listOf(FeatureFlagOption("Remote", isDefault = true)))
-          .build()
-          .map { model -> model.prepare().toString() }
-
-      fileSpec shouldBeRight """
-        |package io.mehow
-        |
-        |import io.mehow.laboratory.Feature
-        |import java.lang.Class
-        |
-        |internal enum class FeatureA : Feature<FeatureA> {
-        |  First,
-        |  Second,
-        |  ;
-        |
-        |  public override val defaultOption: FeatureA
-        |    get() = First
-        |
-        |  public override val source: Class<out Feature<*>> = Source::class.java
-        |
-        |  internal enum class Source : Feature<Source> {
-        |    Local,
-        |    Remote,
-        |    ;
-        |
-        |    public override val defaultOption: Source
-        |      get() = Remote
-        |  }
-        |}
-        |
-      """.trimMargin()
-    }
-
-    it("source visibility follows feature visibility") {
-      val fileSpec = featureBuilder
-          .copy(visibility = Public, sourceOptions = listOf(FeatureFlagOption("Remote")))
-          .build()
-          .map { model -> model.prepare().toString() }
-
-      fileSpec shouldBeRight """
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
@@ -316,14 +204,166 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       """.trimMargin()
     }
 
+    it("does not have source parameter if only source is Local") {
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          sourceOptions = listOf(FeatureFlagOption("Local")),
+      )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |
+        |public enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |}
+        |
+      """.trimMargin()
+    }
+
+    it("filters out any custom local source") {
+      val localPermutations = (0b00000..0b11111).map {
+        listOf(it and 0b00001, it and 0b00010, it and 0b00100, it and 0b01000, it and 0b10000)
+            .map { mask -> mask != 0 }
+            .mapIndexed { index, mask ->
+              val chars = "local"[index].toString()
+              if (mask) chars else chars.replaceFirstChar { char -> char.titlecase(Locale.ROOT) }
+            }.joinToString(separator = "")
+      }
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          sourceOptions = (localPermutations + "Remote").map(::FeatureFlagOption),
+      )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import java.lang.Class
+        |
+        |public enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  public override val source: Class<out Feature<*>> = Source::class.java
+        |
+        |  public enum class Source : Feature<Source> {
+        |    Local,
+        |    Remote,
+        |    ;
+        |
+        |    public override val defaultOption: Source
+        |      get() = Local
+        |  }
+        |}
+        |
+      """.trimMargin()
+    }
+
+    it("can change default source") {
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          sourceOptions = listOf(FeatureFlagOption("Remote", isDefault = true)),
+      )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import java.lang.Class
+        |
+        |public enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  public override val source: Class<out Feature<*>> = Source::class.java
+        |
+        |  public enum class Source : Feature<Source> {
+        |    Local,
+        |    Remote,
+        |    ;
+        |
+        |    public override val defaultOption: Source
+        |      get() = Remote
+        |  }
+        |}
+        |
+      """.trimMargin()
+    }
+
+    it("source visibility follows feature visibility") {
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          visibility = Internal,
+          sourceOptions = listOf(FeatureFlagOption("Remote")),
+      )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify """
+        |package io.mehow
+        |
+        |import io.mehow.laboratory.Feature
+        |import java.lang.Class
+        |
+        |internal enum class FeatureA : Feature<FeatureA> {
+        |  First,
+        |  Second,
+        |  ;
+        |
+        |  public override val defaultOption: FeatureA
+        |    get() = First
+        |
+        |  public override val source: Class<out Feature<*>> = Source::class.java
+        |
+        |  internal enum class Source : Feature<Source> {
+        |    Local,
+        |    Remote,
+        |    ;
+        |
+        |    public override val defaultOption: Source
+        |      get() = Local
+        |  }
+        |}
+        |
+      """.trimMargin()
+    }
+
     context("description") {
       it("is added as KDoc") {
-        val fileSpec = featureBuilder
-            .copy(description = "Feature description")
-            .build()
-            .map { model -> model.prepare().toString() }
+        val model = FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+            description = "Feature description",
+        )
 
-        fileSpec shouldBeRight """
+        val fileSpec = model.prepare()
+
+        fileSpec shouldSpecify """
           |package io.mehow
           |
           |import io.mehow.laboratory.Feature
@@ -332,7 +372,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |/**
           | * Feature description
           | */
-          |internal enum class FeatureA : Feature<FeatureA> {
+          |public enum class FeatureA : Feature<FeatureA> {
           |  First,
           |  Second,
           |  ;
@@ -347,12 +387,15 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
       }
 
       it("does not break hyperlinks") {
-        val fileSpec = featureBuilder
-            .copy(description = "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc.")
-            .build()
-            .map { model -> model.prepare().toString() }
+        val model = FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+            description = "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc.",
+        )
 
-        fileSpec shouldBeRight """
+        val fileSpec = model.prepare()
+
+        fileSpec shouldSpecify """
           |package io.mehow
           |
           |import io.mehow.laboratory.Feature
@@ -363,7 +406,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           | * [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/)
           | * in the KDoc.
           | */
-          |internal enum class FeatureA : Feature<FeatureA> {
+          |public enum class FeatureA : Feature<FeatureA> {
           |  First,
           |  Second,
           |  ;
@@ -381,12 +424,15 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
 
     context("can be deprecated") {
       it("with warning level by default") {
-        val fileSpec = featureBuilder
-            .copy(deprecation = Deprecation(message = "Deprecation message"))
-            .build()
-            .map { model -> model.prepare().toString() }
+        val model = FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+            deprecation = Deprecation("Deprecation message"),
+        )
 
-        fileSpec shouldBeRight """
+        val fileSpec = model.prepare()
+
+        fileSpec shouldSpecify """
           |package io.mehow
           |
           |import io.mehow.laboratory.Feature
@@ -398,7 +444,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |  message = "Deprecation message",
           |  level = DeprecationLevel.WARNING
           |)
-          |internal enum class FeatureA : Feature<@Suppress("DEPRECATION") FeatureA> {
+          |public enum class FeatureA : Feature<@Suppress("DEPRECATION") FeatureA> {
           |  First,
           |  Second,
           |  ;
@@ -413,17 +459,19 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
 
       enumValues<DeprecationLevel>().forEach { level ->
         it("with explicit $level deprecation level") {
-          val fileSpec = featureBuilder
-              .copy(deprecation = Deprecation(message = "Deprecation message", level = level))
-              .build()
-              .map { model -> model.prepare().toString() }
-
+          val model = FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+              deprecation = Deprecation("Deprecation message", level),
+          )
           val suppressLevel = when (level) {
             WARNING -> "DEPRECATION"
             ERROR, HIDDEN -> "DEPRECATION_ERROR"
           }
 
-          fileSpec shouldBeRight """
+          val fileSpec = model.prepare()
+
+          fileSpec shouldSpecify """
             |package io.mehow
             |
             |import io.mehow.laboratory.Feature
@@ -435,7 +483,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             |  message = "Deprecation message",
             |  level = DeprecationLevel.${level}
             |)
-            |internal enum class FeatureA : Feature<@Suppress("$suppressLevel") FeatureA> {
+            |public enum class FeatureA : Feature<@Suppress("$suppressLevel") FeatureA> {
             |  First,
             |  Second,
             |  ;
@@ -451,21 +499,25 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
     }
 
     it("can have supervisor") {
-      val parent = featureBuilder.copy(className = ClassName("io.mehow.parent", "Parent")).build().shouldBeRight()
-      val option = FeatureFlagOption("First")
+      val supervisor = FeatureFlagModel(
+          ClassName("io.mehow.supervisor", "Supervisor"),
+          listOf(FeatureFlagOption("First", isDefault = true)),
+      )
+      val model = FeatureFlagModel(
+          ClassName("io.mehow", "FeatureA"),
+          listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          supervisor = Supervisor(supervisor, supervisor.options.first()),
+      )
 
-      val fileSpec = featureBuilder
-          .copy(supervisor = Supervisor.Builder(parent, option).build().shouldBeRight())
-          .build()
-          .map { model -> model.prepare().toString() }
+      val fileSpec = model.prepare()
 
-      fileSpec shouldBeRight """
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
-        |import io.mehow.parent.Parent
+        |import io.mehow.supervisor.Supervisor
         |
-        |internal enum class FeatureA : Feature<FeatureA> {
+        |public enum class FeatureA : Feature<FeatureA> {
         |  First,
         |  Second,
         |  ;
@@ -473,7 +525,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  public override val defaultOption: FeatureA
         |    get() = First
         |
-        |  public override val supervisorOption: Feature<*> = Parent.First
+        |  public override val supervisorOption: Feature<*> = Supervisor.First
         |}
         |
       """.trimMargin()

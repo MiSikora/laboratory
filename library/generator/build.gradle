@@ -11,7 +11,6 @@ tasks.withType(KotlinCompile).configureEach {
 }
 
 dependencies {
-  api libs.arrow
   api libs.kotlinPoet
   implementation project(":laboratory")
 

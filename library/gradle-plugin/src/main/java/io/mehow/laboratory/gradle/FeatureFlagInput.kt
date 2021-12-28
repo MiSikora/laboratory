@@ -1,6 +1,5 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.getOrHandle
 import com.squareup.kotlinpoet.ClassName
 import io.mehow.laboratory.generator.Deprecation
 import io.mehow.laboratory.generator.FeatureFlagModel
@@ -10,7 +9,6 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import io.mehow.laboratory.gradle.DeprecationLevel.Warning
 import org.gradle.api.Action
-import org.gradle.api.GradleException
 
 /**
  * Representation of a generated feature flag. It must have at least one value and exactly one default value.
@@ -18,7 +16,7 @@ import org.gradle.api.GradleException
 public class FeatureFlagInput internal constructor(
   private val name: String,
   private val packageNameProvider: () -> String,
-  private val supervisor: (() -> Supervisor.Builder)? = null,
+  private val supervisor: (() -> Supervisor)? = null,
 ) {
   /**
    * Sets whether the generated feature flag should be public or internal.
@@ -72,10 +70,7 @@ public class FeatureFlagInput internal constructor(
     val option = FeatureFlagOption(name, isDefault)
     options += option
     val packageNameProvider = { packageName ?: packageNameProvider() }
-    val supervisorBuilder = {
-      val supervisor = toBuilder().build().getOrHandle { throw GradleException(it.message) }
-      Supervisor.Builder(supervisor, option)
-    }
+    val supervisorBuilder = { Supervisor(toModel(), option) }
     childFeatureInputs += ChildFeatureFlagsInput(packageNameProvider, supervisorBuilder).let { input ->
       action.execute(input)
       return@let input
@@ -110,7 +105,7 @@ public class FeatureFlagInput internal constructor(
     deprecation = Deprecation(message, level.kotlinLevel)
   }
 
-  private fun toBuilder() = FeatureFlagModel.Builder(
+  private fun toModel() = FeatureFlagModel(
       visibility = if (isPublic) Public else Internal,
       className = ClassName(packageName ?: packageNameProvider(), name),
       options = options,
@@ -118,9 +113,9 @@ public class FeatureFlagInput internal constructor(
       key = key,
       description = description.orEmpty(),
       deprecation = deprecation,
-      supervisor = supervisor?.invoke()?.build()?.getOrHandle { throw GradleException(it.message) },
+      supervisor = supervisor?.invoke(),
   )
 
-  internal fun toBuilders(): List<FeatureFlagModel.Builder> =
-    listOf(toBuilder()) + childFeatureInputs.flatMap(ChildFeatureFlagsInput::toBuilders)
+  internal fun toModels(): List<FeatureFlagModel> =
+    listOf(toModel()) + childFeatureInputs.flatMap(ChildFeatureFlagsInput::toModels)
 }

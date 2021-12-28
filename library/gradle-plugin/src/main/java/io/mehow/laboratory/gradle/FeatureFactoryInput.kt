@@ -22,7 +22,7 @@ public class FeatureFactoryInput internal constructor(
    */
   public var packageName: String? = null
 
-  internal fun toBuilder(features: List<FeatureFlagModel>, simpleName: String) = FeatureFactoryModel.Builder(
+  internal fun toModel(features: List<FeatureFlagModel>, simpleName: String) = FeatureFactoryModel(
       visibility = if (isPublic) Public else Internal,
       className = ClassName(packageName ?: packageNameProvider(), simpleName),
       features = features,

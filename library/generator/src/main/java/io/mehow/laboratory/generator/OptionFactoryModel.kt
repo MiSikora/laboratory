@@ -1,7 +1,5 @@
 package io.mehow.laboratory.generator
 
-import arrow.core.Either
-import arrow.core.computations.either
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -13,37 +11,31 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.joinToCode
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.OptionFactory
-import io.mehow.laboratory.generator.GenerationFailure.DuplicateKeys
+import io.mehow.laboratory.generator.Visibility.Internal
 
-public class OptionFactoryModel internal constructor(
-  internal val visibility: Visibility,
+public class OptionFactoryModel(
   internal val className: ClassName,
   internal val features: List<FeatureFlagModel>,
+  internal val visibility: Visibility = Internal,
 ) {
+  init {
+    requireNoDuplicates()
+  }
+
   public fun prepare(): FileSpec = OptionFactoryGenerator(this).fileSpec
 
-  public data class Builder(
-    private val visibility: Visibility,
-    private val className: ClassName,
-    private val features: List<FeatureFlagModel>,
-  ) {
-    public fun build(): Either<GenerationFailure, OptionFactoryModel> = either.eager {
-      val features = validateFeatures().bind()
-      OptionFactoryModel(visibility, className, features)
-    }
-
-    private fun validateFeatures(): Either<GenerationFailure, List<FeatureFlagModel>> = run {
+  private companion object {
+    fun OptionFactoryModel.requireNoDuplicates() {
       val groupedFeatures = features.groupBy { it.key ?: it.className.canonicalName }
-      Either.conditionally(
-          test = groupedFeatures.size == features.size,
-          ifTrue = { features },
-          ifFalse = {
-            val duplicates = groupedFeatures
-                .filterValues { it.size > 1 }
-                .mapValues { (_, features) -> features.map(FeatureFlagModel::toString) }
-            DuplicateKeys(duplicates)
-          }
-      )
+      require(groupedFeatures.size == features.size) {
+        val duplicates = groupedFeatures
+            .filterValues { it.size > 1 }
+            .mapValues { (_, features) -> features.map(FeatureFlagModel::toString) }
+        """
+        |Feature flags must have unique keys. Found following duplicates:
+        | - ${duplicates.toList().joinToString(separator = "\n - ") { (key, fqcns) -> "$key: $fqcns" }}
+      """.trimMargin()
+      }
     }
   }
 }
@@ -60,7 +52,7 @@ private class OptionFactoryGenerator(
         if (deprecation != null) {
           CodeBlock.of("%L·%L", deprecation, whenExpression)
         } else {
-         whenExpression
+          whenExpression
         }
       }
 

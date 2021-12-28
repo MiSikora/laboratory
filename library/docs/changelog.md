@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Handle usage of deprecated features in a generated `OptionFactory`.
 
+### Removed
+- Builders for generator models. Models are now created via constructors and throw if data is invalid.
+- `GenerationFailure` interface.
+- Arrow dependency.
+
 ## [1.0.0-rc1] - 2021-12-22
 
 ### Added

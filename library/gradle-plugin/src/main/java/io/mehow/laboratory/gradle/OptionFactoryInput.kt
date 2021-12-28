@@ -22,7 +22,7 @@ public class OptionFactoryInput internal constructor(
    */
   public var packageName: String? = null
 
-  internal fun toBuilder(features: List<FeatureFlagModel>) = OptionFactoryModel.Builder(
+  internal fun toModel(features: List<FeatureFlagModel>) = OptionFactoryModel(
       visibility = if (isPublic) Public else Internal,
       className = ClassName(packageName ?: packageNameProvider(), "GeneratedOptionFactory"),
       features = features,

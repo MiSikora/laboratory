@@ -1,26 +1,13 @@
 package io.mehow.laboratory.generator
 
-import arrow.core.Either
-import arrow.core.right
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
+import io.mehow.laboratory.generator.Visibility.Internal
 
-public class SourcedFeatureStorageModel internal constructor(
-  internal val visibility: Visibility,
+public class SourcedFeatureStorageModel(
   internal val className: ClassName,
   internal val sourceNames: List<String>,
+  internal val visibility: Visibility = Internal,
 ) {
   public fun prepare(): FileSpec = SourcedFeatureStorageGenerator(this).fileSpec()
-
-  public data class Builder(
-    private val visibility: Visibility,
-    private val className: ClassName,
-    internal val sourceNames: List<String>,
-  ) {
-    public fun build(): Either<GenerationFailure, SourcedFeatureStorageModel> = SourcedFeatureStorageModel(
-        visibility,
-        className,
-        sourceNames,
-    ).right()
-  }
 }
