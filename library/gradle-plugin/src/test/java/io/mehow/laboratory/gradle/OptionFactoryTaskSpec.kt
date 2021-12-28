@@ -5,8 +5,6 @@ import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.mehow.laboratory.generator.GenerationFailure.DuplicateKeys
-import io.mehow.laboratory.generator.GenerationFailure.NoOption
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -107,9 +105,10 @@ internal class OptionFactoryTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateOptionFactory")!!.outcome shouldBe FAILED
-    result.output shouldContain DuplicateKeys(mapOf(
-        "Some Key" to listOf("io.mehow.first.FeatureA", "io.mehow.second.FeatureB"),
-    )).message
+    result.output shouldContain """
+      |Feature flags must have unique keys. Found following duplicates:
+      | - Some Key: [io.mehow.first.FeatureA, io.mehow.second.FeatureB]
+    """.trimMargin()
 
     val factory = fixture.optionFactoryFile("GeneratedOptionFactory")
     factory.shouldNotExist()
@@ -121,9 +120,10 @@ internal class OptionFactoryTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateOptionFactory")!!.outcome shouldBe FAILED
-    result.output shouldContain DuplicateKeys(mapOf(
-        "io.mehow.first.FeatureA" to listOf("io.mehow.first.FeatureA", "io.mehow.second.FeatureB"),
-    )).message
+    result.output shouldContain """
+      |Feature flags must have unique keys. Found following duplicates:
+      | - io.mehow.first.FeatureA: [io.mehow.first.FeatureA, io.mehow.second.FeatureB]
+    """.trimMargin()
 
     val factory = fixture.optionFactoryFile("GeneratedOptionFactory")
     factory.shouldNotExist()
@@ -135,22 +135,22 @@ internal class OptionFactoryTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateOptionFactory")!!.outcome shouldBe FAILED
-    result.output shouldContain NoOption("Feature").message
+    result.output shouldContain "Feature must have at least one option"
 
     val factory = fixture.optionFactoryFile("GeneratedOptionFactory")
     factory.shouldNotExist()
   }
 
   "uses implicit package name" {
-  val fixture = "option-factory-package-name-implicit".toFixture()
+    val fixture = "option-factory-package-name-implicit".toFixture()
 
-  gradleRunner.withProjectDir(fixture).build()
+    gradleRunner.withProjectDir(fixture).build()
 
-  val factory = fixture.optionFactoryFile("io.mehow.implicit.GeneratedOptionFactory")
-  factory.shouldExist()
+    val factory = fixture.optionFactoryFile("io.mehow.implicit.GeneratedOptionFactory")
+    factory.shouldExist()
 
-  factory.readText() shouldContain "package io.mehow.implicit"
-}
+    factory.readText() shouldContain "package io.mehow.implicit"
+  }
 
   "uses explicit package name" {
     val fixture = "option-factory-package-name-explicit".toFixture()
@@ -283,9 +283,10 @@ internal class OptionFactoryTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateOptionFactory")!!.outcome shouldBe FAILED
-    result.output shouldContain DuplicateKeys(mapOf(
-        "Some Key" to listOf("FeatureA", "FeatureB"),
-    )).message
+    result.output shouldContain """
+      |Feature flags must have unique keys. Found following duplicates:
+      | - Some Key: [FeatureA, FeatureB]
+    """.trimMargin()
 
     val factory = fixture.optionFactoryFile("GeneratedOptionFactory")
     factory.shouldNotExist()

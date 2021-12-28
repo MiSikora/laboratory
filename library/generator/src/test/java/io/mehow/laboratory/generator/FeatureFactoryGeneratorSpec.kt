@@ -4,39 +4,35 @@ import com.squareup.kotlinpoet.ClassName
 import io.kotest.core.spec.style.DescribeSpec
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
+import io.mehow.laboratory.generator.test.shouldSpecify
 
 internal class FeatureFactoryGeneratorSpec : DescribeSpec({
-  val featureA = FeatureFlagModel.Builder(
-      visibility = Internal,
+  val featureA = FeatureFlagModel(
       className = ClassName("io.mehow", "FeatureA"),
       options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-  ).build().shouldBeRight()
+  )
 
-  val featureB = FeatureFlagModel.Builder(
-      visibility = Internal,
+  val featureB = FeatureFlagModel(
       className = ClassName("io.mehow", "FeatureB"),
       options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-  ).build().shouldBeRight()
+  )
 
-  val featureC = FeatureFlagModel.Builder(
-      visibility = Internal,
+  val featureC = FeatureFlagModel(
       className = ClassName("io.mehow.c", "FeatureA"),
       options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-  ).build().shouldBeRight()
-
-  val factoryBuilder = FeatureFactoryModel.Builder(
-      visibility = Internal,
-      className = ClassName("io.mehow", "GeneratedFeatureFactory"),
-      features = listOf(featureA, featureB, featureC),
   )
 
   describe("generated feature flag factory") {
     it("can be internal") {
-      val fileSpec = factoryBuilder
-          .build()
-          .map { model -> model.prepare("generated").toString() }
+      val model = FeatureFactoryModel(
+          ClassName("io.mehow", "GeneratedFeatureFactory"),
+          listOf(featureA, featureB, featureC),
+          visibility = Internal,
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare("generated")
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
@@ -61,11 +57,15 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
     }
 
     it("can be public") {
-      val fileSpec = factoryBuilder.copy(visibility = Public)
-          .build()
-          .map { model -> model.prepare("generated").toString() }
+      val model = FeatureFactoryModel(
+          ClassName("io.mehow", "GeneratedFeatureFactory"),
+          listOf(featureA, featureB, featureC),
+          visibility = Public,
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare("generated")
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature
@@ -90,11 +90,14 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
     }
 
     it("is optimized in case of no features") {
-      val fileSpec = factoryBuilder.copy(features = emptyList())
-          .build()
-          .map { model -> model.prepare("generated").toString() }
+      val model = FeatureFactoryModel(
+          ClassName("io.mehow", "GeneratedFeatureFactory"),
+          features = emptyList(),
+      )
 
-      fileSpec shouldBeRight """
+      val fileSpec = model.prepare("generated")
+
+      fileSpec shouldSpecify """
         |package io.mehow
         |
         |import io.mehow.laboratory.Feature

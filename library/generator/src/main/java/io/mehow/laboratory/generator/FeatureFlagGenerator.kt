@@ -74,7 +74,7 @@ internal class FeatureFlagGenerator(
       }
       .addProperty(defaultOptionProperty)
       .apply {
-        feature.options.foldLeft(this) { builder, featureOption ->
+        feature.options.fold(this) { builder, featureOption ->
           builder.addEnumConstant(featureOption.name)
         }
       }

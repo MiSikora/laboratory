@@ -1,13 +1,10 @@
 package io.mehow.laboratory.gradle
 
-import arrow.core.nel
-import arrow.core.nonEmptyListOf
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.mehow.laboratory.generator.GenerationFailure.NoOption
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
@@ -155,7 +152,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
     val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain NoOption("Feature").message
+    result.output shouldContain "Feature must have at least one option"
 
     val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
     feature.shouldNotExist()

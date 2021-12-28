@@ -1,6 +1,6 @@
 package io.mehow.laboratory.gradle
 
-import io.mehow.laboratory.generator.Supervisor.Builder
+import io.mehow.laboratory.generator.Supervisor
 import org.gradle.api.Action
 
 /**
@@ -8,7 +8,7 @@ import org.gradle.api.Action
  */
 public class ChildFeatureFlagsInput internal constructor(
   private val packageNameProvider: () -> String,
-  private val supervisor: () -> Builder,
+  private val supervisor: () -> Supervisor,
 ) {
   private val mutableFeatureInputs = mutableListOf<FeatureFlagInput>()
 
@@ -24,5 +24,5 @@ public class ChildFeatureFlagsInput internal constructor(
     }
   }
 
-  internal fun toBuilders() = featureInputs.flatMap(FeatureFlagInput::toBuilders)
+  internal fun toModels() = featureInputs.flatMap(FeatureFlagInput::toModels)
 }
