@@ -1,6 +1,6 @@
 package io.mehow.laboratory.gradle
 
-import io.mehow.laboratory.generator.sourceModels
+import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.laboratoryVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -117,7 +117,7 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.codeGenDir = codeGenDir
       task.factoryClassName = "GeneratedFeatureSourceFactory"
       task.factoryFunctionName = "featureSourceGenerated"
-      task.featureModelsMapper = { it.sourceModels() }
+      task.featureModelsMapper = { it.mapNotNull(FeatureFlagModel::source) }
     }
     addSourceSets(factoryTask, codeGenDir)
   }

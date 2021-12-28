@@ -1,6 +1,7 @@
 package io.mehow.laboratory.gradle
 
-import io.mehow.laboratory.generator.sourceNames
+import io.mehow.laboratory.generator.FeatureFlagModel
+import io.mehow.laboratory.generator.FeatureFlagOption
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
@@ -17,4 +18,9 @@ public open class SourcedFeatureStorageTask : DefaultTask() {
     codeGenDir.deleteRecursively()
     storageModel.prepare().writeTo(codeGenDir)
   }
+
+  private fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull(FeatureFlagModel::source)
+      .map(FeatureFlagModel::options)
+      .flatMap { it.toList() }
+      .map(FeatureFlagOption::name)
 }

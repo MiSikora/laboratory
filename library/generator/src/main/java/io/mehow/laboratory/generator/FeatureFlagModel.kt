@@ -4,15 +4,16 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import io.mehow.laboratory.generator.Visibility.Public
 
-public data class FeatureFlagModel private constructor(
-  internal val className: ClassName,
-  internal val options: List<FeatureFlagOption>,
-  internal val visibility: Visibility,
-  internal val key: String?,
-  internal val description: String,
-  internal val deprecation: Deprecation?,
-  internal val source: FeatureFlagModel?,
-  internal val supervisor: Supervisor?,
+@Suppress("LongParameterList")
+public class FeatureFlagModel private constructor(
+  public val className: ClassName,
+  public val options: List<FeatureFlagOption>,
+  public val visibility: Visibility,
+  public val key: String?,
+  public val description: String,
+  public val deprecation: Deprecation?,
+  public val source: FeatureFlagModel?,
+  public val supervisor: Supervisor?,
 ) {
   init {
     require(options.isNotEmpty()) {
@@ -76,11 +77,3 @@ public data class FeatureFlagModel private constructor(
         }
   }
 }
-
-public fun List<FeatureFlagModel>.sourceNames(): List<String> = sourceModels()
-    .map(FeatureFlagModel::options)
-    .flatMap { it.toList() }
-    .map(FeatureFlagOption::name)
-
-public fun List<FeatureFlagModel>.sourceModels(): List<FeatureFlagModel> =
-  mapNotNull(FeatureFlagModel::source)

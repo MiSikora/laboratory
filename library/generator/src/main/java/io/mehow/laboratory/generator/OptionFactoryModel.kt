@@ -14,9 +14,9 @@ import io.mehow.laboratory.OptionFactory
 import io.mehow.laboratory.generator.Visibility.Internal
 
 public class OptionFactoryModel(
-  internal val className: ClassName,
-  internal val features: List<FeatureFlagModel>,
-  internal val visibility: Visibility = Internal,
+  public val className: ClassName,
+  public val features: List<FeatureFlagModel>,
+  public val visibility: Visibility = Internal,
 ) {
   init {
     requireNoDuplicates()
