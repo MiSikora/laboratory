@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc2] - 2021-12-28
+
 ### Changed
 - `SharedPreferencesFeatureStorage` no marked as experimental due to coroutines.
 - Upgrade Kotlin to `1.6.10`.
@@ -418,7 +420,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.0-rc1...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.0-rc2...HEAD
+[1.0.0-rc2]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0-rc2
 [1.0.0-rc1]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0-rc1
 [0.14.0]: https://github.com/MiSikora/laboratory/releases/tag/0.14.0
 [0.13.1]: https://github.com/MiSikora/laboratory/releases/tag/0.13.1
