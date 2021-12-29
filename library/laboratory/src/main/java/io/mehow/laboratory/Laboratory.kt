@@ -77,9 +77,7 @@ public class Laboratory internal constructor(
     val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
 
     val parent = feature.supervisorOption ?: return activeOption
-    return if (activeOption.supervisorOption != experimentRaw(
-            parent.javaClass)
-    ) defaultOption else activeOption
+    return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) defaultOption else activeOption
   }
 
   /**
