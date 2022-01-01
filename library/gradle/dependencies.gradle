@@ -14,8 +14,8 @@ ext.versions = [
 ext.libs = [
     "android": [
         "gradlePlugin": [
-            "api": "com.android.tools.build:gradle:4.2.2",
-            "project": "com.android.tools.build:gradle:7.2.0-alpha06",
+            "api": "com.android.tools.build:gradle:7.0.4",
+            "project": "com.android.tools.build:gradle:7.0.4",
         ],
         "x": [
             "coreKtx": "androidx.core:core-ktx:1.7.0",
