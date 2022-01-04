@@ -105,6 +105,15 @@ public class Laboratory internal constructor(
     storage.setOptions(*options)
 
   /**
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one option
+   * for the same feature flag, the last one should be applied.
+   *
+   * @return `true` if the option was set successfully, `false` otherwise.
+   */
+  public suspend fun <T : Feature<*>> setOptions(options: Collection<T>): Boolean =
+    storage.setOptions(options)
+
+  /**
    * Removes all stored feature flag options.
    *
    * @return `true` if the option was set successfully, `false` otherwise.

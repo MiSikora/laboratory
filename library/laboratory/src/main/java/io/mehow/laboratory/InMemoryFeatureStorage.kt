@@ -20,9 +20,16 @@ internal class InMemoryFeatureStorage : FeatureStorage {
     return true
   }
 
-  override suspend fun setOptions(vararg options: Feature<*>): Boolean {
-    val newFeatures = options.associate { it.javaClass to it.name }
-    featureFlow.update { it + newFeatures }
+  override suspend fun setOptions(
+    vararg options: Feature<*>,
+  ) = setOptions(options.associate { it.javaClass to it.name })
+
+  override suspend fun setOptions(
+    options: Collection<Feature<*>>,
+  ) = setOptions(options.associate { it.javaClass to it.name })
+
+  private fun setOptions(options: Map<Class<out Feature<*>>, String>): Boolean {
+    featureFlow.update { it + options }
     return true
   }
 }

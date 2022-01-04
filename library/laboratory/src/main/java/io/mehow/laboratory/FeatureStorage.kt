@@ -38,6 +38,14 @@ public interface FeatureStorage {
    */
   public suspend fun setOption(option: Feature<*>): Boolean = setOptions(option)
 
+  /**
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one value
+   * for the same feature flag, the last one should be applied.
+   *
+   * @return `true` if the value was set successfully, `false` otherwise.
+   */
+  public suspend fun setOptions(options: Collection<Feature<*>>): Boolean = setOptions(*options.toTypedArray())
+
   public companion object {
     /**
      * Creates [FeatureStorage] that saves feature flags in app's memory.

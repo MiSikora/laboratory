@@ -52,6 +52,18 @@ public class BlockingLaboratory internal constructor(
   public fun <T : Feature<*>> setOptions(vararg options: T): Boolean = runBlocking { laboratory.setOptions(*options) }
 
   /**
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one option
+   * for the same feature flag, the last one should be applied. Warning – this call can block the calling thread.
+   *
+   * @return `true` if the option was set successfully, `false` otherwise.
+   * @see BlockingIoCall
+   */
+  @BlockingIoCall
+  public fun <T : Feature<*>> setOptions(options: Collection<T>): Boolean = runBlocking {
+    laboratory.setOptions(options)
+  }
+
+  /**
    * Removes all stored feature flag options. Warning – this call can block the calling thread.
    *
    * @return `true` if the option was set successfully, `false` otherwise.

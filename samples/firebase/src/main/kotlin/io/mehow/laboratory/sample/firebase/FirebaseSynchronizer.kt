@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.OptionFactory
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +21,7 @@ class FirebaseSynchronizer(
 ) {
   fun synchronize(scope: CoroutineScope) = databaseReference.asKeyValueFlow()
       .map { pairs -> pairs.mapNotNull { (key, value) -> optionFactory.create(key, value) } }
-      .onEach { featureStorage.setOptions(*it.toTypedArray()) }
+      .onEach(featureStorage::setOptions)
       .launchIn(scope)
 
   private fun DatabaseReference.asKeyValueFlow() = callbackFlow {

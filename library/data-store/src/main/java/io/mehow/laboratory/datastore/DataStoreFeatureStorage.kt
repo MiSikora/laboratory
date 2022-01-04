@@ -20,10 +20,18 @@ internal class DataStoreFeatureStorage(
     null
   }
 
-  override suspend fun setOptions(vararg options: Feature<*>) = try {
+  override suspend fun setOptions(
+    vararg options: Feature<*>,
+  ) = setOptions(options.associate { it.javaClass.name to it.name })
+
+  override suspend fun setOptions(
+    options: Collection<Feature<*>>,
+  ) = setOptions(options.associate { it.javaClass.name to it.name })
+
+  private suspend fun setOptions(options: Map<String, String>) = try {
     dataStore.updateData { flags ->
-      val updatedFeatures = flags.options + options.associate { it.javaClass.name to it.name }
-      return@updateData flags.copy(options = updatedFeatures)
+      val updatedFeatures = flags.options + options
+      flags.copy(options = updatedFeatures)
     }
     true
   } catch (_: IOException) {

@@ -31,10 +31,18 @@ internal class SharedPreferencesFeatureStorage(
     null
   }
 
-  override suspend fun setOptions(vararg options: Feature<*>): Boolean {
+  override suspend fun setOptions(
+    vararg options: Feature<*>,
+  ) = setOptions(options.associate { it.javaClass.name to it.name })
+
+  override suspend fun setOptions(
+    options: Collection<Feature<*>>,
+  ) = setOptions(options.associate { it.javaClass.name to it.name })
+
+  private fun setOptions(options: Map<String, String>): Boolean {
     preferences.edit {
-      for (option in options) {
-        putString(option.javaClass.name, option.name)
+      for ((key, value) in options) {
+        putString(key, value)
       }
     }
     return true
