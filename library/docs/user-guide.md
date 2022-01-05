@@ -317,7 +317,7 @@ class App : Application {
               CustomOptionFactory.create(stringKey, stringValue)
             }
         // Be cautious with using GlobalScope.
-        GlobalScope.launch { firebaseStorage.setOptions(*newOptions.toTypedArray()) }
+        GlobalScope.launch { firebaseStorage.setOptions(newOptions) }
       }
 
       override fun onCancelled(error: DatabaseError) = Unit
