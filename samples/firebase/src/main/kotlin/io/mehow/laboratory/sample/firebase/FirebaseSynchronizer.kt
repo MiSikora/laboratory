@@ -4,7 +4,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.OptionFactory
 import kotlinx.coroutines.CoroutineScope
