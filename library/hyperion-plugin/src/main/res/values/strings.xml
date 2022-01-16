@@ -2,5 +2,5 @@
 <resources>
   <string name="io_mehow_laboratory_plugin_id">Laboratory</string>
   <string name="io_mehow_laboratory_plugin_label">Laboratory</string>
-  <string name="io_mehow_laboratory_plugin_subtitle">Toggle feature flags.</string>
+  <string name="io_mehow_laboratory_plugin_subtitle">Toggle feature flags</string>
 </resources>

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.mehow.laboratory.inspector.SearchMode.Active
 import io.mehow.laboratory.inspector.SearchMode.Idle
-import io.mehow.laboratory.inspector.SearchViewModel.Event.HideSearch
-import io.mehow.laboratory.inspector.SearchViewModel.Event.ToggleSearchMode
+import io.mehow.laboratory.inspector.SearchViewModel.Event.CloseSearch
+import io.mehow.laboratory.inspector.SearchViewModel.Event.OpenSearch
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,18 +27,16 @@ internal class SearchViewModel : ViewModel() {
   val uiModels: Flow<UiModel> = sharedUiModels
 
   fun sendEvent(event: Event) = when (event) {
-    is ToggleSearchMode -> updateToggleMode()
-    is HideSearch -> hideSearch()
+    is OpenSearch -> openSearch()
+    is CloseSearch -> closeSearch()
     is UpdateQuery -> updateQuery(event)
   }
 
-  private fun updateToggleMode() = viewModelScope.launch {
-    uiModelChanges.emit { model ->
-      model.copy(mode = model.mode.toggle(), query = SearchQuery.Empty)
-    }
+  private fun openSearch() = viewModelScope.launch {
+    uiModelChanges.emit { UiModel(Active, SearchQuery.Empty) }
   }
 
-  private fun hideSearch() = viewModelScope.launch {
+  private fun closeSearch() = viewModelScope.launch {
     uiModelChanges.emit { UiModel(Idle, SearchQuery.Empty) }
   }
 
@@ -60,8 +58,8 @@ internal class SearchViewModel : ViewModel() {
   }
 
   sealed class Event {
-    object ToggleSearchMode : Event()
-    object HideSearch : Event()
+    object OpenSearch : Event()
+    object CloseSearch : Event()
     class UpdateQuery(val query: String) : Event()
   }
 

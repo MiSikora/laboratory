@@ -6,8 +6,8 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.inspector.SearchMode.Active
 import io.mehow.laboratory.inspector.SearchMode.Idle
-import io.mehow.laboratory.inspector.SearchQuery.Companion
-import io.mehow.laboratory.inspector.SearchViewModel.Event.ToggleSearchMode
+import io.mehow.laboratory.inspector.SearchViewModel.Event.CloseSearch
+import io.mehow.laboratory.inspector.SearchViewModel.Event.OpenSearch
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
 import io.mehow.laboratory.inspector.SearchViewModel.UiModel
 
@@ -23,16 +23,13 @@ internal class SearchViewModelSpec : DescribeSpec({
       }
     }
 
-    it("can be toggled") {
+    it("can be opened") {
       val viewModel = SearchViewModel()
       viewModel.uiModels.test {
         expectIdleModel()
 
-        viewModel.sendEvent(ToggleSearchMode)
+        viewModel.sendEvent(OpenSearch)
         awaitItem() shouldBe UiModel(Active, SearchQuery.Empty)
-
-        viewModel.sendEvent(ToggleSearchMode)
-        awaitItem() shouldBe UiModel(Idle, Companion.Empty)
 
         cancel()
       }
@@ -43,7 +40,7 @@ internal class SearchViewModelSpec : DescribeSpec({
       viewModel.uiModels.test {
         expectIdleModel()
 
-        viewModel.sendEvent(ToggleSearchMode)
+        viewModel.sendEvent(OpenSearch)
         awaitItem()
 
         viewModel.sendEvent(UpdateQuery("Hello"))
@@ -68,18 +65,18 @@ internal class SearchViewModelSpec : DescribeSpec({
       }
     }
 
-    it("clears queries when toggled to idle mode") {
+    it("clears queries when search is closed") {
       val viewModel = SearchViewModel()
       viewModel.uiModels.test {
         expectIdleModel()
 
-        viewModel.sendEvent(ToggleSearchMode)
+        viewModel.sendEvent(OpenSearch)
         awaitItem()
 
         viewModel.sendEvent(UpdateQuery("Hello"))
         awaitItem() shouldBe UiModel(Active, SearchQuery("Hello"))
 
-        viewModel.sendEvent(ToggleSearchMode)
+        viewModel.sendEvent(CloseSearch)
         expectIdleModel()
 
         cancel()

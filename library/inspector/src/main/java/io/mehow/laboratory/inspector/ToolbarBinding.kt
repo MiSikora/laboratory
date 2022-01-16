@@ -2,13 +2,14 @@ package io.mehow.laboratory.inspector
 
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import io.mehow.laboratory.inspector.SearchMode.Active
-import io.mehow.laboratory.inspector.SearchMode.Idle
-import io.mehow.laboratory.inspector.SearchViewModel.Event.ToggleSearchMode
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textview.MaterialTextView
+import io.mehow.laboratory.inspector.SearchViewModel.Event.CloseSearch
+import io.mehow.laboratory.inspector.SearchViewModel.Event.OpenSearch
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
 import io.mehow.laboratory.inspector.SearchViewModel.UiModel
 
@@ -17,11 +18,12 @@ internal class ToolbarBinding(
   private val onSearchEventsListener: (SearchViewModel.Event) -> Unit,
   private val onResetEventsListener: () -> Unit,
 ) {
-  private val toolbar = view.findViewById<MotionLayout>(R.id.io_mehow_laboratory_toolbar)
+  private val title = view.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_title)
   private val searchQuery = view.findViewById<AppCompatEditText>(R.id.io_mehow_laboratory_feature_query)
-  private val toggleSearch = view.findViewById<KyrieImageView>(R.id.io_mehow_laboratory_toggle_search)
-  private val clearQuery = view.findViewById<AppCompatImageView>(R.id.io_mehow_laboratory_clear_query)
-  private val resetFeatures = view.findViewById<AppCompatImageView>(R.id.io_mehow_laboratory_reset_features)
+  private val openSearch = view.findViewById<ShapeableImageView>(R.id.io_mehow_laboratory_open_search)
+  private val closeSearch = view.findViewById<ShapeableImageView>(R.id.io_mehow_laboratory_close_search)
+  private val clearQuery = view.findViewById<ShapeableImageView>(R.id.io_mehow_laboratory_clear_query)
+  private val resetFeatures = view.findViewById<ShapeableImageView>(R.id.io_mehow_laboratory_reset_features)
 
   private val resetFeaturesDialog = MaterialAlertDialogBuilder(view.context)
       .setTitle(R.string.io_mehow_laboratory_reset_title)
@@ -29,9 +31,6 @@ internal class ToolbarBinding(
       .setNegativeButton(R.string.io_mehow_laboratory_cancel) { _, _ -> }
       .setPositiveButton(R.string.io_mehow_laboratory_reset) { _, _ -> onResetEventsListener() }
       .create()
-
-  private val closeSearchDescription = view.context.getString(R.string.io_mehow_laboratory_close_search)
-  private val openSearchDescription = view.context.getString(R.string.io_mehow_laboratory_search_features)
 
   init {
     var oldText: String? = null
@@ -42,29 +41,24 @@ internal class ToolbarBinding(
       onSearchEventsListener(UpdateQuery(query))
     }
 
-    toolbar.setTransition(R.id.io_mehow_laboratory_search_transition)
-    toggleSearch.setOnClickListener { onSearchEventsListener(ToggleSearchMode) }
+    openSearch.setOnClickListener { onSearchEventsListener(OpenSearch) }
+    closeSearch.setOnClickListener { onSearchEventsListener(CloseSearch) }
     clearQuery.setOnClickListener { searchQuery.setText("") }
     resetFeatures.setOnClickListener { resetFeaturesDialog.show() }
   }
 
   fun render(uiModel: UiModel) {
-    uiModel.mode.applyTransition(toolbar)
-    clearQuery.springVisibility(isVisible = uiModel.showSearch && uiModel.query.isNotEmpty())
+    closeSearch.isVisible = uiModel.showSearch
+    searchQuery.isVisible = uiModel.showSearch
+    openSearch.isGone = uiModel.showSearch
+    title.isGone = uiModel.showSearch
+    clearQuery.isVisible = uiModel.showSearch && uiModel.query.isNotEmpty()
 
     if (uiModel.showSearch) {
       searchQuery.focusAndShowKeyboard()
-      searchQuery.contentDescription = closeSearchDescription
     } else {
       searchQuery.hideKeyboard()
       searchQuery.setText("")
-      searchQuery.contentDescription = openSearchDescription
     }
   }
-
-  private val SearchMode.applyTransition
-    get() = when (this) {
-      Idle -> MotionLayout::transitionToStart
-      Active -> MotionLayout::transitionToEnd
-    }
 }

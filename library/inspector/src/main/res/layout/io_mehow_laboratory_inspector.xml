@@ -16,34 +16,41 @@
       android:orientation="vertical"
       >
 
-    <androidx.constraintlayout.motion.widget.MotionLayout
-        android:id="@+id/io_mehow_laboratory_toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:background="?colorPrimarySurface"
+        android:orientation="horizontal"
         android:paddingHorizontal="@dimen/io_mehow_laboratory_spacing"
-        app:currentState="@+id/io_mehow_laboratory_search_state_idle"
-        app:layoutDescription="@xml/io_mehow_laboratory_toolbar_scene"
         >
+
+      <com.google.android.material.imageview.ShapeableImageView
+          android:id="@+id/io_mehow_laboratory_close_search"
+          android:layout_gravity="center_vertical"
+          android:contentDescription="@string/io_mehow_laboratory_close_search"
+          android:visibility="gone"
+          app:srcCompat="@drawable/io_mehow_laboratory_close_serach"
+          style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
+          />
 
       <com.google.android.material.textview.MaterialTextView
           android:id="@+id/io_mehow_laboratory_title"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:gravity="center_vertical"
           android:text="@string/io_mehow_laboratory"
           android:textAppearance="?textAppearanceHeadline6"
           android:textColor="?colorOnPrimarySurface"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
           />
 
       <androidx.appcompat.widget.AppCompatEditText
           android:id="@+id/io_mehow_laboratory_feature_query"
           android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:alpha="0"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
           android:background="@null"
+          android:gravity="center_vertical"
           android:hint="@string/io_mehow_laboratory_search_features_hint"
           android:imeOptions="actionDone|flagNoExtractUi"
           android:inputType="text|textNoSuggestions"
@@ -51,44 +58,35 @@
           android:textColor="?colorOnPrimarySurface"
           android:textColorHint="@color/io_mehow_laboratory_hint_text"
           android:textCursorDrawable="@drawable/io_mehow_laboratory_hint_cursor"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toStartOf="@+id/io_mehow_laboratory_clear_query"
-          app:layout_constraintStart_toEndOf="@+id/io_mehow_laboratory_toggle_search"
-          app:layout_constraintTop_toTopOf="parent"
+          android:visibility="gone"
           />
 
-      <io.mehow.laboratory.inspector.KyrieImageView
-          android:id="@+id/io_mehow_laboratory_toggle_search"
-          android:contentDescription="@string/io_mehow_laboratory_search_features"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toStartOf="@+id/io_mehow_laboratory_reset_features"
-          app:layout_constraintTop_toTopOf="parent"
-          app:srcCompat="@drawable/io_mehow_laboratory_toggle_serach"
+      <com.google.android.material.imageview.ShapeableImageView
+          android:id="@+id/io_mehow_laboratory_open_search"
+          android:layout_gravity="center_vertical"
+          android:contentDescription="@string/io_mehow_laboratory_open_search"
+          app:srcCompat="@drawable/io_mehow_laboratory_open_serach"
           style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
           />
 
-      <androidx.appcompat.widget.AppCompatImageView
+      <com.google.android.material.imageview.ShapeableImageView
           android:id="@+id/io_mehow_laboratory_clear_query"
+          android:layout_gravity="center_vertical"
           android:contentDescription="@string/io_mehow_laboratory_clear_query"
           android:visibility="gone"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toStartOf="@+id/io_mehow_laboratory_reset_features"
-          app:layout_constraintTop_toTopOf="parent"
           app:srcCompat="@drawable/io_mehow_laboratory_clear"
           style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
           />
 
-      <androidx.appcompat.widget.AppCompatImageView
+      <com.google.android.material.imageview.ShapeableImageView
           android:id="@+id/io_mehow_laboratory_reset_features"
+          android:layout_gravity="center_vertical"
           android:contentDescription="@string/io_mehow_laboratory_reset_features"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
           app:srcCompat="@drawable/io_mehow_laboratory_reset_features"
           style="@style/IoMehowLaboratory.Widget.ActionBar.ImageView"
           />
 
-    </androidx.constraintlayout.motion.widget.MotionLayout>
+    </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/io_mehow_laboratory_tab_layout"
