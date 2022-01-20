@@ -1,7 +1,7 @@
 package io.mehow.laboratory
 
 /**
- * Factory that returns a matching option. Matching rules are up to the implementation details.
+ * Factory that returns a matching option.
  */
 public interface OptionFactory {
   /**
