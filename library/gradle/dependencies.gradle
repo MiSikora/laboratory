@@ -82,6 +82,6 @@ ext.libs = [
     ],
     "kotlinPoet": "com.squareup:kotlinpoet:1.10.2",
     "arrow": "io.arrow-kt:arrow-core:1.0.1",
-    "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:4.0.1",
+    "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:4.1.0",
     "turbine": "app.cash.turbine:turbine:0.7.0",
 ]
