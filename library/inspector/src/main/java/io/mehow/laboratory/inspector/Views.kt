@@ -1,19 +1,22 @@
 package io.mehow.laboratory.inspector
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewConfiguration
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
-import androidx.core.content.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.absoluteValue
 
 internal fun View.focusAndShowKeyboard() {
   fun View.showKeyboardIfFocused() {
     if (isFocused) post {
-      context.getSystemService<InputMethodManager>()?.showSoftInput(this, SHOW_IMPLICIT)
+      val service = context.getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+      service?.showSoftInput(this, SHOW_IMPLICIT)
     }
   }
 
@@ -31,7 +34,8 @@ internal fun View.focusAndShowKeyboard() {
 
 internal fun View.hideKeyboard() {
   clearFocus()
-  context.getSystemService<InputMethodManager>()?.hideSoftInputFromWindow(windowToken, HIDE_NOT_ALWAYS)
+  val service = context.getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+  service?.hideSoftInputFromWindow(windowToken, HIDE_NOT_ALWAYS)
 }
 
 internal fun RecyclerView.hideKeyboardOnScroll() {
@@ -47,3 +51,15 @@ internal fun RecyclerView.hideKeyboardOnScroll() {
     }
   })
 }
+
+internal var View.isVisible: Boolean
+  get() = visibility == VISIBLE
+  set(value) {
+    visibility = if (value) VISIBLE else GONE
+  }
+
+internal var View.isGone: Boolean
+  get() = visibility == GONE
+  set(value) {
+    visibility = if (value) GONE else VISIBLE
+  }

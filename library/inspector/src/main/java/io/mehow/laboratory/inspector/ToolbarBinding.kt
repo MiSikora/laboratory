@@ -1,10 +1,9 @@
 package io.mehow.laboratory.inspector
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
@@ -34,13 +33,17 @@ internal class ToolbarBinding(
 
   init {
     var oldText: String? = null
-    searchQuery.addTextChangedListener { editable ->
-      val query = editable?.toString() ?: return@addTextChangedListener
-      if (oldText == query) return@addTextChangedListener
-      oldText = query
-      onSearchEventsListener(UpdateQuery(query))
-    }
-
+    searchQuery.addTextChangedListener(object : TextWatcher {
+      override fun afterTextChanged(editable: Editable?) {
+        val query = editable?.toString()
+        if (query != null && oldText != query) {
+          oldText = query
+          onSearchEventsListener(UpdateQuery(query))
+        }
+      }
+      override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) = Unit
+      override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) = Unit
+    })
     openSearch.setOnClickListener { onSearchEventsListener(OpenSearch) }
     closeSearch.setOnClickListener { onSearchEventsListener(CloseSearch) }
     clearQuery.setOnClickListener { searchQuery.setText("") }

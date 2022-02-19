@@ -2,9 +2,9 @@ package io.mehow.laboratory.inspector
 
 import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.SpannedString
 import android.text.style.URLSpan
 import android.widget.TextView
-import androidx.core.text.buildSpannedString
 import io.mehow.laboratory.inspector.TextToken.Link
 import io.mehow.laboratory.inspector.TextToken.Regular
 
@@ -53,9 +53,9 @@ private fun Sequence<MatchResult>.toUnmatchedRanges(text: String) = sequence {
 }.windowed(2, 1).map { (start, end) -> start.last..end.first }.filterNot { range -> range.isEmpty() }
 
 internal fun TextView.setTextTokens(tokens: Iterable<TextToken>) {
-  text = buildSpannedString {
+  text = SpannableStringBuilder().apply {
     for (token in tokens) {
       token.buildSpan(this)
     }
-  }
+  }.let(::SpannedString)
 }

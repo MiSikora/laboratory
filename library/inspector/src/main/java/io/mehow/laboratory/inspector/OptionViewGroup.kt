@@ -5,8 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.CompoundButton
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
-import androidx.core.view.children
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import io.mehow.laboratory.Feature
@@ -29,7 +27,7 @@ internal class OptionViewGroup @JvmOverloads constructor(
   }
 
   fun render(models: List<OptionUiModel>, isEnabled: Boolean) {
-    children.filterIsInstance<Chip>().forEach(::removeOnCheckedChangeListener)
+    chips.forEach(::removeOnCheckedChangeListener)
     removeAllViews()
     models.map { createChip(it, isEnabled) }.forEach(::addView)
   }
@@ -40,7 +38,7 @@ internal class OptionViewGroup @JvmOverloads constructor(
       text = model.option.name
       isChecked = model.isSelected
       if (model.supervisedFeatures.isNotEmpty()) {
-        chipIcon = ContextCompat.getDrawable(context, R.drawable.io_mehow_laboratory_supervisor)
+        chipIcon = context.getDrawable(R.drawable.io_mehow_laboratory_supervisor)
         setOnLongClickListener { showSupervisedFeaturesMenu(this, model.supervisedFeatures) }
       }
       isActivated = isEnabled
@@ -58,9 +56,7 @@ internal class OptionViewGroup @JvmOverloads constructor(
 
   // ChipGroup.isSingleSelection does not work with initial selection from code.
   private fun Chip.deselectOtherChips() {
-    children.filterIsInstance<Chip>()
-        .filter { it !== this }
-        .forEach { chip -> chip.isChecked = false }
+    chips.filter { it !== this }.forEach { chip -> chip.isChecked = false }
   }
 
   private fun removeOnCheckedChangeListener(chip: Chip) = chip.setOnCheckedChangeListener(null)
@@ -76,6 +72,13 @@ internal class OptionViewGroup @JvmOverloads constructor(
       }
     }.show()
     return true
+  }
+
+  private val chips: Sequence<Chip> get() = sequence {
+    for (index in 0 until childCount) {
+      val chip = getChildAt(index) as? Chip ?: continue
+      yield(chip)
+    }
   }
 
   interface OptionGroupListener {

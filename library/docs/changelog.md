@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- CoreKtx dependency.
+
 ## [1.0.0] - 2021-02-06
 
 ### Added

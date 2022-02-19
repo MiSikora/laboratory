@@ -3,7 +3,6 @@ package io.mehow.laboratory.inspector
 import android.os.Bundle
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -59,7 +58,9 @@ internal class SectionFragment : Fragment(R.layout.io_mehow_laboratory_feature_g
 
     fun create(section: String): SectionFragment {
       return SectionFragment().apply {
-        arguments = bundleOf(sectionKey to section)
+        arguments = Bundle().apply {
+          putString(sectionKey, section)
+        }
       }
     }
   }

@@ -2,7 +2,6 @@ package io.mehow.laboratory.sharedpreferences
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import androidx.core.content.edit
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureStorage
 import kotlinx.coroutines.channels.awaitClose
@@ -56,6 +55,8 @@ internal class SharedPreferencesFeatureStorage(
     }
     return true
   }
+
+  private fun SharedPreferences.edit(block: SharedPreferences.Editor.() -> Unit) = edit().apply(block).apply()
 }
 
 /**

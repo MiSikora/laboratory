@@ -27,7 +27,6 @@ android {
 
 dependencies {
   api project(":laboratory")
-  api libs.android.x.coreKtx
 
   androidTestUtil libs.android.x.test.orchestrator
   androidTestImplementation libs.android.x.testExtJunitKtx

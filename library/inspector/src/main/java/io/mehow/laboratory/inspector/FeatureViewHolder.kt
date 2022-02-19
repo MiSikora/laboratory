@@ -1,17 +1,18 @@
 package io.mehow.laboratory.inspector
 
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+import android.text.SpannedString
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
-import androidx.core.text.buildSpannedString
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.textview.MaterialTextView
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Hide
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Show
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Strikethrough
+import io.mehow.laboratory.inspector.R.string
 import io.mehow.laboratory.supervisorOption
 
 internal class FeatureViewHolder(
@@ -62,13 +63,13 @@ internal class FeatureViewHolder(
   private fun FeatureUiModel.bindSupervisor() = with(type) {
     supervisorControl.isVisible = supervisorOption != null
     supervisorControl.text = supervisorOption?.let { supervisorOption ->
-      buildSpannedString {
-        append(context.getString(R.string.io_mehow_laboratory_feature_supervisor_prefix))
+      SpannableStringBuilder().run {
+        append(context.getString(string.io_mehow_laboratory_feature_supervisor_prefix))
         val linkStart = length
         append(supervisorOption::class.simpleName)
         setSpan(goToSupervisor, linkStart, length, SPAN_EXCLUSIVE_EXCLUSIVE)
-        append(context.getString(R.string.io_mehow_laboratory_feature_supervisor_suffix, supervisorOption))
-      }
+        append(context.getString(string.io_mehow_laboratory_feature_supervisor_suffix, supervisorOption))
+      }.let(::SpannedString)
     }
   }
 
