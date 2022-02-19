@@ -80,6 +80,6 @@ ext.libs = [
         "gradlePluginId": "com.github.ben-manes.versions",
     ],
     "kotlinPoet": "com.squareup:kotlinpoet:1.10.2",
-    "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:4.0.1",
+    "wireGradlePlugin": "com.squareup.wire:wire-gradle-plugin:4.2.0",
     "turbine": "app.cash.turbine:turbine:0.7.0",
 ]
