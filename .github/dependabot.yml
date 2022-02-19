@@ -7,11 +7,3 @@ updates:
     labels:
       - "Dependencies"
     open-pull-requests-limit: 99
-
-  - package-ecosystem: "gradle"
-    directory: "library/"
-    schedule:
-      interval: "monthly"
-    labels:
-      - "Dependencies"
-    open-pull-requests-limit: 99
