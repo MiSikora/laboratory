@@ -10,7 +10,7 @@ import io.mehow.laboratory.generator.Visibility.Public
  * Representation of a generated feature factory class.
  */
 public class FeatureFactoryInput internal constructor(
-  private val packageNameProvider: () -> String,
+  private val parentPackageName: String,
 ) {
   /**
    * Sets whether the generated feature factory should be public or internal.
@@ -24,7 +24,7 @@ public class FeatureFactoryInput internal constructor(
 
   internal fun toModel(features: List<FeatureFlagModel>, simpleName: String) = FeatureFactoryModel(
       visibility = if (isPublic) Public else Internal,
-      className = ClassName(packageName ?: packageNameProvider(), simpleName),
+      className = ClassName(packageName ?: parentPackageName, simpleName),
       features = features,
   )
 }

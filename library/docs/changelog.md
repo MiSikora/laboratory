@@ -6,6 +6,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Gradle [configuration cache](https://docs.gradle.org/current/userguide/configuration_cache.html) support.
+
+### Changed
+- Package name in the `laboratory` block no longer applies to all features retroactively. Before, the following configuration would generate `second.FeatureA` and `second.FeatureB`. Now, it will generate `first.FeatureA` and `second.FeatureB`.
+    ```groovy
+    laboratory {
+      packageName = "first"
+
+      feature("FeatureA") {
+        withDefaultOption("A")
+        withOption("B")
+      }
+
+      packageName = "second"
+
+      feature("FeatureB") {
+        withDefaultOption("A")
+        withOption("B")
+      }
+    }
+    ```
+
 ### Removed
 - CoreKtx dependency.
 

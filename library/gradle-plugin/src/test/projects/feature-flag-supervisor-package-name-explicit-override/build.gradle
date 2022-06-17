@@ -9,7 +9,7 @@ laboratory {
 
     withDefaultOption("ParentOption") { parent ->
       parent.feature("Child") {
-        packageName = "io.mehow.explicit"
+        it.packageName = "io.mehow.explicit"
 
         it.withDefaultOption("ChildOption")
       }

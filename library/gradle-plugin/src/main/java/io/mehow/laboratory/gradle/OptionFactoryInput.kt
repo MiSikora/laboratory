@@ -10,7 +10,7 @@ import io.mehow.laboratory.generator.Visibility.Public
  * Representation of a generated option factory that is aware of feature flags.
  */
 public class OptionFactoryInput internal constructor(
-  private val packageNameProvider: () -> String,
+  private val parentPackageName: String,
 ) {
   /**
    * Sets whether the generated option factory should be public or internal.
@@ -24,7 +24,7 @@ public class OptionFactoryInput internal constructor(
 
   internal fun toModel(features: List<FeatureFlagModel>) = OptionFactoryModel(
       visibility = if (isPublic) Public else Internal,
-      className = ClassName(packageName ?: packageNameProvider(), "GeneratedOptionFactory"),
+      className = ClassName(packageName ?: parentPackageName, "GeneratedOptionFactory"),
       features = features,
   )
 }
