@@ -7,7 +7,7 @@ import org.gradle.api.Action
  * An entry point for configuration of supervised feature flags code generation.
  */
 public class ChildFeatureFlagsInput internal constructor(
-  private val packageNameProvider: () -> String,
+  private val parentPackageName: String,
   private val supervisor: () -> Supervisor,
 ) {
   private val mutableFeatureInputs = mutableListOf<FeatureFlagInput>()
@@ -18,7 +18,7 @@ public class ChildFeatureFlagsInput internal constructor(
    * Generates a new supervised feature flag.
    */
   public fun feature(name: String, action: Action<FeatureFlagInput>) {
-    mutableFeatureInputs += FeatureFlagInput(name, packageNameProvider, supervisor).let { input ->
+    mutableFeatureInputs += FeatureFlagInput(name, parentPackageName, supervisor).let { input ->
       action.execute(input)
       return@let input
     }
