@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.CompoundButton
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -38,7 +39,7 @@ internal class OptionViewGroup @JvmOverloads constructor(
       text = model.option.name
       isChecked = model.isSelected
       if (model.supervisedFeatures.isNotEmpty()) {
-        chipIcon = context.getDrawable(R.drawable.io_mehow_laboratory_supervisor)
+        chipIcon = AppCompatResources.getDrawable(context, R.drawable.io_mehow_laboratory_supervisor)
         setOnLongClickListener { showSupervisedFeaturesMenu(this, model.supervisedFeatures) }
       }
       isActivated = isEnabled

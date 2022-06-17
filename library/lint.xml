@@ -11,4 +11,5 @@
   </issue>
   <issue id="RequiredSize" severity="error" />
   <issue id="Registered" severity="error" />
+  <issue id="DialogFragmentCallbacksDetector" severity="ignore" />
 </lint>
