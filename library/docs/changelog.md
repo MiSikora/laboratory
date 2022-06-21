@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2022-06-21
+
 ### Added
 - Gradle [configuration cache](https://docs.gradle.org/current/userguide/configuration_cache.html) support.
 
@@ -434,7 +436,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/MiSikora/laboratory/releases/tag/1.0.1
 [1.0.0]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0
 [1.0.0-rc2]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0-rc2
 [1.0.0-rc1]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0-rc1
