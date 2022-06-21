@@ -9,7 +9,7 @@ import io.mehow.laboratory.generator.Visibility.Public
  * Representation of a generated feature storage that is aware of feature flags sources.
  */
 public class SourcedFeatureStorageInput internal constructor(
-  private val parentPackageName: String,
+  private val packageNameProvider: () -> String,
 ) {
   /**
    * Sets whether the generated feature storage should be public or internal.
@@ -23,7 +23,7 @@ public class SourcedFeatureStorageInput internal constructor(
 
   internal fun toModel(sourceNames: List<String>) = SourcedFeatureStorageModel(
       visibility = if (isPublic) Public else Internal,
-      className = ClassName(packageName ?: parentPackageName, "SourcedGeneratedFeatureStorage"),
+      className = ClassName(packageName ?: packageNameProvider(), "SourcedGeneratedFeatureStorage"),
       sourceNames = sourceNames,
   )
 }

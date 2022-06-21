@@ -277,15 +277,15 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     featureB.shouldExist()
   }
 
-  "switches implicit package name to a new one" {
+  "uses last implicit package name for all features" {
     val fixture = "feature-flag-package-name-implicit-switching".toFixture()
 
     gradleRunner.withProjectDir(fixture).build()
 
-    val featureA = fixture.featureFile("io.mehow.implicit.FeatureA")
+    val featureA = fixture.featureFile("io.mehow.implicit.switch.FeatureA")
     featureA.shouldExist()
 
-    featureA.readText() shouldContain "package io.mehow.implicit"
+    featureA.readText() shouldContain "package io.mehow.implicit.switch"
 
     val featureB = fixture.featureFile("io.mehow.implicit.switch.FeatureB")
     featureB.shouldExist()

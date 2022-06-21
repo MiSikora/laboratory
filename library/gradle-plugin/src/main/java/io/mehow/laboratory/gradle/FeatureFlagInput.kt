@@ -15,7 +15,7 @@ import org.gradle.api.Action
  */
 public class FeatureFlagInput internal constructor(
   private val name: String,
-  private val parentPackageName: String,
+  private val packageNameProvider: () -> String,
   private val supervisor: (() -> Supervisor)? = null,
 ) {
   /**
@@ -69,8 +69,9 @@ public class FeatureFlagInput internal constructor(
   private fun withOption(name: String, isDefault: Boolean, action: Action<ChildFeatureFlagsInput>) {
     val option = FeatureFlagOption(name, isDefault)
     options += option
+    val packageNameProvider = { packageName ?: packageNameProvider() }
     val supervisorBuilder = { Supervisor(toModel(), option) }
-    childFeatureInputs += ChildFeatureFlagsInput(packageName ?: parentPackageName, supervisorBuilder).let { input ->
+    childFeatureInputs += ChildFeatureFlagsInput(packageNameProvider, supervisorBuilder).let { input ->
       action.execute(input)
       return@let input
     }
@@ -106,7 +107,7 @@ public class FeatureFlagInput internal constructor(
 
   private fun toModel() = FeatureFlagModel(
       visibility = if (isPublic) Public else Internal,
-      className = ClassName(packageName ?: parentPackageName, name),
+      className = ClassName(packageName ?: packageNameProvider(), name),
       options = options,
       sourceOptions = sources,
       key = key,
