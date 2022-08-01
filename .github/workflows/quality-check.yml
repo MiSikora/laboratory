@@ -29,7 +29,7 @@ jobs:
           java-version: 11
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.5
         with:
           path: |
             ~/.gradle/caches/
@@ -64,7 +64,7 @@ jobs:
           java-version: 11
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.5
         with:
           path: |
             ~/.gradle/caches/
@@ -93,7 +93,7 @@ jobs:
           java-version: 11
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.5
         with:
           path: |
             ~/.gradle/caches/
@@ -122,7 +122,7 @@ jobs:
           java-version: 11
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.5
         with:
           path: |
             ~/.gradle/caches/
@@ -151,7 +151,7 @@ jobs:
           java-version: 11
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v3.0.3
+        uses: actions/cache@v3.0.5
         with:
           path: |
             ~/.gradle/caches/
