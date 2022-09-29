@@ -40,9 +40,7 @@ private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Proje
   }
   val sources = extension.sourceSets.associate { set -> set.name to set.kotlin }
   for (variant in extension.variants) {
-    val kotlinSourceSet = requireNotNull(sources[variant.name]) {
-      "Did not find Kotlin source set for variant ${variant.name}"
-    }
+    val kotlinSourceSet = sources[variant.name] ?: project.createEmptySourceSet(variant.name)
     kotlinSourceSet.srcDir(dir.toRelativeString(project.projectDir))
     variant.addJavaSourceFoldersToModel(dir)
 
@@ -58,9 +56,7 @@ private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Proje
 
 private fun contributeToKotlin(dir: File, project: Project) {
   val sourceSets = project.property("sourceSets") as SourceSetContainer
-  val kotlinSourceSet = requireNotNull(sourceSets.getByName("main").kotlin) {
-    "Did not find Kotlin source set"
-  }
+  val kotlinSourceSet = sourceSets.getByName("main").kotlin ?: project.createEmptySourceSet("empty")
   kotlinSourceSet.srcDir(dir)
 }
 
@@ -83,3 +79,6 @@ private val Any.kotlin: SourceDirectorySet?
   }
 
 private fun Any.getConvention(name: String) = (this as HasConvention).convention.plugins[name]
+
+private fun Project.createEmptySourceSet(name: String) =
+  objects.sourceDirectorySet(name, "Empty kotlin source set")
