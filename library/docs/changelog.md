@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed `IllegalArgumentException: Did not find Kotlin source set` after upgrading to kotlin 1.7.20
+
 ## [1.0.1] - 2022-06-21
 
 ### Added
