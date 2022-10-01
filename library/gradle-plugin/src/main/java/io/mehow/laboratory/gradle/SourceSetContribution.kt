@@ -8,12 +8,8 @@ import org.gradle.api.DomainObjectSet
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KOTLIN_DSL_NAME
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.util.Locale
@@ -72,15 +68,3 @@ private val BaseExtension.variants: DomainObjectSet<out BaseVariant>
     is LibraryExtension -> libraryVariants
     else -> throw GradleException("Unknown Android plugin $this")
   }
-
-private val Any.kotlin: SourceDirectorySet?
-  get() {
-    val convention = getConvention(KOTLIN_DSL_NAME) ?: return null
-    val sourceSetInterface = convention.javaClass
-        .interfaces
-        .find { it.name == KotlinSourceSet::class.qualifiedName }
-    val getKotlin = sourceSetInterface?.methods?.find { it.name == "getKotlin" } ?: return null
-    return getKotlin(convention) as? SourceDirectorySet
-  }
-
-private fun Any.getConvention(name: String) = (this as HasConvention).convention.plugins[name]
