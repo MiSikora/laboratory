@@ -10,8 +10,8 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.HasConvention
-import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskProvider
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KOTLIN_DSL_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -34,13 +34,24 @@ private fun TaskProvider<out Task>.makeKotlinDependOnTask(project: Project) {
   }
 }
 
+private fun contributeToKotlin(dir: File, project: Project) {
+  val sourceSets = project.extensions.getByType(KotlinProjectExtension::class.java).sourceSets
+  val kotlinSourceSet = sourceSets.getByName("main").kotlin
+  kotlinSourceSet.srcDir(dir)
+}
+
 private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Project) {
   val extension = requireNotNull(project.extensions.findByType(BaseExtension::class.java)) {
     "Did not find BaseExtension in Android project"
   }
-  val sources = extension.sourceSets.associate { set -> set.name to set.kotlin }
+  val kotlinSourceSets = project.extensions.getByType(KotlinProjectExtension::class.java).sourceSets
+  val sources = extension.sourceSets.associate { set ->
+    set.name to kotlinSourceSets.getByName(set.name).kotlin
+  }
   for (variant in extension.variants) {
-    val kotlinSourceSet = sources[variant.name] ?: project.createEmptySourceSet(variant.name)
+    val kotlinSourceSet = requireNotNull(sources[variant.name]) {
+      "Did not find Kotlin source set for variant ${variant.name}"
+    }
     kotlinSourceSet.srcDir(dir.toRelativeString(project.projectDir))
     variant.addJavaSourceFoldersToModel(dir)
 
@@ -52,12 +63,6 @@ private fun TaskProvider<out Task>.contributeToAndroid(dir: File, project: Proje
       it.dependsOn(this)
     }
   }
-}
-
-private fun contributeToKotlin(dir: File, project: Project) {
-  val sourceSets = project.property("sourceSets") as SourceSetContainer
-  val kotlinSourceSet = sourceSets.getByName("main").kotlin ?: project.createEmptySourceSet("empty")
-  kotlinSourceSet.srcDir(dir)
 }
 
 // Copied from SQLDelight with small modifications.
@@ -79,6 +84,3 @@ private val Any.kotlin: SourceDirectorySet?
   }
 
 private fun Any.getConvention(name: String) = (this as HasConvention).convention.plugins[name]
-
-private fun Project.createEmptySourceSet(name: String) =
-  objects.sourceDirectorySet(name, "Empty kotlin source set")
