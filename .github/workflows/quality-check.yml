@@ -78,6 +78,35 @@ jobs:
       - name: Stop Gradle
         run: ./gradlew --stop
 
+  build-sample:
+    if: ${{ github.repository == 'MiSikora/laboratory' }}
+    name: Build sample
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Configure JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: 11
+
+      - name: Cache Gradle Dirs
+        uses: actions/cache@v3.0.8
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/
+          key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: cache-gradle-
+
+      - name: Assemble project
+        run: ./gradlew :samples:ci-check:assemble --stacktrace
+
+      - name: Stop Gradle
+        run: ./gradlew --stop
+
   detekt:
     if: ${{ github.repository == 'MiSikora/laboratory' }}
     name: Detekt
