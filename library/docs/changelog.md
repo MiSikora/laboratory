@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2022-10-01
+
 ### Fixed
 - Generating feature flags and related classes to empty Kotlin source sets in Kotlin `1.7.20`.
 
@@ -444,7 +446,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.2...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.0.3...HEAD
+[1.0.3]: https://github.com/MiSikora/laboratory/releases/tag/1.0.3
 [1.0.2]: https://github.com/MiSikora/laboratory/releases/tag/1.0.2
 [1.0.1]: https://github.com/MiSikora/laboratory/releases/tag/1.0.1
 [1.0.0]: https://github.com/MiSikora/laboratory/releases/tag/1.0.0
