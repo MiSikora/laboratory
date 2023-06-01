@@ -73,7 +73,9 @@ Also, you have to enable [default methods generation](https://blog.jetbrains.com
 ```groovy
 android {
   kotlinOptions {
-    freeCompilerArgs += "-Xjvm-default=all"
+    freeCompilerArgs += [
+        "-Xjvm-default=all",
+    ]
   }
 }
 ```

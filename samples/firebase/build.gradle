@@ -45,7 +45,9 @@ android {
 
   kotlinOptions {
     jvmTarget = JavaConfig.name
-    freeCompilerArgs += "-Xjvm-default=all"
+    freeCompilerArgs += [
+        "-Xjvm-default=all",
+    ]
   }
 }
 
