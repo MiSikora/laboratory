@@ -1,0 +1,73 @@
+[versions]
+androidBuild-targetSdk = "33"
+androidPlugin = "8.0.2"
+coroutines = "1.6.4"
+kotest = "4.6.3"
+hyperion = "0.9.37"
+detekt = "1.22.0"
+
+[libraries]
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidPlugin" }
+
+android-x-dataStore = { group = "androidx.datastore", name = "datastore-core", version = "1.0.0" }
+android-x-appCompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
+android-x-viewModelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.6.1" }
+android-x-fragmentKtx = { group = "androidx.fragment", name = "fragment-ktx", version = "1.5.7" }
+android-x-viewPager2 = { group = "androidx.viewpager2", name = "viewpager2", version = "1.0.0" }
+android-x-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version = "1.3.0" }
+
+android-x-test-coreKtx = { group = "androidx.test", name = "core-ktx", version = "1.5.0" }
+android-x-test-orchestrator = { group = "androidx.test", name = "orchestrator", version = "1.4.2" }
+android-x-test-runner = { group = "androidx.test", name = "runner", version = "1.5.2" }
+android-x-testExtJunitKtx = { group = "androidx.test.ext", name = "junit-ktx", version = "1.1.5" }
+
+android-material = { group = "com.google.android.material", name = "material", version = "1.9.0" }
+
+firebase-databaseKtx = { group = "com.google.firebase", name = "firebase-database-ktx", version = "20.2.2" }
+
+googleServices-gradlePlugin = { group = "com.google.gms", name = "google-services", version = "4.3.15" }
+
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "1.8.21" }
+
+kotlin-x-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-x-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlin-x-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlin-x-binaryCompatibility-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version = "0.13.1" }
+
+dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "1.8.10" }
+
+kotest-runnerJunit5 = { group = "io.kotest", name = "kotest-runner-junit5-jvm", version.ref = "kotest" }
+kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core-jvm", version.ref = "kotest" }
+kotest-property = { group = "io.kotest", name = "kotest-property-jvm", version.ref = "kotest" }
+
+hyperion-core = { group = "com.willowtreeapps.hyperion", name = "hyperion-core", version.ref = "hyperion" }
+hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plugin", version.ref = "hyperion" }
+
+autoService = { group = "com.google.auto.service", name = "auto-service", version = "1.1.0" }
+
+mavenPublish-gradlePlugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version = "0.18.0" }
+
+detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
+detekt-cli = { group = "io.gitlab.arturbosch.detekt", name = "detekt-cli", version.ref = "detekt" }
+
+gradleVersions-gradlePlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.46.0" }
+
+kotlinPoet = { group = "com.squareup", name = "kotlinpoet", version = "1.13.2" }
+wireGradlePlugin = { group = "com.squareup.wire", name = "wire-gradle-plugin", version = "4.7.0" }
+turbine = { group = "app.cash.turbine", name = "turbine", version = "0.7.0" }
+
+laboratory-core = { module = "io.mehow.laboratory:laboratory" }
+laboratory-inspector = { module = "io.mehow.laboratory:inspector" }
+laboratory-hyperionPlugin = { module = "io.mehow.laboratory:hyperion-plugin" }
+laboratory-sharedPreferences = { module = "io.mehow.laboratory:shared-preferences" }
+laboratory-dataStore = { module = "io.mehow.laboratory:data-store" }
+laboratory-generator = { module = "io.mehow.laboratory:generator" }
+laboratory-gradlePlugin = { module = "io.mehow.laboratory:gradle-plugin" }
+
+[plugins]
+gradleVersions = { id = "com.github.ben-manes.versions" }
+detekt = { id = "io.gitlab.arturbosch.detekt" }
+binaryCompatibility = { id = "binary-compatibility-validator", version = "0.13.1" }
+dokka = { id = "org.jetbrains.dokka" }
+mavenPublish = { id = "com.vanniktech.maven.publish" }
