@@ -80,7 +80,7 @@ private object SectionAFactory : FeatureFactory {
 }
 
 private object SectionBFactory : FeatureFactory {
-  override fun create() = setOf(SectionTwoFeature::class.java)
+  override fun create(): Set<Class<out Feature<*>>> = setOf(SectionTwoFeature::class.java)
 }
 
 private enum class SectionOneFeatureA : Feature<SectionOneFeatureA> {

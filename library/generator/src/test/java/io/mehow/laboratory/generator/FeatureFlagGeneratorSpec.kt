@@ -109,7 +109,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |}
         |
@@ -135,7 +135,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |}
         |
@@ -159,7 +159,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  First,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |}
         |
@@ -186,17 +186,17 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |
-        |  public override val source: Class<out Feature<*>> = Source::class.java
+        |  override val source: Class<out Feature<*>> = Source::class.java
         |
         |  public enum class Source : Feature<Source> {
         |    Local,
         |    Remote,
         |    ;
         |
-        |    public override val defaultOption: Source
+        |    override val defaultOption: Source
         |      get() = Local
         |  }
         |}
@@ -223,7 +223,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |}
         |
@@ -258,17 +258,17 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |
-        |  public override val source: Class<out Feature<*>> = Source::class.java
+        |  override val source: Class<out Feature<*>> = Source::class.java
         |
         |  public enum class Source : Feature<Source> {
         |    Local,
         |    Remote,
         |    ;
         |
-        |    public override val defaultOption: Source
+        |    override val defaultOption: Source
         |      get() = Local
         |  }
         |}
@@ -296,17 +296,17 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |
-        |  public override val source: Class<out Feature<*>> = Source::class.java
+        |  override val source: Class<out Feature<*>> = Source::class.java
         |
         |  public enum class Source : Feature<Source> {
         |    Local,
         |    Remote,
         |    ;
         |
-        |    public override val defaultOption: Source
+        |    override val defaultOption: Source
         |      get() = Remote
         |  }
         |}
@@ -335,17 +335,17 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |
-        |  public override val source: Class<out Feature<*>> = Source::class.java
+        |  override val source: Class<out Feature<*>> = Source::class.java
         |
         |  internal enum class Source : Feature<Source> {
         |    Local,
         |    Remote,
         |    ;
         |
-        |    public override val defaultOption: Source
+        |    override val defaultOption: Source
         |      get() = Local
         |  }
         |}
@@ -377,10 +377,10 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |  Second,
           |  ;
           |
-          |  public override val defaultOption: FeatureA
+          |  override val defaultOption: FeatureA
           |    get() = First
           |
-          |  public override val description: String = "Feature description"
+          |  override val description: String = "Feature description"
           |}
           |
         """.trimMargin()
@@ -411,10 +411,10 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |  Second,
           |  ;
           |
-          |  public override val defaultOption: FeatureA
+          |  override val defaultOption: FeatureA
           |    get() = First
           |
-          |  public override val description: String =
+          |  override val description: String =
           |      "Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc."
           |}
           |
@@ -450,7 +450,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |  ;
           |
           |  @Suppress("DEPRECATION")
-          |  public override val defaultOption: FeatureA
+          |  override val defaultOption: FeatureA
           |    get() = First
           |}
           |
@@ -489,7 +489,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             |  ;
             |
             |  @Suppress("$suppressLevel")
-            |  public override val defaultOption: FeatureA
+            |  override val defaultOption: FeatureA
             |    get() = First
             |}
             |
@@ -522,10 +522,10 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
         |  Second,
         |  ;
         |
-        |  public override val defaultOption: FeatureA
+        |  override val defaultOption: FeatureA
         |    get() = First
         |
-        |  public override val supervisorOption: Feature<*> = Supervisor.First
+        |  override val supervisorOption: Feature<*> = Supervisor.First
         |}
         |
       """.trimMargin()

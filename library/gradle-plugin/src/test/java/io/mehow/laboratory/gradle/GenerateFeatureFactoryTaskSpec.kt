@@ -34,7 +34,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<out Feature<*>>>()
+      |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin()
   }
@@ -54,7 +54,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("io.mehow.first.FeatureA"),
       |    Class.forName("io.mehow.second.FeatureB")
       |  ) as Set<Class<out Feature<*>>>
@@ -143,7 +143,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("FeatureA"),
       |    Class.forName("FeatureB"),
       |    Class.forName("RootFeature")
@@ -167,7 +167,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("FeatureB"),
       |    Class.forName("RootFeature")
       |  ) as Set<Class<out Feature<*>>>
@@ -189,7 +189,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<out Feature<*>>>()
+      |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin()
   }
@@ -209,7 +209,7 @@ internal class GenerateFeatureFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("Child"),
       |    Class.forName("Grandparent"),
       |    Class.forName("Parent")

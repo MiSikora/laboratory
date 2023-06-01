@@ -35,7 +35,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<out Feature<*>>>()
+      |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin()
   }
@@ -56,7 +56,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("io.mehow.first.FeatureA${"\${'$'}"}Source"),
       |    Class.forName("io.mehow.second.FeatureB${"\${'$'}"}Source")
       |  ) as Set<Class<out Feature<*>>>
@@ -147,7 +147,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("FeatureA${"\${'$'}"}Source"),
       |    Class.forName("FeatureB${"\${'$'}"}Source"),
       |    Class.forName("RootFeature${"\${'$'}"}Source")
@@ -172,7 +172,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("FeatureB${"\${'$'}"}Source"),
       |    Class.forName("RootFeature${"\${'$'}"}Source")
       |  ) as Set<Class<out Feature<*>>>
@@ -195,7 +195,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |    GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
-      |  public override fun create() = emptySet<Class<out Feature<*>>>()
+      |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
       |}
     """.trimMargin()
   }
@@ -216,7 +216,7 @@ internal class GenerateFeatureSourceFactoryTaskSpec : StringSpec({
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
-      |  public override fun create() = setOf(
+      |  override fun create(): Set<Class<out Feature<*>>> = setOf(
       |    Class.forName("Child${"\${'$'}"}Source"),
       |    Class.forName("Grandparent${"\${'$'}"}Source"),
       |    Class.forName("Parent${"\${'$'}"}Source")

@@ -314,7 +314,7 @@ internal fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = Gener
 
 private object GeneratedFeatureFactory : FeatureFactory {
   @Suppress("UNCHECKED_CAST")
-  public override fun create() = setOf(
+  override fun create(): Set<Class<out Feature<*>>> = setOf(
     Class.forName("io.mehow.laboratory.sample.FeatureA"),
     Class.forName("io.mehow.laboratory.sample.FeatureB"),
     Class.forName("io.mehow.laboratory.sample.FeatureC")
@@ -365,7 +365,7 @@ internal fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
 
 private object GeneratedFeatureSourceFactory : FeatureFactory {
   @Suppress("UNCHECKED_CAST")
-  public override fun create() = setOf(
+  override fun create(): Set<Class<out Feature<*>>> = setOf(
     Class.forName("io.mehow.laboratory.sample.FeatureA${'$'}Source"),
     Class.forName("io.mehow.laboratory.sample.FeatureB${'$'}Source")
   ) as Set<Class<Feature<*>>>
@@ -419,7 +419,7 @@ import io.mehow.laboratory.OptionFactory
 internal fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
 
 private object GeneratedOptionFactory : OptionFactory {
-  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+  override fun create(key: String, name: String): Feature<*>? = when (key) {
     "FeatureA" -> when (name) {
       "Enabled" -> FeatureA.Enabled
       "Disabled" -> FeatureA.Disabled

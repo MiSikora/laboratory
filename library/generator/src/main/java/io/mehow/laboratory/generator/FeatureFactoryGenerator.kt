@@ -36,6 +36,8 @@ internal class FeatureFactoryGenerator(
   private val discoveryFunctionOverride = FunSpec.builder("create")
       .addModifiers(OVERRIDE)
       .apply {
+        returns(factoryReturnType)
+
         if (factory.features.isNotEmpty()) {
           addAnnotation(suppressCast)
           addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
@@ -56,10 +58,11 @@ internal class FeatureFactoryGenerator(
       .addStatement("return %N", factoryType)
       .build()
 
-  private val factoryFile = FileSpec.builder(factory.className.packageName, factory.className.simpleName)
-      .addFunction(factoryExtension)
-      .addType(factoryType)
-      .build()
+  private val factoryFile =
+    FileSpec.builder(factory.className.packageName, factory.className.simpleName)
+        .addFunction(factoryExtension)
+        .addType(factoryType)
+        .build()
 
   fun fileSpec() = factoryFile
 

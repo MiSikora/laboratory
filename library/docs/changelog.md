@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade Wire to `4.7.0`.
 - Upgrade Kotlin to `1.8.21`.
+- Upgrade KotlinPoet to `1.14.2`.
 
 ## [1.0.3] - 2022-10-01
 

@@ -40,7 +40,7 @@ LaboratoryActivity.configure(
 LaboratoryActivity.start(context)
 
 object CustomFeatureFactory : FeatureFactory {
-  public override fun create(): Set<Class<out Feature<*>>> = setOf(
+  override fun create(): Set<Class<out Feature<*>>> = setOf(
     AllowScreenshots::class.java,
     Authentication::class.java,
     PowerSource::class.java,

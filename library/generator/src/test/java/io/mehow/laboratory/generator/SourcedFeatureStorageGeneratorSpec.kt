@@ -48,15 +48,15 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  private val localSource: FeatureStorage,
         |  private val remoteSources: Map<String, FeatureStorage>,
         |) : FirebaseStep, S3Step, BuildingStep {
-        |  public override fun firebaseSource(source: FeatureStorage): S3Step = copy(
+        |  override fun firebaseSource(source: FeatureStorage): S3Step = copy(
         |    remoteSources = remoteSources + ("Firebase" to source)
         |  )
         |
-        |  public override fun s3Source(source: FeatureStorage): BuildingStep = copy(
+        |  override fun s3Source(source: FeatureStorage): BuildingStep = copy(
         |    remoteSources = remoteSources + ("S3" to source)
         |  )
         |
-        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
       """.trimMargin()
@@ -101,15 +101,15 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  private val localSource: FeatureStorage,
         |  private val remoteSources: Map<String, FeatureStorage>,
         |) : FirebaseStep, S3Step, BuildingStep {
-        |  public override fun firebaseSource(source: FeatureStorage): S3Step = copy(
+        |  override fun firebaseSource(source: FeatureStorage): S3Step = copy(
         |    remoteSources = remoteSources + ("Firebase" to source)
         |  )
         |
-        |  public override fun s3Source(source: FeatureStorage): BuildingStep = copy(
+        |  override fun s3Source(source: FeatureStorage): BuildingStep = copy(
         |    remoteSources = remoteSources + ("S3" to source)
         |  )
         |
-        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
       """.trimMargin()
@@ -157,19 +157,19 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  private val localSource: FeatureStorage,
         |  private val remoteSources: Map<String, FeatureStorage>,
         |) : BarStep, BazStep, FooStep, BuildingStep {
-        |  public override fun barSource(source: FeatureStorage): BazStep = copy(
+        |  override fun barSource(source: FeatureStorage): BazStep = copy(
         |    remoteSources = remoteSources + ("Bar" to source)
         |  )
         |
-        |  public override fun bazSource(source: FeatureStorage): FooStep = copy(
+        |  override fun bazSource(source: FeatureStorage): FooStep = copy(
         |    remoteSources = remoteSources + ("Baz" to source)
         |  )
         |
-        |  public override fun fooSource(source: FeatureStorage): BuildingStep = copy(
+        |  override fun fooSource(source: FeatureStorage): BuildingStep = copy(
         |    remoteSources = remoteSources + ("Foo" to source)
         |  )
         |
-        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
       """.trimMargin()
@@ -218,11 +218,11 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  private val localSource: FeatureStorage,
         |  private val remoteSources: Map<String, FeatureStorage>,
         |) : FooStep, BuildingStep {
-        |  public override fun fooSource(source: FeatureStorage): BuildingStep = copy(
+        |  override fun fooSource(source: FeatureStorage): BuildingStep = copy(
         |    remoteSources = remoteSources + ("Foo" to source)
         |  )
         |
-        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
       """.trimMargin()
@@ -257,7 +257,7 @@ internal class SourcedFeatureStorageGeneratorSpec : DescribeSpec({
         |  private val localSource: FeatureStorage,
         |  private val remoteSources: Map<String, FeatureStorage>,
         |) : BuildingStep {
-        |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
         |}
         |
       """.trimMargin()

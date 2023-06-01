@@ -135,7 +135,7 @@ internal class OptionFactoryModelSpec : DescribeSpec({
         |internal fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
         |
         |private object GeneratedOptionFactory : OptionFactory {
-        |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+        |  override fun create(key: String, name: String): Feature<*>? = when (key) {
         |    "FeatureA" -> when (name) {
         |      "OneA" -> FeatureA.OneA
         |      "OneB" -> FeatureA.OneB
@@ -193,7 +193,7 @@ internal class OptionFactoryModelSpec : DescribeSpec({
         |public fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
         |
         |private object GeneratedOptionFactory : OptionFactory {
-        |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+        |  override fun create(key: String, name: String): Feature<*>? = when (key) {
         |    "FeatureA" -> when (name) {
         |      "OneA" -> FeatureA.OneA
         |      "OneB" -> FeatureA.OneB
@@ -233,7 +233,7 @@ internal class OptionFactoryModelSpec : DescribeSpec({
         |internal fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
         |
         |private object GeneratedOptionFactory : OptionFactory {
-        |  public override fun create(key: String, name: String): Feature<*>? = null
+        |  override fun create(key: String, name: String): Feature<*>? = null
         |}
         |
       """.trimMargin()
@@ -279,7 +279,7 @@ internal class OptionFactoryModelSpec : DescribeSpec({
         |internal fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
         |
         |private object GeneratedOptionFactory : OptionFactory {
-        |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+        |  override fun create(key: String, name: String): Feature<*>? = when (key) {
         |    "io.mehow.FeatureA" -> when (name) {
         |      "OneA" -> FeatureA.OneA
         |      else -> null

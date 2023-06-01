@@ -36,7 +36,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: Feature
+      |  override val defaultOption: Feature
       |    get() = First
       |}
     """.trimMargin()
@@ -58,7 +58,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  SecondA,
       |  ;
       |
-      |  public override val defaultOption: FeatureA
+      |  override val defaultOption: FeatureA
       |    get() = FirstA
       |}
     """.trimMargin()
@@ -72,7 +72,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  SecondB,
       |  ;
       |
-      |  public override val defaultOption: FeatureB
+      |  override val defaultOption: FeatureB
       |    get() = FirstB
       |}
     """.trimMargin()
@@ -94,10 +94,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: Feature
+      |  override val defaultOption: Feature
       |    get() = First
       |
-      |  public override val source: Class<out io.mehow.laboratory.Feature<*>> = Source::class.java
+      |  override val source: Class<out io.mehow.laboratory.Feature<*>> = Source::class.java
       |
       |  public enum class Source : io.mehow.laboratory.Feature<Source> {
       |    Local,
@@ -105,7 +105,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |    RemoteB,
       |    ;
       |
-      |    public override val defaultOption: Source
+      |    override val defaultOption: Source
       |      get() = Local
       |  }
       |}
@@ -128,10 +128,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: Feature
+      |  override val defaultOption: Feature
       |    get() = First
       |
-      |  public override val source: Class<out io.mehow.laboratory.Feature<*>> = Source::class.java
+      |  override val source: Class<out io.mehow.laboratory.Feature<*>> = Source::class.java
       |
       |  internal enum class Source : io.mehow.laboratory.Feature<Source> {
       |    Local,
@@ -139,7 +139,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |    RemoteB,
       |    ;
       |
-      |    public override val defaultOption: Source
+      |    override val defaultOption: Source
       |      get() = Local
       |  }
       |}
@@ -162,10 +162,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: Feature
+      |  override val defaultOption: Feature
       |    get() = First
       |
-      |  public override val source: Class<out io.mehow.laboratory.Feature<*>> = Source::class.java
+      |  override val source: Class<out io.mehow.laboratory.Feature<*>> = Source::class.java
       |
       |  public enum class Source : io.mehow.laboratory.Feature<Source> {
       |    Local,
@@ -173,7 +173,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |    RemoteB,
       |    ;
       |
-      |    public override val defaultOption: Source
+      |    override val defaultOption: Source
       |      get() = Local
       |  }
       |}
@@ -196,10 +196,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: FeatureA
+      |  override val defaultOption: FeatureA
       |    get() = First
       |
-      |  public override val source: Class<out Feature<*>> = Source::class.java
+      |  override val source: Class<out Feature<*>> = Source::class.java
       |
       |  public enum class Source : Feature<Source> {
       |    Local,
@@ -207,7 +207,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |    RemoteB,
       |    ;
       |
-      |    public override val defaultOption: Source
+      |    override val defaultOption: Source
       |      get() = Local
       |  }
       |}
@@ -222,7 +222,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: FeatureB
+      |  override val defaultOption: FeatureB
       |    get() = First
       |}
     """.trimMargin()
@@ -236,10 +236,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: FeatureC
+      |  override val defaultOption: FeatureC
       |    get() = First
       |
-      |  public override val source: Class<out Feature<*>> = Source::class.java
+      |  override val source: Class<out Feature<*>> = Source::class.java
       |
       |  public enum class Source : Feature<Source> {
       |    Local,
@@ -247,7 +247,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |    RemoteC,
       |    ;
       |
-      |    public override val defaultOption: Source
+      |    override val defaultOption: Source
       |      get() = RemoteA
       |  }
       |}
@@ -367,7 +367,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: FeatureA
+      |  override val defaultOption: FeatureA
       |    get() = First
       |}
     """.trimMargin()
@@ -381,7 +381,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  Second,
       |  ;
       |
-      |  public override val defaultOption: FeatureB
+      |  override val defaultOption: FeatureB
       |    get() = First
       |}
     """.trimMargin()
@@ -414,7 +414,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  First,
       |  ;
       |
-      |  public override val defaultOption: Feature
+      |  override val defaultOption: Feature
       |    get() = First
       |}
     """.trimMargin()
@@ -438,10 +438,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  First,
       |  ;
       |
-      |  public override val defaultOption: Feature
+      |  override val defaultOption: Feature
       |    get() = First
       |
-      |  public override val description: String = "Feature description"
+      |  override val description: String = "Feature description"
       |}
     """.trimMargin()
   }
@@ -499,10 +499,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  ChildOption,
       |  ;
       |
-      |  public override val defaultOption: Child
+      |  override val defaultOption: Child
       |    get() = ChildOption
       |
-      |  public override val supervisorOption: Feature<*> = Parent.ParentOption
+      |  override val supervisorOption: Feature<*> = Parent.ParentOption
       |}
     """.trimMargin()
   }
@@ -522,10 +522,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  GrandchildOption,
       |  ;
       |
-      |  public override val defaultOption: Grandchild
+      |  override val defaultOption: Grandchild
       |    get() = GrandchildOption
       |
-      |  public override val supervisorOption: Feature<*> = Parent.ParentOption
+      |  override val supervisorOption: Feature<*> = Parent.ParentOption
       |}
     """.trimMargin()
   }
@@ -545,10 +545,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  ChildOption,
       |  ;
       |
-      |  public override val defaultOption: FirstChild
+      |  override val defaultOption: FirstChild
       |    get() = ChildOption
       |
-      |  public override val supervisorOption: Feature<*> = Parent.FirstParentOption
+      |  override val supervisorOption: Feature<*> = Parent.FirstParentOption
       |}
     """.trimMargin()
 
@@ -560,10 +560,10 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
       |  ChildOption,
       |  ;
       |
-      |  public override val defaultOption: SecondChild
+      |  override val defaultOption: SecondChild
       |    get() = ChildOption
       |
-      |  public override val supervisorOption: Feature<*> = Parent.SecondParentOption
+      |  override val supervisorOption: Feature<*> = Parent.SecondParentOption
       |}
     """.trimMargin()
   }
