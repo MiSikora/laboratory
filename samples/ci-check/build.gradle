@@ -6,13 +6,13 @@ plugins {
 }
 
 tasks.withType(JavaCompile).configureEach {
-  sourceCompatibility JavaConfig.name
-  targetCompatibility JavaConfig.name
+  sourceCompatibility JavaVersion.VERSION_17.toString()
+  targetCompatibility JavaVersion.VERSION_17.toString()
 }
 
 tasks.withType(KotlinCompile).configureEach {
   kotlinOptions {
-    jvmTarget = JavaConfig.name
+    jvmTarget = JavaVersion.VERSION_17.toString()
     freeCompilerArgs += [
         "-Xjvm-default=all",
     ]
