@@ -34,7 +34,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
       |
       |private object GeneratedOptionFactory : OptionFactory {
-      |  public override fun create(key: String, name: String): Feature<*>? = null
+      |  override fun create(key: String, name: String): Feature<*>? = null
       |}
     """.trimMargin()
   }
@@ -53,7 +53,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
       |
       |private object GeneratedOptionFactory : OptionFactory {
-      |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+      |  override fun create(key: String, name: String): Feature<*>? = when (key) {
       |    "io.mehow.first.FeatureA" -> when (name) {
       |      "FirstA" -> FeatureA.FirstA
       |      "SecondA" -> FeatureA.SecondA
@@ -83,7 +83,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
       |
       |private object GeneratedOptionFactory : OptionFactory {
-      |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+      |  override fun create(key: String, name: String): Feature<*>? = when (key) {
       |    "Key A" -> when (name) {
       |      "FirstA" -> FeatureA.FirstA
       |      "SecondA" -> FeatureA.SecondA
@@ -210,7 +210,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
       |
       |private object GeneratedOptionFactory : OptionFactory {
-      |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+      |  override fun create(key: String, name: String): Feature<*>? = when (key) {
       |    "Key A" -> when (name) {
       |      "First" -> FeatureA.First
       |      else -> null
@@ -243,7 +243,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
       |
       |private object GeneratedOptionFactory : OptionFactory {
-      |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+      |  override fun create(key: String, name: String): Feature<*>? = when (key) {
       |    "Key B" -> when (name) {
       |      "First" -> FeatureB.First
       |      else -> null
@@ -272,7 +272,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
       |
       |private object GeneratedOptionFactory : OptionFactory {
-      |  public override fun create(key: String, name: String): Feature<*>? = null
+      |  override fun create(key: String, name: String): Feature<*>? = null
       |}
     """.trimMargin()
   }
@@ -306,7 +306,7 @@ internal class OptionFactoryTaskSpec : StringSpec({
       |fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
       |
       |private object GeneratedOptionFactory : OptionFactory {
-      |  public override fun create(key: String, name: String): Feature<*>? = when (key) {
+      |  override fun create(key: String, name: String): Feature<*>? = when (key) {
       |    "Key Root" -> when (name) {
       |      "First" -> RootFeature.First
       |      else -> null

@@ -46,7 +46,7 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |
         |private object GeneratedFeatureFactory : FeatureFactory {
         |  @Suppress("UNCHECKED_CAST")
-        |  public override fun create() = setOf(
+        |  override fun create(): Set<Class<out Feature<*>>> = setOf(
         |    Class.forName("io.mehow.FeatureA"),
         |    Class.forName("io.mehow.FeatureB"),
         |    Class.forName("io.mehow.c.FeatureA")
@@ -79,7 +79,7 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |
         |private object GeneratedFeatureFactory : FeatureFactory {
         |  @Suppress("UNCHECKED_CAST")
-        |  public override fun create() = setOf(
+        |  override fun create(): Set<Class<out Feature<*>>> = setOf(
         |    Class.forName("io.mehow.FeatureA"),
         |    Class.forName("io.mehow.FeatureB"),
         |    Class.forName("io.mehow.c.FeatureA")
@@ -103,12 +103,13 @@ internal class FeatureFactoryGeneratorSpec : DescribeSpec({
         |import io.mehow.laboratory.Feature
         |import io.mehow.laboratory.FeatureFactory
         |import java.lang.Class
+        |import kotlin.collections.Set
         |import kotlin.collections.emptySet
         |
         |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
         |
         |private object GeneratedFeatureFactory : FeatureFactory {
-        |  public override fun create() = emptySet<Class<out Feature<*>>>()
+        |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
         |}
         |
       """.trimMargin()

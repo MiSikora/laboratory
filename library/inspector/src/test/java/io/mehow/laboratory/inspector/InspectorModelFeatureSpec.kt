@@ -203,10 +203,10 @@ internal class InspectorViewModelFeatureSpec : DescribeSpec({
 
     it("includes supervised features to options from different sections") {
       val parentFactory = object : FeatureFactory {
-        override fun create() = setOf(Parent::class.java)
+        override fun create(): Set<Class<out Feature<*>>> = setOf(Parent::class.java)
       }
       val childFactory = object : FeatureFactory {
-        override fun create() = setOf(Child::class.java)
+        override fun create(): Set<Class<out Feature<*>>> = setOf(Child::class.java)
       }
 
       val viewModel = InspectorViewModel(
@@ -234,7 +234,7 @@ private object NoSourceFeatureFactory : FeatureFactory {
 }
 
 private object SourcedFeatureFactory : FeatureFactory {
-  override fun create() = setOf(Sourced::class.java)
+  override fun create(): Set<Class<out Feature<*>>> = setOf(Sourced::class.java)
 }
 
 private object AllFeatureFactory : FeatureFactory {

@@ -46,7 +46,7 @@ internal class FeatureFlagGenerator(
 
   private val description: String? = feature.description.takeIf(String::isNotBlank)
 
-  private val kdoc = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
+  private val kdocCodeBlock = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
 
   private val descriptionProperty = description?.let { description ->
     PropertySpec
@@ -84,14 +84,15 @@ internal class FeatureFlagGenerator(
           addProperty(sourceWithOverride)
         }
       }
-      .apply { kdoc?.let { addKdoc(it) } }
+      .apply { kdocCodeBlock?.let { addKdoc(it) } }
       .apply { descriptionProperty?.let { addProperty(it) } }
       .apply { supervisorOptionProperty?.let { addProperty(it) } }
       .build()
 
-  private val fileSpec = FileSpec.builder(feature.className.packageName, feature.className.simpleName)
-      .addType(typeSpec)
-      .build()
+  private val fileSpec =
+    FileSpec.builder(feature.className.packageName, feature.className.simpleName)
+        .addType(typeSpec)
+        .build()
 
   fun fileSpec() = fileSpec
 
@@ -156,4 +157,6 @@ private fun Sequence<MatchResult>.toUnmatchedRanges(text: String) = sequence {
   yield(Int.MIN_VALUE..0)
   yieldAll(map { it.range }.map { it.first - 1..it.last + 1 })
   yield(text.length - 1..Int.MAX_VALUE)
-}.windowed(2, 1).map { (start, end) -> start.last..end.first }.filterNot { range -> range.isEmpty() }
+}.windowed(2, 1)
+    .map { (start, end) -> start.last..end.first }
+    .filterNot { range -> range.isEmpty() }
