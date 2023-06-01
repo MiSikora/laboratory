@@ -62,7 +62,7 @@ ext.libs = [
         "core": "com.willowtreeapps.hyperion:hyperion-core:${versions.hyperion}",
         "plugin": "com.willowtreeapps.hyperion:hyperion-plugin:${versions.hyperion}"
     ],
-    "autoService": "com.google.auto.service:auto-service:1.0.1",
+    "autoService": "com.google.auto.service:auto-service:1.1.0",
     "mavenPublish": [
         "gradlePlugin": "com.vanniktech:gradle-maven-publish-plugin:0.25.2",
         "gradlePluginId": "com.vanniktech.maven.publish",
