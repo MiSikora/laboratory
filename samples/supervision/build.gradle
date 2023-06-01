@@ -7,8 +7,6 @@ plugins {
 android {
   namespace "io.mehow.laboratory.sample.supervision"
 
-  compileSdkVersion versions.androidBuild.compileSdk
-
   signingConfigs {
     config {
       keyAlias "mehow-io"
@@ -21,7 +19,6 @@ android {
   defaultConfig {
     applicationId "io.mehow.laboratory.sample.supervision"
 
-    minSdkVersion versions.androidBuild.minSdk
     targetSdkVersion versions.androidBuild.targetSdk
 
     versionCode 1

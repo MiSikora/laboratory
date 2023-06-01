@@ -65,12 +65,8 @@ allprojects {
         targetCompatibility JavaConfig.code
       }
 
-      compileSdkVersion versions.androidBuild.compileSdk
-
       defaultConfig {
-        minSdkVersion versions.androidBuild.minSdk
         targetSdkVersion versions.androidBuild.targetSdk
-
         vectorDrawables.useSupportLibrary true
       }
 
