@@ -41,9 +41,13 @@ android {
   }
 
   compileOptions {
-    kotlinOptions.freeCompilerArgs += [
-        "-Xjvm-default=all",
-    ]
+    sourceCompatibility JavaConfig.code
+    targetCompatibility JavaConfig.code
+  }
+
+  kotlinOptions {
+    jvmTarget = JavaConfig.name
+    freeCompilerArgs += "-Xjvm-default=all"
   }
 }
 
@@ -63,7 +67,8 @@ laboratory {
   }
 
   feature("ReportRootedDevice") {
-    description = "Reports during [cold start](https://developer.android.com/topic/performance/vitals/launch-time#cold) whether device is rooted"
+    description =
+        "Reports during [cold start](https://developer.android.com/topic/performance/vitals/launch-time#cold) whether device is rooted"
 
     withDefaultOption("Disabled")
     withOption("Enabled")
