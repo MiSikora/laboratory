@@ -29,7 +29,7 @@ ext.libs = [
             ],
             "testExtJunitKtx": "androidx.test.ext:junit-ktx:1.1.5",
         ],
-        "material": "com.google.android.material:material:1.4.0",
+        "material": "com.google.android.material:material:1.9.0",
     ],
     "firebase": [
         "databaseKtx": "com.google.firebase:firebase-database-ktx:20.0.3",
