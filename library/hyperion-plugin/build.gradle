@@ -6,7 +6,6 @@ plugins {
 
 android {
   namespace "io.mehow.laboratory.hyperion"
-  
   resourcePrefix "io_mehow_laboratory_"
 }
 
