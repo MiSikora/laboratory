@@ -1,4 +1,6 @@
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 
 plugins {
   id "org.jetbrains.kotlin.jvm"
@@ -57,3 +59,11 @@ tasks.withType(KotlinCompile).configureEach {
 
 apply from: "$rootDir/gradle/dokka-config.gradle"
 apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
+
+tasks.withType(Jar).configureEach {
+  it.dependsOn(generateVersion)
+}
+
+tasks.withType(DokkaTask).configureEach {
+  it.dependsOn(generateVersion)
+}
