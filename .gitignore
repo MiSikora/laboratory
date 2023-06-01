@@ -10,7 +10,7 @@ build/
 /reports/
 
 # Gradle Android
-/local.properties
+**/local.properties
 /captures
 
 # OSX
