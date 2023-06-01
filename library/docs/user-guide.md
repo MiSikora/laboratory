@@ -26,7 +26,9 @@ Because `FeatureStorage` is an interface that is meant to be used with I/O opera
 ```groovy
 android {
   kotlinOptions {
-    freeCompilerArgs += "-Xopt-in=io.mehow.laboratory.BlockingIoCall"
+    freeCompilerArgs += [
+        "-Xopt-in=io.mehow.laboratory.BlockingIoCall",
+    ]
   }
 }
 ```
