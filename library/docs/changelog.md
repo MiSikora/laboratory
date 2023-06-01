@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade Wire to `4.7.0`.
 - Upgrade Kotlin to `1.8.21`.
 - Upgrade KotlinPoet to `1.14.2`.
+- Upgrade Gradle to `8.1.1`.
+- Upgrade Hyperion to `0.9.37`.
+- Upgrade Coroutines to `1.6.4`.
+- Upgrade AppCompat to `1.6.1`.
+- Upgrade ViewModel-ktx to `2.6.1`.
+- Upgrade Fragment-ktx to `1.5.7`.
+- Upgrade RecyclerView to `1.3.0`.
+- Upgrade Material to `1.9.0`.
+- Upgrade Firebase to `20.2.2`.
+- Upgrade Google Services to `4.3.15`.
+- Upgrade Auto-Service to `1.1.0`.
+- Upgrade target and source compatibilities versions to Java 17.
+- Change compile and target sdk to 33.
 
 ## [1.0.3] - 2022-10-01
 
