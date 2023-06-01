@@ -442,7 +442,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
           |
           |@Deprecated(
           |  message = "Deprecation message",
-          |  level = DeprecationLevel.WARNING
+          |  level = DeprecationLevel.WARNING,
           |)
           |public enum class FeatureA : Feature<@Suppress("DEPRECATION") FeatureA> {
           |  First,
@@ -481,7 +481,7 @@ internal class FeatureFlagGeneratorSpec : DescribeSpec({
             |
             |@Deprecated(
             |  message = "Deprecation message",
-            |  level = DeprecationLevel.${level}
+            |  level = DeprecationLevel.${level},
             |)
             |public enum class FeatureA : Feature<@Suppress("$suppressLevel") FeatureA> {
             |  First,

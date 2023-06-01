@@ -40,7 +40,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |private data class Builder(
       |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>
+      |  private val remoteSources: Map<String, FeatureStorage>,
       |) : BuildingStep {
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
@@ -76,7 +76,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |private data class Builder(
       |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>
+      |  private val remoteSources: Map<String, FeatureStorage>,
       |) : RemoteAStep, RemoteBStep, BuildingStep {
       |  public override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
       |    remoteSources = remoteSources + ("RemoteA" to source)
@@ -190,7 +190,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |private data class Builder(
       |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>
+      |  private val remoteSources: Map<String, FeatureStorage>,
       |) : RemoteStep, RemoteAStep, RemoteBStep, BuildingStep {
       |  public override fun remoteSource(source: FeatureStorage): RemoteAStep = copy(
       |    remoteSources = remoteSources + ("Remote" to source)
@@ -237,7 +237,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |private data class Builder(
       |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>
+      |  private val remoteSources: Map<String, FeatureStorage>,
       |) : RemoteStep, RemoteBStep, BuildingStep {
       |  public override fun remoteSource(source: FeatureStorage): RemoteBStep = copy(
       |    remoteSources = remoteSources + ("Remote" to source)
@@ -272,7 +272,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |private data class Builder(
       |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>
+      |  private val remoteSources: Map<String, FeatureStorage>,
       |) : BuildingStep {
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
@@ -299,7 +299,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |private data class Builder(
       |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>
+      |  private val remoteSources: Map<String, FeatureStorage>,
       |) : BuildingStep {
       |  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
       |}
@@ -338,7 +338,7 @@ internal class GenerateSourcedStorageTaskSpec : StringSpec({
       |
       |private data class Builder(
       |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>
+      |  private val remoteSources: Map<String, FeatureStorage>,
       |) : ChildStep, GrandparentStep, ParentStep, BuildingStep {
       |  public override fun childSource(source: FeatureStorage): GrandparentStep = copy(
       |    remoteSources = remoteSources + ("Child" to source)
