@@ -50,8 +50,10 @@ public abstract interface class io/mehow/laboratory/FeatureStorage {
 	public abstract fun getFeatureName (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun observeFeatureName (Ljava/lang/Class;)Lkotlinx/coroutines/flow/Flow;
 	public fun setOption (Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun setOption$suspendImpl (Lio/mehow/laboratory/FeatureStorage;Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setOptions (Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun setOptions ([Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun setOptions$suspendImpl (Lio/mehow/laboratory/FeatureStorage;Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class io/mehow/laboratory/FeatureStorage$Companion {
