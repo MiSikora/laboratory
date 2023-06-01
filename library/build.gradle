@@ -40,13 +40,13 @@ allprojects {
   }
 
   tasks.withType(JavaCompile).configureEach {
-    sourceCompatibility JavaConfig.name
-    targetCompatibility JavaConfig.name
+    sourceCompatibility JavaVersion.VERSION_17.toString()
+    targetCompatibility JavaVersion.VERSION_17.toString()
   }
 
   tasks.withType(KotlinCompile).configureEach {
     kotlinOptions {
-      jvmTarget = JavaConfig.name
+      jvmTarget = JavaVersion.VERSION_17.toString()
       freeCompilerArgs += [
           "-progressive",
           "-Xjvm-default=all",
@@ -61,8 +61,8 @@ allprojects {
   pluginManager.withPlugin("com.android.library") { plugin ->
     android {
       compileOptions {
-        sourceCompatibility JavaConfig.code
-        targetCompatibility JavaConfig.code
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
       }
 
       compileSdkVersion versions.androidBuild.compileSdk
