@@ -3,7 +3,7 @@ ext.versions = [
     "coroutines": "1.6.0",
     "kotest": "4.6.3",
     "androidxTest": "1.4.0",
-    "hyperion": "0.9.34",
+    "hyperion": "0.9.37",
     "detekt": "1.19.0",
     "androidBuild": [
         "minSdk": 21,
