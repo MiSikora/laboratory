@@ -1,3 +1,22 @@
+import com.android.build.api.dsl.SettingsExtension
+
+pluginManagement {
+  repositories {
+    mavenCentral()
+    google()
+  }
+}
+
+plugins {
+  id("com.android.settings") version "8.0.2"
+}
+
+@Suppress("UnstableApiUsage")
+extensions.getByType(SettingsExtension::class).apply {
+  compileSdk = 33
+  minSdk = 21
+}
+
 include(":laboratory")
 include(":shared-preferences")
 include(":inspector")

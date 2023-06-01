@@ -6,8 +6,6 @@ ext.versions = [
     "hyperion": "0.9.37",
     "detekt": "1.22.0",
     "androidBuild": [
-        "minSdk": 21,
-        "compileSdk": 33,
         "targetSdk": 33,
     ],
 ]
