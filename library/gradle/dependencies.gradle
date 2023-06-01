@@ -46,7 +46,7 @@ ext.libs = [
             "coroutinesAndroid": "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}",
             "coroutinesTest": "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}",
             "binaryCompatibility": [
-                "gradlePlugin": "org.jetbrains.kotlinx:binary-compatibility-validator:0.8.0",
+                "gradlePlugin": "org.jetbrains.kotlinx:binary-compatibility-validator:0.13.1",
                 "gradlePluginId": "binary-compatibility-validator",
             ],
         ],
