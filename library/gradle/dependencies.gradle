@@ -19,7 +19,7 @@ ext.libs = [
             "dataStore": "androidx.datastore:datastore-core:1.0.0",
             "appCompat": "androidx.appcompat:appcompat:1.6.1",
             "viewModelKtx": "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1",
-            "fragmentKtx": "androidx.fragment:fragment-ktx:1.4.0",
+            "fragmentKtx": "androidx.fragment:fragment-ktx:1.5.7",
             "viewPager2": "androidx.viewpager2:viewpager2:1.0.0",
             "recyclerView": "androidx.recyclerview:recyclerview:1.2.1",
             "test": [
