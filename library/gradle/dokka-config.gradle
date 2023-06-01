@@ -1,4 +1,4 @@
-apply plugin: libs.dokka.gradlePluginId
+apply plugin: libs.plugins.dokka.get().pluginId
 
 dokkaHtml {
   outputDirectory.set(file("$rootDir/docs/api/${project.name}"))

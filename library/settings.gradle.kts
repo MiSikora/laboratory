@@ -7,6 +7,21 @@ pluginManagement {
   }
 }
 
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+  repositories {
+    mavenCentral()
+    google()
+    gradlePluginPortal()
+  }
+
+  versionCatalogs {
+    create("libs") {
+      from(files("gradle/dependencies.toml"))
+    }
+  }
+}
+
 plugins {
   id("com.android.settings") version "8.0.2"
 }
