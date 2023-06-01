@@ -20,8 +20,8 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v3
         with:
-          distribution: adopt
-          java-version: 11
+          distribution: zulu
+          java-version: 19
 
       - name: Cache Gradle Dirs
         uses: actions/cache@v3.0.11
