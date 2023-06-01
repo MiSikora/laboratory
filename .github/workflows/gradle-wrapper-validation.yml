@@ -17,8 +17,8 @@ jobs:
       - name: Configure JDK
         uses: actions/setup-java@v3
         with:
-          distribution: adopt
-          java-version: 11
+          distribution: zulu
+          java-version: 19
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1.0.5
