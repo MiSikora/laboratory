@@ -42,10 +42,13 @@ android {
   }
 
   compileOptions {
-    kotlinOptions.freeCompilerArgs += [
-        "-Xjvm-default=all",
-        "-Xopt-in=kotlin.RequiresOptIn",
-    ]
+    sourceCompatibility JavaConfig.code
+    targetCompatibility JavaConfig.code
+  }
+
+  kotlinOptions {
+    jvmTarget = JavaConfig.name
+    freeCompilerArgs += "-Xjvm-default=all"
   }
 }
 
