@@ -5,5 +5,5 @@ plugins {
 
 android {
   namespace "io.mehow.laboratory.sample"
-  compileSdkVersion 30
+  compileSdkVersion 33
 }
