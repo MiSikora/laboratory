@@ -1,16 +1,4 @@
 buildscript {
-  apply from: "library/gradle/dependencies.gradle"
-
-  ext.libs.laboratory = [
-      "core": "io.mehow.laboratory:laboratory",
-      "inspector": "io.mehow.laboratory:inspector",
-      "hyperionPlugin": "io.mehow.laboratory:hyperion-plugin",
-      "sharedPreferences": "io.mehow.laboratory:shared-preferences",
-      "dataStore": "io.mehow.laboratory:data-store",
-      "generator": "io.mehow.laboratory:generator",
-      "gradlePlugin": "io.mehow.laboratory:gradle-plugin",
-  ]
-
   repositories {
     mavenCentral()
     gradlePluginPortal()
@@ -21,12 +9,5 @@ buildscript {
     classpath libs.android.gradlePlugin
     classpath libs.kotlin.gradlePlugin
     classpath libs.googleServices.gradlePlugin
-  }
-}
-
-allprojects {
-  repositories {
-    mavenCentral()
-    google()
   }
 }

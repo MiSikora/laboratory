@@ -2,8 +2,6 @@ import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-  apply from: "gradle/dependencies.gradle"
-
   repositories {
     mavenCentral()
     gradlePluginPortal()
@@ -22,14 +20,9 @@ buildscript {
   }
 }
 
-apply plugin: libs.kotlin.x.binaryCompatibility.gradlePluginId
+apply plugin: libs.plugins.binaryCompatibility.get().pluginId
 
 allprojects {
-  repositories {
-    mavenCentral()
-    google()
-  }
-
   group GROUP
   version VERSION_NAME
 
@@ -66,7 +59,7 @@ allprojects {
       }
 
       defaultConfig {
-        targetSdkVersion versions.androidBuild.targetSdk
+        targetSdkVersion libs.versions.androidBuild.targetSdk.get().toInteger()
         vectorDrawables.useSupportLibrary true
       }
 
@@ -104,7 +97,7 @@ allprojects {
   }
 }
 
-apply plugin: libs.detekt.gradlePluginId
+apply plugin: libs.plugins.detekt.get().pluginId
 
 dependencies {
   detekt libs.detekt.formatting
@@ -128,7 +121,7 @@ tasks.withType(Detekt).configureEach {
   }
 }
 
-apply plugin: libs.gradleVersions.gradlePluginId
+apply plugin: libs.plugins.gradleVersions.get().pluginId
 
 dependencyUpdates {
   rejectVersionIf {

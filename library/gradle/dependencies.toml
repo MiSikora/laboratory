@@ -53,7 +53,7 @@ detekt-cli = { group = "io.gitlab.arturbosch.detekt", name = "detekt-cli", versi
 
 gradleVersions-gradlePlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.46.0" }
 
-kotlinPoet = { group = "com.squareup", name = "kotlinpoet", version = "1.13.2" }
+kotlinPoet = { group = "com.squareup", name = "kotlinpoet", version = "1.14.2" }
 wireGradlePlugin = { group = "com.squareup.wire", name = "wire-gradle-plugin", version = "4.7.0" }
 turbine = { group = "app.cash.turbine", name = "turbine", version = "0.7.0" }
 

@@ -18,7 +18,7 @@ android {
 
   defaultConfig {
     applicationId "io.mehow.laboratory.sample.defaultoption"
-    targetSdkVersion versions.androidBuild.targetSdk
+    targetSdkVersion libs.versions.androidBuild.targetSdk.get().toInteger()
 
     versionCode 1
     versionName "1.0.0"
