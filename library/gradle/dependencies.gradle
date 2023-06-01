@@ -4,7 +4,7 @@ ext.versions = [
     "kotest": "4.6.3",
     "androidxTest": "1.4.0",
     "hyperion": "0.9.37",
-    "detekt": "1.19.0",
+    "detekt": "1.22.0",
     "androidBuild": [
         "minSdk": 21,
         "compileSdk": 31,
