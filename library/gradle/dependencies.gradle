@@ -74,7 +74,7 @@ ext.libs = [
         "cli": "io.gitlab.arturbosch.detekt:detekt-cli:${versions.detekt}",
     ],
     "gradleVersions": [
-        "gradlePlugin": "com.github.ben-manes:gradle-versions-plugin:0.39.0",
+        "gradlePlugin": "com.github.ben-manes:gradle-versions-plugin:0.46.0",
         "gradlePluginId": "com.github.ben-manes.versions",
     ],
     "kotlinPoet": "com.squareup:kotlinpoet:1.14.2",
