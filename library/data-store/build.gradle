@@ -9,6 +9,8 @@ wire {
 }
 
 android {
+  namespace "io.mehow.laboratory.datastore"
+
   sourceSets {
     getByName("main").java.srcDirs += "$buildDir/generated/source/wire/"
   }

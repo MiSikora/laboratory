@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+  namespace "io.mehow.laboratory.sharedpreferences"
+
   defaultConfig {
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     testInstrumentationRunnerArgument "clearPackageData", "true"

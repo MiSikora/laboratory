@@ -5,6 +5,8 @@ plugins {
 }
 
 android {
+  namespace "io.mehow.laboratory.sample.multimodule"
+
   compileSdkVersion versions.androidBuild.compileSdk
 
   signingConfigs {

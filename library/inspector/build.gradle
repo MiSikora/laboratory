@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+  namespace "io.mehow.laboratory.inspector"
+
   resourcePrefix "io_mehow_laboratory_"
 
   defaultConfig {
