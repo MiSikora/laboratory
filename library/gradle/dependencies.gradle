@@ -1,4 +1,5 @@
 ext.versions = [
+    androidPlugin: "8.0.2",
     "coroutines": "1.6.0",
     "kotest": "4.6.3",
     "androidxTest": "1.4.0",
@@ -13,10 +14,7 @@ ext.versions = [
 
 ext.libs = [
     "android": [
-        "gradlePlugin": [
-            "api": "com.android.tools.build:gradle:4.2.2",
-            "project": "com.android.tools.build:gradle:8.0.2",
-        ],
+        "gradlePlugin": "com.android.tools.build:gradle:${versions.androidPlugin}",
         "x": [
             "dataStore": "androidx.datastore:datastore-core:1.0.0",
             "appCompat": "androidx.appcompat:appcompat:1.4.0",
