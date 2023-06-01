@@ -19,17 +19,21 @@ internal class SharedPreferencesFeaturesStorageTest {
   private val storage = FeatureStorage.sharedPreferences(preferences)
   private val laboratory = Laboratory.create(storage)
 
-  @Test fun storedOptionIsAvailableAsExperiment() = runBlocking {
-    storage.setOption(FeatureA.B)
+  @Test fun storedOptionIsAvailableAsExperiment() {
+    runBlocking {
+      storage.setOption(FeatureA.B)
 
-    laboratory.experiment<FeatureA>() shouldBe FeatureA.B
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.B
+    }
   }
 
-  @Test fun corruptedFeatureFlagOptionYieldsDefaultExperiment() = runBlocking {
-    storage.setOption(FeatureA.B)
-    preferences.edit().putInt(FeatureA::class.java.name, 1).commit()
+  @Test fun corruptedFeatureFlagOptionYieldsDefaultExperiment() {
+    runBlocking {
+      storage.setOption(FeatureA.B)
+      preferences.edit().putInt(FeatureA::class.java.name, 1).commit()
 
-    laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+    }
   }
 
   @Test fun observesFeatureFlagChanges() = runBlocking {
