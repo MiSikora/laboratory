@@ -459,7 +459,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.readText() shouldContain """
       |@Deprecated(
       |  message = "Deprecation message",
-      |  level = DeprecationLevel.WARNING
+      |  level = DeprecationLevel.WARNING,
       |)
       |public enum class Feature : io.mehow.laboratory.Feature<@Suppress("DEPRECATION") Feature>
     """.trimMargin()
@@ -478,7 +478,7 @@ internal class GenerateFeatureFlagsTaskSpec : StringSpec({
     feature.readText() shouldContain """
       |@Deprecated(
       |  message = "Deprecation message",
-      |  level = DeprecationLevel.HIDDEN
+      |  level = DeprecationLevel.HIDDEN,
       |)
       |public enum class Feature : io.mehow.laboratory.Feature<@Suppress("DEPRECATION_ERROR") Feature>
     """.trimMargin()
