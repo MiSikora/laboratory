@@ -45,7 +45,7 @@ hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plug
 
 autoService = { group = "com.google.auto.service", name = "auto-service", version = "1.1.0" }
 
-mavenPublish-gradlePlugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version = "0.18.0" }
+mavenPublish-gradlePlugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version = "0.25.2" }
 
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
