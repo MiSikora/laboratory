@@ -1,5 +1,6 @@
 apply plugin: libs.plugins.mavenPublish.get().pluginId
 
 mavenPublishing {
+  publishToMavenCentral()
   signAllPublications()
 }
