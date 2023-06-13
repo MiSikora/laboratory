@@ -1,0 +1,10 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:io.mehow.laboratory.datastore////PointingToDeclaration/data-store/io.mehow.laboratory.datastore/index.html
+$dokka.location:io.mehow.laboratory.datastore//dataStore/io.mehow.laboratory.FeatureStorage.Companion#androidx.datastore.core.DataStore[io.mehow.laboratory.datastore.FeatureFlags]/PointingToDeclaration/data-store/io.mehow.laboratory.datastore/data-store.html
+$dokka.location:io.mehow.laboratory.datastore/FeatureFlagsSerializer///PointingToDeclaration/data-store/io.mehow.laboratory.datastore/-feature-flags-serializer/index.html
+$dokka.location:io.mehow.laboratory.datastore/FeatureFlagsSerializer/defaultValue/#/PointingToDeclaration/data-store/io.mehow.laboratory.datastore/-feature-flags-serializer/default-value.html
+$dokka.location:io.mehow.laboratory.datastore/FeatureFlagsSerializer/readFrom/#java.io.InputStream/PointingToDeclaration/data-store/io.mehow.laboratory.datastore/-feature-flags-serializer/read-from.html
+$dokka.location:io.mehow.laboratory.datastore/FeatureFlagsSerializer/writeTo/#io.mehow.laboratory.datastore.FeatureFlags#java.io.OutputStream/PointingToDeclaration/data-store/io.mehow.laboratory.datastore/-feature-flags-serializer/write-to.html
+io.mehow.laboratory.datastore
+
