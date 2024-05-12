@@ -1,8 +1,6 @@
 # IDEA
 *.iml
-/.idea/
-!/.idea/codeStyles/
-!/.idea/codeStyles/*
+.idea/
 
 # Gradle
 .gradle/
@@ -17,4 +15,4 @@ build/
 .DS_Store
 
 # MkDocs
-/library/docs/api
+/docs/api

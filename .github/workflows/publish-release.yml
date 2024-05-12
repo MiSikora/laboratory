@@ -12,21 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.4
 
       - name: Configure JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4.2.1
         with:
           distribution: zulu
-          java-version: 19
+          java-version: 21
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@v4.0.2
         with:
           path: |
             ~/.gradle/caches/
             ~/.gradle/wrapper/
-          key: cache-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          key: cache-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
           restore-keys: cache-gradle-
 
       - name: Deploy Release
@@ -34,19 +34,19 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SONATYPE_NEXUS_SIGNING_KEY }}
-        run: ./gradlew -p library publishAllPublicationsToMavenCentral --no-configuration-cache --stacktrace
+        run: ./gradlew publish --no-configuration-cache --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop
 
       - name: Extract Release Notes
         id: release-notes
-        uses: ffurrer2/extract-release-notes@v1.16.0
+        uses: ffurrer2/extract-release-notes@v2.2.0
         with:
-          changelog_file: ./library/docs/changelog.md
+          changelog_file: ./docs/changelog.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.0.5
         with:
           body: ${{ steps.release-notes.outputs.release_notes }}
           files: |

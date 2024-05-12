@@ -35,8 +35,8 @@ class Activity : AndroidActivity() {
 
   private inline fun <reified T : Feature<T>> TextView.observeFeature() {
     laboratory.observe<T>()
-        .map { "${it.javaClass.simpleName}: $it" }
-        .onEach { text = it }
-        .launchIn(mainScope)
+      .map { "${it.javaClass.simpleName}: $it" }
+      .onEach { text = it }
+      .launchIn(mainScope)
   }
 }

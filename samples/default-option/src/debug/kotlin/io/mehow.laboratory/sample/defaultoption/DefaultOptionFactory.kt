@@ -8,6 +8,6 @@ fun DefaultOptionFactory.Companion.create(): DefaultOptionFactory = DebugDefault
 
 private object DebugDefaultOptionFactory : DefaultOptionFactory {
   override fun <T : Feature<out T>> create(feature: T) = feature::class.java
-      .options
-      .firstOrNull { it.name == "Disabled" }
+    .options
+    .firstOrNull { it.name == "Disabled" }
 }

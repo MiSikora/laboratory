@@ -21,17 +21,11 @@ dependencies {
 }
 ```
 
-Enable Java 8 support.
+Enable [default methods generation](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-m3-generating-default-methods-in-interfaces/).
 
 ```groovy
 android {
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
-  }
-
   kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.toString()
     freeCompilerArgs += [
         "-Xjvm-default=all",
     ]

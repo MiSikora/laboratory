@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.widget.TextView
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.inspector.LaboratoryActivity
-import io.mehow.laboratory.sample.supervision.databinding.MainBinding
 import io.mehow.laboratory.sample.supervision.Application.Companion.laboratory
+import io.mehow.laboratory.sample.supervision.databinding.MainBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
@@ -38,8 +38,8 @@ class Activity : AndroidActivity() {
 
   private inline fun <reified T : Feature<T>> TextView.observeFeature() {
     laboratory.observe<T>()
-        .map { "${it.javaClass.simpleName}: $it" }
-        .onEach { text = it }
-        .launchIn(mainScope)
+      .map { "${it.javaClass.simpleName}: $it" }
+      .onEach { text = it }
+      .launchIn(mainScope)
   }
 }
