@@ -21,9 +21,9 @@ class Application : AndroidApplication() {
     val storage = FeatureStorage.dataStore(dataStore)
     laboratory = Laboratory.create(storage)
     LaboratoryActivity.configure(
-        laboratory,
-        mainFactory = FeatureFactory.featureGenerated(),
-        externalFactories = mapOf("Camera" to FeatureFactory.cameraFeatureGenerated())
+      laboratory,
+      mainFactory = FeatureFactory.featureGenerated(),
+      externalFactories = mapOf("Camera" to FeatureFactory.cameraFeatureGenerated()),
     )
   }
 

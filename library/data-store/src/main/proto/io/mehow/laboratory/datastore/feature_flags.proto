@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package io.mehow.laboratory.datastore;
-
-option java_package = "io.mehow.laboratory.datastore";
-
-message FeatureFlags {
-  map<string, string> options = 1;
-}

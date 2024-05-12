@@ -1,0 +1,21 @@
+# https://editorconfig.org
+root = true
+
+[*]
+indent_size = 2
+indent_style = space
+# Handled by Detekt, which supports @Suppress annotation
+max_line_length = off
+
+[*.{kt,kts}]
+# Different rules in Detekt
+ktlint_standard_property-naming = disabled
+# I don't like it
+ktlint_standard_multiline-expression-wrapping = disabled
+
+# Don't allow any wildcard imports
+ij_kotlin_packages_to_use_import_on_demand = unset
+
+# Prevent wildcard imports
+ij_kotlin_name_count_to_use_star_import = 99
+ij_kotlin_name_count_to_use_star_import_for_members = 99

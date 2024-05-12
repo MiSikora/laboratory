@@ -21,6 +21,7 @@ class Activity : AndroidActivity() {
 
     val binding = MainBinding.inflate(layoutInflater).apply {
       launchLaboratory.setOnClickListener { LaboratoryActivity.start(this@Activity) }
+      @Suppress("DEPRECATION")
       logType.observeFeature<LogType>()
       reportRootedDevice.observeFeature<ReportRootedDevice>()
       authentication.observeFeature<Authentication>()
@@ -35,8 +36,8 @@ class Activity : AndroidActivity() {
 
   private inline fun <reified T : Feature<T>> TextView.observeFeature() {
     laboratory.observe<T>()
-        .map { "${it.javaClass.simpleName}: $it" }
-        .onEach { text = it }
-        .launchIn(mainScope)
+      .map { "${it.javaClass.simpleName}: $it" }
+      .onEach { text = it }
+      .launchIn(mainScope)
   }
 }

@@ -2,10 +2,8 @@
 <!-- Why did you change something? Is there an issue to link here? Or an external link? -->
 
 ## :pencil: Checklist
-<!-- Please make sure to go through the checklist and select checkboxes appropriate for your changes. -->
-- [ ] I updated the [changelog](https://github.com/MiSikora/laboratory/blob/trunk/library/docs/changelog.md).
-- [ ] I updated the [documentation](https://github.com/MiSikora/laboratory/tree/trunk/library/docs).
-- [ ] I updated the [sample](https://github.com/MiSikora/laboratory/tree/trunk/sample).
-
-## :crystal_ball: Next steps
-<!-- Is there something to plan or to do after the merge? Does this PR close any issue? If yes, please add a magic keyword - https://docs.github.com/en/enterprise/2.16/user/github/managing-your-work-on-github/closing-issues-using-keywords. -->
+<!-- Please make sure to go through the checklist and select check-boxes appropriate for your changes. -->
+- [ ] I updated the [changelog](https://github.com/MiSikora/laboratory/blob/trunk/docs/changelog.md).
+- [ ] I updated the [documentation](https://github.com/MiSikora/laboratory/tree/trunk/docs).
+- [ ] I updated the [samples](https://github.com/MiSikora/laboratory/tree/trunk/samples).
+- 

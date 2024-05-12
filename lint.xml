@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+  <issue id="ObsoleteSdkInt" severity="error" />
+  <issue id="PrivateResource" severity="error" />
+  <issue id="UnusedIds" severity="error" />
+  <issue id="UnusedResources" severity="error" />
+  <issue id="SyntheticAccessor" severity="error" />
+  <issue id="RequiredSize" severity="error" />
+  <issue id="Registered" severity="error" />
+</lint>

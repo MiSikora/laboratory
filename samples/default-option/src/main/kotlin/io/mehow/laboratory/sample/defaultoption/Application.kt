@@ -20,9 +20,9 @@ class Application : AndroidApplication() {
     val dataStore = DataStoreFactory.create(FeatureFlagsSerializer) { File(filesDir, "datastore/local") }
     val storage = FeatureStorage.dataStore(dataStore)
     laboratory = Laboratory.builder()
-        .featureStorage(storage)
-        .defaultOptionFactory(DefaultOptionFactory.create())
-        .build()
+      .featureStorage(storage)
+      .defaultOptionFactory(DefaultOptionFactory.create())
+      .build()
     LaboratoryActivity.configure(laboratory, FeatureFactory.featureGenerated())
   }
 
