@@ -634,5 +634,7 @@ laboratory {
 
   // Includes feature flags that are used for generation of feature factories, sourced storage and option factory.
   dependency(project(":some-project"))
+  // If typesafe project accessors are enabled.
+  dependency(projects.someProject)
 }
 ```

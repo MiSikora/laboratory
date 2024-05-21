@@ -259,7 +259,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
 
     result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage", isAndroid = true)
     factory.shouldExist()
 
     factory.readText() shouldContain """

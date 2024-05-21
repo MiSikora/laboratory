@@ -2,27 +2,39 @@ package io.mehow.laboratory.gradle
 
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.FeatureFlagOption
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Internal
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import java.io.File
+import javax.inject.Inject
 
-public open class SourcedFeatureStorageTask : DefaultTask() {
-  @get:Internal internal lateinit var storage: SourcedFeatureStorageInput
+internal abstract class SourcedFeatureStorageTask @Inject constructor(
+  objects: ObjectFactory,
+) : OutputTask() {
+  @Input @Optional
+  val storage: Property<SourcedFeatureStorageInput?> = objects.property(SourcedFeatureStorageInput::class.java)
 
-  @get:Internal internal lateinit var features: List<FeatureFlagInput>
+  @Input
+  val features: ListProperty<FeatureFlagInput> = objects.listProperty(FeatureFlagInput::class.java)
 
-  @get:Internal internal lateinit var codeGenDir: File
+  @OutputDirectory
+  override val outputDirectory: DirectoryProperty = objects.directoryProperty()
 
-  @TaskAction public fun generateSourcedFeatureStorage() {
-    val sourceNames = features.flatMap(FeatureFlagInput::toModels).sourceNames().distinct()
-    val storageModel = storage.toModel(sourceNames)
-    codeGenDir.deleteRecursively()
-    storageModel.prepare().writeTo(codeGenDir)
+  @TaskAction
+  fun generateSourcedFeatureStorage() {
+    outputDirectory.get().asFile.deleteRecursively()
+    storage.orNull
+      ?.toModel(features.get().flatMap(FeatureFlagInput::toModels).sourceNames().distinct())
+      ?.prepare()
+      ?.writeTo(outputDirectory.get().asFile)
   }
 
   private fun List<FeatureFlagModel>.sourceNames(): List<String> = mapNotNull(FeatureFlagModel::source)
     .map(FeatureFlagModel::options)
-    .flatMap { it.toList() }
+    .flatMap(List<FeatureFlagOption>::toList)
     .map(FeatureFlagOption::name)
 }

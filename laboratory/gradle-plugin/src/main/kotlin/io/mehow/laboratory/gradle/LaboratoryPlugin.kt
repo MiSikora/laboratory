@@ -1,157 +1,151 @@
 package io.mehow.laboratory.gradle
 
-import io.mehow.laboratory.generator.FeatureFlagModel
+import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskProvider
-import java.io.File
-import java.util.concurrent.atomic.AtomicBoolean
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 public class LaboratoryPlugin : Plugin<Project> {
-  private val hasAndroid = AtomicBoolean(false)
-  private val hasKotlin = AtomicBoolean(false)
-  private lateinit var extension: LaboratoryExtension
-
-  override fun apply(project: Project) {
-    extension = project.extensions.create(PluginName, LaboratoryExtension::class.java).apply {
-      this.project = project
+  override fun apply(target: Project) {
+    val extension = target.extensions.create(PluginName, LaboratoryExtension::class.java).apply {
+      this.project = target
     }
-    project.setUpKotlinProject()
-    project.setUpAndroidProject()
+
+    target.checkKotlinPlugin()
+    target.setUpProject(extension)
   }
 
-  private fun Project.setUpKotlinProject() {
-    val kotlinPluginHandler = { _: Plugin<*> -> hasKotlin.set(true) }
-    plugins.withId("org.jetbrains.kotlin.android", kotlinPluginHandler)
-    plugins.withId("org.jetbrains.kotlin.jvm", kotlinPluginHandler)
-
-    afterEvaluate {
-      registerLaboratoryTasks(afterAndroid = false)
+  private fun Project.checkKotlinPlugin() {
+    val hasKotlin = with(plugins) {
+      hasPlugin("org.jetbrains.kotlin.jvm") || hasPlugin("org.jetbrains.kotlin.android")
+    }
+    check(hasKotlin) {
+      "Laboratory Gradle plugin applied in '$path' requires Kotlin plugin."
     }
   }
 
-  private fun Project.setUpAndroidProject() {
-    val androidPluginHandler = { _: Plugin<*> ->
-      hasAndroid.set(true)
-      afterEvaluate {
-        registerLaboratoryTasks(afterAndroid = true)
-      }
-    }
-    plugins.withId("com.android.application", androidPluginHandler)
-    plugins.withId("com.android.library", androidPluginHandler)
-    plugins.withId("com.android.instantapp", androidPluginHandler)
-    plugins.withId("com.android.feature", androidPluginHandler)
-    plugins.withId("com.android.dynamic-feature", androidPluginHandler)
-  }
-
-  private fun Project.registerLaboratoryTasks(afterAndroid: Boolean) {
-    if (hasAndroid.get() && !afterAndroid) return
-
-    check(hasKotlin.get()) {
-      "Laboratory Gradle plugin requires Kotlin plugin."
-    }
-
+  private fun Project.setUpProject(extension: LaboratoryExtension) {
     addLaboratoryDependency()
-    registerFeaturesTask()
-    registerFeatureFactoryTask()
-    registerSourcedFeatureStorageTask()
-    registerFeatureSourcesFactoryTask()
-    registerOptionFactoryTask()
-  }
 
-  private fun Project.registerFeaturesTask() = afterEvaluate {
-    val codeGenDir = File("${layout.buildDirectory.get()}/generated/laboratory/code/feature-flags")
-    val featuresTask = registerTask<FeatureFlagsTask>("generateFeatureFlags") { task ->
-      task.group = PluginName
-      task.description = "Generate Laboratory features."
-      task.features = extension.featureInputs
-      task.codeGenDir = codeGenDir
-    }
-    addSourceSets(featuresTask, codeGenDir)
-  }
-
-  private fun Project.registerFeatureFactoryTask() = afterEvaluate {
-    val factoryInput = extension.factoryInput ?: return@afterEvaluate
-
-    val codeGenDir = File("${layout.buildDirectory.get()}/generated/laboratory/code/feature-factory")
-    val factoryTask = registerTask<FeatureFactoryTask>("generateFeatureFactory") { task ->
-      task.group = PluginName
-      task.description = "Generate Laboratory feature factory."
-      task.factory = factoryInput
-      task.features = extension.factoryFeatureInputs
-      task.codeGenDir = codeGenDir
-      task.factoryClassName = "GeneratedFeatureFactory"
-      task.factoryFunctionName = "featureGenerated"
-      task.featureModelsMapper = { it }
-    }
-    addSourceSets(factoryTask, codeGenDir)
-  }
-
-  private fun Project.registerSourcedFeatureStorageTask() = afterEvaluate {
-    val storageInput = extension.storageInput ?: return@afterEvaluate
-
-    val codeGenDir = File("${layout.buildDirectory.get()}/generated/laboratory/code/sourced-storage")
-    val storageTask = registerTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage") { task ->
-      task.group = PluginName
-      task.description = "Generate Laboratory sourced feature storage."
-      task.storage = storageInput
-      task.features = extension.factoryFeatureInputs
-      task.codeGenDir = codeGenDir
-    }
-    addSourceSets(storageTask, codeGenDir)
-  }
-
-  private fun Project.registerFeatureSourcesFactoryTask() = afterEvaluate {
-    val factoryInput = extension.featureSourcesFactory ?: return@afterEvaluate
-
-    val codeGenDir = File("${layout.buildDirectory.get()}/generated/laboratory/code/feature-source-factory")
-    val factoryTask = registerTask<FeatureFactoryTask>("generateFeatureSourceFactory") { task ->
-      task.group = PluginName
-      task.description = "Generate Laboratory feature sources factory."
-      task.factory = factoryInput
-      task.features = extension.factoryFeatureInputs
-      task.codeGenDir = codeGenDir
-      task.factoryClassName = "GeneratedFeatureSourceFactory"
-      task.factoryFunctionName = "featureSourceGenerated"
-      task.featureModelsMapper = { it.mapNotNull(FeatureFlagModel::source) }
-    }
-    addSourceSets(factoryTask, codeGenDir)
-  }
-
-  private fun Project.registerOptionFactoryTask() = afterEvaluate {
-    val factoryInput = extension.optionFactoryInput ?: return@afterEvaluate
-
-    val codeGenDir = File("${layout.buildDirectory.get()}/generated/laboratory/code/option-factory")
-    val factoryTask = registerTask<OptionFactoryTask>("generateOptionFactory") { task ->
-      task.group = PluginName
-      task.description = "Generate Laboratory option factory."
-      task.factory = factoryInput
-      task.features = extension.factoryFeatureInputs
-      task.codeGenDir = codeGenDir
-    }
-    addSourceSets(factoryTask, codeGenDir)
+    val hasAndroid = plugins.hasPlugin("com.android.base")
+    registerFeatureFlagsTask(extension, hasAndroid)
+    registerFeatureFactoryTask(extension, hasAndroid)
+    registerSourcedFeatureStorageTask(extension, hasAndroid)
+    registerOptionFactoryTask(extension, hasAndroid)
+    registerFeatureSourcesFactoryTask(extension, hasAndroid)
   }
 
   private fun Project.addLaboratoryDependency() {
     dependencies.add("api", "io.mehow.laboratory:laboratory:$LibraryVersion")
   }
 
-  private inline fun <reified T : Task> Project.registerTask(
-    name: String,
-    crossinline action: (T) -> Unit,
-  ): TaskProvider<out T> {
-    return tasks.register(name, T::class.java) { action(it) }
+  private fun Project.registerFeatureFlagsTask(
+    extension: LaboratoryExtension,
+    hasAndroid: Boolean,
+  ) {
+    registerOutputTask<FeatureFlagsTask>("generateFeatureFlags", hasAndroid) { task ->
+      task.group = PluginName
+      task.description = "Generate feature flags"
+      task.inputFlags.set(extension.featureFlags)
+      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-flags"))
+    }
   }
 
-  private fun Project.addSourceSets(
-    task: TaskProvider<out Task>,
-    dir: File,
+  private fun Project.registerFeatureFactoryTask(
+    extension: LaboratoryExtension,
+    hasAndroid: Boolean,
   ) {
-    if (hasAndroid.get()) {
-      task.contributeToAndroidSourceSets(dir, this)
-    } else {
-      task.contributeToSourceSets(dir, this)
+    registerOutputTask<FeatureFactoryTask>("generateFeatureFactory", hasAndroid) { task ->
+      task.group = PluginName
+      task.description = "Generate feature factory"
+      task.factory.set(extension.factoryInput)
+      task.features.set(extension.factoryFeatureFlags)
+      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-factory"))
+    }
+  }
+
+  private fun Project.registerSourcedFeatureStorageTask(
+    extension: LaboratoryExtension,
+    hasAndroid: Boolean,
+  ) {
+    registerOutputTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage", hasAndroid) { task ->
+      task.group = PluginName
+      task.description = "Generate sourced feature storage"
+      task.storage.set(extension.storageInput)
+      task.features.set(extension.factoryFeatureFlags)
+      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/sourced-storage"))
+    }
+  }
+
+  private fun Project.registerOptionFactoryTask(
+    extension: LaboratoryExtension,
+    hasAndroid: Boolean,
+  ) {
+    registerOutputTask<OptionFactoryTask>("generateOptionFactory", hasAndroid) { task ->
+      task.group = PluginName
+      task.description = "Generate option factory"
+      task.factory.set(extension.optionFactoryInput)
+      task.features.set(extension.factoryFeatureFlags)
+      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/option-factory"))
+    }
+  }
+
+  private fun Project.registerFeatureSourcesFactoryTask(
+    extension: LaboratoryExtension,
+    hasAndroid: Boolean,
+  ) {
+    registerOutputTask<FeatureSourceFactoryTask>("generateFeatureSourceFactory", hasAndroid) { task ->
+      task.group = PluginName
+      task.description = "Generate feature source factory"
+      task.factory.set(extension.featureSourcesFactory)
+      task.features.set(extension.factoryFeatureFlags)
+      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-source-factory"))
+    }
+  }
+
+  private inline fun <reified T : OutputTask> Project.registerOutputTask(
+    name: String,
+    hasAndroid: Boolean,
+    crossinline action: (T) -> Unit,
+  ): TaskProvider<T> {
+    val task = tasks.register(name, T::class.java) { action(it) }
+    makeKotlinDependOnTask(task)
+    contributeToSourceSets(task, hasAndroid)
+    return task
+  }
+
+  private fun Project.makeKotlinDependOnTask(task: TaskProvider<out Task>) {
+    tasks.withType(KotlinCompile::class.java).configureEach { kotlinTask ->
+      kotlinTask.dependsOn(task)
+    }
+  }
+
+  private fun Project.contributeToSourceSets(
+    task: TaskProvider<out OutputTask>,
+    hasAndroid: Boolean,
+  ) = if (hasAndroid) {
+    contributeToAndroid(task)
+  } else {
+    contributeToKotlin(task)
+  }
+
+  private fun Project.contributeToKotlin(
+    task: TaskProvider<out OutputTask>,
+  ) {
+    val sourceSets = extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets
+    val kotlinSourceSet = sourceSets.getByName("main").kotlin
+    kotlinSourceSet.srcDir(task)
+  }
+
+  private fun Project.contributeToAndroid(
+    task: TaskProvider<out OutputTask>,
+  ) {
+    extensions.getByType(AndroidComponentsExtension::class.java).onVariants { variant ->
+      // 'kotlin' sources do not include
+      variant.sources.java?.addGeneratedSourceDirectory(task, OutputTask::outputDirectory)
     }
   }
 }

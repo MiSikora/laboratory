@@ -1,5 +1,6 @@
 package io.mehow.laboratory.gradle
 
+import io.mehow.laboratory.generator.FeatureFlagModel
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
@@ -10,11 +11,11 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import javax.inject.Inject
 
-internal abstract class OptionFactoryTask @Inject constructor(
+internal abstract class FeatureSourceFactoryTask @Inject constructor(
   objects: ObjectFactory,
 ) : OutputTask() {
   @Input @Optional
-  val factory: Property<OptionFactoryInput?> = objects.property(OptionFactoryInput::class.java)
+  val factory: Property<FeatureFactoryInput?> = objects.property(FeatureFactoryInput::class.java)
 
   @Input
   val features: ListProperty<FeatureFlagInput> = objects.listProperty(FeatureFlagInput::class.java)
@@ -23,11 +24,16 @@ internal abstract class OptionFactoryTask @Inject constructor(
   override val outputDirectory: DirectoryProperty = objects.directoryProperty()
 
   @TaskAction
-  fun generateSourcedFeatureStorage() {
+  fun generateFeatureFactory() {
     outputDirectory.get().asFile.deleteRecursively()
     factory.orNull
-      ?.toModel(features.get().flatMap(FeatureFlagInput::toModels))
-      ?.prepare()
+      ?.toModel(
+        features.get()
+          .flatMap(FeatureFlagInput::toModels)
+          .mapNotNull(FeatureFlagModel::source),
+        "GeneratedFeatureSourceFactory",
+      )
+      ?.prepare("featureSourceGenerated")
       ?.writeTo(outputDirectory.get().asFile)
   }
 }

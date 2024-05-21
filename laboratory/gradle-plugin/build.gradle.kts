@@ -40,7 +40,7 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 }
 
 dependencies {
-  compileOnly(libs.android.gradlePlugin)
+  compileOnly(libs.android.gradle.api)
 
   implementation(projects.laboratory.generator)
   implementation(libs.kotlin.gradlePlugin)

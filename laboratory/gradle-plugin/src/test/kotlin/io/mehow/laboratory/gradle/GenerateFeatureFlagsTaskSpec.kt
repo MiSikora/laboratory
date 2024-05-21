@@ -406,7 +406,7 @@ class GenerateFeatureFlagsTaskSpec : FunSpec({
 
     result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
 
-    val feature = fixture.featureFile("Feature")
+    val feature = fixture.featureFile("Feature", isAndroid = true)
     feature.shouldExist()
 
     feature.readText() shouldContain """

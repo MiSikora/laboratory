@@ -1,28 +1,33 @@
 package io.mehow.laboratory.gradle
 
-import io.mehow.laboratory.generator.FeatureFlagModel
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Internal
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import java.io.File
+import javax.inject.Inject
 
-public open class FeatureFactoryTask : DefaultTask() {
-  @get:Internal internal lateinit var factory: FeatureFactoryInput
+internal abstract class FeatureFactoryTask @Inject constructor(
+  objects: ObjectFactory,
+) : OutputTask() {
+  @Input @Optional
+  val factory: Property<FeatureFactoryInput?> = objects.property(FeatureFactoryInput::class.java)
 
-  @get:Internal internal lateinit var features: List<FeatureFlagInput>
+  @Input
+  val features: ListProperty<FeatureFlagInput> = objects.listProperty(FeatureFlagInput::class.java)
 
-  @get:Internal internal lateinit var codeGenDir: File
+  @OutputDirectory
+  override val outputDirectory: DirectoryProperty = objects.directoryProperty()
 
-  @get:Internal internal lateinit var factoryClassName: String
-
-  @get:Internal internal lateinit var factoryFunctionName: String
-
-  @get:Internal internal lateinit var featureModelsMapper: (List<FeatureFlagModel>) -> List<FeatureFlagModel>
-
-  @TaskAction public fun generateFeatureFactory() {
-    val featureModels = featureModelsMapper(features.flatMap(FeatureFlagInput::toModels))
-    val factoryModel = factory.toModel(featureModels, factoryClassName)
-    codeGenDir.deleteRecursively()
-    factoryModel.prepare(factoryFunctionName).writeTo(codeGenDir)
+  @TaskAction
+  fun generateFeatureFactory() {
+    outputDirectory.get().asFile.deleteRecursively()
+    factory.orNull
+      ?.toModel(features.get().flatMap(FeatureFlagInput::toModels), "GeneratedFeatureFactory")
+      ?.prepare("featureGenerated")
+      ?.writeTo(outputDirectory.get().asFile)
   }
 }
