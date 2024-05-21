@@ -28,7 +28,7 @@ internal abstract class SourcedFeatureStorageTask @Inject constructor(
   fun generateSourcedFeatureStorage() {
     outputDirectory.get().asFile.deleteRecursively()
     storage.orNull
-      ?.toModel(features.get().flatMap(FeatureFlagInput::toModels).sourceNames().distinct())
+      ?.toModel(features.get().flatMap(FeatureFlagInput::toModelsWithChildren).sourceNames().distinct())
       ?.prepare()
       ?.writeTo(outputDirectory.get().asFile)
   }

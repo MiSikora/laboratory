@@ -26,7 +26,7 @@ internal abstract class FeatureFactoryTask @Inject constructor(
   fun generateFeatureFactory() {
     outputDirectory.get().asFile.deleteRecursively()
     factory.orNull
-      ?.toModel(features.get().flatMap(FeatureFlagInput::toModels), "GeneratedFeatureFactory")
+      ?.toModel(features.get().flatMap(FeatureFlagInput::toModelsWithChildren), "GeneratedFeatureFactory")
       ?.prepare("featureGenerated")
       ?.writeTo(outputDirectory.get().asFile)
   }

@@ -7,9 +7,10 @@ import org.gradle.api.Action
 import java.io.Serializable
 
 /**
- * Representation of a generated feature flag. It must have at least one value and exactly one default value.
+ * Representation of a feature flag with multiple options.
+ * Can be either [MultiOption] or [BinaryOption].
  */
-public class FeatureFlagInput internal constructor(
+public sealed class FeatureFlagInput(
   private val name: String,
   packageNameProvider: PackageNameProvider,
   private val supervisor: SupervisorInput?,
@@ -17,7 +18,7 @@ public class FeatureFlagInput internal constructor(
   /**
    * Sets whether the generated feature flag should be public or internal.
    */
-  public var isPublic: Boolean = true
+  public abstract var isPublic: Boolean
 
   /**
    * Sets package name of the generated feature flag. Overwrites any previously set values.
@@ -31,54 +32,26 @@ public class FeatureFlagInput internal constructor(
   /**
    * Sets description of the generated feature flag.
    */
-  public var description: String? = null
+  public abstract var description: String?
 
   /**
    * Sets a custom key that will be used for generated option factory.
    */
-  public var key: String? = null
+  public abstract var key: String?
 
-  private val options = mutableListOf<FeatureFlagOptionInput>()
+  private val options = mutableMapOf<String, FeatureFlagOptionInput>()
 
-  private val childFeatureInputs = mutableListOf<ChildFeatureFlagsInput>()
+  private val childFeatureInputs = mutableMapOf<String, ChildFeatureFlagsInput>()
 
-  /**
-   * Adds a feature option.
-   */
-  public fun withOption(name: String): Unit = withOption(name, action = {})
-
-  /**
-   * Adds a feature option and configures features flags supervised by it.
-   */
-  public fun withOption(
-    name: String,
-    action: Action<ChildFeatureFlagsInput>,
-  ): Unit = withOption(name, isDefault = false, action = action)
-
-  /**
-   * Adds a feature value that will be used as a default value.
-   * Exactly one value must be set with this method.
-   */
-  public fun withDefaultOption(name: String): Unit = withDefaultOption(name, action = {})
-
-  /**
-   * Adds a feature value that will be used as a default value and configures features flags supervised by it.
-   * Exactly one value must be set with this method.
-   */
-  public fun withDefaultOption(
-    name: String,
-    action: Action<ChildFeatureFlagsInput>,
-  ): Unit = withOption(name, isDefault = true, action = action)
-
-  private fun withOption(
+  internal fun withOption(
     name: String,
     isDefault: Boolean,
     action: Action<ChildFeatureFlagsInput>,
   ) {
     val option = FeatureFlagOptionInput(name, isDefault)
     val supervisor = SupervisorInput(this, option)
-    childFeatureInputs += ChildFeatureFlagsInput(packageNameProvider, supervisor).apply(action::execute)
-    options += option
+    childFeatureInputs += name to ChildFeatureFlagsInput(packageNameProvider, supervisor).apply(action::execute)
+    options += name to option
   }
 
   private val sources = mutableListOf<FeatureFlagOptionInput>()
@@ -109,17 +82,18 @@ public class FeatureFlagInput internal constructor(
   /**
    * Annotates a feature flag as deprecated.
    */
-  @JvmOverloads public fun deprecated(
+  @JvmOverloads
+  public fun deprecated(
     message: String,
     level: DeprecationLevel = DeprecationLevel.Warning,
   ) {
     deprecation = DeprecationInput(message, level.kotlinLevel)
   }
 
-  internal fun toModel() = FeatureFlagModel(
+  internal fun toModel(): FeatureFlagModel = FeatureFlagModel(
     visibility = if (isPublic) Visibility.Public else Visibility.Internal,
-    className = ClassName(packageNameProvider.value.orEmpty(), name),
-    options = options.map(FeatureFlagOptionInput::toModel),
+    className = ClassName(packageName.orEmpty(), name),
+    options = options.values.map(FeatureFlagOptionInput::toModel),
     sourceOptions = sources.map(FeatureFlagOptionInput::toModel),
     key = key,
     description = description.orEmpty(),
@@ -127,7 +101,101 @@ public class FeatureFlagInput internal constructor(
     supervisor = supervisor?.toModel(),
   )
 
-  internal fun toModels() = listOf(toModel()) + childFeatureInputs.flatMap(ChildFeatureFlagsInput::toModels)
+  internal fun toModelsWithChildren() = buildList {
+    add(toModel())
+    addAll(childFeatureInputs.values.flatMap(ChildFeatureFlagsInput::toModels))
+  }
+
+  /**
+   * Representation of a feature flag with multiple options.
+   * It must have at least one option and exactly one default option.
+   */
+  public class MultiOption internal constructor(
+    name: String,
+    packageNameProvider: PackageNameProvider,
+    supervisor: SupervisorInput?,
+  ) : FeatureFlagInput(name, packageNameProvider, supervisor) {
+    override var isPublic: Boolean = true
+
+    override var description: String? = null
+
+    override var key: String? = null
+
+    /**
+     * Adds a feature option.
+     */
+    public fun withOption(name: String): Unit = withOption(name, action = {})
+
+    /**
+     * Adds a feature option and configures features flags supervised by it.
+     */
+    public fun withOption(
+      name: String,
+      action: Action<ChildFeatureFlagsInput>,
+    ): Unit = withOption(name, isDefault = false, action = action)
+
+    /**
+     * Adds a feature value that will be used as a default value.
+     * Exactly one value must be set with this method.
+     */
+    public fun withDefaultOption(name: String): Unit = withDefaultOption(name, action = {})
+
+    /**
+     * Adds a feature value that will be used as a default value and configures features flags supervised by it.
+     * Exactly one value must be set with this method.
+     */
+    public fun withDefaultOption(
+      name: String,
+      action: Action<ChildFeatureFlagsInput>,
+    ): Unit = withOption(name, isDefault = true, action = action)
+
+    internal companion object {
+      private const val serialVersionUID = 0L
+    }
+  }
+
+  /**
+   * Representation of a feature flag with only two options - "Enabled" and "Disabled".
+   */
+  public class BinaryOption internal constructor(
+    name: String,
+    private val isEnabled: Boolean,
+    packageNameProvider: PackageNameProvider,
+    supervisor: SupervisorInput?,
+  ) : FeatureFlagInput(name, packageNameProvider, supervisor) {
+    override var isPublic: Boolean = true
+
+    override var description: String? = null
+
+    override var key: String? = null
+
+    init {
+      withOption("Enabled", isDefault = isEnabled, action = {})
+      withOption("Disabled", isDefault = !isEnabled, action = {})
+    }
+
+    /**
+     * Configures "Enabled" option.
+     */
+    public fun withEnabled(
+      action: Action<ChildFeatureFlagsInput>,
+    ) {
+      withOption("Enabled", isDefault = isEnabled, action)
+    }
+
+    /**
+     * Configures "Disabled" option.
+     */
+    public fun withDisabled(
+      action: Action<ChildFeatureFlagsInput>,
+    ) {
+      withOption("Disabled", isDefault = !isEnabled, action)
+    }
+
+    internal companion object {
+      private const val serialVersionUID = 0L
+    }
+  }
 
   internal companion object {
     private const val serialVersionUID = 0L

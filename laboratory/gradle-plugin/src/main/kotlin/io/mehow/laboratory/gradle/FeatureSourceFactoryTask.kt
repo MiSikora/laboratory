@@ -29,7 +29,7 @@ internal abstract class FeatureSourceFactoryTask @Inject constructor(
     factory.orNull
       ?.toModel(
         features.get()
-          .flatMap(FeatureFlagInput::toModels)
+          .flatMap(FeatureFlagInput::toModelsWithChildren)
           .mapNotNull(FeatureFlagModel::source),
         "GeneratedFeatureSourceFactory",
       )
