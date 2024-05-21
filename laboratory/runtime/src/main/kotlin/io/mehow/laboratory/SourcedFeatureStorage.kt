@@ -47,7 +47,7 @@ internal class SourcedFeatureStorage(
     ?.source
     ?.takeUnless { it.options.isEmpty() }
 
-  fun withDefaultOptionFactory(factory: DefaultOptionFactory) = SourcedFeatureStorage(
+  override fun withDefaultOptionFactory(factory: DefaultOptionFactory) = SourcedFeatureStorage(
     localSource,
     remoteSources,
     factory,

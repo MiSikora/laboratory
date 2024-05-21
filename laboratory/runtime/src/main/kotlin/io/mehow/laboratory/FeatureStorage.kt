@@ -47,6 +47,11 @@ public interface FeatureStorage {
   @Suppress("SpreadOperator") // Implementations override this to be more efficient
   public suspend fun setOptions(options: Collection<Feature<*>>): Boolean = setOptions(*options.toTypedArray())
 
+  /**
+   * Allows implementation to handle default option overrides provided via [factory] if necessary.
+   */
+  public fun withDefaultOptionFactory(factory: DefaultOptionFactory): FeatureStorage = this
+
   public companion object {
     /**
      * Creates [FeatureStorage] that saves feature flags in app's memory.

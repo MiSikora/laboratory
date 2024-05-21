@@ -54,6 +54,7 @@ public abstract interface class io/mehow/laboratory/FeatureStorage {
 	public fun setOptions (Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun setOptions ([Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun setOptions$suspendImpl (Lio/mehow/laboratory/FeatureStorage;Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun withDefaultOptionFactory (Lio/mehow/laboratory/DefaultOptionFactory;)Lio/mehow/laboratory/FeatureStorage;
 }
 
 public final class io/mehow/laboratory/FeatureStorage$Companion {

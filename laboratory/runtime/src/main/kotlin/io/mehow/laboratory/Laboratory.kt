@@ -12,12 +12,7 @@ public class Laboratory internal constructor(
   builder: Builder,
 ) {
   private val storage = builder.storage.let { storage ->
-    val optionFactory = builder.defaultOptionFactory
-    if (optionFactory != null && storage is SourcedFeatureStorage) {
-      storage.withDefaultOptionFactory(optionFactory)
-    } else {
-      storage
-    }
+    builder.defaultOptionFactory?.let(storage::withDefaultOptionFactory) ?: storage
   }
   private val defaultOptionFactory = builder.defaultOptionFactory?.let(::SafeDefaultOptionFactory)
   private val blockingLaboratory = BlockingLaboratory(this)
