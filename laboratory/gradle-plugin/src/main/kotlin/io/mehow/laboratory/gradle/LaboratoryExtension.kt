@@ -2,6 +2,7 @@ package io.mehow.laboratory.gradle
 
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.internal.catalog.DelegatingProjectDependency
 
 /**
  * An entry point for configuration of feature flags code generation.
@@ -12,34 +13,28 @@ public abstract class LaboratoryExtension {
    * Package names can be individually overwritten in each generating block
    */
   public var packageName: String
-    get() = packageNameProvider()
+    get() = packageNameProvider.value.orEmpty()
     set(value) {
-      packageNameProvider.value = value
+      packageNameProvider.setValue(value)
     }
 
   private val packageNameProvider = PackageNameProvider()
 
-  private val mutableFeatureInputs = mutableListOf<FeatureFlagInput>()
-
-  internal val featureInputs: List<FeatureFlagInput> = mutableFeatureInputs
-
   private val mutableDependencies = mutableListOf<FeatureFlagInput>()
 
-  internal val factoryFeatureInputs get() = featureInputs + mutableDependencies
+  internal val factoryFeatureFlags get() = featureFlags + mutableDependencies
 
   internal lateinit var project: Project
 
-  /**
-   * Generates a new feature in this module.
-   */
+  private val mutableFeatureInputs = mutableListOf<FeatureFlagInput>()
+
+  internal val featureFlags: List<FeatureFlagInput> = mutableFeatureInputs
+
   public fun feature(
     name: String,
     action: Action<FeatureFlagInput>,
   ) {
-    mutableFeatureInputs += FeatureFlagInput(name, packageNameProvider).let { input ->
-      action.execute(input)
-      return@let input
-    }
+    mutableFeatureInputs += FeatureFlagInput(name, packageNameProvider, supervisor = null).apply(action::execute)
   }
 
   internal var factoryInput: FeatureFactoryInput? = null
@@ -131,12 +126,19 @@ public abstract class LaboratoryExtension {
    * Includes a [project] during feature flags contribution to [featureFactory], [featureSourcesFactory],
    * [sourcedStorage] or [optionFactory]. Included project must have Laboratory plugin applied.
    */
+  public fun dependency(project: DelegatingProjectDependency) {
+    dependency(project.dependencyProject)
+  }
+
+  /**
+   * Includes a [project] during feature flags contribution to [featureFactory], [featureSourcesFactory],
+   * [sourcedStorage] or [optionFactory]. Included project must have Laboratory plugin applied.
+   */
   public fun dependency(project: Project) {
     this.project.evaluationDependsOn(project.path)
-    val laboratoryExtension =
-      requireNotNull(project.extensions.findByType(LaboratoryExtension::class.java)) {
-        "Cannot depend on a project without laboratory plugin"
-      }
-    mutableDependencies += laboratoryExtension.featureInputs
+    val laboratoryExtension = requireNotNull(project.extensions.findByType(LaboratoryExtension::class.java)) {
+      "Cannot depend on a project without laboratory plugin"
+    }
+    mutableDependencies += laboratoryExtension.featureFlags
   }
 }

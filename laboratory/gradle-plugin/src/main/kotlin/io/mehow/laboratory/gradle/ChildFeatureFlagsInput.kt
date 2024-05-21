@@ -1,15 +1,16 @@
 package io.mehow.laboratory.gradle
 
-import io.mehow.laboratory.generator.Supervisor
+import io.mehow.laboratory.generator.FeatureFlagModel
 import org.gradle.api.Action
+import java.io.Serializable
 
 /**
  * An entry point for configuration of supervised feature flags code generation.
  */
 public class ChildFeatureFlagsInput internal constructor(
-  private val packageNameProvider: () -> String,
-  private val supervisor: () -> Supervisor,
-) {
+  private val packageNameProvider: PackageNameProvider,
+  private val supervisor: SupervisorInput,
+) : Serializable {
   private val mutableFeatureInputs = mutableListOf<FeatureFlagInput>()
 
   private val featureInputs: List<FeatureFlagInput> = mutableFeatureInputs
@@ -27,5 +28,9 @@ public class ChildFeatureFlagsInput internal constructor(
     }
   }
 
-  internal fun toModels() = featureInputs.flatMap(FeatureFlagInput::toModels)
+  internal fun toModels(): List<FeatureFlagModel> = featureInputs.flatMap(FeatureFlagInput::toModels)
+
+  internal companion object {
+    private const val serialVersionUID = 0L
+  }
 }

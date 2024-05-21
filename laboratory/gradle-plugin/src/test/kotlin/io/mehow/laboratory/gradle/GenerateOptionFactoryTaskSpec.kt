@@ -9,7 +9,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
-class OptionFactoryTaskSpec : FunSpec({
+class GenerateOptionFactoryTaskSpec : FunSpec({
   lateinit var gradleRunner: GradleRunner
 
   cleanBuildDirs()
@@ -265,7 +265,7 @@ class OptionFactoryTaskSpec : FunSpec({
 
     result.task(":generateOptionFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.optionFactoryFile("GeneratedOptionFactory")
+    val factory = fixture.optionFactoryFile("GeneratedOptionFactory", isAndroid = true)
     factory.shouldExist()
 
     factory.readText() shouldContain """

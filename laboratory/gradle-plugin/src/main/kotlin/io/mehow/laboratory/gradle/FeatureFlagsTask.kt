@@ -1,20 +1,28 @@
 package io.mehow.laboratory.gradle
 
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Internal
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import java.io.File
+import javax.inject.Inject
 
-public open class FeatureFlagsTask : DefaultTask() {
-  @get:Internal internal lateinit var features: List<FeatureFlagInput>
+internal abstract class FeatureFlagsTask @Inject constructor(
+  objects: ObjectFactory,
+) : OutputTask() {
+  @Input
+  val inputFlags: ListProperty<FeatureFlagInput> = objects.listProperty(FeatureFlagInput::class.java)
 
-  @get:Internal internal lateinit var codeGenDir: File
+  @OutputDirectory
+  override val outputDirectory: DirectoryProperty = objects.directoryProperty()
 
-  @TaskAction public fun generateFeatureFlags() {
-    val featureFlagModels = features.flatMap(FeatureFlagInput::toModels)
-
-    for (model in featureFlagModels) {
-      model.prepare().writeTo(codeGenDir)
-    }
+  @TaskAction
+  fun generateFeatureFlags() {
+    outputDirectory.get().asFile.deleteRecursively()
+    val outputPath = outputDirectory.get().asFile
+    inputFlags.get()
+      .flatMap(FeatureFlagInput::toModels)
+      .forEach { model -> model.prepare().writeTo(outputPath) }
   }
 }

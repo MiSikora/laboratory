@@ -6,7 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Gradle tasks are now cacheable.
+- Support for typesafe project accessors when declaring dependencies.
+
 ### Changed
+- Gradle tasks are now always registered when plugin is applied in a project. If there is nothing to generate tasks will clear their respective output directories. 
 - Upgrade to Kotlin `1.9.24`.
 - Upgrade to Coroutines `1.8.1`.
 - Upgrade to Gradle `8.7`.
@@ -22,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Hyperion `0.9.38`.
 - Downgrade target and source compatibilities versions to Java 11.
 - Change compile and target SDK to 34.
+
+### Fixed
+- Gradle tasks are now correctly marked as `internal`.
 
 ## [1.1.0] - 2023-06-13
 
