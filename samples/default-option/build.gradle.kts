@@ -15,20 +15,9 @@ laboratory {
 
   featureFactory()
 
-  feature("ShowAds") {
-    withDefaultOption("Enabled")
-    withOption("Disabled")
-  }
-
-  feature("ReportRootedDevice") {
-    withDefaultOption("Enabled")
-    withOption("Disabled")
-  }
-
-  feature("RequiredFingerprint") {
-    withDefaultOption("Enabled")
-    withOption("Disabled")
-  }
+  enabledFeature("ShowAds")
+  enabledFeature("ReportRootedDevice")
+  enabledFeature("RequiredFingerprint")
 }
 
 dependencies {
