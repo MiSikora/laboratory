@@ -658,6 +658,9 @@ laboratory {
 
   // Includes feature flags that are used for generation of feature factories, sourced storage and option factory.
   dependency(project(":some-project"))
+  // By default dependency contributes to all declared generators but it can be selectively applied
+  // by passing a contribution list.
+  dependency(project(":some-project"), [DependencyContribution.FeatureFactory, DependencyContribution.OptionFactory])
   // If typesafe project accessors are enabled.
   dependency(projects.someProject)
 }

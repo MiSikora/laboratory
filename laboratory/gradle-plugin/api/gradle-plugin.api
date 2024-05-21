@@ -8,6 +8,16 @@ public final class io/mehow/laboratory/gradle/ChildFeatureFlagsInput : java/io/S
 	public final fun feature (Ljava/lang/String;Lorg/gradle/api/Action;)V
 }
 
+public final class io/mehow/laboratory/gradle/DependencyContribution : java/lang/Enum {
+	public static final field FeatureFactory Lio/mehow/laboratory/gradle/DependencyContribution;
+	public static final field FeatureSourceFactory Lio/mehow/laboratory/gradle/DependencyContribution;
+	public static final field OptionFactory Lio/mehow/laboratory/gradle/DependencyContribution;
+	public static final field SourcedStorage Lio/mehow/laboratory/gradle/DependencyContribution;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/gradle/DependencyContribution;
+	public static fun values ()[Lio/mehow/laboratory/gradle/DependencyContribution;
+}
+
 public final class io/mehow/laboratory/gradle/DeprecationLevel : java/lang/Enum {
 	public static final field Error Lio/mehow/laboratory/gradle/DeprecationLevel;
 	public static final field Hidden Lio/mehow/laboratory/gradle/DeprecationLevel;
@@ -68,7 +78,11 @@ public final class io/mehow/laboratory/gradle/FeatureFlagInput$MultiOption : io/
 public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
 	public fun <init> ()V
 	public final fun dependency (Lorg/gradle/api/Project;)V
+	public final fun dependency (Lorg/gradle/api/Project;Ljava/util/Collection;)V
 	public final fun dependency (Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;)V
+	public final fun dependency (Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;Ljava/util/Collection;)V
+	public static synthetic fun dependency$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Lorg/gradle/api/Project;Ljava/util/Collection;ILjava/lang/Object;)V
+	public static synthetic fun dependency$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;Ljava/util/Collection;ILjava/lang/Object;)V
 	public final fun disabledFeature (Ljava/lang/String;)V
 	public final fun disabledFeature (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public static synthetic fun disabledFeature$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Ljava/lang/String;Lorg/gradle/api/Action;ILjava/lang/Object;)V

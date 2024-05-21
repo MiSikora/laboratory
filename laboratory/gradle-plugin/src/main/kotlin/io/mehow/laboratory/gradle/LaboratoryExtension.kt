@@ -20,9 +20,13 @@ public abstract class LaboratoryExtension {
 
   private val packageNameProvider = PackageNameProvider()
 
-  private val mutableDependencies = mutableListOf<FeatureFlagInput>()
+  private val externalDependencies = mutableMapOf<DependencyContribution, List<FeatureFlagInput>>()
 
-  internal val factoryFeatureFlags get() = featureFlags + mutableDependencies
+  internal val factoryFeatureFlags get() = buildMap {
+    DependencyContribution.entries.forEach { entry ->
+      put(entry, featureFlags + externalDependencies[entry].orEmpty())
+    }
+  }
 
   internal lateinit var project: Project
 
@@ -147,21 +151,38 @@ public abstract class LaboratoryExtension {
 
   /**
    * Includes a [project] during feature flags contribution to [featureFactory], [featureSourcesFactory],
-   * [sourcedStorage] or [optionFactory]. Included project must have Laboratory plugin applied.
+   * [sourcedStorage] or [optionFactory]. Contribution can be selective applied by supplying [contributeTo] collection.
+   *
+   * Included project must have Laboratory plugin applied.
    */
-  public fun dependency(project: DelegatingProjectDependency) {
-    dependency(project.dependencyProject)
+  @JvmOverloads
+  public fun dependency(
+    project: DelegatingProjectDependency,
+    contributeTo: Collection<DependencyContribution> = DependencyContribution.entries,
+  ) {
+    dependency(project.dependencyProject, contributeTo)
   }
 
   /**
    * Includes a [project] during feature flags contribution to [featureFactory], [featureSourcesFactory],
-   * [sourcedStorage] or [optionFactory]. Included project must have Laboratory plugin applied.
+   * [sourcedStorage] or [optionFactory]. Contribution can be selective applied by supplying [contributeTo] collection.
+   *
+   * Included project must have Laboratory plugin applied.
    */
-  public fun dependency(project: Project) {
+  @JvmOverloads
+  public fun dependency(
+    project: Project,
+    contributeTo: Collection<DependencyContribution> = DependencyContribution.entries,
+  ) {
+    require(contributeTo.isNotEmpty()) {
+      "Dependency in project '${this.project.name}' on '${project.name}' must have at least one contribution"
+    }
     this.project.evaluationDependsOn(project.path)
     val laboratoryExtension = requireNotNull(project.extensions.findByType(LaboratoryExtension::class.java)) {
       "Cannot depend on a project without laboratory plugin"
     }
-    mutableDependencies += laboratoryExtension.featureFlags
+    contributeTo.forEach { entry ->
+      externalDependencies[entry] = externalDependencies[entry].orEmpty() + laboratoryExtension.featureFlags
+    }
   }
 }
