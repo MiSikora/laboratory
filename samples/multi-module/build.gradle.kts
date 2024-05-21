@@ -16,7 +16,7 @@ laboratory {
   featureFactory()
 
   dependency(project(":multi-module:multi-module-a"))
-  dependency(project(":multi-module:multi-module-b"))
+  dependency(projects.multiModule.multiModuleB)
 }
 
 dependencies {
