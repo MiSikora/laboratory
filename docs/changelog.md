@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Kotlin `1.9.24`.
 - Upgrade to Coroutines `1.8.1`.
 - Upgrade to Gradle `8.7`.
-- Upgrade to AGP to `8.4.0`.
+- Upgrade to AGP to `8.4.1`.
 - Upgrade to Wire `4.9.9`.
 - Upgrade to KotlinPoet `1.16.0`.
 - Upgrade to DataStore `1.1.1`.
