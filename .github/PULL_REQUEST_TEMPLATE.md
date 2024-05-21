@@ -6,4 +6,3 @@
 - [ ] I updated the [changelog](https://github.com/MiSikora/laboratory/blob/trunk/docs/changelog.md).
 - [ ] I updated the [documentation](https://github.com/MiSikora/laboratory/tree/trunk/docs).
 - [ ] I updated the [samples](https://github.com/MiSikora/laboratory/tree/trunk/samples).
-- 
