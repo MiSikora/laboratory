@@ -25,11 +25,8 @@ laboratory {
     withOption("Error")
   }
 
-  feature("ReportRootedDevice") {
+  disabledFeature("ReportRootedDevice") {
     description = "Reports during [cold start](https://developer.android.com/topic/performance/vitals/launch-time#cold) whether device is rooted"
-
-    withDefaultOption("Disabled")
-    withOption("Enabled")
   }
 
   feature("Authentication") {
