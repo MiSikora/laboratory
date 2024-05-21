@@ -62,7 +62,7 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.group = PluginName
       task.description = "Generate feature factory"
       task.factory.set(extension.factoryInput)
-      task.features.set(extension.factoryFeatureFlags)
+      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureFactory))
       task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-factory"))
     }
   }
@@ -75,7 +75,7 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.group = PluginName
       task.description = "Generate sourced feature storage"
       task.storage.set(extension.storageInput)
-      task.features.set(extension.factoryFeatureFlags)
+      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.SourcedStorage))
       task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/sourced-storage"))
     }
   }
@@ -88,7 +88,7 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.group = PluginName
       task.description = "Generate option factory"
       task.factory.set(extension.optionFactoryInput)
-      task.features.set(extension.factoryFeatureFlags)
+      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.OptionFactory))
       task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/option-factory"))
     }
   }
@@ -101,7 +101,7 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.group = PluginName
       task.description = "Generate feature source factory"
       task.factory.set(extension.featureSourcesFactory)
-      task.features.set(extension.factoryFeatureFlags)
+      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureSourceFactory))
       task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-source-factory"))
     }
   }

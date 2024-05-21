@@ -18,6 +18,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       disabledFeature("Feature")
     }
     ```
+- Dependencies can now selectively contribute to generation process.
+    ```groovy
+    laboratory {
+      featureFactory()
+      featureSourceFactory()
+      sourcedStorage()
+      optionFactory()
+    
+      dependency(project(":feature"), [
+        DependencyContribution.FeatureFactory,
+        DependencyContribution.FeatureSourceFactory, 
+        DependencyContribution.OptionFactory, 
+        DependencyContribution.SourcedStorage,
+      ])
+    }
+    ```
 
 ### Changed
 - Gradle tasks are now always registered when plugin is applied in a project. If there is nothing to generate tasks will clear their respective output directories. 
