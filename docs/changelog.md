@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Gradle tasks are now cacheable.
 - Support for typesafe project accessors when declaring dependencies.
+- Shorthand for creating binary flags.
+    ```groovy
+    laboratory {
+      // Generates 'Feature' with two options - 'Enabled and 'Disabled'. 'Enabled' is the default one.
+      enabledFeature("Feature")
+      // Generates 'Feature' with two options - 'Enabled and 'Disabled'. 'Disabled' is the default one.
+      disabledFeature("Feature")
+    }
+    ```
 
 ### Changed
 - Gradle tasks are now always registered when plugin is applied in a project. If there is nothing to generate tasks will clear their respective output directories. 

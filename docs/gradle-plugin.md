@@ -596,6 +596,30 @@ laboratory {
     }
   }
 
+  // Informs plugin to create 'enum class SomeFeature' during the generation period with two options.
+  // 'Enabled' and 'Disabled' and uses 'Enabled' as the default one.
+  enabledFeature("SomeFeature") {
+    // Uses the same options as feature() block except for `withOption()` and `withDefaultOption()`.
+    
+    withEnabled { option ->
+      option.feature("SupervisedFeature") {
+        // recursive feature generation
+      }
+    }
+  }
+
+  // Informs plugin to create 'enum class SomeFeature' during the generation period with two options.
+  // 'Enabled' and 'Disabled' and uses 'Disabled' as the default one.
+  disabled("SomeFeature") {
+    // Uses the same options as feature() block except for `withOption()` and `withDefaultOption()`.
+
+    withEnabled { option ->
+      option.feature("SupervisedFeature") {
+        // recursive feature generation
+      }
+    }
+  }
+
   // Configures feature flags storage. Useful when feature flags have multiple sources.
   sourcedStorage {
     // Overrides globally declared namespace. No value by default.

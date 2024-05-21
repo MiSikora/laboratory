@@ -507,6 +507,46 @@ class GenerateFeatureFlagsTaskSpec : FunSpec({
     """.trimMargin()
   }
 
+  test("generates enabled feature flag") {
+    val fixture = "feature-flag-generate-enabled".toFixture()
+
+    gradleRunner.withProjectDir(fixture).build()
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: Feature
+      |    get() = Enabled
+      |}
+    """.trimMargin()
+  }
+
+  test("generates disabled feature flag") {
+    val fixture = "feature-flag-generate-disabled".toFixture()
+
+    gradleRunner.withProjectDir(fixture).build()
+
+    val feature = fixture.featureFile("Feature")
+    feature.shouldExist()
+
+    feature.readText() shouldContain """
+      |enum class Feature : io.mehow.laboratory.Feature<Feature> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: Feature
+      |    get() = Disabled
+      |}
+    """.trimMargin()
+  }
+
   test("generates supervised grandchild feature flag") {
     val fixture = "feature-flag-supervisor-generate-grandchild".toFixture()
 
@@ -611,5 +651,113 @@ class GenerateFeatureFlagsTaskSpec : FunSpec({
 
     val feature = fixture.featureFile("Feature")
     feature.shouldNotExist()
+  }
+
+  test("generates supervised children for enabled feature flag") {
+    val fixture = "feature-flag-supervisor-enabled-generate-child".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val parent = fixture.featureFile("Parent")
+    parent.shouldExist()
+
+    parent.readText() shouldContain """
+      |enum class Parent : Feature<Parent> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: Parent
+      |    get() = Enabled
+      |}
+    """.trimMargin()
+
+    val first = fixture.featureFile("DisabledChild")
+    first.shouldExist()
+
+    first.readText() shouldContain """
+      |enum class DisabledChild : Feature<DisabledChild> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: DisabledChild
+      |    get() = Disabled
+      |
+      |  override val supervisorOption: Feature<*> = Parent.Enabled
+      |}
+    """.trimMargin()
+
+    val second = fixture.featureFile("EnabledChild")
+    second.shouldExist()
+
+    second.readText() shouldContain """
+      |enum class EnabledChild : Feature<EnabledChild> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: EnabledChild
+      |    get() = Enabled
+      |
+      |  override val supervisorOption: Feature<*> = Parent.Disabled
+      |}
+    """.trimMargin()
+  }
+
+  test("generates supervised children for disabled feature flag") {
+    val fixture = "feature-flag-supervisor-disabled-generate-child".toFixture()
+
+    val result = gradleRunner.withProjectDir(fixture).build()
+
+    result.task(":generateFeatureFlags")!!.outcome shouldBe SUCCESS
+
+    val parent = fixture.featureFile("Parent")
+    parent.shouldExist()
+
+    parent.readText() shouldContain """
+      |enum class Parent : Feature<Parent> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: Parent
+      |    get() = Disabled
+      |}
+    """.trimMargin()
+
+    val first = fixture.featureFile("DisabledChild")
+    first.shouldExist()
+
+    first.readText() shouldContain """
+      |enum class DisabledChild : Feature<DisabledChild> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: DisabledChild
+      |    get() = Disabled
+      |
+      |  override val supervisorOption: Feature<*> = Parent.Enabled
+      |}
+    """.trimMargin()
+
+    val second = fixture.featureFile("EnabledChild")
+    second.shouldExist()
+
+    second.readText() shouldContain """
+      |enum class EnabledChild : Feature<EnabledChild> {
+      |  Enabled,
+      |  Disabled,
+      |  ;
+      |
+      |  override val defaultOption: EnabledChild
+      |    get() = Enabled
+      |
+      |  override val supervisorOption: Feature<*> = Parent.Disabled
+      |}
+    """.trimMargin()
   }
 })

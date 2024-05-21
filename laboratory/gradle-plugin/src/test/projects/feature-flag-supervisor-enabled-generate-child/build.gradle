@@ -1,0 +1,15 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  enabledFeature("Parent") {
+    withEnabled { parent ->
+      parent.disabledFeature("DisabledChild")
+    }
+    withDisabled { parent ->
+      parent.enabledFeature("EnabledChild")
+    }
+  }
+}
