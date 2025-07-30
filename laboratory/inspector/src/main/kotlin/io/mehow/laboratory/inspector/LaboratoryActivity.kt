@@ -75,7 +75,7 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
         view.updatePadding(
           left = padding.left + bars.left,
           right = padding.right + bars.right,
-          bottom = padding.bottom + bars.bottom
+          bottom = padding.bottom + bars.bottom,
         )
       }
     }

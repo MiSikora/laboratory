@@ -6,15 +6,12 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewConfiguration
 import android.view.ViewTreeObserver
-import android.view.WindowInsets
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.internal.ViewUtils.requestApplyInsetsWhenAttached
 import kotlin.math.absoluteValue
 
 internal fun View.focusAndShowKeyboard() {
