@@ -37,12 +37,12 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setUpEdgeToEdgeInsents()
+    setUpEdgeToEdgeInsets()
     setUpToolbar()
     setUpViewPager()
   }
 
-  private fun setUpEdgeToEdgeInsents() {
+  private fun setUpEdgeToEdgeInsets() {
     window.decorView.fixSystemBarInsets()
   }
 
