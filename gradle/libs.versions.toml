@@ -9,8 +9,8 @@ ktlint = "1.2.1"
 
 jvmTarget = "11"
 minSdk = "21"
-compileSdk = "34"
-targetSdk = "34"
+compileSdk = "35"
+targetSdk = "35"
 
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }

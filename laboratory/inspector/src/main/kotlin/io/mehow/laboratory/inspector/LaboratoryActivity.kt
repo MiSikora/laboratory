@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
 import io.mehow.laboratory.FeatureFactory
 import io.mehow.laboratory.Laboratory
+import io.mehow.laboratory.inspector.LaboratoryActivity.Companion.configure
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Limited
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Unlimited
 import kotlinx.coroutines.delay
@@ -36,8 +37,13 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setUpEdgeToEdgeInsents()
     setUpToolbar()
     setUpViewPager()
+  }
+
+  private fun setUpEdgeToEdgeInsents() {
+    window.decorView.fixSystemBarInsets()
   }
 
   private fun setUpToolbar() {

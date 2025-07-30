@@ -9,6 +9,9 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.absoluteValue
 
@@ -71,3 +74,19 @@ internal var View.isGone: Boolean
   set(value) {
     visibility = if (value) GONE else VISIBLE
   }
+
+internal fun View.fixSystemBarInsets() {
+  ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+    val bars = insets.getInsets(
+      WindowInsetsCompat.Type.systemBars()
+        or WindowInsetsCompat.Type.displayCutout()
+    )
+    v.updatePadding(
+      left = bars.left,
+      top = bars.top,
+      right = bars.right,
+      bottom = bars.bottom,
+    )
+    WindowInsetsCompat.CONSUMED
+  }
+}
