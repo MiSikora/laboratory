@@ -1,7 +1,7 @@
 # Laboratory ⚗️
 
-[<img src="https://img.shields.io/maven-central/v/io.mehow.laboratory/laboratory.svg?label=latest%20release"/>](https://search.maven.org/search?q=g:io.mehow.laboratory)
-[<img src="https://img.shields.io/nexus/s/https/oss.sonatype.org/io.mehow.laboratory/laboratory.svg?label=latest%20snapshot"/>](https://oss.sonatype.org/content/repositories/snapshots/io/mehow/laboratory/)
+[![Maven Central](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fio%2Fmehow%2Flaboratory%2Flaboratory%2Fmaven-metadata.xml&style=flat-square&label=maven-central&color=%235C96B2)](https://central.sonatype.com/namespace/io.mehow.laboratory)
+[![Snapshots](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fio%2Fmehow%2Flaboratory%2Flaboratory%2Fmaven-metadata.xml&style=flat-square&label=snapshots&color=%2315252D&strategy=latestProperty)](https://central.sonatype.com/repository/maven-snapshots/io/mehow/laboratory/)
 
 Feature flags for multi-module Kotlin Android projects.
 
