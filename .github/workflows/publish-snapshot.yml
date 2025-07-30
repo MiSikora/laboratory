@@ -18,13 +18,13 @@ jobs:
         uses: actions/checkout@v4.2.2
 
       - name: Configure JDK
-        uses: actions/setup-java@v4.5.0
+        uses: actions/setup-java@v4.7.1
         with:
           distribution: zulu
           java-version: 21
 
       - name: Cache Gradle Dirs
-        uses: actions/cache@v4.1.2
+        uses: actions/cache@v4.2.3
         with:
           path: |
             ~/.gradle/caches/
