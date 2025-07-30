@@ -3,6 +3,8 @@ package io.mehow.laboratory.inspector
 import android.os.Bundle
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -46,6 +48,12 @@ internal class SectionFragment : Fragment(R.layout.io_mehow_laboratory_feature_g
       }
       adapter = featureAdapter
       hideKeyboardOnScroll()
+      doOnApplyWindowInsets { view, insets, padding ->
+        val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+        view.updatePadding(
+          bottom = padding.bottom + bars.bottom,
+        )
+      }
     }
     observeGroup()
   }

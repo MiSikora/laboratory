@@ -9,6 +9,8 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.absoluteValue
 
@@ -71,3 +73,20 @@ internal var View.isGone: Boolean
   set(value) {
     visibility = if (value) GONE else VISIBLE
   }
+
+internal fun View.doOnApplyWindowInsets(block: (View, WindowInsetsCompat, InitialPadding) -> Unit) {
+  val initialPadding = initialPadding()
+  ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+    block(view, insets, initialPadding)
+    insets
+  }
+}
+
+internal data class InitialPadding(
+  val left: Int,
+  val top: Int,
+  val right: Int,
+  val bottom: Int,
+)
+
+private fun View.initialPadding() = InitialPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
