@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2025-07-30
+
 ### Added
 - Gradle tasks are now cacheable.
 - Support for typesafe project accessors when declaring dependencies.
@@ -513,7 +515,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.1.1...HEAD
+[1.1.1]: https://github.com/MiSikora/laboratory/releases/tag/1.1.1
 [1.1.0]: https://github.com/MiSikora/laboratory/releases/tag/1.1.0
 [1.0.3]: https://github.com/MiSikora/laboratory/releases/tag/1.0.3
 [1.0.2]: https://github.com/MiSikora/laboratory/releases/tag/1.0.2
