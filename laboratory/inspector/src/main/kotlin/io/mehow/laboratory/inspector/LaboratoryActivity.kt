@@ -3,10 +3,14 @@ package io.mehow.laboratory.inspector
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.View.OVER_SCROLL_NEVER
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -37,16 +41,20 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setUpEdgeToEdgeInsets()
+    enableEdgeToEdge()
     setUpToolbar()
     setUpViewPager()
   }
 
-  private fun setUpEdgeToEdgeInsets() {
-    window.decorView.fixSystemBarInsets()
-  }
-
   private fun setUpToolbar() {
+    findViewById<View>(R.id.io_mehow_laboratory_toolbar).doOnApplyWindowInsets { view, insets, padding ->
+      val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+      view.updatePadding(
+        left = padding.left + bars.left,
+        top = padding.top + bars.top,
+        right = padding.right + bars.right,
+      )
+    }
     val binding = ToolbarBinding(
       view = window.decorView,
       onSearchEventsListener = { event -> searchViewModel.sendEvent(event) },
@@ -62,6 +70,14 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
       adapter = SectionAdapter(this@LaboratoryActivity, sectionNames)
       offscreenPageLimit = configuration.offscreenSectionCount
       disableScrollEffect()
+      doOnApplyWindowInsets { view, insets, padding ->
+        val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+        view.updatePadding(
+          left = padding.left + bars.left,
+          right = padding.right + bars.right,
+          bottom = padding.bottom + bars.bottom
+        )
+      }
     }
     observeNavigationEvents(viewPager)
 
