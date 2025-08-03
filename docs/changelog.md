@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to AppCompat `1.7.1`
 - Upgrade to ViewModel-ktx `2.9.2`
 - Upgrade to Fragment-ktx `1.8.8`
+- Upgrade to RecyclerView `1.4.0`
 
 ## [1.1.2] - 2025-08-04
 
