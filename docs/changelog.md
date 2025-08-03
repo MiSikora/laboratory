@@ -8,10 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade Gradle to 9.0.0
-- Upgrade Android Gradle Plugin to 8.12.0
-- Upgrade target Android SDK to 36
-- Upgrade Kotlin to 2.2.0
-- Upgrade Wire to 5.3.5
+- Upgrade to Android Gradle Plugin 8.12.0
+- Upgrade to target Android SDK 36
+- Upgrade to Kotlin 2.2.0
+- Upgrade to Wire 5.3.5
+- Upgrade to Coroutines 1.10.2
 
 ## [1.1.2] - 2025-08-04
 
