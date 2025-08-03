@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Coroutines `1.10.2`
 - Upgrade to KotlinPoet `2.2.0`
 - Upgrade to DataStore `1.1.7`
+- Upgrade to AppCompat `1.7.1`
 
 ## [1.1.2] - 2025-08-04
 
