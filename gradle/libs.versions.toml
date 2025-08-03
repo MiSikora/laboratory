@@ -33,7 +33,7 @@ kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", ver
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property-jvm", version.ref = "kotest" }
 turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.1" }
-androidx-test-coreKtx = { group = "androidx.test", name = "core-ktx", version = "1.5.0" }
+androidx-test-coreKtx = { group = "androidx.test", name = "core-ktx", version = "1.7.0" }
 androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version = "1.4.2" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version = "1.5.2" }
 androidx-testExt-junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version = "1.1.5" }
