@@ -79,10 +79,10 @@ public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
 	public fun <init> ()V
 	public final fun dependency (Lorg/gradle/api/Project;)V
 	public final fun dependency (Lorg/gradle/api/Project;Ljava/util/Collection;)V
-	public final fun dependency (Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;)V
-	public final fun dependency (Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;Ljava/util/Collection;)V
+	public final fun dependency (Lorg/gradle/api/artifacts/ProjectDependency;)V
+	public final fun dependency (Lorg/gradle/api/artifacts/ProjectDependency;Ljava/util/Collection;)V
 	public static synthetic fun dependency$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Lorg/gradle/api/Project;Ljava/util/Collection;ILjava/lang/Object;)V
-	public static synthetic fun dependency$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Lorg/gradle/api/internal/catalog/DelegatingProjectDependency;Ljava/util/Collection;ILjava/lang/Object;)V
+	public static synthetic fun dependency$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Lorg/gradle/api/artifacts/ProjectDependency;Ljava/util/Collection;ILjava/lang/Object;)V
 	public final fun disabledFeature (Ljava/lang/String;)V
 	public final fun disabledFeature (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public static synthetic fun disabledFeature$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Ljava/lang/String;Lorg/gradle/api/Action;ILjava/lang/Object;)V
