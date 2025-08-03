@@ -31,8 +31,7 @@ class GenerateFeatureSourceFactoryTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
-      |    GeneratedFeatureSourceFactory
+      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory = GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
@@ -51,8 +50,7 @@ class GenerateFeatureSourceFactoryTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
-      |    GeneratedFeatureSourceFactory
+      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory = GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
@@ -142,8 +140,7 @@ class GenerateFeatureSourceFactoryTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
-      |    GeneratedFeatureSourceFactory
+      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory = GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
@@ -167,8 +164,7 @@ class GenerateFeatureSourceFactoryTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
-      |    GeneratedFeatureSourceFactory
+      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory = GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")
@@ -191,8 +187,7 @@ class GenerateFeatureSourceFactoryTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
-      |    GeneratedFeatureSourceFactory
+      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory = GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
@@ -211,8 +206,7 @@ class GenerateFeatureSourceFactoryTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
-      |    GeneratedFeatureSourceFactory
+      |fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory = GeneratedFeatureSourceFactory
       |
       |private object GeneratedFeatureSourceFactory : FeatureFactory {
       |  @Suppress("UNCHECKED_CAST")

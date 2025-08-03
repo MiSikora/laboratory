@@ -28,8 +28,7 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |import kotlin.collections.plus
       |import kotlin.to
       |
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep = Builder(localSource, emptyMap())
       |
       |internal interface FirebaseStep {
       |  public fun firebaseSource(source: FeatureStorage): S3Step
@@ -46,7 +45,9 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : FirebaseStep, S3Step, BuildingStep {
+      |) : FirebaseStep,
+      |    S3Step,
+      |    BuildingStep {
       |  override fun firebaseSource(source: FeatureStorage): S3Step = copy(
       |    remoteSources = remoteSources + ("Firebase" to source)
       |  )
@@ -81,8 +82,7 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |import kotlin.collections.plus
       |import kotlin.to
       |
-      |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep =
-      |    Builder(localSource, emptyMap())
+      |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FirebaseStep = Builder(localSource, emptyMap())
       |
       |public interface FirebaseStep {
       |  public fun firebaseSource(source: FeatureStorage): S3Step
@@ -99,7 +99,9 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : FirebaseStep, S3Step, BuildingStep {
+      |) : FirebaseStep,
+      |    S3Step,
+      |    BuildingStep {
       |  override fun firebaseSource(source: FeatureStorage): S3Step = copy(
       |    remoteSources = remoteSources + ("Firebase" to source)
       |  )
@@ -133,8 +135,7 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |import kotlin.collections.plus
       |import kotlin.to
       |
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BarStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BarStep = Builder(localSource, emptyMap())
       |
       |internal interface BarStep {
       |  public fun barSource(source: FeatureStorage): BazStep
@@ -155,7 +156,10 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : BarStep, BazStep, FooStep, BuildingStep {
+      |) : BarStep,
+      |    BazStep,
+      |    FooStep,
+      |    BuildingStep {
       |  override fun barSource(source: FeatureStorage): BazStep = copy(
       |    remoteSources = remoteSources + ("Bar" to source)
       |  )
@@ -202,8 +206,7 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |import kotlin.collections.plus
       |import kotlin.to
       |
-      |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FooStep =
-      |    Builder(localSource, emptyMap())
+      |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): FooStep = Builder(localSource, emptyMap())
       |
       |public interface FooStep {
       |  public fun fooSource(source: FeatureStorage): BuildingStep
@@ -216,7 +219,8 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : FooStep, BuildingStep {
+      |) : FooStep,
+      |    BuildingStep {
       |  override fun fooSource(source: FeatureStorage): BuildingStep = copy(
       |    remoteSources = remoteSources + ("Foo" to source)
       |  )
@@ -245,8 +249,7 @@ class SourcedFeatureStorageModelSpec : FunSpec({
       |import kotlin.collections.Map
       |import kotlin.collections.emptyMap
       |
-      |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-      |    Builder(localSource, emptyMap())
+      |public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
       |
       |public interface BuildingStep {
       |  public fun build(): FeatureStorage

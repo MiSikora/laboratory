@@ -15,7 +15,7 @@ targetSdk = "36"
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-kotlinPoet = { group = "com.squareup", name = "kotlinpoet", version = "1.16.0" }
+kotlinPoet = { group = "com.squareup", name = "kotlinpoet", version = "2.2.0" }
 androidx-dataStore = { group = "androidx.datastore", name = "datastore-core", version = "1.1.1" }
 androidx-appCompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
 androidx-viewModelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.8.0" }
