@@ -265,7 +265,7 @@ class GenerateOptionFactoryTaskSpec : FunSpec({
 
     result.task(":generateOptionFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.optionFactoryFile("GeneratedOptionFactory", isAndroid = true)
+    val factory = fixture.optionFactoryFile("GeneratedOptionFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain """

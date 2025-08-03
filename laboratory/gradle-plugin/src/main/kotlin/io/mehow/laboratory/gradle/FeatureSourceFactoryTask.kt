@@ -15,7 +15,7 @@ internal abstract class FeatureSourceFactoryTask @Inject constructor(
   objects: ObjectFactory,
 ) : OutputTask() {
   @Input @Optional
-  val factory: Property<FeatureFactoryInput?> = objects.property(FeatureFactoryInput::class.java)
+  val factory: Property<FeatureFactoryInput> = objects.property(FeatureFactoryInput::class.java)
 
   @Input
   val features: ListProperty<FeatureFlagInput> = objects.listProperty(FeatureFlagInput::class.java)
