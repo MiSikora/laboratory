@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to KotlinPoet `2.2.0`
 - Upgrade to DataStore `1.1.7`
 - Upgrade to AppCompat `1.7.1`
+- Upgrade to ViewModel-ktx `2.9.2`
 
 ## [1.1.1] - 2025-07-30
 
