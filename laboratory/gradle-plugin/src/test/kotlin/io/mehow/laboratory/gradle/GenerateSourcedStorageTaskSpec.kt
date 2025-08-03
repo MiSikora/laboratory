@@ -31,8 +31,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
       |
       |internal interface BuildingStep {
       |  public fun build(): FeatureStorage
@@ -59,8 +58,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteAStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteAStep = Builder(localSource, emptyMap())
       |
       |internal interface RemoteAStep {
       |  public fun remoteASource(source: FeatureStorage): RemoteBStep
@@ -77,7 +75,9 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteAStep, RemoteBStep, BuildingStep {
+      |) : RemoteAStep,
+      |    RemoteBStep,
+      |    BuildingStep {
       |  override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
       |    remoteSources = remoteSources + ("RemoteA" to source)
       |  )
@@ -169,8 +169,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
       |
       |internal interface RemoteStep {
       |  public fun remoteSource(source: FeatureStorage): RemoteAStep
@@ -191,7 +190,10 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteStep, RemoteAStep, RemoteBStep, BuildingStep {
+      |) : RemoteStep,
+      |    RemoteAStep,
+      |    RemoteBStep,
+      |    BuildingStep {
       |  override fun remoteSource(source: FeatureStorage): RemoteAStep = copy(
       |    remoteSources = remoteSources + ("Remote" to source)
       |  )
@@ -220,8 +222,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
       |
       |internal interface RemoteStep {
       |  public fun remoteSource(source: FeatureStorage): RemoteBStep
@@ -238,7 +239,9 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteStep, RemoteBStep, BuildingStep {
+      |) : RemoteStep,
+      |    RemoteBStep,
+      |    BuildingStep {
       |  override fun remoteSource(source: FeatureStorage): RemoteBStep = copy(
       |    remoteSources = remoteSources + ("Remote" to source)
       |  )
@@ -263,8 +266,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
       |
       |internal interface BuildingStep {
       |  public fun build(): FeatureStorage
@@ -290,8 +292,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
       |
       |internal interface BuildingStep {
       |  public fun build(): FeatureStorage
@@ -317,8 +318,7 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
     factory.shouldExist()
 
     factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): ChildStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): ChildStep = Builder(localSource, emptyMap())
       |
       |internal interface ChildStep {
       |  public fun childSource(source: FeatureStorage): GrandparentStep
@@ -339,7 +339,10 @@ class GenerateSourcedStorageTaskSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : ChildStep, GrandparentStep, ParentStep, BuildingStep {
+      |) : ChildStep,
+      |    GrandparentStep,
+      |    ParentStep,
+      |    BuildingStep {
       |  override fun childSource(source: FeatureStorage): GrandparentStep = copy(
       |    remoteSources = remoteSources + ("Child" to source)
       |  )

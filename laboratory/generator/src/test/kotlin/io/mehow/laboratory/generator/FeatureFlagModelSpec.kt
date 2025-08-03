@@ -361,9 +361,7 @@ class FeatureFlagModelSpec : FunSpec({
       |import kotlin.String
       |
       |/**
-      | * Some
-      | * [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/)
-      | * in the KDoc.
+      | * Some [long hyperlink](https://square.github.io/kotlinpoet/1.x/kotlinpoet-classinspector-elements/com.squareup.kotlinpoet.classinspector.elements/) in the KDoc.
       | */
       |public enum class FeatureA : Feature<FeatureA> {
       |  First,

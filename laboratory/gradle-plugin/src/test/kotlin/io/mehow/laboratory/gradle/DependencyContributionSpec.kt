@@ -55,8 +55,7 @@ class DependencyContributionSpec : FunSpec({
     """.trimMargin()
 
     fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage").readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
       |
       |internal interface BuildingStep {
       |  public fun build(): FeatureStorage
@@ -103,8 +102,7 @@ class DependencyContributionSpec : FunSpec({
     """.trimMargin()
 
     fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage").readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
       |
       |internal interface BuildingStep {
       |  public fun build(): FeatureStorage
@@ -154,8 +152,7 @@ class DependencyContributionSpec : FunSpec({
     """.trimMargin()
 
     fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage").readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
       |
       |internal interface BuildingStep {
       |  public fun build(): FeatureStorage
@@ -199,8 +196,7 @@ class DependencyContributionSpec : FunSpec({
     """.trimMargin()
 
     fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage").readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
       |
       |internal interface RemoteStep {
       |  public fun remoteSource(source: FeatureStorage): BuildingStep
@@ -213,7 +209,8 @@ class DependencyContributionSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteStep, BuildingStep {
+      |) : RemoteStep,
+      |    BuildingStep {
       |  override fun remoteSource(source: FeatureStorage): BuildingStep = copy(
       |    remoteSources = remoteSources + ("Remote" to source)
       |  )
@@ -264,8 +261,7 @@ class DependencyContributionSpec : FunSpec({
     """.trimMargin()
 
     fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage").readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
       |
       |internal interface RemoteStep {
       |  public fun remoteSource(source: FeatureStorage): BuildingStep
@@ -278,7 +274,8 @@ class DependencyContributionSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteStep, BuildingStep {
+      |) : RemoteStep,
+      |    BuildingStep {
       |  override fun remoteSource(source: FeatureStorage): BuildingStep = copy(
       |    remoteSources = remoteSources + ("Remote" to source)
       |  )
@@ -329,8 +326,7 @@ class DependencyContributionSpec : FunSpec({
     """.trimMargin()
 
     fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage").readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep =
-      |    Builder(localSource, emptyMap())
+      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
       |
       |internal interface RemoteStep {
       |  public fun remoteSource(source: FeatureStorage): BuildingStep
@@ -343,7 +339,8 @@ class DependencyContributionSpec : FunSpec({
       |private data class Builder(
       |  private val localSource: FeatureStorage,
       |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteStep, BuildingStep {
+      |) : RemoteStep,
+      |    BuildingStep {
       |  override fun remoteSource(source: FeatureStorage): BuildingStep = copy(
       |    remoteSources = remoteSources + ("Remote" to source)
       |  )
