@@ -16,7 +16,7 @@ internal abstract class SourcedFeatureStorageTask @Inject constructor(
   objects: ObjectFactory,
 ) : OutputTask() {
   @Input @Optional
-  val storage: Property<SourcedFeatureStorageInput?> = objects.property(SourcedFeatureStorageInput::class.java)
+  val storage: Property<SourcedFeatureStorageInput> = objects.property(SourcedFeatureStorageInput::class.java)
 
   @Input
   val features: ListProperty<FeatureFlagInput> = objects.listProperty(FeatureFlagInput::class.java)

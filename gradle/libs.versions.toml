@@ -1,16 +1,16 @@
 [versions]
-android = "8.4.1"
+android = "8.12.0"
 coroutines = "1.8.1"
-kotest = "5.8.1"
-kotlin = "1.9.24"
+kotest = "5.9.1"
+kotlin = "2.2.0"
 hyperion = "0.9.38"
-detekt = "1.23.6"
+detekt = "1.23.8"
 ktlint = "1.2.1"
 
 jvmTarget = "11"
 minSdk = "21"
-compileSdk = "35"
-targetSdk = "35"
+compileSdk = "36"
+targetSdk = "36"
 
 [libraries]
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -46,11 +46,11 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "android" }
 android-application = { id = "com.android.application", version.ref = "android" }
-ksp = { id = "com.google.devtools.ksp", version = "1.9.24-1.0.20" }
-wire = { id = "com.squareup.wire", version = "4.9.9" }
-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.3.5" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
+wire = { id = "com.squareup.wire", version = "5.3.5" }
+buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.6.7" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
-spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
+spotless = { id = "com.diffplug.spotless", version = "7.2.1" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-kotlinx-binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.14.0" }
-dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
+kotlinx-binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.1" }
+dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }

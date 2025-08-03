@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Upgrade Gradle to 9.0.0
+- Upgrade Android Gradle Plugin to 8.12.0
+- Upgrade target Android SDK to 36
+- Upgrade Kotlin to 2.2.0
+- Upgrade Wire to 5.3.5
+
 ## [1.1.2] - 2025-08-04
 
 ### Fixed
@@ -520,8 +527,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.1.2...HEAD
-[1.1.2]: https://github.com/MiSikora/laboratory/releases/tag/1.1.2
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.1.1...HEAD
 [1.1.1]: https://github.com/MiSikora/laboratory/releases/tag/1.1.1
 [1.1.0]: https://github.com/MiSikora/laboratory/releases/tag/1.1.0
 [1.0.3]: https://github.com/MiSikora/laboratory/releases/tag/1.0.3

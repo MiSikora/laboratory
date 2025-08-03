@@ -182,7 +182,7 @@ class GenerateFeatureFactoryTaskSpec : FunSpec({
 
     result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory", isAndroid = true)
+    val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
     factory.shouldExist()
 
     factory.readText() shouldContain """
