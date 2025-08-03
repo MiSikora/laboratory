@@ -2,7 +2,7 @@ package io.mehow.laboratory.gradle
 
 import org.gradle.api.Action
 import org.gradle.api.Project
-import org.gradle.api.internal.catalog.DelegatingProjectDependency
+import org.gradle.api.artifacts.ProjectDependency
 
 /**
  * An entry point for configuration of feature flags code generation.
@@ -157,10 +157,10 @@ public abstract class LaboratoryExtension {
    */
   @JvmOverloads
   public fun dependency(
-    project: DelegatingProjectDependency,
+    project: ProjectDependency,
     contributeTo: Collection<DependencyContribution> = DependencyContribution.entries,
   ) {
-    dependency(project.dependencyProject, contributeTo)
+    dependency(this.project.project(project.path), contributeTo)
   }
 
   /**

@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Upgrade Gradle to 9.0.0
+- Upgrade Android Gradle Plugin to 8.12.0
+- Upgrade target Android SDK to 36
+- Upgrade Kotlin to 2.2.0
+- Upgrade Wire to 5.3.5
+
 ## [1.1.1] - 2025-07-30
 
 ### Added
