@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2025-08-04
+
 ### Fixed
 - Broken POM declaration of the `laboratory-shared-preferences` uses non-existing dependencies.
 
@@ -518,7 +520,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release.
 
-[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.1.1...HEAD
+[Unreleased]: https://github.com/MiSikora/laboratory/compare/1.1.2...HEAD
+[1.1.2]: https://github.com/MiSikora/laboratory/releases/tag/1.1.2
 [1.1.1]: https://github.com/MiSikora/laboratory/releases/tag/1.1.1
 [1.1.0]: https://github.com/MiSikora/laboratory/releases/tag/1.1.0
 [1.0.3]: https://github.com/MiSikora/laboratory/releases/tag/1.0.3
