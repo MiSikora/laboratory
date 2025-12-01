@@ -41,7 +41,7 @@ jobs:
 
       - name: Extract Release Notes
         id: release-notes
-        uses: ffurrer2/extract-release-notes@v2.3.0
+        uses: ffurrer2/extract-release-notes@v3.0.0
         with:
           changelog_file: ./docs/changelog.md
 
