@@ -103,7 +103,7 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
       it.sectionName == sectionName
     }
       ?: run {
-        @Suppress("MagicNumber") delay(100) // ¯\_(ツ)_/¯
+        delay(100) // ¯\_(ツ)_/¯
         awaitSectionFragment(sectionName)
       }
 

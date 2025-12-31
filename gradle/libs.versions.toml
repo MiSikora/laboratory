@@ -14,7 +14,6 @@ androidx-viewpager2 = "1.1.0"
 auto-service-ksp = "1.2.0"
 binary-compatibility-validator = "0.18.1"
 buildconfig = "5.6.7"
-detekt = "1.23.8"
 dokka = "2.0.0"
 hyperion = "0.9.38"
 kotest = "5.9.1"
@@ -38,7 +37,6 @@ agp-application = { id = "com.android.application", version.ref = "agp" }
 agp-library = { id = "com.android.library", version.ref = "agp" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

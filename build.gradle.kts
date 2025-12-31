@@ -6,9 +6,6 @@ import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.diffplug.spotless.LineEnding
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.DetektPlugin
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
@@ -23,7 +20,6 @@ plugins {
   alias(libs.plugins.binary.compatibility.validator)
   alias(libs.plugins.dokka)
   alias(libs.plugins.spotless)
-  alias(libs.plugins.detekt)
   alias(libs.plugins.buildconfig) apply false
   alias(libs.plugins.wire) apply false
   alias(libs.plugins.ksp) apply false
@@ -85,24 +81,6 @@ allprojects {
     }
     if (project.rootProject == project) {
       configure<SpotlessExtensionPredeclare> { configureSpotless() }
-    }
-  }
-
-  plugins.withType<DetektPlugin>().configureEach {
-    configure<DetektExtension> {
-      toolVersion = libs.versions.detekt.get()
-      allRules = true
-      parallel = true
-      buildUponDefaultConfig = true
-      config.from(rootProject.file("detekt.yml"))
-    }
-    tasks.withType<Detekt>().configureEach {
-      jvmTarget = javaTarget.target
-      reports {
-        html.required.set(true)
-        xml.required.set(true)
-        txt.required.set(true)
-      }
     }
   }
 }

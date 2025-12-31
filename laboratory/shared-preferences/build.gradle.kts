@@ -3,7 +3,6 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.spotless)
-  alias(libs.plugins.detekt)
   alias(libs.plugins.dokka)
 }
 

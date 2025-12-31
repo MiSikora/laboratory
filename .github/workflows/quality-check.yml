@@ -81,39 +81,6 @@ jobs:
       - name: Stop Gradle
         run: ./gradlew --stop
 
-  detekt:
-    if: ${{ github.repository == 'MiSikora/laboratory' }}
-    name: Detekt
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v6.0.0
-
-      - name: Configure JDK
-        uses: actions/setup-java@v5.0.0
-        with:
-          distribution: zulu
-          java-version: 21
-
-      - name: Cache Gradle Dirs
-        uses: actions/cache@v4.3.0
-        with:
-          path: |
-            ~/.gradle/caches/
-            ~/.gradle/wrapper/
-          key: cache-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
-          restore-keys: cache-gradle-
-
-      - name: Run Detekt
-        run: ./gradlew detekt --stacktrace
-
-      - name: Run Samples Detekt
-        working-directory: ./samples
-        run: ./gradlew detekt
-
-      - name: Stop Gradle
-        run: ./gradlew --stop
-
   spotless:
     if: ${{ github.repository == 'MiSikora/laboratory' }}
     name: Spotless

@@ -40,7 +40,6 @@ public interface FeatureStorage {
    *
    * @return `true` if the value was set successfully, `false` otherwise.
    */
-  @Suppress("SpreadOperator") // Implementations override this to be more efficient
   public suspend fun setOptions(options: Collection<Feature<*>>): Boolean =
     setOptions(*options.toTypedArray())
 

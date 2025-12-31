@@ -2,7 +2,6 @@ plugins {
   alias(libs.plugins.agp.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.laboratory)
-  alias(libs.plugins.detekt)
   alias(libs.plugins.spotless)
 }
 
