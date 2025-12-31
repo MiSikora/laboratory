@@ -159,7 +159,6 @@ class LaboratorySpec : FunSpec() {
         }
       }
 
-      @Suppress("MaxLineLength")
       test("fails when provided default option uses wrong type") {
         shouldThrowExactly<IllegalStateException> {
           laboratory.experiment<FeatureB>()

@@ -14,7 +14,6 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.generator.TextToken.Link
 import io.mehow.laboratory.generator.TextToken.Regular
 
-@Suppress("StringLiteralDuplication")
 internal class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
   private val deprecated =
     feature.deprecation?.let { deprecation ->

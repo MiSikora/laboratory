@@ -4,7 +4,6 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import io.mehow.laboratory.generator.Visibility.Public
 
-@Suppress("LongParameterList")
 public class FeatureFlagModel
 private constructor(
   public val className: ClassName,

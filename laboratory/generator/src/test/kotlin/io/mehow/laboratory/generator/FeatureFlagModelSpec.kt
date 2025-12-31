@@ -374,7 +374,6 @@ class FeatureFlagModelSpec :
     }
 
     test("description does not break hyperlinks") {
-      @Suppress("MaxLineLength")
       val model =
         FeatureFlagModel(
           ClassName("io.mehow", "FeatureA"),

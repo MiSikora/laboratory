@@ -256,7 +256,6 @@ class SourcedFeatureStorageSpec : FunSpec() {
       }
     }
 
-    @Suppress("NAME_SHADOWING")
     context("feature with unknown source") {
       val localStorage = FeatureStorage.inMemory()
       val sourcedStorage = SourcedFeatureStorage(localStorage, emptyMap())

@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Suppress("LongParameterList")
 internal class InspectorViewModel(
   private val laboratory: Laboratory,
   private val searchQueries: Flow<SearchQuery>,

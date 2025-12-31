@@ -405,7 +405,6 @@ class DependencyContributionSpec :
 
       val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
-      @Suppress("MaxLineLength")
       result.output shouldContain
         "Dependency in project 'dependency-contribution-none' on 'feature' must have at least one contribution"
     }

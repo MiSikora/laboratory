@@ -4,9 +4,6 @@ import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.diffplug.spotless.LineEnding
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.DetektPlugin
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
@@ -17,7 +14,6 @@ plugins {
   alias(libs.plugins.kotlin.android) apply false
   alias(libs.plugins.agp.application) apply false
   alias(libs.plugins.laboratory) apply false
-  alias(libs.plugins.detekt)
   alias(libs.plugins.spotless)
 }
 
@@ -58,24 +54,6 @@ allprojects {
     }
     if (project.rootProject == project) {
       configure<SpotlessExtensionPredeclare> { configureSpotless() }
-    }
-  }
-
-  plugins.withType<DetektPlugin>().configureEach {
-    configure<DetektExtension> {
-      toolVersion = libs.versions.detekt.get()
-      allRules = true
-      parallel = true
-      buildUponDefaultConfig = true
-      config.from(rootProject.file("detekt.yml"))
-    }
-    tasks.withType<Detekt>().configureEach {
-      jvmTarget = javaTarget.target
-      reports {
-        html.required.set(true)
-        xml.required.set(true)
-        txt.required.set(true)
-      }
     }
   }
 }
