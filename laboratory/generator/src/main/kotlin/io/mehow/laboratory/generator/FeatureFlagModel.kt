@@ -5,7 +5,8 @@ import com.squareup.kotlinpoet.FileSpec
 import io.mehow.laboratory.generator.Visibility.Public
 
 @Suppress("LongParameterList")
-public class FeatureFlagModel private constructor(
+public class FeatureFlagModel
+private constructor(
   public val className: ClassName,
   public val options: List<FeatureFlagOption>,
   public val visibility: Visibility,
@@ -16,9 +17,7 @@ public class FeatureFlagModel private constructor(
   public val supervisor: Supervisor?,
 ) {
   init {
-    require(options.isNotEmpty()) {
-      "${className.canonicalName} must have at least one option"
-    }
+    require(options.isNotEmpty()) { "${className.canonicalName} must have at least one option" }
     require(options.count(FeatureFlagOption::isDefault) == 1) {
       "${className.canonicalName} must have exactly one default option"
     }
@@ -61,19 +60,21 @@ public class FeatureFlagModel private constructor(
       visibility: Visibility,
       featureName: ClassName,
       options: List<FeatureFlagOption>,
-    ) = options.toSourceOptions()?.let { sourceOptions ->
-      FeatureFlagModel(featureName.toSourceName(), sourceOptions, visibility)
-    }
+    ) =
+      options.toSourceOptions()?.let { sourceOptions ->
+        FeatureFlagModel(featureName.toSourceName(), sourceOptions, visibility)
+      }
 
     private fun ClassName.toSourceName() = ClassName(packageName, simpleNames + "Source")
 
-    private fun List<FeatureFlagOption>.toSourceOptions() = filterNot { it.name.equals("local", ignoreCase = true) }
-      .takeIf { it.isNotEmpty() }
-      ?.let { options ->
-        buildList {
-          add(FeatureFlagOption("Local", isDefault = options.none(FeatureFlagOption::isDefault)))
-          addAll(options)
+    private fun List<FeatureFlagOption>.toSourceOptions() =
+      filterNot { it.name.equals("local", ignoreCase = true) }
+        .takeIf { it.isNotEmpty() }
+        ?.let { options ->
+          buildList {
+            add(FeatureFlagOption("Local", isDefault = options.none(FeatureFlagOption::isDefault)))
+            addAll(options)
+          }
         }
-      }
   }
 }

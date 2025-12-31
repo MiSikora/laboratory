@@ -15,79 +15,78 @@ import io.mehow.laboratory.generator.TextToken.Link
 import io.mehow.laboratory.generator.TextToken.Regular
 
 @Suppress("StringLiteralDuplication")
-internal class FeatureFlagGenerator(
-  private val feature: FeatureFlagModel,
-) {
-  private val deprecated = feature.deprecation?.let { deprecation ->
-    AnnotationSpec.builder(Deprecated::class)
-      .addMember("message = %S", deprecation.message)
-      .addMember("level = %T.%L", DeprecationLevel::class, deprecation.level)
-      .build()
-  }
+internal class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
+  private val deprecated =
+    feature.deprecation?.let { deprecation ->
+      AnnotationSpec.builder(Deprecated::class)
+        .addMember("message = %S", deprecation.message)
+        .addMember("level = %T.%L", DeprecationLevel::class, deprecation.level)
+        .build()
+    }
 
   private val suppressDeprecation = feature.deprecation?.suppressSpec
 
-  private val defaultOptionProperty = feature.options.toList()
-    .single(FeatureFlagOption::isDefault)
-    .let { option ->
-      PropertySpec
-        .builder(defaultOptionPropertyName, feature.className, OVERRIDE)
+  private val defaultOptionProperty =
+    feature.options.toList().single(FeatureFlagOption::isDefault).let { option ->
+      PropertySpec.builder(defaultOptionPropertyName, feature.className, OVERRIDE)
         .apply { suppressDeprecation?.let { addAnnotation(it) } }
         .getter(FunSpec.getterBuilder().addCode("return %L", option.name).build())
         .build()
     }
 
-  private val sourceProperty = feature.source?.let { nestedSource ->
-    nestedSource to PropertySpec
-      .builder(sourcePropertyName, featureClassType, OVERRIDE)
-      .initializer("%T::class.java", nestedSource.className)
-      .build()
-  }
+  private val sourceProperty =
+    feature.source?.let { nestedSource ->
+      nestedSource to
+        PropertySpec.builder(sourcePropertyName, featureClassType, OVERRIDE)
+          .initializer("%T::class.java", nestedSource.className)
+          .build()
+    }
 
   private val description: String? = feature.description.takeIf(String::isNotBlank)
 
   private val kdocCodeBlock = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
 
-  private val descriptionProperty = description?.let { description ->
-    PropertySpec
-      .builder(descriptionPropertyName, String::class, OVERRIDE)
-      .initializer("%S", description)
-      .build()
-  }
+  private val descriptionProperty =
+    description?.let { description ->
+      PropertySpec.builder(descriptionPropertyName, String::class, OVERRIDE)
+        .initializer("%S", description)
+        .build()
+    }
 
-  private val supervisorOptionProperty = feature.supervisor?.let { supervisor ->
-    PropertySpec
-      .builder(supervisorOptionPropertyName, featureType, OVERRIDE)
-      .initializer("%T.%L", supervisor.featureFlag.className, supervisor.option.name)
-      .build()
-  }
+  private val supervisorOptionProperty =
+    feature.supervisor?.let { supervisor ->
+      PropertySpec.builder(supervisorOptionPropertyName, featureType, OVERRIDE)
+        .initializer("%T.%L", supervisor.featureFlag.className, supervisor.option.name)
+        .build()
+    }
 
-  private val typeSpec: TypeSpec = TypeSpec.enumBuilder(feature.className)
-    .apply { deprecated?.let { addAnnotation(it) } }
-    .addModifiers(feature.visibility.modifier)
-    .apply {
-      var parametrizedType: TypeName = feature.className
-      if (suppressDeprecation != null) {
-        parametrizedType = parametrizedType.copy(annotations = listOf(suppressDeprecation))
+  private val typeSpec: TypeSpec =
+    TypeSpec.enumBuilder(feature.className)
+      .apply { deprecated?.let { addAnnotation(it) } }
+      .addModifiers(feature.visibility.modifier)
+      .apply {
+        var parametrizedType: TypeName = feature.className
+        if (suppressDeprecation != null) {
+          parametrizedType = parametrizedType.copy(annotations = listOf(suppressDeprecation))
+        }
+        addSuperinterface(Feature::class(parametrizedType))
       }
-      addSuperinterface(Feature::class(parametrizedType))
-    }
-    .addProperty(defaultOptionProperty)
-    .apply {
-      feature.options.fold(this) { builder, featureOption ->
-        builder.addEnumConstant(featureOption.name)
+      .addProperty(defaultOptionProperty)
+      .apply {
+        feature.options.fold(this) { builder, featureOption ->
+          builder.addEnumConstant(featureOption.name)
+        }
       }
-    }
-    .apply {
-      sourceProperty?.let { (nestedSource, sourceWithOverride) ->
-        addType(FeatureFlagGenerator(nestedSource).typeSpec)
-        addProperty(sourceWithOverride)
+      .apply {
+        sourceProperty?.let { (nestedSource, sourceWithOverride) ->
+          addType(FeatureFlagGenerator(nestedSource).typeSpec)
+          addProperty(sourceWithOverride)
+        }
       }
-    }
-    .apply { kdocCodeBlock?.let { addKdoc(it) } }
-    .apply { descriptionProperty?.let { addProperty(it) } }
-    .apply { supervisorOptionProperty?.let { addProperty(it) } }
-    .build()
+      .apply { kdocCodeBlock?.let { addKdoc(it) } }
+      .apply { descriptionProperty?.let { addProperty(it) } }
+      .apply { supervisorOptionProperty?.let { addProperty(it) } }
+      .build()
 
   private val fileSpec =
     FileSpec.builder(feature.className.packageName, feature.className.simpleName)
@@ -114,9 +113,10 @@ internal fun String.prepareKdocHyperlinks(): String {
   val matches = extractLinkRegex.findAll(this)
   val regularTokens = matches.toRegularTokens(this)
   val linkTokens = matches.toLinkTokens()
-  val tokens = (regularTokens + linkTokens)
-    .sortedBy { (_, startIndex) -> startIndex }
-    .map { (token, _) -> token }
+  val tokens =
+    (regularTokens + linkTokens)
+      .sortedBy { (_, startIndex) -> startIndex }
+      .map { (token, _) -> token }
   return buildString {
     for (token in tokens) {
       token.append(this)
@@ -150,13 +150,15 @@ private fun Sequence<MatchResult>.toLinkTokens() = map { matchResult ->
   Link(text, url) to matchResult.range.first
 }
 
-private fun Sequence<MatchResult>.toRegularTokens(text: String) = toUnmatchedRanges(text)
-  .map { range -> Regular(text.substring(range)) to range.first }
+private fun Sequence<MatchResult>.toRegularTokens(text: String) =
+  toUnmatchedRanges(text).map { range -> Regular(text.substring(range)) to range.first }
 
-private fun Sequence<MatchResult>.toUnmatchedRanges(text: String) = sequence {
-  yield(Int.MIN_VALUE..0)
-  yieldAll(map { it.range }.map { it.first - 1..it.last + 1 })
-  yield(text.length - 1..Int.MAX_VALUE)
-}.windowed(2, 1)
-  .map { (start, end) -> start.last..end.first }
-  .filterNot { range -> range.isEmpty() }
+private fun Sequence<MatchResult>.toUnmatchedRanges(text: String) =
+  sequence {
+      yield(Int.MIN_VALUE..0)
+      yieldAll(map { it.range }.map { it.first - 1..it.last + 1 })
+      yield(text.length - 1..Int.MAX_VALUE)
+    }
+    .windowed(2, 1)
+    .map { (start, end) -> start.last..end.first }
+    .filterNot { range -> range.isEmpty() }

@@ -19,35 +19,39 @@ import kotlinx.coroutines.launch
 internal class SearchViewModel : ViewModel() {
   private val uiModelChanges = MutableSharedFlow<(UiModel) -> UiModel>()
 
-  private val sharedUiModels = uiModelChanges.scan(
-    initial = UiModel(Idle, SearchQuery.Empty),
-    operation = { currentModel, updateModel -> updateModel(currentModel) },
-  ).shareIn(viewModelScope, SharingStarted.Lazily, replay = 1).distinctUntilChanged()
+  private val sharedUiModels =
+    uiModelChanges
+      .scan(
+        initial = UiModel(Idle, SearchQuery.Empty),
+        operation = { currentModel, updateModel -> updateModel(currentModel) },
+      )
+      .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+      .distinctUntilChanged()
 
   val uiModels: Flow<UiModel> = sharedUiModels
 
-  fun sendEvent(event: Event) = when (event) {
-    is OpenSearch -> openSearch()
-    is CloseSearch -> closeSearch()
-    is UpdateQuery -> updateQuery(event)
-  }
+  fun sendEvent(event: Event) =
+    when (event) {
+      is OpenSearch -> openSearch()
+      is CloseSearch -> closeSearch()
+      is UpdateQuery -> updateQuery(event)
+    }
 
-  private fun openSearch() = viewModelScope.launch {
-    uiModelChanges.emit { UiModel(Active, SearchQuery.Empty) }
-  }
+  private fun openSearch() =
+    viewModelScope.launch { uiModelChanges.emit { UiModel(Active, SearchQuery.Empty) } }
 
-  private fun closeSearch() = viewModelScope.launch {
-    uiModelChanges.emit { UiModel(Idle, SearchQuery.Empty) }
-  }
+  private fun closeSearch() =
+    viewModelScope.launch { uiModelChanges.emit { UiModel(Idle, SearchQuery.Empty) } }
 
-  private fun updateQuery(event: UpdateQuery) = viewModelScope.launch {
-    uiModelChanges.emit { model ->
-      when (model.mode) {
-        Idle -> model
-        Active -> model.copy(query = SearchQuery(event.query))
+  private fun updateQuery(event: UpdateQuery) =
+    viewModelScope.launch {
+      uiModelChanges.emit { model ->
+        when (model.mode) {
+          Idle -> model
+          Active -> model.copy(query = SearchQuery(event.query))
+        }
       }
     }
-  }
 
   object Factory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -65,10 +69,7 @@ internal class SearchViewModel : ViewModel() {
     class UpdateQuery(val query: String) : Event()
   }
 
-  data class UiModel(
-    val mode: SearchMode,
-    val query: SearchQuery,
-  ) {
+  data class UiModel(val mode: SearchMode, val query: SearchQuery) {
     val showSearch = mode == Active
   }
 }

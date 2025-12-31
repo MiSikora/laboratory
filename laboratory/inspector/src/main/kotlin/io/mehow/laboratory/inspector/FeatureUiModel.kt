@@ -15,10 +15,9 @@ internal data class FeatureUiModel(
 ) {
   val hasMultipleSources = sources.size > 1
 
-  private val isCurrentSourceLocal = sources.firstOrNull(OptionUiModel::isSelected)
-    ?.option
-    ?.name
-    ?.equals("Local", ignoreCase = true) ?: true
+  private val isCurrentSourceLocal =
+    sources.firstOrNull(OptionUiModel::isSelected)?.option?.name?.equals("Local", ignoreCase = true)
+      ?: true
 
   private val isSupervised = type.supervisorOption == supervisorOption
 
@@ -27,10 +26,8 @@ internal data class FeatureUiModel(
   companion object {
     private val firstAlignmentOrdinal = DeprecationAlignment.values().first()
 
-    val NaturalComparator = compareBy<FeatureUiModel>(
-      { it.deprecationAlignment ?: firstAlignmentOrdinal },
-      { it.name },
-    )
+    val NaturalComparator =
+      compareBy<FeatureUiModel>({ it.deprecationAlignment ?: firstAlignmentOrdinal }, { it.name })
   }
 }
 
@@ -42,6 +39,8 @@ private fun FeatureUiModel.search(query: SearchQuery) = takeIf {
   query.matches(name) || query.matches(modelNames) || query.matches(sourceNames)
 }
 
-private val FeatureUiModel.modelNames get() = models.map { it.option.name }
+private val FeatureUiModel.modelNames
+  get() = models.map { it.option.name }
 
-private val FeatureUiModel.sourceNames get() = sources.map { it.option.name }
+private val FeatureUiModel.sourceNames
+  get() = sources.map { it.option.name }

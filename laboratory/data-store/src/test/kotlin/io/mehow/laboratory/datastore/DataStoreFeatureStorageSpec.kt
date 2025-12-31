@@ -10,59 +10,65 @@ import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import okio.ByteString.Companion.decodeHex
 
-class DataStoreFeatureStorageSpec : FunSpec({
-  test("reads stored feature option") {
-    val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
-    val laboratory = Laboratory.create(storage)
-
-    storage.setOption(FeatureA.B)
-
-    laboratory.experiment<FeatureA>() shouldBe FeatureA.B
-  }
-
-  test("uses default option for corrupted data") {
-    val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
-    val laboratory = Laboratory.create(storage)
-
-    // Represents a map<string, int> with a key of Feature::class.java.name and value of 1.
-    val corruptedBytes = "0a290a25696f2e6d65686f772e6c61626f7261746f72792e6461746173746f72652e466561747572651001"
-      .decodeHex()
-      .toByteArray()
-    tempFile.writeBytes(corruptedBytes)
-
-    laboratory.experiment<FeatureA>() shouldBe FeatureA.A
-  }
-
-  test("emits feature option changes") {
-    val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
-
-    storage.observeFeatureName(FeatureA::class.java).test {
-      awaitItem() shouldBe null
+class DataStoreFeatureStorageSpec :
+  FunSpec({
+    test("reads stored feature option") {
+      val tempFile = tempfile()
+      val storage =
+        FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
+      val laboratory = Laboratory.create(storage)
 
       storage.setOption(FeatureA.B)
-      awaitItem() shouldBe FeatureA.B.name
 
-      storage.setOption(FeatureA.B)
-      expectNoEvents()
-
-      storage.setOption(FeatureA.A)
-      awaitItem() shouldBe FeatureA.A.name
-
-      cancel()
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.B
     }
-  }
 
-  test("clears storage") {
-    val tempFile = tempfile()
-    val storage = FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
-    val laboratory = Laboratory.create(storage)
+    test("uses default option for corrupted data") {
+      val tempFile = tempfile()
+      val storage =
+        FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
+      val laboratory = Laboratory.create(storage)
 
-    storage.setOption(FeatureA.B)
-    storage.clear()
+      // Represents a map<string, int> with a key of Feature::class.java.name and value of 1.
+      val corruptedBytes =
+        "0a290a25696f2e6d65686f772e6c61626f7261746f72792e6461746173746f72652e466561747572651001"
+          .decodeHex()
+          .toByteArray()
+      tempFile.writeBytes(corruptedBytes)
 
-    laboratory.experimentIs(FeatureA.A).shouldBeTrue()
-  }
-})
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+    }
+
+    test("emits feature option changes") {
+      val tempFile = tempfile()
+      val storage =
+        FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
+
+      storage.observeFeatureName(FeatureA::class.java).test {
+        awaitItem() shouldBe null
+
+        storage.setOption(FeatureA.B)
+        awaitItem() shouldBe FeatureA.B.name
+
+        storage.setOption(FeatureA.B)
+        expectNoEvents()
+
+        storage.setOption(FeatureA.A)
+        awaitItem() shouldBe FeatureA.A.name
+
+        cancel()
+      }
+    }
+
+    test("clears storage") {
+      val tempFile = tempfile()
+      val storage =
+        FeatureStorage.dataStore(DataStoreFactory.create(FeatureFlagsSerializer) { tempFile })
+      val laboratory = Laboratory.create(storage)
+
+      storage.setOption(FeatureA.B)
+      storage.clear()
+
+      laboratory.experimentIs(FeatureA.A).shouldBeTrue()
+    }
+  })

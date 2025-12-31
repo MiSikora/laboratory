@@ -28,62 +28,83 @@ public class OptionFactoryModel(
     fun OptionFactoryModel.requireNoDuplicates() {
       val groupedFeatures = features.groupBy { it.key ?: it.className.canonicalName }
       require(groupedFeatures.size == features.size) {
-        val duplicates = groupedFeatures
-          .filterValues { it.size > 1 }
-          .mapValues { (_, features) -> features.map(FeatureFlagModel::toString) }
+        val duplicates =
+          groupedFeatures
+            .filterValues { it.size > 1 }
+            .mapValues { (_, features) -> features.map(FeatureFlagModel::toString) }
         """
         |Feature flags must have unique keys. Found following duplicates:
         | - ${duplicates.toList().joinToString(separator = "\n - ") { (key, fqcns) -> "$key: $fqcns" }}
-        """.trimMargin()
+        """
+          .trimMargin()
       }
     }
   }
 }
 
-private class OptionFactoryGenerator(
-  private val model: OptionFactoryModel,
-) {
-  private val nameMatcher = model.features.associateBy { it.className }
-    .mapValues { (className, feature) ->
-      val whenExpression = feature.options
-        .map { CodeBlock.of("%S·->·%T.%L", it.name, className, it.name) }
-        .joinToCode(prefix = "when·(name)·{\n⇥", separator = "\n", suffix = "\nelse·->·null⇤\n}")
-      val deprecation = feature.deprecation?.suppressSpec
-      if (deprecation != null) {
-        CodeBlock.of("%L·%L", deprecation, whenExpression)
-      } else {
-        whenExpression
+private class OptionFactoryGenerator(private val model: OptionFactoryModel) {
+  private val nameMatcher =
+    model.features
+      .associateBy { it.className }
+      .mapValues { (className, feature) ->
+        val whenExpression =
+          feature.options
+            .map { CodeBlock.of("%S·->·%T.%L", it.name, className, it.name) }
+            .joinToCode(
+              prefix = "when·(name)·{\n⇥",
+              separator = "\n",
+              suffix = "\nelse·->·null⇤\n}",
+            )
+        val deprecation = feature.deprecation?.suppressSpec
+        if (deprecation != null) {
+          CodeBlock.of("%L·%L", deprecation, whenExpression)
+        } else {
+          whenExpression
+        }
       }
-    }
 
-  private val keyMatcher = model.features
-    .sortedWith(compareBy({ it.key == null }, { it.key }, { it.className.canonicalName }))
-    .map { CodeBlock.of("%S·->·%L", it.key ?: it.className.canonicalName, nameMatcher.getValue(it.className)) }
-    .joinToCode(prefix = "when·(key)·{\n⇥", separator = "\n", suffix = "\nelse·->·null⇤\n}")
+  private val keyMatcher =
+    model.features
+      .sortedWith(compareBy({ it.key == null }, { it.key }, { it.className.canonicalName }))
+      .map {
+        CodeBlock.of(
+          "%S·->·%L",
+          it.key ?: it.className.canonicalName,
+          nameMatcher.getValue(it.className),
+        )
+      }
+      .joinToCode(prefix = "when·(key)·{\n⇥", separator = "\n", suffix = "\nelse·->·null⇤\n}")
 
-  private val createFunctionOverride = FunSpec.builder("create")
-    .addModifiers(OVERRIDE)
-    .addParameter("key", String::class)
-    .addParameter("name", String::class)
-    .returns(Feature::class(STAR).copy(nullable = true))
-    .apply { if (model.features.isEmpty()) addStatement("return null") else addStatement("return %L", keyMatcher) }
-    .build()
+  private val createFunctionOverride =
+    FunSpec.builder("create")
+      .addModifiers(OVERRIDE)
+      .addParameter("key", String::class)
+      .addParameter("name", String::class)
+      .returns(Feature::class(STAR).copy(nullable = true))
+      .apply {
+        if (model.features.isEmpty()) addStatement("return null")
+        else addStatement("return %L", keyMatcher)
+      }
+      .build()
 
-  private val factoryType = TypeSpec.objectBuilder(model.className)
-    .addModifiers(PRIVATE)
-    .addSuperinterface(OptionFactory::class)
-    .addFunction(createFunctionOverride)
-    .build()
+  private val factoryType =
+    TypeSpec.objectBuilder(model.className)
+      .addModifiers(PRIVATE)
+      .addSuperinterface(OptionFactory::class)
+      .addFunction(createFunctionOverride)
+      .build()
 
-  private val factoryExtension = FunSpec.builder("generated")
-    .addModifiers(model.visibility.modifier)
-    .receiver(OptionFactory.Companion::class)
-    .returns(OptionFactory::class)
-    .addStatement("return %N", factoryType)
-    .build()
+  private val factoryExtension =
+    FunSpec.builder("generated")
+      .addModifiers(model.visibility.modifier)
+      .receiver(OptionFactory.Companion::class)
+      .returns(OptionFactory::class)
+      .addStatement("return %N", factoryType)
+      .build()
 
-  val fileSpec = FileSpec.builder(model.className.packageName, model.className.simpleName)
-    .addFunction(factoryExtension)
-    .addType(factoryType)
-    .build()
+  val fileSpec =
+    FileSpec.builder(model.className.packageName, model.className.simpleName)
+      .addFunction(factoryExtension)
+      .addType(factoryType)
+      .build()
 }

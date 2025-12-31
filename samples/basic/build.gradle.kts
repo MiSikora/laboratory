@@ -6,9 +6,7 @@ plugins {
   alias(libs.plugins.spotless)
 }
 
-android {
-  namespace = "io.mehow.laboratory.sample.basic"
-}
+android { namespace = "io.mehow.laboratory.sample.basic" }
 
 laboratory {
   packageName = "io.mehow.laboratory.sample.basic"
@@ -26,7 +24,8 @@ laboratory {
   }
 
   disabledFeature("ReportRootedDevice") {
-    description = "Reports during [cold start](https://developer.android.com/topic/performance/vitals/launch-time#cold) whether device is rooted"
+    description =
+      "Reports during [cold start](https://developer.android.com/topic/performance/vitals/launch-time#cold) whether device is rooted"
   }
 
   feature("Authentication") {

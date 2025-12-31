@@ -15,12 +15,11 @@ import com.squareup.kotlinpoet.asClassName
 import io.mehow.laboratory.FeatureStorage
 import java.util.Locale
 
-internal class SourcedFeatureStorageGenerator(
-  storage: SourcedFeatureStorageModel,
-) {
-  private val sourceNames = storage.sourceNames
-    .filterNot { featureName -> featureName.equals("local", ignoreCase = true) }
-    .distinct()
+internal class SourcedFeatureStorageGenerator(storage: SourcedFeatureStorageModel) {
+  private val sourceNames =
+    storage.sourceNames
+      .filterNot { featureName -> featureName.equals("local", ignoreCase = true) }
+      .distinct()
 
   private val sourced = MemberName(FeatureStorage.Companion::class.asClassName(), "sourced")
 
@@ -32,27 +31,27 @@ internal class SourcedFeatureStorageGenerator(
 
   private val buildingStepClassName = ClassName(storage.className.packageName, "BuildingStep")
 
-  private val buildingStepType = TypeSpec.interfaceBuilder(buildingStepClassName)
-    .addModifiers(storage.visibility.modifier)
-    .addFunction(
-      FunSpec.builder("build")
-        .addModifiers(ABSTRACT)
-        .returns(FeatureStorage::class)
-        .build(),
-    )
-    .build()
+  private val buildingStepType =
+    TypeSpec.interfaceBuilder(buildingStepClassName)
+      .addModifiers(storage.visibility.modifier)
+      .addFunction(
+        FunSpec.builder("build").addModifiers(ABSTRACT).returns(FeatureStorage::class).build()
+      )
+      .build()
 
-  private val remoteStepClassNames = sourceNames.distinct()
-    .sorted()
-    .map { ClassName(storage.className.packageName, it + stepSuffix) }
+  private val remoteStepClassNames =
+    sourceNames.distinct().sorted().map {
+      ClassName(storage.className.packageName, it + stepSuffix)
+    }
 
-  private val remoteStepTypes = remoteStepClassNames
-    .windowed(size = 2, step = 1, partialWindows = true) { sources ->
+  private val remoteStepTypes =
+    remoteStepClassNames.windowed(size = 2, step = 1, partialWindows = true) { sources ->
       val currentSourceClassName = sources.first()
       val functionReturnClassName = sources.drop(1).firstOrNull() ?: buildingStepClassName
-      val functionName = currentSourceClassName.simpleName
-        .removeSuffix(stepSuffix)
-        .replaceFirstChar { it.lowercase(Locale.ROOT) } + "Source"
+      val functionName =
+        currentSourceClassName.simpleName.removeSuffix(stepSuffix).replaceFirstChar {
+          it.lowercase(Locale.ROOT)
+        } + "Source"
 
       TypeSpec.interfaceBuilder(currentSourceClassName)
         .addModifiers(storage.visibility.modifier)
@@ -61,77 +60,82 @@ internal class SourcedFeatureStorageGenerator(
             .addModifiers(ABSTRACT)
             .addParameter("source", FeatureStorage::class)
             .returns(functionReturnClassName)
-            .build(),
+            .build()
         )
         .build()
     }
 
-  private val builderType = TypeSpec.classBuilder(ClassName(storage.className.simpleName, "Builder"))
-    .addModifiers(PRIVATE, DATA)
-    .addSuperinterfaces(remoteStepClassNames + buildingStepClassName)
-    .primaryConstructor(
-      FunSpec.constructorBuilder()
-        .addParameter(localSourceParam, FeatureStorage::class)
-        .addParameter(remoteSourcesParam, stringToStorageMap)
-        .build(),
-    )
-    .addProperty(
-      PropertySpec.builder(localSourceParam, FeatureStorage::class)
-        .initializer(localSourceParam)
-        .addModifiers(PRIVATE)
-        .build(),
-    )
-    .addProperty(
-      PropertySpec.builder(remoteSourcesParam, stringToStorageMap)
-        .initializer(remoteSourcesParam)
-        .addModifiers(PRIVATE)
-        .build(),
-    )
-    .addFunctions(
-      remoteStepTypes.mapIndexed { index, remoteStep ->
-        val function = remoteStep.funSpecs.single()
-        function.toBuilder()
+  private val builderType =
+    TypeSpec.classBuilder(ClassName(storage.className.simpleName, "Builder"))
+      .addModifiers(PRIVATE, DATA)
+      .addSuperinterfaces(remoteStepClassNames + buildingStepClassName)
+      .primaryConstructor(
+        FunSpec.constructorBuilder()
+          .addParameter(localSourceParam, FeatureStorage::class)
+          .addParameter(remoteSourcesParam, stringToStorageMap)
+          .build()
+      )
+      .addProperty(
+        PropertySpec.builder(localSourceParam, FeatureStorage::class)
+          .initializer(localSourceParam)
+          .addModifiers(PRIVATE)
+          .build()
+      )
+      .addProperty(
+        PropertySpec.builder(remoteSourcesParam, stringToStorageMap)
+          .initializer(remoteSourcesParam)
+          .addModifiers(PRIVATE)
+          .build()
+      )
+      .addFunctions(
+        remoteStepTypes.mapIndexed { index, remoteStep ->
+          val function = remoteStep.funSpecs.single()
+          function
+            .toBuilder()
+            .apply { modifiers -= ABSTRACT }
+            .addModifiers(OVERRIDE)
+            .addStatement(
+              "return copy(\n⇥%1L = %1L %2M (%3S %4M %5N)⇤\n)",
+              remoteSourcesParam,
+              mapPlus,
+              remoteStepClassNames[index].simpleName.removeSuffix(stepSuffix),
+              infixTo,
+              function.parameters.single(),
+            )
+            .build()
+        }
+      )
+      .addFunction(
+        buildingStepType.funSpecs
+          .single()
+          .toBuilder()
           .apply { modifiers -= ABSTRACT }
           .addModifiers(OVERRIDE)
-          .addStatement(
-            "return copy(\n⇥%1L = %1L %2M (%3S %4M %5N)⇤\n)",
-            remoteSourcesParam,
-            mapPlus,
-            remoteStepClassNames[index].simpleName.removeSuffix(stepSuffix),
-            infixTo,
-            function.parameters.single(),
-          )
+          .addStatement("return %M(%L, %L)", sourced, localSourceParam, remoteSourcesParam)
           .build()
-      },
-    )
-    .addFunction(
-      buildingStepType.funSpecs.single()
-        .toBuilder()
-        .apply { modifiers -= ABSTRACT }
-        .addModifiers(OVERRIDE)
-        .addStatement("return %M(%L, %L)", sourced, localSourceParam, remoteSourcesParam)
-        .build(),
-    )
-    .build()
+      )
+      .build()
 
-  private val storageBuilderExtension = FunSpec.builder("sourcedBuilder")
-    .addModifiers(storage.visibility.modifier)
-    .receiver(FeatureStorage.Companion::class)
-    .returns(remoteStepClassNames.firstOrNull() ?: buildingStepClassName)
-    .addParameter(localSourceParam, FeatureStorage::class)
-    .addStatement("return %N(%L, %M())", builderType, localSourceParam, emptyMap)
-    .build()
+  private val storageBuilderExtension =
+    FunSpec.builder("sourcedBuilder")
+      .addModifiers(storage.visibility.modifier)
+      .receiver(FeatureStorage.Companion::class)
+      .returns(remoteStepClassNames.firstOrNull() ?: buildingStepClassName)
+      .addParameter(localSourceParam, FeatureStorage::class)
+      .addStatement("return %N(%L, %M())", builderType, localSourceParam, emptyMap)
+      .build()
 
-  private val storageFile = FileSpec.builder(storage.className.packageName, storage.className.simpleName)
-    .addFunction(storageBuilderExtension)
-    .apply {
-      for (type in remoteStepTypes) {
-        addType(type)
+  private val storageFile =
+    FileSpec.builder(storage.className.packageName, storage.className.simpleName)
+      .addFunction(storageBuilderExtension)
+      .apply {
+        for (type in remoteStepTypes) {
+          addType(type)
+        }
       }
-    }
-    .addType(buildingStepType)
-    .addType(builderType)
-    .build()
+      .addType(buildingStepType)
+      .addType(builderType)
+      .build()
 
   fun fileSpec() = storageFile
 
@@ -142,9 +146,7 @@ internal class SourcedFeatureStorageGenerator(
 
     const val kotlinCollectionsSpace = "kotlin.collections"
 
-    val stringToStorageMap = Map::class(
-      String::class.asClassName(),
-      FeatureStorage::class.asClassName(),
-    )
+    val stringToStorageMap =
+      Map::class(String::class.asClassName(), FeatureStorage::class.asClassName())
   }
 }

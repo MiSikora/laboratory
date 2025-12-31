@@ -2,14 +2,11 @@ package io.mehow.laboratory
 
 import kotlinx.coroutines.runBlocking
 
-/**
- * A blocking equivalent of [Laboratory].
- */
-public class BlockingLaboratory internal constructor(
-  private val laboratory: Laboratory,
-) {
+/** A blocking equivalent of [Laboratory]. */
+public class BlockingLaboratory internal constructor(private val laboratory: Laboratory) {
   /**
-   * Returns the current option of the input [Feature]. Warning – this call can block the calling thread.
+   * Returns the current option of the input [Feature]. Warning – this call can block the calling
+   * thread.
    *
    * @see BlockingIoCall
    */
@@ -17,20 +14,26 @@ public class BlockingLaboratory internal constructor(
   public inline fun <reified T : Feature<out T>> experiment(): T = experiment(T::class.java)
 
   /**
-   * Returns the current option of the input [Feature]. Warning – this call can block the calling thread.
+   * Returns the current option of the input [Feature]. Warning – this call can block the calling
+   * thread.
    *
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<out T>> experiment(feature: Class<out T>): T = runBlocking { laboratory.experiment(feature) }
+  public fun <T : Feature<out T>> experiment(feature: Class<out T>): T = runBlocking {
+    laboratory.experiment(feature)
+  }
 
   /**
-   * Checks if a [Feature] is set to the input [option]. Warning – this call can block the calling thread.
+   * Checks if a [Feature] is set to the input [option]. Warning – this call can block the calling
+   * thread.
    *
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<out T>> experimentIs(option: T): Boolean = runBlocking { laboratory.experimentIs(option) }
+  public fun <T : Feature<out T>> experimentIs(option: T): Boolean = runBlocking {
+    laboratory.experimentIs(option)
+  }
 
   /**
    * Sets a [Feature] to have the input [option]. Warning – this call can block the calling thread.
@@ -39,21 +42,27 @@ public class BlockingLaboratory internal constructor(
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<*>> setOption(option: T): Boolean = runBlocking { laboratory.setOption(option) }
+  public fun <T : Feature<*>> setOption(option: T): Boolean = runBlocking {
+    laboratory.setOption(option)
+  }
 
   /**
-   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one option
-   * for the same feature flag, the last one should be applied. Warning – this call can block the calling thread.
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one
+   * option for the same feature flag, the last one should be applied. Warning – this call can block
+   * the calling thread.
    *
    * @return `true` if the option was set successfully, `false` otherwise.
    * @see BlockingIoCall
    */
   @BlockingIoCall
-  public fun <T : Feature<*>> setOptions(vararg options: T): Boolean = runBlocking { laboratory.setOptions(*options) }
+  public fun <T : Feature<*>> setOptions(vararg options: T): Boolean = runBlocking {
+    laboratory.setOptions(*options)
+  }
 
   /**
-   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one option
-   * for the same feature flag, the last one should be applied. Warning – this call can block the calling thread.
+   * Sets [Features][Feature] to have the input [options]. If [options] contains more than one
+   * option for the same feature flag, the last one should be applied. Warning – this call can block
+   * the calling thread.
    *
    * @return `true` if the option was set successfully, `false` otherwise.
    * @see BlockingIoCall
@@ -69,6 +78,5 @@ public class BlockingLaboratory internal constructor(
    * @return `true` if the option was set successfully, `false` otherwise.
    * @see BlockingIoCall
    */
-  @BlockingIoCall
-  public fun clear(): Boolean = runBlocking { laboratory.clear() }
+  @BlockingIoCall public fun clear(): Boolean = runBlocking { laboratory.clear() }
 }

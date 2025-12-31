@@ -16,219 +16,202 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 
-class InspectorViewModelFeatureSpec : FunSpec({
-  setMainDispatcher()
+class InspectorViewModelFeatureSpec :
+  FunSpec({
+    setMainDispatcher()
 
-  test("filters empty feature flag groups") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+    test("filters empty feature flag groups") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-    val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
+      val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
 
-    featureNames shouldNotContain "Empty"
-  }
-
-  test("orders feature flag groups by name") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
-
-    val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
-
-    featureNames shouldContainExactly listOf("First", "Second")
-  }
-
-  test("does not order feature flag options") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
-
-    val features = viewModel.sectionFlow().first()
-      .map(FeatureUiModel::models)
-      .map { models -> models.map(OptionUiModel::option) }
-
-    features[0] shouldContainExactly listOf(First.C, First.B, First.A)
-    features[1] shouldContainExactly listOf(Second.B, Second.C, Second.A)
-  }
-
-  test("marks first feature flag option as selected by default") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
-
-    viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.C, Second.B)
-  }
-
-  test("marks saved feature flag options as selected") {
-    val laboratory = Laboratory.inMemory().apply {
-      setOption(First.A)
-      setOption(Second.C)
+      featureNames shouldNotContain "Empty"
     }
 
-    val viewModel = InspectorViewModel(laboratory, NoSourceFeatureFactory)
+    test("orders feature flag groups by name") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-    viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.A, Second.C)
-  }
+      val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
 
-  test("selects feature flag options") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      featureNames shouldContainExactly listOf("First", "Second")
+    }
 
-    viewModel.selectFeature(First.B)
-    viewModel.selectFeature(Second.A)
+    test("does not order feature flag options") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-    viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.B, Second.A)
-  }
+      val features =
+        viewModel.sectionFlow().first().map(FeatureUiModel::models).map { models ->
+          models.map(OptionUiModel::option)
+        }
 
-  test("emits feature flag changes") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+      features[0] shouldContainExactly listOf(First.C, First.B, First.A)
+      features[1] shouldContainExactly listOf(Second.B, Second.C, Second.A)
+    }
 
-    viewModel.observeSelectedFeatures().test {
-      awaitItem() shouldContainExactly listOf(First.C, Second.B)
+    test("marks first feature flag option as selected by default") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+
+      viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.C, Second.B)
+    }
+
+    test("marks saved feature flag options as selected") {
+      val laboratory =
+        Laboratory.inMemory().apply {
+          setOption(First.A)
+          setOption(Second.C)
+        }
+
+      val viewModel = InspectorViewModel(laboratory, NoSourceFeatureFactory)
+
+      viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.A, Second.C)
+    }
+
+    test("selects feature flag options") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
       viewModel.selectFeature(First.B)
-      awaitItem() shouldContainExactly listOf(First.B, Second.B)
+      viewModel.selectFeature(Second.A)
 
-      viewModel.selectFeature(Second.C)
-      awaitItem() shouldContainExactly listOf(First.B, Second.C)
-
-      cancel()
+      viewModel.observeSelectedFeatures().first() shouldContainExactly listOf(First.B, Second.A)
     }
-  }
 
-  test("emits source changes") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), AllFeatureFactory)
+    test("emits feature flag changes") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
 
-    viewModel.observeSelectedFeaturesAndSources().test {
-      awaitItem() shouldContainExactly listOf(
-        First.C to null,
-        Second.B to null,
-        Sourced.A to Sourced.Source.Local,
-      )
+      viewModel.observeSelectedFeatures().test {
+        awaitItem() shouldContainExactly listOf(First.C, Second.B)
 
-      viewModel.selectFeature(Sourced.Source.Remote)
+        viewModel.selectFeature(First.B)
+        awaitItem() shouldContainExactly listOf(First.B, Second.B)
 
-      awaitItem() shouldContainExactly listOf(
-        First.C to null,
-        Second.B to null,
-        Sourced.A to Sourced.Source.Remote,
-      )
-    }
-  }
+        viewModel.selectFeature(Second.C)
+        awaitItem() shouldContainExactly listOf(First.B, Second.C)
 
-  test("resets feature flags to default options declared in factory") {
-    val defaultOptionFactory = object : DefaultOptionFactory {
-      override fun <T : Feature<out T>> create(feature: T): Feature<*>? = when (feature) {
-        is First -> First.A
-        is Second -> Second.A
-        else -> null
+        cancel()
       }
     }
-    val laboratory = Laboratory.builder()
-      .featureStorage(FeatureStorage.inMemory())
-      .defaultOptionFactory(defaultOptionFactory)
-      .build()
-    val viewModel = InspectorViewModel(laboratory, NoSourceFeatureFactory)
 
-    viewModel.observeSelectedFeatures().test {
-      awaitItem() shouldContainExactly listOf(First.A, Second.A)
+    test("emits source changes") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), AllFeatureFactory)
 
-      viewModel.selectFeature(First.B)
-      awaitItem() shouldContainExactly listOf(First.B, Second.A)
+      viewModel.observeSelectedFeaturesAndSources().test {
+        awaitItem() shouldContainExactly
+          listOf(First.C to null, Second.B to null, Sourced.A to Sourced.Source.Local)
 
-      viewModel.selectFeature(Second.B)
-      awaitItem() shouldContainExactly listOf(First.B, Second.B)
+        viewModel.selectFeature(Sourced.Source.Remote)
 
-      laboratory.clear()
-      awaitItemEventually { it shouldContainExactly listOf(First.A, Second.A) }
-
-      cancel()
+        awaitItem() shouldContainExactly
+          listOf(First.C to null, Second.B to null, Sourced.A to Sourced.Source.Remote)
+      }
     }
-  }
 
-  test("uses text tokens for feature flag description") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+    test("resets feature flags to default options declared in factory") {
+      val defaultOptionFactory =
+        object : DefaultOptionFactory {
+          override fun <T : Feature<out T>> create(feature: T): Feature<*>? =
+            when (feature) {
+              is First -> First.A
+              is Second -> Second.A
+              else -> null
+            }
+        }
+      val laboratory =
+        Laboratory.builder()
+          .featureStorage(FeatureStorage.inMemory())
+          .defaultOptionFactory(defaultOptionFactory)
+          .build()
+      val viewModel = InspectorViewModel(laboratory, NoSourceFeatureFactory)
 
-    val descriptions = viewModel.sectionFlow().first().map(FeatureUiModel::description)
+      viewModel.observeSelectedFeatures().test {
+        awaitItem() shouldContainExactly listOf(First.A, Second.A)
 
-    descriptions shouldContainExactly listOf(
-      listOf(
-        Regular("Description with a "),
-        Link("link", "https://mehow.io"),
-      ),
-      listOf(
-        Regular("Description without a link"),
-      ),
-    )
-  }
+        viewModel.selectFeature(First.B)
+        awaitItem() shouldContainExactly listOf(First.B, Second.A)
 
-  test("emits feature flags supervision") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
+        viewModel.selectFeature(Second.B)
+        awaitItem() shouldContainExactly listOf(First.B, Second.B)
 
-    viewModel.observeSelectedFeaturesAndEnabledState().test {
-      awaitItem() shouldContainExactly listOf(
-        Child.A to false,
-        Parent.Disabled to true,
-      )
+        laboratory.clear()
+        awaitItemEventually { it shouldContainExactly listOf(First.A, Second.A) }
 
-      viewModel.selectFeature(Parent.Enabled)
-      awaitItemEventually {
-        it shouldContainExactly listOf(
-          Child.A to true,
-          Parent.Enabled to true,
+        cancel()
+      }
+    }
+
+    test("uses text tokens for feature flag description") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), NoSourceFeatureFactory)
+
+      val descriptions = viewModel.sectionFlow().first().map(FeatureUiModel::description)
+
+      descriptions shouldContainExactly
+        listOf(
+          listOf(Regular("Description with a "), Link("link", "https://mehow.io")),
+          listOf(Regular("Description without a link")),
         )
+    }
+
+    test("emits feature flags supervision") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
+
+      viewModel.observeSelectedFeaturesAndEnabledState().test {
+        awaitItem() shouldContainExactly listOf(Child.A to false, Parent.Disabled to true)
+
+        viewModel.selectFeature(Parent.Enabled)
+        awaitItemEventually {
+          it shouldContainExactly listOf(Child.A to true, Parent.Enabled to true)
+        }
+
+        viewModel.selectFeature(Child.B)
+        awaitItem() shouldContainExactly listOf(Child.B to true, Parent.Enabled to true)
+
+        viewModel.selectFeature(Parent.Disabled)
+        awaitItemEventually {
+          it shouldContainExactly listOf(Child.A to false, Parent.Disabled to true)
+        }
+
+        cancel()
       }
+    }
 
-      viewModel.selectFeature(Child.B)
-      awaitItem() shouldContainExactly listOf(
-        Child.B to true,
-        Parent.Enabled to true,
-      )
+    test("includes supervised features to options") {
+      val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
 
-      viewModel.selectFeature(Parent.Disabled)
-      awaitItemEventually {
-        it shouldContainExactly listOf(
-          Child.A to false,
-          Parent.Disabled to true,
+      viewModel.supervisedFeaturesFlow().first() shouldContainExactly
+        listOf(
+          Child.A to emptyList(),
+          Child.B to emptyList(),
+          Parent.Enabled to listOf(Child::class.java),
+          Parent.Disabled to emptyList(),
         )
-      }
-
-      cancel()
-    }
-  }
-
-  test("includes supervised features to options") {
-    val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
-
-    viewModel.supervisedFeaturesFlow().first() shouldContainExactly listOf(
-      Child.A to emptyList(),
-      Child.B to emptyList(),
-      Parent.Enabled to listOf(Child::class.java),
-      Parent.Disabled to emptyList(),
-    )
-  }
-
-  test("includes supervised features to options from different sections") {
-    val parentFactory = object : FeatureFactory {
-      override fun create(): Set<Class<out Feature<*>>> = setOf(Parent::class.java)
-    }
-    val childFactory = object : FeatureFactory {
-      override fun create(): Set<Class<out Feature<*>>> = setOf(Child::class.java)
     }
 
-    val viewModel = InspectorViewModel(
-      Laboratory.inMemory(),
-      searchQueries = emptyFlow(),
-      mapOf("Parent" to parentFactory, "Child" to childFactory),
-      DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
-      Dispatchers.Unconfined,
-    )
+    test("includes supervised features to options from different sections") {
+      val parentFactory =
+        object : FeatureFactory {
+          override fun create(): Set<Class<out Feature<*>>> = setOf(Parent::class.java)
+        }
+      val childFactory =
+        object : FeatureFactory {
+          override fun create(): Set<Class<out Feature<*>>> = setOf(Child::class.java)
+        }
 
-    viewModel.supervisedFeaturesFlow("Parent").first() shouldContainExactly listOf(
-      Parent.Enabled to listOf(Child::class.java),
-      Parent.Disabled to emptyList(),
-    )
-  }
-})
+      val viewModel =
+        InspectorViewModel(
+          Laboratory.inMemory(),
+          searchQueries = emptyFlow(),
+          mapOf("Parent" to parentFactory, "Child" to childFactory),
+          DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
+          Dispatchers.Unconfined,
+        )
+
+      viewModel.supervisedFeaturesFlow("Parent").first() shouldContainExactly
+        listOf(Parent.Enabled to listOf(Child::class.java), Parent.Disabled to emptyList())
+    }
+  })
 
 private object NoSourceFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<out Feature<*>>> = setOf(
-    Second::class.java,
-    First::class.java,
-    Empty::class.java,
-  )
+  override fun create(): Set<Class<out Feature<*>>> =
+    setOf(Second::class.java, First::class.java, Empty::class.java)
 }
 
 private object SourcedFeatureFactory : FeatureFactory {
@@ -240,19 +223,16 @@ private object AllFeatureFactory : FeatureFactory {
 }
 
 private object SupervisedFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<out Feature<*>>> = setOf(
-    Parent::class.java,
-    Child::class.java,
-  )
+  override fun create(): Set<Class<out Feature<*>>> = setOf(Parent::class.java, Child::class.java)
 }
 
 private enum class First : Feature<First> {
   C,
   B,
-  A,
-  ;
+  A;
 
-  override val defaultOption get() = C
+  override val defaultOption
+    get() = C
 
   override val description = "Description with a [link](https://mehow.io)"
 }
@@ -260,10 +240,10 @@ private enum class First : Feature<First> {
 private enum class Second : Feature<Second> {
   B,
   C,
-  A,
-  ;
+  A;
 
-  override val defaultOption get() = B
+  override val defaultOption
+    get() = B
 
   override val description = "Description without a link"
 }
@@ -273,46 +253,45 @@ private enum class Empty : Feature<Empty>
 private enum class Sourced : Feature<Sourced> {
   A,
   B,
-  C,
-  ;
+  C;
 
-  override val defaultOption get() = A
+  override val defaultOption
+    get() = A
 
   override val source = Source::class.java
 
   enum class Source : Feature<Source> {
     Local,
-    Remote,
-    ;
+    Remote;
 
-    override val defaultOption get() = Local
+    override val defaultOption
+      get() = Local
   }
 }
 
 private enum class Parent : Feature<Parent> {
   Enabled,
-  Disabled,
-  ;
+  Disabled;
 
-  override val defaultOption get() = Disabled
+  override val defaultOption
+    get() = Disabled
 }
 
 private enum class Child : Feature<Child> {
   A,
-  B,
-  ;
+  B;
 
-  override val defaultOption get() = A
+  override val defaultOption
+    get() = A
 
-  override val supervisorOption get() = Parent.Enabled
+  override val supervisorOption
+    get() = Parent.Enabled
 }
 
-private fun InspectorViewModel(
-  laboratory: Laboratory,
-  factory: FeatureFactory,
-) = InspectorViewModel(
-  laboratory,
-  emptyFlow(),
-  factory,
-  DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
-)
+private fun InspectorViewModel(laboratory: Laboratory, factory: FeatureFactory) =
+  InspectorViewModel(
+    laboratory,
+    emptyFlow(),
+    factory,
+    DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
+  )

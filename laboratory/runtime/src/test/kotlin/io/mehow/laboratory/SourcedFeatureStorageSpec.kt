@@ -8,49 +8,49 @@ class SourcedFeatureStorageSpec : FunSpec() {
   enum class FeatureA : Feature<FeatureA> {
     A,
     B,
-    C,
-    ;
+    C;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
 
     override val source = Source::class.java
 
     enum class Source : Feature<Source> {
       Local,
-      RemoteA,
-      ;
+      RemoteA;
 
-      override val defaultOption get() = Local
+      override val defaultOption
+        get() = Local
     }
   }
 
   enum class FeatureB : Feature<FeatureB> {
     A,
     B,
-    C,
-    ;
+    C;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
 
     override val source = Source::class.java
 
     enum class Source : Feature<Source> {
       Local,
       RemoteA,
-      RemoteB,
-      ;
+      RemoteB;
 
-      override val defaultOption get() = RemoteB
+      override val defaultOption
+        get() = RemoteB
     }
   }
 
   enum class EmptySourceFeature : Feature<EmptySourceFeature> {
     A,
     B,
-    C,
-    ;
+    C;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
 
     override val source = Source::class.java
 
@@ -60,20 +60,21 @@ class SourcedFeatureStorageSpec : FunSpec() {
   enum class UnsourcedFeature : Feature<UnsourcedFeature> {
     A,
     B,
-    C,
-    ;
+    C;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   init {
     val storageLocal = FeatureStorage.inMemory()
     val storageRemoteA = FeatureStorage.inMemory()
     val storageRemoteB = FeatureStorage.inMemory()
-    val storageSourced = SourcedFeatureStorage(
-      storageLocal,
-      mapOf("RemoteA" to storageRemoteA, "RemoteB" to storageRemoteB),
-    )
+    val storageSourced =
+      SourcedFeatureStorage(
+        storageLocal,
+        mapOf("RemoteA" to storageRemoteA, "RemoteB" to storageRemoteB),
+      )
 
     val laboratoryLocal = Laboratory.create(storageLocal)
     val laboratoryRemoteA = Laboratory.create(storageRemoteA)
@@ -184,16 +185,19 @@ class SourcedFeatureStorageSpec : FunSpec() {
     }
 
     test("allows to override default sources") {
-      val defaultOptionFactory = object : DefaultOptionFactory {
-        override fun <T : Feature<out T>> create(feature: T) = when (feature) {
-          is FeatureA.Source -> FeatureA.Source.RemoteA
-          else -> null
+      val defaultOptionFactory =
+        object : DefaultOptionFactory {
+          override fun <T : Feature<out T>> create(feature: T) =
+            when (feature) {
+              is FeatureA.Source -> FeatureA.Source.RemoteA
+              else -> null
+            }
         }
-      }
-      val laboratory = Laboratory.Builder()
-        .featureStorage(storageSourced)
-        .defaultOptionFactory(defaultOptionFactory)
-        .build()
+      val laboratory =
+        Laboratory.Builder()
+          .featureStorage(storageSourced)
+          .defaultOptionFactory(defaultOptionFactory)
+          .build()
 
       laboratoryRemoteA.setOption(FeatureA.C)
 
@@ -259,9 +263,7 @@ class SourcedFeatureStorageSpec : FunSpec() {
       val laboratoryLocal = Laboratory.create(localStorage)
       val laboratorySourced = Laboratory.create(sourcedStorage)
 
-      beforeTest {
-        laboratoryLocal.clear()
-      }
+      beforeTest { laboratoryLocal.clear() }
 
       test("reads from a local storage") {
         laboratorySourced.experiment<FeatureA>() shouldBe FeatureA.A

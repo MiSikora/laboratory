@@ -10,100 +10,98 @@ import io.mehow.laboratory.inspector.DeprecationAlignment.Regular
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Hide
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Show
 import io.mehow.laboratory.inspector.DeprecationPhenotype.Strikethrough
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
 import kotlin.DeprecationLevel.ERROR
 import kotlin.DeprecationLevel.HIDDEN
 import kotlin.DeprecationLevel.WARNING
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 
-class InspectorViewModelDeprecationSpec : FunSpec({
-  setMainDispatcher()
+class InspectorViewModelDeprecationSpec :
+  FunSpec({
+    setMainDispatcher()
 
-  test("can be filtered out") {
-    val viewModel = InspectorViewModel(
-      DeprecationHandler(
-        phenotypeSelector = { Hide },
-        alignmentSelector = { Regular },
-      ),
-    )
+    test("can be filtered out") {
+      val viewModel =
+        InspectorViewModel(
+          DeprecationHandler(phenotypeSelector = { Hide }, alignmentSelector = { Regular })
+        )
 
-    val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
+      val featureNames = viewModel.sectionFlow().first().map(FeatureUiModel::name)
 
-    featureNames shouldContainExactly listOf("NotDeprecated")
-  }
+      featureNames shouldContainExactly listOf("NotDeprecated")
+    }
 
-  test("can be struck through") {
-    val viewModel = InspectorViewModel(
-      DeprecationHandler(
-        phenotypeSelector = { Strikethrough },
-        alignmentSelector = { Regular },
-      ),
-    )
+    test("can be struck through") {
+      val viewModel =
+        InspectorViewModel(
+          DeprecationHandler(phenotypeSelector = { Strikethrough }, alignmentSelector = { Regular })
+        )
 
-    val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
-    featureNames shouldContainExactly listOf(
-      "DeprecatedError" to Strikethrough,
-      "DeprecatedHidden" to Strikethrough,
-      "DeprecatedWarning" to Strikethrough,
-      "NotDeprecated" to null,
-    )
-  }
+      featureNames shouldContainExactly
+        listOf(
+          "DeprecatedError" to Strikethrough,
+          "DeprecatedHidden" to Strikethrough,
+          "DeprecatedWarning" to Strikethrough,
+          "NotDeprecated" to null,
+        )
+    }
 
-  test("can be shown") {
-    val viewModel = InspectorViewModel(
-      DeprecationHandler(
-        phenotypeSelector = { Show },
-        alignmentSelector = { Regular },
-      ),
-    )
+    test("can be shown") {
+      val viewModel =
+        InspectorViewModel(
+          DeprecationHandler(phenotypeSelector = { Show }, alignmentSelector = { Regular })
+        )
 
-    val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
-    featureNames shouldContainExactly listOf(
-      "DeprecatedError" to Show,
-      "DeprecatedHidden" to Show,
-      "DeprecatedWarning" to Show,
-      "NotDeprecated" to null,
-    )
-  }
+      featureNames shouldContainExactly
+        listOf(
+          "DeprecatedError" to Show,
+          "DeprecatedHidden" to Show,
+          "DeprecatedWarning" to Show,
+          "NotDeprecated" to null,
+        )
+    }
 
-  test("can be moved to bottom") {
-    val viewModel = InspectorViewModel(
-      DeprecationHandler(
-        phenotypeSelector = { Show },
-        alignmentSelector = { Bottom },
-      ),
-    )
+    test("can be moved to bottom") {
+      val viewModel =
+        InspectorViewModel(
+          DeprecationHandler(phenotypeSelector = { Show }, alignmentSelector = { Bottom })
+        )
 
-    val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
-    featureNames shouldContainExactly listOf(
-      "NotDeprecated" to null,
-      "DeprecatedError" to Show,
-      "DeprecatedHidden" to Show,
-      "DeprecatedWarning" to Show,
-    )
-  }
+      featureNames shouldContainExactly
+        listOf(
+          "NotDeprecated" to null,
+          "DeprecatedError" to Show,
+          "DeprecatedHidden" to Show,
+          "DeprecatedWarning" to Show,
+        )
+    }
 
-  test("can be selected based on deprecation level") {
-    val viewModel = InspectorViewModel(
-      DeprecationHandler(
-        phenotypeSelector = { if (it == WARNING) Strikethrough else Show },
-        alignmentSelector = { if (it != WARNING) Bottom else Regular },
-      ),
-    )
+    test("can be selected based on deprecation level") {
+      val viewModel =
+        InspectorViewModel(
+          DeprecationHandler(
+            phenotypeSelector = { if (it == WARNING) Strikethrough else Show },
+            alignmentSelector = { if (it != WARNING) Bottom else Regular },
+          )
+        )
 
-    val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
+      val featureNames = viewModel.sectionFlow().first().map { it.name to it.deprecationPhenotype }
 
-    featureNames shouldContainExactly listOf(
-      "DeprecatedWarning" to Strikethrough,
-      "NotDeprecated" to null,
-      "DeprecatedError" to Show,
-      "DeprecatedHidden" to Show,
-    )
-  }
-})
+      featureNames shouldContainExactly
+        listOf(
+          "DeprecatedWarning" to Strikethrough,
+          "NotDeprecated" to null,
+          "DeprecatedError" to Show,
+          "DeprecatedHidden" to Show,
+        )
+    }
+  })
 
 private object DeprecatedFeatureFactory : FeatureFactory {
   override fun create(): Set<Class<Feature<*>>> {
@@ -113,17 +111,14 @@ private object DeprecatedFeatureFactory : FeatureFactory {
       Class.forName("io.mehow.laboratory.inspector.DeprecatedError"),
       Class.forName("io.mehow.laboratory.inspector.DeprecatedHidden"),
       Class.forName("io.mehow.laboratory.inspector.NotDeprecated"),
-    ) as Set<Class<Feature<*>>>
+    )
+      as Set<Class<Feature<*>>>
   }
 }
 
 @Deprecated("", level = WARNING)
-private enum class DeprecatedWarning : Feature<
-  @Suppress("DEPRECATION")
-  DeprecatedWarning,
-> {
-  Option,
-  ;
+private enum class DeprecatedWarning : Feature<@Suppress("DEPRECATION") DeprecatedWarning> {
+  Option;
 
   @Suppress("DEPRECATION")
   override val defaultOption: DeprecatedWarning
@@ -131,12 +126,8 @@ private enum class DeprecatedWarning : Feature<
 }
 
 @Deprecated("message", level = ERROR)
-private enum class DeprecatedError : Feature<
-  @Suppress("DEPRECATION_ERROR")
-  DeprecatedError,
-> {
-  Option,
-  ;
+private enum class DeprecatedError : Feature<@Suppress("DEPRECATION_ERROR") DeprecatedError> {
+  Option;
 
   @Suppress("DEPRECATION_ERROR")
   override val defaultOption: DeprecatedError
@@ -144,12 +135,8 @@ private enum class DeprecatedError : Feature<
 }
 
 @Deprecated("", level = HIDDEN)
-private enum class DeprecatedHidden : Feature<
-  @Suppress("DEPRECATION_ERROR")
-  DeprecatedHidden,
-> {
-  Option,
-  ;
+private enum class DeprecatedHidden : Feature<@Suppress("DEPRECATION_ERROR") DeprecatedHidden> {
+  Option;
 
   @Suppress("DEPRECATION_ERROR")
   override val defaultOption: DeprecatedHidden
@@ -157,18 +144,16 @@ private enum class DeprecatedHidden : Feature<
 }
 
 private enum class NotDeprecated : Feature<NotDeprecated> {
-  Option,
-  ;
+  Option;
 
   override val defaultOption: NotDeprecated
     get() = Option
 }
 
-private fun InspectorViewModel(
-  deprecationHandler: DeprecationHandler,
-) = InspectorViewModel(
-  Laboratory.inMemory(),
-  emptyFlow(),
-  DeprecatedFeatureFactory,
-  deprecationHandler,
-)
+private fun InspectorViewModel(deprecationHandler: DeprecationHandler) =
+  InspectorViewModel(
+    Laboratory.inMemory(),
+    emptyFlow(),
+    DeprecatedFeatureFactory,
+    deprecationHandler,
+  )

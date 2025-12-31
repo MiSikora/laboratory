@@ -8,9 +8,7 @@ plugins {
 laboratory {
   packageName = "io.mehow.laboratory.smaple.multimodule.c"
 
-  featureFactory {
-    isPublic = true
-  }
+  featureFactory { isPublic = true }
 
   feature("Camera") {
     withDefaultOption("Disabled")

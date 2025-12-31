@@ -5,7 +5,5 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import kotlin.reflect.KClass
 
-internal operator fun KClass<*>.invoke(
-  parameter: TypeName,
-  vararg parameters: TypeName,
-) = asClassName().parameterizedBy(parameter, *parameters)
+internal operator fun KClass<*>.invoke(parameter: TypeName, vararg parameters: TypeName) =
+  asClassName().parameterizedBy(parameter, *parameters)

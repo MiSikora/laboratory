@@ -6,96 +6,91 @@ import android.view.LayoutInflater
 import android.widget.CompoundButton
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
+import com.google.android.material.R as MaterialR
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import io.mehow.laboratory.Feature
-import com.google.android.material.R as MaterialR
 
 internal class OptionViewGroup
-  @JvmOverloads
-  constructor(
-    context: Context,
-    attrs: AttributeSet,
-    defStyle: Int = MaterialR.attr.chipGroupStyle,
-  ) : ChipGroup(context, attrs, defStyle) {
-    private val inflater = LayoutInflater.from(context)
-    private var listener: OptionGroupListener? = null
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet, defStyle: Int = MaterialR.attr.chipGroupStyle) :
+  ChipGroup(context, attrs, defStyle) {
+  private val inflater = LayoutInflater.from(context)
+  private var listener: OptionGroupListener? = null
 
-    init {
-      isSelectionRequired = true
-    }
+  init {
+    isSelectionRequired = true
+  }
 
-    fun setOnSelectFeatureListener(listener: OptionGroupListener?) {
-      this.listener = listener
-    }
+  fun setOnSelectFeatureListener(listener: OptionGroupListener?) {
+    this.listener = listener
+  }
 
-    fun render(
-      models: List<OptionUiModel>,
-      isEnabled: Boolean,
-    ) {
-      chips.forEach(::removeOnCheckedChangeListener)
-      removeAllViews()
-      models.map { createChip(it, isEnabled) }.forEach(::addView)
-    }
+  fun render(models: List<OptionUiModel>, isEnabled: Boolean) {
+    chips.forEach(::removeOnCheckedChangeListener)
+    removeAllViews()
+    models.map { createChip(it, isEnabled) }.forEach(::addView)
+  }
 
-    private fun createChip(
-      model: OptionUiModel,
-      isEnabled: Boolean,
-    ): Chip {
-      val chip = inflater.inflate(R.layout.io_mehow_laboratory_feature_option_chip, this, false) as Chip
-      return chip.apply {
-        text = model.option.name
-        isChecked = model.isSelected
-        if (model.supervisedFeatures.isNotEmpty()) {
-          chipIcon = AppCompatResources.getDrawable(context, R.drawable.io_mehow_laboratory_supervisor)
-          setOnLongClickListener { showSupervisedFeaturesMenu(this, model.supervisedFeatures) }
-        }
-        isActivated = isEnabled
-        this.isEnabled = isEnabled
-        setOnCheckedChangeListener(createListener(model))
+  private fun createChip(model: OptionUiModel, isEnabled: Boolean): Chip {
+    val chip =
+      inflater.inflate(R.layout.io_mehow_laboratory_feature_option_chip, this, false) as Chip
+    return chip.apply {
+      text = model.option.name
+      isChecked = model.isSelected
+      if (model.supervisedFeatures.isNotEmpty()) {
+        chipIcon =
+          AppCompatResources.getDrawable(context, R.drawable.io_mehow_laboratory_supervisor)
+        setOnLongClickListener { showSupervisedFeaturesMenu(this, model.supervisedFeatures) }
       }
+      isActivated = isEnabled
+      this.isEnabled = isEnabled
+      setOnCheckedChangeListener(createListener(model))
     }
+  }
 
-    private fun createListener(model: OptionUiModel) = CompoundButton.OnCheckedChangeListener { chip, isChecked ->
+  private fun createListener(model: OptionUiModel) =
+    CompoundButton.OnCheckedChangeListener { chip, isChecked ->
       if (isChecked) {
         (chip as Chip).deselectOtherChips()
         listener?.onSelectOption(model.option)
       }
     }
 
-    // ChipGroup.isSingleSelection does not work with initial selection from code.
-    private fun Chip.deselectOtherChips() {
-      chips.filter { it !== this }.forEach { chip -> chip.isChecked = false }
-    }
+  // ChipGroup.isSingleSelection does not work with initial selection from code.
+  private fun Chip.deselectOtherChips() {
+    chips.filter { it !== this }.forEach { chip -> chip.isChecked = false }
+  }
 
-    private fun removeOnCheckedChangeListener(chip: Chip) = chip.setOnCheckedChangeListener(null)
+  private fun removeOnCheckedChangeListener(chip: Chip) = chip.setOnCheckedChangeListener(null)
 
-    private fun showSupervisedFeaturesMenu(
-      anchor: Chip,
-      features: List<Class<out Feature<*>>>,
-    ): Boolean {
-      PopupMenu(context, anchor).apply {
-        features.forEachIndexed { index, feature ->
-          menu.add(0, index, index, feature.simpleName)
-        }
+  private fun showSupervisedFeaturesMenu(
+    anchor: Chip,
+    features: List<Class<out Feature<*>>>,
+  ): Boolean {
+    PopupMenu(context, anchor)
+      .apply {
+        features.forEachIndexed { index, feature -> menu.add(0, index, index, feature.simpleName) }
         setOnMenuItemClickListener {
           listener?.onSelectSupervisedFeature(features[it.order])
           true
         }
-      }.show()
-      return true
-    }
+      }
+      .show()
+    return true
+  }
 
-    private val chips: Sequence<Chip> get() = sequence {
+  private val chips: Sequence<Chip>
+    get() = sequence {
       for (index in 0 until childCount) {
         val chip = getChildAt(index) as? Chip ?: continue
         yield(chip)
       }
     }
 
-    interface OptionGroupListener {
-      fun onSelectOption(option: Feature<*>)
+  interface OptionGroupListener {
+    fun onSelectOption(option: Feature<*>)
 
-      fun onSelectSupervisedFeature(feature: Class<out Feature<*>>)
-    }
+    fun onSelectSupervisedFeature(feature: Class<out Feature<*>>)
   }
+}

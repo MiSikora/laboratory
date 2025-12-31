@@ -22,7 +22,7 @@ plugins {
 }
 
 val javaTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
-val ktlintVersion = libs.versions.ktlint.get()
+val ktfmtVersion = libs.versions.ktfmt.get()
 
 allprojects {
   val configureSpotless: SpotlessExtension.() -> Unit = {
@@ -32,14 +32,14 @@ allprojects {
       target("src/**/*.kt")
       trimTrailingWhitespace()
       endWithNewline()
-      ktlint(ktlintVersion).setEditorConfigPath(rootProject.file(".editorconfig"))
+      ktfmt(ktfmtVersion).googleStyle()
     }
 
     kotlinGradle {
       target("*.kts")
       trimTrailingWhitespace()
       endWithNewline()
-      ktlint(ktlintVersion).setEditorConfigPath(rootProject.file(".editorconfig"))
+      ktfmt(ktfmtVersion).googleStyle()
     }
 
     format("misc") {
@@ -87,9 +87,7 @@ subprojects {
         jvmTarget.set(javaTarget)
         progressiveMode.set(true)
         allWarningsAsErrors.set(true)
-        freeCompilerArgs.addAll(
-          "-Xjvm-default=all",
-        )
+        freeCompilerArgs.addAll("-Xjvm-default=all")
       }
     }
   }
@@ -106,12 +104,13 @@ subprojects {
         targetCompatibility = JavaVersion.toVersion(javaTarget.target)
       }
 
-      val dummyConfig by signingConfigs.creating {
-        storeFile = rootProject.file("mehow-io.keystore")
-        storePassword = "mehow-io"
-        keyAlias = "mehow-io"
-        keyPassword = "mehow-io"
-      }
+      val dummyConfig by
+        signingConfigs.creating {
+          storeFile = rootProject.file("mehow-io.keystore")
+          storePassword = "mehow-io"
+          keyAlias = "mehow-io"
+          keyPassword = "mehow-io"
+        }
 
       compileSdk = libs.versions.compileSdk.get().toInt()
       defaultConfig {
@@ -124,9 +123,7 @@ subprojects {
         signingConfig = dummyConfig
       }
 
-      buildFeatures {
-        viewBinding = true
-      }
+      buildFeatures { viewBinding = true }
 
       buildTypes {
         debug {

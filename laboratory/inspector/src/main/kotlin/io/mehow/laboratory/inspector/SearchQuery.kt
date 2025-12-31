@@ -3,10 +3,12 @@ package io.mehow.laboratory.inspector
 import java.util.Locale
 
 internal class SearchQuery(input: String) {
-  private val parts = input.replace(whiteSpaceRegex, " ")
-    .split(' ')
-    .flatMap { it.replace(searchNoiseRegex, "").splitToParts() }
-    .map { it.lowercase(Locale.ROOT) }
+  private val parts =
+    input
+      .replace(whiteSpaceRegex, " ")
+      .split(' ')
+      .flatMap { it.replace(searchNoiseRegex, "").splitToParts() }
+      .map { it.lowercase(Locale.ROOT) }
   private val joinedParts = parts.joinToString("")
 
   fun isNotEmpty() = parts.isNotEmpty()
@@ -20,13 +22,14 @@ internal class SearchQuery(input: String) {
 
   private fun String.containsParts(parts: List<String>) = splitToParts().containsAllInOrder(parts)
 
-  private fun String.splitToParts() = fold(emptyList<String>()) { xs, x ->
-    when {
-      xs.isEmpty() -> xs + x.toString()
-      x.isLowerCase() && !x.isDigit() -> xs.dropLast(1) + (xs.last() + x)
-      else -> xs + x.toString()
+  private fun String.splitToParts() =
+    fold(emptyList<String>()) { xs, x ->
+      when {
+        xs.isEmpty() -> xs + x.toString()
+        x.isLowerCase() && !x.isDigit() -> xs.dropLast(1) + (xs.last() + x)
+        else -> xs + x.toString()
+      }
     }
-  }
 
   override fun equals(other: Any?) = other is SearchQuery && this.parts == other.parts
 

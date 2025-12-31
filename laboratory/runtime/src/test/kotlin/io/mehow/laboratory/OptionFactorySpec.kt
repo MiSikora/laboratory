@@ -6,41 +6,39 @@ import io.kotest.matchers.shouldBe
 class OptionFactorySpec : FunSpec() {
   enum class FeatureA : Feature<FeatureA> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   enum class FeatureB : Feature<FeatureB> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   init {
-    val firstFactory = object : OptionFactory {
-      override fun create(
-        key: String,
-        name: String,
-      ): Feature<*>? = when (key) {
-        "FeatureA" -> FeatureA.A
-        else -> null
+    val firstFactory =
+      object : OptionFactory {
+        override fun create(key: String, name: String): Feature<*>? =
+          when (key) {
+            "FeatureA" -> FeatureA.A
+            else -> null
+          }
       }
-    }
 
-    val secondFactory = object : OptionFactory {
-      override fun create(
-        key: String,
-        name: String,
-      ): Feature<*>? = when (key) {
-        "FeatureA" -> FeatureA.B
-        "FeatureB" -> FeatureB.B
-        else -> null
+    val secondFactory =
+      object : OptionFactory {
+        override fun create(key: String, name: String): Feature<*>? =
+          when (key) {
+            "FeatureA" -> FeatureA.B
+            "FeatureB" -> FeatureB.B
+            else -> null
+          }
       }
-    }
 
     context("factory created from sum") {
       val factory = firstFactory + secondFactory

@@ -7,38 +7,38 @@ import io.kotest.matchers.shouldBe
 class ParentChildFeatureSpec : FunSpec() {
   enum class GrandParentFeature : Feature<GrandParentFeature> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   enum class ParentFeature : Feature<ParentFeature> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
 
     override val supervisorOption = GrandParentFeature.A
   }
 
   enum class ChildFeature : Feature<ChildFeature> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
 
     override val supervisorOption = ParentFeature.A
   }
 
   enum class ChildFeature2 : Feature<ChildFeature2> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
 
     override val supervisorOption = ParentFeature.B
   }

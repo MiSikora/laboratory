@@ -7,42 +7,46 @@ class DefaultOptionFactorySpec : FunSpec() {
   enum class FeatureA : Feature<FeatureA> {
     A,
     B,
-    C,
-    ;
+    C;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   enum class FeatureB : Feature<FeatureB> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   enum class FeatureC : Feature<FeatureC> {
-    A,
-    ;
+    A;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   init {
-    val firstFactory = object : DefaultOptionFactory {
-      override fun <T : Feature<out T>> create(feature: T): Feature<*>? = when (feature) {
-        is FeatureA -> FeatureA.C
-        else -> null
+    val firstFactory =
+      object : DefaultOptionFactory {
+        override fun <T : Feature<out T>> create(feature: T): Feature<*>? =
+          when (feature) {
+            is FeatureA -> FeatureA.C
+            else -> null
+          }
       }
-    }
 
-    val secondFactory = object : DefaultOptionFactory {
-      override fun <T : Feature<out T>> create(feature: T): Feature<*>? = when (feature) {
-        is FeatureA -> FeatureA.B
-        is FeatureB -> FeatureB.B
-        else -> null
+    val secondFactory =
+      object : DefaultOptionFactory {
+        override fun <T : Feature<out T>> create(feature: T): Feature<*>? =
+          when (feature) {
+            is FeatureA -> FeatureA.B
+            is FeatureB -> FeatureB.B
+            else -> null
+          }
       }
-    }
 
     context("factory created from sum") {
       val factory = firstFactory + secondFactory

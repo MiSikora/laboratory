@@ -26,12 +26,13 @@ internal fun View.focusAndShowKeyboard() {
 
   requestFocus()
   if (!hasWindowFocus()) {
-    val listener = object : ViewTreeObserver.OnWindowFocusChangeListener {
-      override fun onWindowFocusChanged(hasFocus: Boolean) {
-        viewTreeObserver.removeOnWindowFocusChangeListener(this)
-        if (hasFocus) showKeyboardIfFocused()
+    val listener =
+      object : ViewTreeObserver.OnWindowFocusChangeListener {
+        override fun onWindowFocusChanged(hasFocus: Boolean) {
+          viewTreeObserver.removeOnWindowFocusChangeListener(this)
+          if (hasFocus) showKeyboardIfFocused()
+        }
       }
-    }
     viewTreeObserver.addOnWindowFocusChangeListener(listener)
   } else {
     showKeyboardIfFocused()
@@ -47,19 +48,17 @@ internal fun View.hideKeyboard() {
 internal fun RecyclerView.hideKeyboardOnScroll() {
   val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
   var totalDy = 0
-  addOnScrollListener(object : RecyclerView.OnScrollListener() {
-    override fun onScrolled(
-      recyclerView: RecyclerView,
-      dx: Int,
-      dy: Int,
-    ) {
-      totalDy += dy.absoluteValue
-      if (totalDy >= touchSlop) {
-        totalDy = 0
-        hideKeyboard()
+  addOnScrollListener(
+    object : RecyclerView.OnScrollListener() {
+      override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        totalDy += dy.absoluteValue
+        if (totalDy >= touchSlop) {
+          totalDy = 0
+          hideKeyboard()
+        }
       }
     }
-  })
+  )
 }
 
 internal var View.isVisible: Boolean
@@ -82,11 +81,7 @@ internal fun View.doOnApplyWindowInsets(block: (View, WindowInsetsCompat, Initia
   }
 }
 
-internal data class InitialPadding(
-  val left: Int,
-  val top: Int,
-  val right: Int,
-  val bottom: Int,
-)
+internal data class InitialPadding(val left: Int, val top: Int, val right: Int, val bottom: Int)
 
-private fun View.initialPadding() = InitialPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+private fun View.initialPadding() =
+  InitialPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)

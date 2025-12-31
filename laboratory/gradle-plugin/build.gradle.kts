@@ -29,15 +29,11 @@ buildConfig {
   buildConfigField("String", "PluginName", "\"${pluginName}\"")
 }
 
-tasks.withType<Test>().configureEach {
-  useJUnitPlatform()
-}
+tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 val fixtureClasspath: Configuration by configurations.creating
 
-tasks.withType<PluginUnderTestMetadata>().configureEach {
-  pluginClasspath.from(fixtureClasspath)
-}
+tasks.withType<PluginUnderTestMetadata>().configureEach { pluginClasspath.from(fixtureClasspath) }
 
 dependencies {
   compileOnly(libs.agp.api)

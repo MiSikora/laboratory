@@ -4,8 +4,8 @@ import io.mehow.laboratory.Feature
 
 enum class FeatureA : Feature<FeatureA> {
   A,
-  B,
-  ;
+  B;
 
-  override val defaultOption get() = A
+  override val defaultOption
+    get() = A
 }

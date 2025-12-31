@@ -8,162 +8,189 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.GradleRunner
 
-class LaboratoryPluginSpec : FunSpec({
-  lateinit var gradleRunner: GradleRunner
+class LaboratoryPluginSpec :
+  FunSpec({
+    lateinit var gradleRunner: GradleRunner
 
-  cleanBuildDirs()
+    cleanBuildDirs()
 
-  beforeTest {
-    gradleRunner = GradleRunner.create().withPluginClasspath()
-  }
+    beforeTest { gradleRunner = GradleRunner.create().withPluginClasspath() }
 
-  test("fails for project without Kotlin plugin") {
-    val fixture = "plugin-kotlin-missing".toFixture()
+    test("fails for project without Kotlin plugin") {
+      val fixture = "plugin-kotlin-missing".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .buildAndFail()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureFlags", "--stacktrace")
+          .buildAndFail()
 
-    result.task(":generateFeatureFlags").shouldBeNull()
-    result.output shouldContain "Laboratory Gradle plugin applied in ':' requires Kotlin plugin."
-  }
+      result.task(":generateFeatureFlags").shouldBeNull()
+      result.output shouldContain "Laboratory Gradle plugin applied in ':' requires Kotlin plugin."
+    }
 
-  test("registers feature flags task for project with Kotlin plugin") {
-    val fixture = "plugin-kotlin-present".toFixture()
+    test("registers feature flags task for project with Kotlin plugin") {
+      val fixture = "plugin-kotlin-present".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureFlags", "--stacktrace")
+          .build()
 
-    result.task(":generateFeatureFlags").shouldNotBeNull()
-  }
+      result.task(":generateFeatureFlags").shouldNotBeNull()
+    }
 
-  test("fails for Android project without Kotlin Android plugin") {
-    val fixture = "plugin-kotlin-android-missing".toFixture()
+    test("fails for Android project without Kotlin Android plugin") {
+      val fixture = "plugin-kotlin-android-missing".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .buildAndFail()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureFlags", "--stacktrace")
+          .buildAndFail()
 
-    result.task(":generateFeatureFlags").shouldBeNull()
-    result.output shouldContain "Laboratory Gradle plugin applied in ':' requires Kotlin plugin."
-  }
+      result.task(":generateFeatureFlags").shouldBeNull()
+      result.output shouldContain "Laboratory Gradle plugin applied in ':' requires Kotlin plugin."
+    }
 
-  test("registers feature flags task for project with Kotlin Android plugin") {
-    val fixture = "plugin-kotlin-android-present".toFixture()
+    test("registers feature flags task for project with Kotlin Android plugin") {
+      val fixture = "plugin-kotlin-android-present".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFlags", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureFlags", "--stacktrace")
+          .build()
 
-    result.task(":generateFeatureFlags").shouldNotBeNull()
-  }
+      result.task(":generateFeatureFlags").shouldNotBeNull()
+    }
 
-  test("registers feature flags factory for project without feature flags factory extension") {
-    val fixture = "plugin-factory-missing".toFixture()
+    test("registers feature flags factory for project without feature flags factory extension") {
+      val fixture = "plugin-factory-missing".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFactory", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureFactory", "--stacktrace")
+          .build()
 
-    result.task(":generateFeatureFactory").shouldNotBeNull()
-  }
+      result.task(":generateFeatureFactory").shouldNotBeNull()
+    }
 
-  test("registers feature flags factory for project with feature flags factory extension") {
-    val fixture = "plugin-factory-present".toFixture()
+    test("registers feature flags factory for project with feature flags factory extension") {
+      val fixture = "plugin-factory-present".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureFactory", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureFactory", "--stacktrace")
+          .build()
 
-    result.task(":generateFeatureFactory").shouldNotBeNull()
-  }
+      result.task(":generateFeatureFactory").shouldNotBeNull()
+    }
 
-  test("registers sourced storage for project without sourced storage extension") {
-    val fixture = "plugin-sourced-storage-missing".toFixture()
+    test("registers sourced storage for project without sourced storage extension") {
+      val fixture = "plugin-sourced-storage-missing".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+          .build()
 
-    result.task(":generateSourcedFeatureStorage").shouldNotBeNull()
-  }
+      result.task(":generateSourcedFeatureStorage").shouldNotBeNull()
+    }
 
-  test("registers sourced storage for project with factory extension") {
-    val fixture = "plugin-sourced-storage-present".toFixture()
+    test("registers sourced storage for project with factory extension") {
+      val fixture = "plugin-sourced-storage-present".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+          .build()
 
-    result.task(":generateSourcedFeatureStorage").shouldNotBeNull()
-  }
+      result.task(":generateSourcedFeatureStorage").shouldNotBeNull()
+    }
 
-  test("registers feature flag sources factory for project without feature flag sources factory extension") {
-    val fixture = "plugin-source-factory-missing".toFixture()
+    test(
+      "registers feature flag sources factory for project without feature flag sources factory extension"
+    ) {
+      val fixture = "plugin-source-factory-missing".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureSourceFactory", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureSourceFactory", "--stacktrace")
+          .build()
 
-    result.task(":generateFeatureSourceFactory").shouldNotBeNull()
-  }
+      result.task(":generateFeatureSourceFactory").shouldNotBeNull()
+    }
 
-  test("registers feature flag sources factory for project with feature flag sources factory extension") {
-    val fixture = "plugin-source-factory-present".toFixture()
+    test(
+      "registers feature flag sources factory for project with feature flag sources factory extension"
+    ) {
+      val fixture = "plugin-source-factory-present".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateFeatureSourceFactory", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateFeatureSourceFactory", "--stacktrace")
+          .build()
 
-    result.task(":generateFeatureSourceFactory").shouldNotBeNull()
-  }
+      result.task(":generateFeatureSourceFactory").shouldNotBeNull()
+    }
 
-  test("registers option factory for project without option factory extension") {
-    val fixture = "plugin-option-factory-missing".toFixture()
+    test("registers option factory for project without option factory extension") {
+      val fixture = "plugin-option-factory-missing".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateOptionFactory", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateOptionFactory", "--stacktrace")
+          .build()
 
-    result.task(":generateOptionFactory").shouldNotBeNull()
-  }
+      result.task(":generateOptionFactory").shouldNotBeNull()
+    }
 
-  test("registers option factory for project with option factory extension") {
-    val fixture = "plugin-option-factory-present".toFixture()
+    test("registers option factory for project with option factory extension") {
+      val fixture = "plugin-option-factory-present".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture)
-      .withArguments("generateOptionFactory", "--stacktrace")
-      .build()
+      val result =
+        gradleRunner
+          .withProjectDir(fixture)
+          .withArguments("generateOptionFactory", "--stacktrace")
+          .build()
 
-    result.task(":generateOptionFactory").shouldNotBeNull()
-  }
+      result.task(":generateOptionFactory").shouldNotBeNull()
+    }
 
-  test("does not fail for including dependency without laboratory plugin") {
-    val fixture = "plugin-dependency-plugin".toFixture()
+    test("does not fail for including dependency without laboratory plugin") {
+      val fixture = "plugin-dependency-plugin".toFixture()
 
-    shouldNotThrowAny { gradleRunner.withProjectDir(fixture).build() }
-  }
+      shouldNotThrowAny { gradleRunner.withProjectDir(fixture).build() }
+    }
 
-  test("fails for including dependency without laboratory plugin") {
-    val fixture = "plugin-dependency-plugin-missing".toFixture()
+    test("fails for including dependency without laboratory plugin") {
+      val fixture = "plugin-dependency-plugin-missing".toFixture()
 
-    val exception = shouldThrowAny { gradleRunner.withProjectDir(fixture).build() }
+      val exception = shouldThrowAny { gradleRunner.withProjectDir(fixture).build() }
 
-    exception.message shouldContain "Cannot depend on a project without laboratory plugin"
-  }
+      exception.message shouldContain "Cannot depend on a project without laboratory plugin"
+    }
 
-  test("does not fail for including dependency accessor without laboratory plugin") {
-    val fixture = "plugin-dependency-accessor-plugin".toFixture()
+    test("does not fail for including dependency accessor without laboratory plugin") {
+      val fixture = "plugin-dependency-accessor-plugin".toFixture()
 
-    shouldNotThrowAny { gradleRunner.withProjectDir(fixture).build() }
-  }
+      shouldNotThrowAny { gradleRunner.withProjectDir(fixture).build() }
+    }
 
-  test("fails for including dependency accessor without laboratory plugin") {
-    val fixture = "plugin-dependency-accessor-plugin-missing".toFixture()
+    test("fails for including dependency accessor without laboratory plugin") {
+      val fixture = "plugin-dependency-accessor-plugin-missing".toFixture()
 
-    val exception = shouldThrowAny { gradleRunner.withProjectDir(fixture).build() }
+      val exception = shouldThrowAny { gradleRunner.withProjectDir(fixture).build() }
 
-    exception.message shouldContain "Cannot depend on a project without laboratory plugin"
-  }
-})
+      exception.message shouldContain "Cannot depend on a project without laboratory plugin"
+    }
+  })

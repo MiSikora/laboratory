@@ -4,13 +4,11 @@ import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 
-/**
- * An entry point for configuration of feature flags code generation.
- */
+/** An entry point for configuration of feature flags code generation. */
 public abstract class LaboratoryExtension {
   /**
-   * Sets package name for any factories or feature flags defined in this extension.
-   * Package names can be individually overwritten in each generating block
+   * Sets package name for any factories or feature flags defined in this extension. Package names
+   * can be individually overwritten in each generating block
    */
   public var packageName: String
     get() = packageNameProvider.value.orEmpty()
@@ -22,11 +20,12 @@ public abstract class LaboratoryExtension {
 
   private val externalDependencies = mutableMapOf<DependencyContribution, List<FeatureFlagInput>>()
 
-  internal val factoryFeatureFlags get() = buildMap {
-    DependencyContribution.entries.forEach { entry ->
-      put(entry, featureFlags + externalDependencies[entry].orEmpty())
+  internal val factoryFeatureFlags
+    get() = buildMap {
+      DependencyContribution.entries.forEach { entry ->
+        put(entry, featureFlags + externalDependencies[entry].orEmpty())
+      }
     }
-  }
 
   internal lateinit var project: Project
 
@@ -34,35 +33,33 @@ public abstract class LaboratoryExtension {
 
   internal val featureFlags: List<FeatureFlagInput> = mutableFeatureInputs
 
-  /**
-   * Generates a new [multi-option][FeatureFlagInput.MultiOption] feature flag.
-   */
-  public fun feature(
-    name: String,
-    action: Action<FeatureFlagInput.MultiOption>,
-  ) {
-    mutableFeatureInputs += FeatureFlagInput.MultiOption(name, packageNameProvider, supervisor = null)
-      .apply(action::execute)
+  /** Generates a new [multi-option][FeatureFlagInput.MultiOption] feature flag. */
+  public fun feature(name: String, action: Action<FeatureFlagInput.MultiOption>) {
+    mutableFeatureInputs +=
+      FeatureFlagInput.MultiOption(name, packageNameProvider, supervisor = null)
+        .apply(action::execute)
   }
 
   /**
-   * Generates a new supervised [binary][FeatureFlagInput.BinaryOption] feature flag that is enabled by default.
+   * Generates a new supervised [binary][FeatureFlagInput.BinaryOption] feature flag that is enabled
+   * by default.
    */
   @JvmOverloads
   public fun enabledFeature(
     name: String,
-    action: Action<FeatureFlagInput.BinaryOption> = Action { },
+    action: Action<FeatureFlagInput.BinaryOption> = Action {},
   ) {
     binaryFeature(name, isEnabled = true, action)
   }
 
   /**
-   * Generates a new supervised [binary][FeatureFlagInput.BinaryOption] feature flag that is disabled by default.
+   * Generates a new supervised [binary][FeatureFlagInput.BinaryOption] feature flag that is
+   * disabled by default.
    */
   @JvmOverloads
   public fun disabledFeature(
     name: String,
-    action: Action<FeatureFlagInput.BinaryOption> = Action { },
+    action: Action<FeatureFlagInput.BinaryOption> = Action {},
   ) {
     binaryFeature(name, isEnabled = false, action)
   }
@@ -72,23 +69,24 @@ public abstract class LaboratoryExtension {
     isEnabled: Boolean,
     action: Action<FeatureFlagInput.BinaryOption>,
   ) {
-    mutableFeatureInputs += FeatureFlagInput.BinaryOption(name, isEnabled, packageNameProvider, supervisor = null)
-      .apply(action::execute)
+    mutableFeatureInputs +=
+      FeatureFlagInput.BinaryOption(name, isEnabled, packageNameProvider, supervisor = null)
+        .apply(action::execute)
   }
 
   internal var factoryInput: FeatureFactoryInput? = null
     private set
 
   /**
-   * Generates a new feature factory in this module. This should generally be used only by a
-   * top level module that needs to have information about all feature flags for QA purposes.
+   * Generates a new feature factory in this module. This should generally be used only by a top
+   * level module that needs to have information about all feature flags for QA purposes.
    */
-  public fun featureFactory(): Unit = featureFactory { }
+  public fun featureFactory(): Unit = featureFactory {}
 
   /**
-   * Generates and customizes a new feature factory in this module.
-   * This should generally be used only by a top level module
-   * that needs to have information about all feature flags for QA purposes.
+   * Generates and customizes a new feature factory in this module. This should generally be used
+   * only by a top level module that needs to have information about all feature flags for QA
+   * purposes.
    */
   public fun featureFactory(action: Action<FeatureFactoryInput>) {
     factoryInput = FeatureFactoryInput(packageNameProvider).apply(action::execute)
@@ -98,17 +96,16 @@ public abstract class LaboratoryExtension {
     private set
 
   /**
-   * Generates a new feature storage in this module. This should generally be used only by a
-   * top level module that needs to to have information about all sources.
-   * Feature storage generated by this method should be then used in the application.
+   * Generates a new feature storage in this module. This should generally be used only by a top
+   * level module that needs to to have information about all sources. Feature storage generated by
+   * this method should be then used in the application.
    */
-  public fun sourcedStorage(): Unit = sourcedStorage { }
+  public fun sourcedStorage(): Unit = sourcedStorage {}
 
   /**
-   * Generates and customizes a new feature storage in this module.
-   * This should generally be used only by a top level module
-   * that needs to to have information about all sources.
-   * Feature storage generated by this method should be then used in the application.
+   * Generates and customizes a new feature storage in this module. This should generally be used
+   * only by a top level module that needs to to have information about all sources. Feature storage
+   * generated by this method should be then used in the application.
    */
   public fun sourcedStorage(action: Action<SourcedFeatureStorageInput>) {
     storageInput = SourcedFeatureStorageInput(packageNameProvider).apply(action::execute)
@@ -121,12 +118,11 @@ public abstract class LaboratoryExtension {
    * Generates a new feature sources factory in this module. This should generally be used only by a
    * top level module that needs to have information about all feature flags for QA purposes.
    */
-  public fun featureSourceFactory(): Unit = featureSourceFactory { }
+  public fun featureSourceFactory(): Unit = featureSourceFactory {}
 
   /**
-   * Generates a new feature sources factory in this module.
-   * This should generally be used only by a top level module
-   * that needs to have information about all feature flags for QA purposes.
+   * Generates a new feature sources factory in this module. This should generally be used only by a
+   * top level module that needs to have information about all feature flags for QA purposes.
    */
   public fun featureSourceFactory(action: Action<FeatureFactoryInput>) {
     featureSourcesFactory = FeatureFactoryInput(packageNameProvider).apply(action::execute)
@@ -136,22 +132,23 @@ public abstract class LaboratoryExtension {
     private set
 
   /**
-   * Generates a new option factory in this module. All features that can be created by this factory must
-   * be visible to it during compilation.
+   * Generates a new option factory in this module. All features that can be created by this factory
+   * must be visible to it during compilation.
    */
-  public fun optionFactory(): Unit = optionFactory { }
+  public fun optionFactory(): Unit = optionFactory {}
 
   /**
-   * Generates a new option factory in this module. All features that can be created by this factory must
-   * be visible to it during compilation.
+   * Generates a new option factory in this module. All features that can be created by this factory
+   * must be visible to it during compilation.
    */
   public fun optionFactory(action: Action<OptionFactoryInput>) {
     optionFactoryInput = OptionFactoryInput(packageNameProvider).apply(action::execute)
   }
 
   /**
-   * Includes a [project] during feature flags contribution to [featureFactory], [featureSourcesFactory],
-   * [sourcedStorage] or [optionFactory]. Contribution can be selective applied by supplying [contributeTo] collection.
+   * Includes a [project] during feature flags contribution to [featureFactory],
+   * [featureSourcesFactory], [sourcedStorage] or [optionFactory]. Contribution can be selective
+   * applied by supplying [contributeTo] collection.
    *
    * Included project must have Laboratory plugin applied.
    */
@@ -164,8 +161,9 @@ public abstract class LaboratoryExtension {
   }
 
   /**
-   * Includes a [project] during feature flags contribution to [featureFactory], [featureSourcesFactory],
-   * [sourcedStorage] or [optionFactory]. Contribution can be selective applied by supplying [contributeTo] collection.
+   * Includes a [project] during feature flags contribution to [featureFactory],
+   * [featureSourcesFactory], [sourcedStorage] or [optionFactory]. Contribution can be selective
+   * applied by supplying [contributeTo] collection.
    *
    * Included project must have Laboratory plugin applied.
    */
@@ -178,11 +176,13 @@ public abstract class LaboratoryExtension {
       "Dependency in project '${this.project.name}' on '${project.name}' must have at least one contribution"
     }
     this.project.evaluationDependsOn(project.path)
-    val laboratoryExtension = requireNotNull(project.extensions.findByType(LaboratoryExtension::class.java)) {
-      "Cannot depend on a project without laboratory plugin"
-    }
+    val laboratoryExtension =
+      requireNotNull(project.extensions.findByType(LaboratoryExtension::class.java)) {
+        "Cannot depend on a project without laboratory plugin"
+      }
     contributeTo.forEach { entry ->
-      externalDependencies[entry] = externalDependencies[entry].orEmpty() + laboratoryExtension.featureFlags
+      externalDependencies[entry] =
+        externalDependencies[entry].orEmpty() + laboratoryExtension.featureFlags
     }
   }
 }

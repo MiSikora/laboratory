@@ -11,77 +11,78 @@ import io.mehow.laboratory.inspector.SearchViewModel.Event.OpenSearch
 import io.mehow.laboratory.inspector.SearchViewModel.Event.UpdateQuery
 import io.mehow.laboratory.inspector.SearchViewModel.UiModel
 
-class SearchViewModelSpec : FunSpec({
-  setMainDispatcher()
+class SearchViewModelSpec :
+  FunSpec({
+    setMainDispatcher()
 
-  test("starts with an idle state") {
-    SearchViewModel().uiModels.test {
-      expectIdleModel()
+    test("starts with an idle state") {
+      SearchViewModel().uiModels.test {
+        expectIdleModel()
 
-      cancel()
+        cancel()
+      }
     }
-  }
 
-  test("can be opened") {
-    val viewModel = SearchViewModel()
-    viewModel.uiModels.test {
-      expectIdleModel()
+    test("can be opened") {
+      val viewModel = SearchViewModel()
+      viewModel.uiModels.test {
+        expectIdleModel()
 
-      viewModel.sendEvent(OpenSearch)
-      awaitItem() shouldBe UiModel(Active, SearchQuery.Empty)
+        viewModel.sendEvent(OpenSearch)
+        awaitItem() shouldBe UiModel(Active, SearchQuery.Empty)
 
-      cancel()
+        cancel()
+      }
     }
-  }
 
-  test("updates search queries in active mode") {
-    val viewModel = SearchViewModel()
-    viewModel.uiModels.test {
-      expectIdleModel()
+    test("updates search queries in active mode") {
+      val viewModel = SearchViewModel()
+      viewModel.uiModels.test {
+        expectIdleModel()
 
-      viewModel.sendEvent(OpenSearch)
-      awaitItem()
+        viewModel.sendEvent(OpenSearch)
+        awaitItem()
 
-      viewModel.sendEvent(UpdateQuery("Hello"))
-      awaitItem() shouldBe UiModel(Active, SearchQuery("Hello"))
+        viewModel.sendEvent(UpdateQuery("Hello"))
+        awaitItem() shouldBe UiModel(Active, SearchQuery("Hello"))
 
-      viewModel.sendEvent(UpdateQuery("World"))
-      awaitItem() shouldBe UiModel(Active, SearchQuery("World"))
+        viewModel.sendEvent(UpdateQuery("World"))
+        awaitItem() shouldBe UiModel(Active, SearchQuery("World"))
 
-      cancel()
+        cancel()
+      }
     }
-  }
 
-  test("ignores queries in idle mode") {
-    val viewModel = SearchViewModel()
-    viewModel.uiModels.test {
-      expectIdleModel()
+    test("ignores queries in idle mode") {
+      val viewModel = SearchViewModel()
+      viewModel.uiModels.test {
+        expectIdleModel()
 
-      viewModel.sendEvent(UpdateQuery("Hello"))
-      expectNoEvents()
+        viewModel.sendEvent(UpdateQuery("Hello"))
+        expectNoEvents()
 
-      cancel()
+        cancel()
+      }
     }
-  }
 
-  test("clears queries when search is closed") {
-    val viewModel = SearchViewModel()
-    viewModel.uiModels.test {
-      expectIdleModel()
+    test("clears queries when search is closed") {
+      val viewModel = SearchViewModel()
+      viewModel.uiModels.test {
+        expectIdleModel()
 
-      viewModel.sendEvent(OpenSearch)
-      awaitItem()
+        viewModel.sendEvent(OpenSearch)
+        awaitItem()
 
-      viewModel.sendEvent(UpdateQuery("Hello"))
-      awaitItem() shouldBe UiModel(Active, SearchQuery("Hello"))
+        viewModel.sendEvent(UpdateQuery("Hello"))
+        awaitItem() shouldBe UiModel(Active, SearchQuery("Hello"))
 
-      viewModel.sendEvent(CloseSearch)
-      expectIdleModel()
+        viewModel.sendEvent(CloseSearch)
+        expectIdleModel()
 
-      cancel()
+        cancel()
+      }
     }
-  }
-})
+  })
 
 private suspend fun TurbineTestContext<UiModel>.expectIdleModel() {
   awaitItem() shouldBe UiModel(Idle, SearchQuery.Empty)

@@ -8,9 +8,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
-fun TestConfiguration.setMainDispatcher(
-  dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
-) {
+fun TestConfiguration.setMainDispatcher(dispatcher: CoroutineDispatcher = Dispatchers.Unconfined) {
   beforeSpec { Dispatchers.setMain(dispatcher) }
   afterSpec { Dispatchers.resetMain() }
 }

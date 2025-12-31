@@ -15,50 +15,50 @@ import com.squareup.kotlinpoet.joinToCode
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 
-internal class FeatureFactoryGenerator(
-  factory: FeatureFactoryModel,
-  functionName: String,
-) {
-  private val featureClasses = factory.features
-    .map { it.className.reflectionName() }
-    .sorted()
-    .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
-    .joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
+internal class FeatureFactoryGenerator(factory: FeatureFactoryModel, functionName: String) {
+  private val featureClasses =
+    factory.features
+      .map { it.className.reflectionName() }
+      .sorted()
+      .map { name -> CodeBlock.of("%T.forName(%S)", Class::class.asTypeName(), name) }
+      .joinToCode(prefix = "\n⇥", separator = ",\n", suffix = "⇤\n")
 
-  private val suppressCast = AnnotationSpec.builder(Suppress::class)
-    .addMember("%S", "UNCHECKED_CAST")
-    .build()
+  private val suppressCast =
+    AnnotationSpec.builder(Suppress::class).addMember("%S", "UNCHECKED_CAST").build()
 
   private val setOf = MemberName("kotlin.collections", "setOf")
 
   private val emptySet = MemberName("kotlin.collections", "emptySet")
 
-  private val discoveryFunctionOverride = FunSpec.builder("create")
-    .addModifiers(OVERRIDE)
-    .apply {
-      returns(factoryReturnType)
+  private val discoveryFunctionOverride =
+    FunSpec.builder("create")
+      .addModifiers(OVERRIDE)
+      .apply {
+        returns(factoryReturnType)
 
-      if (factory.features.isNotEmpty()) {
-        addAnnotation(suppressCast)
-        addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
-      } else {
-        addStatement("return %M<%T>()", emptySet, featureType)
+        if (factory.features.isNotEmpty()) {
+          addAnnotation(suppressCast)
+          addStatement("return %M(%L) as %T", setOf, featureClasses, factoryReturnType)
+        } else {
+          addStatement("return %M<%T>()", emptySet, featureType)
+        }
       }
-    }
-    .build()
+      .build()
 
-  private val factoryType = TypeSpec.objectBuilder(factory.className)
-    .addModifiers(PRIVATE)
-    .addSuperinterface(FeatureFactory::class)
-    .addFunction(discoveryFunctionOverride)
-    .build()
+  private val factoryType =
+    TypeSpec.objectBuilder(factory.className)
+      .addModifiers(PRIVATE)
+      .addSuperinterface(FeatureFactory::class)
+      .addFunction(discoveryFunctionOverride)
+      .build()
 
-  private val factoryExtension = FunSpec.builder(functionName)
-    .addModifiers(factory.visibility.modifier)
-    .receiver(FeatureFactory.Companion::class)
-    .returns(FeatureFactory::class)
-    .addStatement("return %N", factoryType)
-    .build()
+  private val factoryExtension =
+    FunSpec.builder(functionName)
+      .addModifiers(factory.visibility.modifier)
+      .receiver(FeatureFactory.Companion::class)
+      .returns(FeatureFactory::class)
+      .addStatement("return %N", factoryType)
+      .build()
 
   private val factoryFile =
     FileSpec.builder(factory.className.packageName, factory.className.simpleName)
