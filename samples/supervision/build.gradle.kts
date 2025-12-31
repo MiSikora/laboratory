@@ -1,5 +1,5 @@
 plugins {
-  alias(libs.plugins.android.application)
+  alias(libs.plugins.agp.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.laboratory)
   alias(libs.plugins.detekt)
@@ -57,7 +57,7 @@ laboratory {
 }
 
 dependencies {
-  implementation(libs.kotlinx.coroutinesAndroid)
+  implementation(libs.coroutines.android)
   implementation(libs.android.material)
   implementation(libs.hyperion.core)
   implementation(libs.laboratory.dataStore)

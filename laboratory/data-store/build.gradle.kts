@@ -1,7 +1,7 @@
 plugins {
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.agp.library)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.mavenPublish)
+  alias(libs.plugins.maven.publish)
   alias(libs.plugins.spotless)
   alias(libs.plugins.detekt)
   alias(libs.plugins.dokka)
@@ -26,7 +26,7 @@ tasks.withType<Test>().configureEach {
 
 dependencies {
   api(projects.laboratory.runtime)
-  api(libs.androidx.dataStore)
+  api(libs.androidx.datastore)
 
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)

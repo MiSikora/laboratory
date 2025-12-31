@@ -1,7 +1,7 @@
 plugins {
-  alias(libs.plugins.android.library)
+  alias(libs.plugins.agp.library)
   alias(libs.plugins.kotlin.android)
-  alias(libs.plugins.mavenPublish)
+  alias(libs.plugins.maven.publish)
   alias(libs.plugins.spotless)
   alias(libs.plugins.detekt)
   alias(libs.plugins.dokka)
@@ -16,6 +16,6 @@ android {
 dependencies {
   api(projects.laboratory.inspector)
   api(libs.hyperion.plugin)
-  implementation(libs.androidx.appCompat)
-  ksp(libs.autoServiceKsp)
+  implementation(libs.androidx.appcompat)
+  ksp(libs.auto.service.ksp)
 }
