@@ -18,9 +18,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 plugins {
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.kotlin.android) apply false
-  alias(libs.plugins.android.library) apply false
-  alias(libs.plugins.mavenPublish) apply false
-  alias(libs.plugins.kotlinx.binaryCompatibilityValidator)
+  alias(libs.plugins.agp.library) apply false
+  alias(libs.plugins.maven.publish) apply false
+  alias(libs.plugins.binary.compatibility.validator)
   alias(libs.plugins.dokka)
   alias(libs.plugins.spotless)
   alias(libs.plugins.detekt)
@@ -37,7 +37,7 @@ tasks.dokkaHtmlMultiModule {
 
 val javaTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
 val ktlintVersion = libs.versions.ktlint.get()
-val mavenPublishId = libs.plugins.mavenPublish.get().pluginId
+val mavenPublishId = libs.plugins.maven.publish.get().pluginId
 
 allprojects {
   val configureSpotless: SpotlessExtension.() -> Unit = {

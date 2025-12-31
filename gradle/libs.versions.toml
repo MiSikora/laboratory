@@ -1,56 +1,75 @@
 [versions]
-android = "8.12.0"
-coroutines = "1.10.2"
+agp = "8.12.0"
+android-material = "1.12.0"
+androidx-appcompat = "1.7.1"
+androidx-datastore = "1.1.7"
+androidx-fragment = "1.8.8"
+androidx-recyclerview = "1.4.0"
+androidx-test-core = "1.7.0"
+androidx-test-junit = "1.3.0"
+androidx-test-orchestrator = "1.6.1"
+androidx-test-runner = "1.7.0"
+androidx-viewmodel = "2.9.2"
+androidx-viewpager2 = "1.1.0"
+auto-service-ksp = "1.2.0"
+binary-compatibility-validator = "0.18.1"
+buildconfig = "5.6.7"
+detekt = "1.23.8"
+dokka = "2.0.0"
+hyperion = "0.9.38"
 kotest = "5.9.1"
 kotlin = "2.2.0"
-hyperion = "0.9.38"
-detekt = "1.23.8"
+kotlinpoet = "2.2.0"
+kotlinx-coroutines = "1.10.2"
+ksp = "2.2.0-2.0.2"
 ktlint = "1.2.1"
+maven-publish = "0.34.0"
+spotless = "7.2.1"
+turbine = "1.2.1"
+wire = "5.3.5"
 
 jvmTarget = "11"
-minSdk = "21"
 compileSdk = "36"
+minSdk = "21"
 targetSdk = "36"
 
+[plugins]
+agp-application = { id = "com.android.application", version.ref = "agp" }
+agp-library = { id = "com.android.library", version.ref = "agp" }
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
+buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+wire = { id = "com.squareup.wire", version.ref = "wire" }
+
 [libraries]
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
-kotlinx-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-kotlinPoet = { group = "com.squareup", name = "kotlinpoet", version = "2.2.0" }
-androidx-dataStore = { group = "androidx.datastore", name = "datastore-core", version = "1.1.7" }
-androidx-appCompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.1" }
-androidx-viewModelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.9.2" }
-androidx-fragmentKtx = { group = "androidx.fragment", name = "fragment-ktx", version = "1.8.8" }
-androidx-viewPager2 = { group = "androidx.viewpager2", name = "viewpager2", version = "1.1.0" }
-androidx-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version = "1.4.0" }
-android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "android" }
-android-material = { group = "com.google.android.material", name = "material", version = "1.12.0" }
+agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
+android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-core", version.ref = "androidx-datastore" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
+androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx-test-core" }
+androidx-test-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-junit" }
+androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidx-test-orchestrator" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
+androidx-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-viewmodel" }
+androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "androidx-viewpager2" }
+auto-service-ksp = { group = "dev.zacsweers.autoservice", name = "auto-service-ksp", version.ref = "auto-service-ksp" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 hyperion-core = { group = "com.willowtreeapps.hyperion", name = "hyperion-core", version.ref = "hyperion" }
 hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plugin", version.ref = "hyperion" }
-autoServiceKsp = { group = "dev.zacsweers.autoservice", name = "auto-service-ksp", version = "1.2.0" }
-
-kotlinx-coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
-kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
+kgp = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property-jvm", version.ref = "kotest" }
-turbine = { group = "app.cash.turbine", name = "turbine", version = "1.2.1" }
-androidx-test-coreKtx = { group = "androidx.test", name = "core-ktx", version = "1.7.0" }
-androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version = "1.6.1" }
-androidx-test-runner = { group = "androidx.test", name = "runner", version = "1.7.0" }
-androidx-testExt-junitKtx = { group = "androidx.test.ext", name = "junit-ktx", version = "1.3.0" }
-
-android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android" }
-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-
-[plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-android-library = { id = "com.android.library", version.ref = "android" }
-android-application = { id = "com.android.application", version.ref = "android" }
-ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
-wire = { id = "com.squareup.wire", version = "5.3.5" }
-buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.6.7" }
-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
-spotless = { id = "com.diffplug.spotless", version = "7.2.1" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-kotlinx-binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.18.1" }
-dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
+kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }

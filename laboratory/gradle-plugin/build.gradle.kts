@@ -1,7 +1,7 @@
 plugins {
   `java-gradle-plugin`
   alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.mavenPublish)
+  alias(libs.plugins.maven.publish)
   alias(libs.plugins.spotless)
   alias(libs.plugins.detekt)
   alias(libs.plugins.dokka)
@@ -40,13 +40,13 @@ tasks.withType<PluginUnderTestMetadata>().configureEach {
 }
 
 dependencies {
-  compileOnly(libs.android.gradle.api)
+  compileOnly(libs.agp.api)
 
   implementation(projects.laboratory.generator)
-  implementation(libs.kotlin.gradlePlugin)
+  implementation(libs.kgp)
 
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)
 
-  fixtureClasspath(libs.android.gradlePlugin)
+  fixtureClasspath(libs.agp)
 }
