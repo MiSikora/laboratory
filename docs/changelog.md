@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Upgrade Android min SDK to 23.
 - Upgrade Gradle to `9.0.0`
 - Upgrade to Android Gradle Plugin `8.12.0`
 - Upgrade to target Android SDK `36`
