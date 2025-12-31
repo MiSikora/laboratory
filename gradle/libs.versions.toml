@@ -23,7 +23,7 @@ kotlinx-coroutines = "1.10.2"
 ksp = "2.2.0-2.0.2"
 ktfmt = "0.61"
 maven-publish = "0.35.0"
-spotless = "7.2.1"
+spotless = "8.1.0"
 turbine = "1.2.1"
 wire = "5.3.5"
 
