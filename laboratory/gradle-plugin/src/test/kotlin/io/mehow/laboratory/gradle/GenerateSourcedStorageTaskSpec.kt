@@ -9,354 +9,371 @@ import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
-class GenerateSourcedStorageTaskSpec : FunSpec({
-  lateinit var gradleRunner: GradleRunner
+class GenerateSourcedStorageTaskSpec :
+  FunSpec({
+    lateinit var gradleRunner: GradleRunner
 
-  cleanBuildDirs()
+    cleanBuildDirs()
 
-  beforeTest {
-    gradleRunner = GradleRunner.create()
-      .withPluginClasspath()
-      .withArguments("generateSourcedFeatureStorage", "--stacktrace")
-  }
+    beforeTest {
+      gradleRunner =
+        GradleRunner.create()
+          .withPluginClasspath()
+          .withArguments("generateSourcedFeatureStorage", "--stacktrace")
+    }
 
-  test("generates storage with only local source") {
-    val fixture = "sourced-storage-generate-local".toFixture()
+    test("generates storage with only local source") {
+      val fixture = "sourced-storage-generate-local".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).build()
+      val result = gradleRunner.withProjectDir(fixture).build()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
-      |
-      |internal interface BuildingStep {
-      |  public fun build(): FeatureStorage
-      |}
-      |
-      |private data class Builder(
-      |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : BuildingStep {
-      |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-      |}
-      |
-    """.trimMargin()
-  }
+      factory.readText() shouldContain
+        """
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>,
+        |) : BuildingStep {
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        |"""
+          .trimMargin()
+    }
 
-  test("generates storage with sources") {
-    val fixture = "sourced-storage-generate-sources".toFixture()
+    test("generates storage with sources") {
+      val fixture = "sourced-storage-generate-sources".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).build()
+      val result = gradleRunner.withProjectDir(fixture).build()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteAStep = Builder(localSource, emptyMap())
-      |
-      |internal interface RemoteAStep {
-      |  public fun remoteASource(source: FeatureStorage): RemoteBStep
-      |}
-      |
-      |internal interface RemoteBStep {
-      |  public fun remoteBSource(source: FeatureStorage): BuildingStep
-      |}
-      |
-      |internal interface BuildingStep {
-      |  public fun build(): FeatureStorage
-      |}
-      |
-      |private data class Builder(
-      |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteAStep,
-      |    RemoteBStep,
-      |    BuildingStep {
-      |  override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
-      |    remoteSources = remoteSources + ("RemoteA" to source)
-      |  )
-      |
-      |  override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
-      |    remoteSources = remoteSources + ("RemoteB" to source)
-      |  )
-      |
-      |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-      |}
-    """.trimMargin()
-  }
+      factory.readText() shouldContain
+        """
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteAStep = Builder(localSource, emptyMap())
+        |
+        |internal interface RemoteAStep {
+        |  public fun remoteASource(source: FeatureStorage): RemoteBStep
+        |}
+        |
+        |internal interface RemoteBStep {
+        |  public fun remoteBSource(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>,
+        |) : RemoteAStep,
+        |    RemoteBStep,
+        |    BuildingStep {
+        |  override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
+        |    remoteSources = remoteSources + ("RemoteA" to source)
+        |  )
+        |
+        |  override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("RemoteB" to source)
+        |  )
+        |
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        """
+          .trimMargin()
+    }
 
-  test("uses implicit package name") {
-    val fixture = "sourced-storage-package-name-implicit".toFixture()
+    test("uses implicit package name") {
+      val fixture = "sourced-storage-package-name-implicit".toFixture()
 
-    gradleRunner.withProjectDir(fixture).build()
+      gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("io.mehow.implicit.SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("io.mehow.implicit.SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain "package io.mehow.implicit"
-  }
+      factory.readText() shouldContain "package io.mehow.implicit"
+    }
 
-  test("uses explicit package name") {
-    val fixture = "sourced-storage-package-name-explicit".toFixture()
+    test("uses explicit package name") {
+      val fixture = "sourced-storage-package-name-explicit".toFixture()
 
-    gradleRunner.withProjectDir(fixture).build()
+      gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("io.mehow.explicit.SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("io.mehow.explicit.SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain "package io.mehow.explicit"
-  }
+      factory.readText() shouldContain "package io.mehow.explicit"
+    }
 
-  test("overrides implicit package name") {
-    val fixture = "sourced-storage-package-name-explicit-override".toFixture()
+    test("overrides implicit package name") {
+      val fixture = "sourced-storage-package-name-explicit-override".toFixture()
 
-    gradleRunner.withProjectDir(fixture).build()
+      gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("io.mehow.explicit.SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("io.mehow.explicit.SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain "package io.mehow.explicit"
-  }
+      factory.readText() shouldContain "package io.mehow.explicit"
+    }
 
-  test("generates internal storage") {
-    val fixture = "sourced-storage-generate-internal".toFixture()
+    test("generates internal storage") {
+      val fixture = "sourced-storage-generate-internal".toFixture()
 
-    gradleRunner.withProjectDir(fixture).build()
+      gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain "internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage)"
-  }
+      factory.readText() shouldContain
+        "internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage)"
+    }
 
-  test("generates public storage") {
-    val fixture = "sourced-storage-generate-public".toFixture()
+    test("generates public storage") {
+      val fixture = "sourced-storage-generate-public".toFixture()
 
-    gradleRunner.withProjectDir(fixture).build()
+      gradleRunner.withProjectDir(fixture).build()
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain "public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage)"
-  }
+      factory.readText() shouldContain
+        "public fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage)"
+    }
 
-  test("fails for feature flags with no options") {
-    val fixture = "sourced-storage-feature-flag-option-missing".toFixture()
+    test("fails for feature flags with no options") {
+      val fixture = "sourced-storage-feature-flag-option-missing".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).buildAndFail()
+      val result = gradleRunner.withProjectDir(fixture).buildAndFail()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
-    result.output shouldContain "Feature must have at least one option"
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe FAILED
+      result.output shouldContain "Feature must have at least one option"
 
-    val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    feature.shouldNotExist()
-  }
+      val feature = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      feature.shouldNotExist()
+    }
 
-  test("generates storage with sourced from all modules") {
-    val fixture = "sourced-storage-multi-module-generate-all".toFixture()
+    test("generates storage with sourced from all modules") {
+      val fixture = "sourced-storage-multi-module-generate-all".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).build()
+      val result = gradleRunner.withProjectDir(fixture).build()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
-      |
-      |internal interface RemoteStep {
-      |  public fun remoteSource(source: FeatureStorage): RemoteAStep
-      |}
-      |
-      |internal interface RemoteAStep {
-      |  public fun remoteASource(source: FeatureStorage): RemoteBStep
-      |}
-      |
-      |internal interface RemoteBStep {
-      |  public fun remoteBSource(source: FeatureStorage): BuildingStep
-      |}
-      |
-      |internal interface BuildingStep {
-      |  public fun build(): FeatureStorage
-      |}
-      |
-      |private data class Builder(
-      |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteStep,
-      |    RemoteAStep,
-      |    RemoteBStep,
-      |    BuildingStep {
-      |  override fun remoteSource(source: FeatureStorage): RemoteAStep = copy(
-      |    remoteSources = remoteSources + ("Remote" to source)
-      |  )
-      |
-      |  override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
-      |    remoteSources = remoteSources + ("RemoteA" to source)
-      |  )
-      |
-      |  override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
-      |    remoteSources = remoteSources + ("RemoteB" to source)
-      |  )
-      |
-      |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-      |}
-    """.trimMargin()
-  }
+      factory.readText() shouldContain
+        """
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
+        |
+        |internal interface RemoteStep {
+        |  public fun remoteSource(source: FeatureStorage): RemoteAStep
+        |}
+        |
+        |internal interface RemoteAStep {
+        |  public fun remoteASource(source: FeatureStorage): RemoteBStep
+        |}
+        |
+        |internal interface RemoteBStep {
+        |  public fun remoteBSource(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>,
+        |) : RemoteStep,
+        |    RemoteAStep,
+        |    RemoteBStep,
+        |    BuildingStep {
+        |  override fun remoteSource(source: FeatureStorage): RemoteAStep = copy(
+        |    remoteSources = remoteSources + ("Remote" to source)
+        |  )
+        |
+        |  override fun remoteASource(source: FeatureStorage): RemoteBStep = copy(
+        |    remoteSources = remoteSources + ("RemoteA" to source)
+        |  )
+        |
+        |  override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("RemoteB" to source)
+        |  )
+        |
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        """
+          .trimMargin()
+    }
 
-  test("generates storage with names only from included modules") {
-    val fixture = "sourced-storage-multi-module-generate-filtered".toFixture()
+    test("generates storage with names only from included modules") {
+      val fixture = "sourced-storage-multi-module-generate-filtered".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).build()
+      val result = gradleRunner.withProjectDir(fixture).build()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
-      |
-      |internal interface RemoteStep {
-      |  public fun remoteSource(source: FeatureStorage): RemoteBStep
-      |}
-      |
-      |internal interface RemoteBStep {
-      |  public fun remoteBSource(source: FeatureStorage): BuildingStep
-      |}
-      |
-      |internal interface BuildingStep {
-      |  public fun build(): FeatureStorage
-      |}
-      |
-      |private data class Builder(
-      |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : RemoteStep,
-      |    RemoteBStep,
-      |    BuildingStep {
-      |  override fun remoteSource(source: FeatureStorage): RemoteBStep = copy(
-      |    remoteSources = remoteSources + ("Remote" to source)
-      |  )
-      |
-      |  override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
-      |    remoteSources = remoteSources + ("RemoteB" to source)
-      |  )
-      |
-      |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-      |}
-    """.trimMargin()
-  }
+      factory.readText() shouldContain
+        """
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): RemoteStep = Builder(localSource, emptyMap())
+        |
+        |internal interface RemoteStep {
+        |  public fun remoteSource(source: FeatureStorage): RemoteBStep
+        |}
+        |
+        |internal interface RemoteBStep {
+        |  public fun remoteBSource(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>,
+        |) : RemoteStep,
+        |    RemoteBStep,
+        |    BuildingStep {
+        |  override fun remoteSource(source: FeatureStorage): RemoteBStep = copy(
+        |    remoteSources = remoteSources + ("Remote" to source)
+        |  )
+        |
+        |  override fun remoteBSource(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("RemoteB" to source)
+        |  )
+        |
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        """
+          .trimMargin()
+    }
 
-  test("generates storage for Android project") {
-    val fixture = "sourced-storage-android-smoke".toFixture()
+    test("generates storage for Android project") {
+      val fixture = "sourced-storage-android-smoke".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).build()
+      val result = gradleRunner.withProjectDir(fixture).build()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
-      |
-      |internal interface BuildingStep {
-      |  public fun build(): FeatureStorage
-      |}
-      |
-      |private data class Builder(
-      |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : BuildingStep {
-      |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-      |}
-    """.trimMargin()
-  }
+      factory.readText() shouldContain
+        """
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>,
+        |) : BuildingStep {
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        """
+          .trimMargin()
+    }
 
-  test("ignores any custom variant of local sources") {
-    val fixture = "sourced-storage-generate-local-ignore".toFixture()
+    test("ignores any custom variant of local sources") {
+      val fixture = "sourced-storage-generate-local-ignore".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).build()
+      val result = gradleRunner.withProjectDir(fixture).build()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
-      |
-      |internal interface BuildingStep {
-      |  public fun build(): FeatureStorage
-      |}
-      |
-      |private data class Builder(
-      |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : BuildingStep {
-      |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-      |}
-    """.trimMargin()
-  }
+      factory.readText() shouldContain
+        """
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): BuildingStep = Builder(localSource, emptyMap())
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>,
+        |) : BuildingStep {
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        """
+          .trimMargin()
+    }
 
-  test("generates storage with supervised feature flag sources") {
-    val fixture = "sourced-storage-generate-supervised-feature-flags".toFixture()
+    test("generates storage with supervised feature flag sources") {
+      val fixture = "sourced-storage-generate-supervised-feature-flags".toFixture()
 
-    val result = gradleRunner.withProjectDir(fixture).build()
+      val result = gradleRunner.withProjectDir(fixture).build()
 
-    result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
+      result.task(":generateSourcedFeatureStorage")!!.outcome shouldBe SUCCESS
 
-    val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
-    factory.shouldExist()
+      val factory = fixture.sourcedStorageFile("SourcedGeneratedFeatureStorage")
+      factory.shouldExist()
 
-    factory.readText() shouldContain """
-      |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): ChildStep = Builder(localSource, emptyMap())
-      |
-      |internal interface ChildStep {
-      |  public fun childSource(source: FeatureStorage): GrandparentStep
-      |}
-      |
-      |internal interface GrandparentStep {
-      |  public fun grandparentSource(source: FeatureStorage): ParentStep
-      |}
-      |
-      |internal interface ParentStep {
-      |  public fun parentSource(source: FeatureStorage): BuildingStep
-      |}
-      |
-      |internal interface BuildingStep {
-      |  public fun build(): FeatureStorage
-      |}
-      |
-      |private data class Builder(
-      |  private val localSource: FeatureStorage,
-      |  private val remoteSources: Map<String, FeatureStorage>,
-      |) : ChildStep,
-      |    GrandparentStep,
-      |    ParentStep,
-      |    BuildingStep {
-      |  override fun childSource(source: FeatureStorage): GrandparentStep = copy(
-      |    remoteSources = remoteSources + ("Child" to source)
-      |  )
-      |
-      |  override fun grandparentSource(source: FeatureStorage): ParentStep = copy(
-      |    remoteSources = remoteSources + ("Grandparent" to source)
-      |  )
-      |
-      |  override fun parentSource(source: FeatureStorage): BuildingStep = copy(
-      |    remoteSources = remoteSources + ("Parent" to source)
-      |  )
-      |
-      |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
-      |}
-    """.trimMargin()
-  }
-})
+      factory.readText() shouldContain
+        """
+        |internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): ChildStep = Builder(localSource, emptyMap())
+        |
+        |internal interface ChildStep {
+        |  public fun childSource(source: FeatureStorage): GrandparentStep
+        |}
+        |
+        |internal interface GrandparentStep {
+        |  public fun grandparentSource(source: FeatureStorage): ParentStep
+        |}
+        |
+        |internal interface ParentStep {
+        |  public fun parentSource(source: FeatureStorage): BuildingStep
+        |}
+        |
+        |internal interface BuildingStep {
+        |  public fun build(): FeatureStorage
+        |}
+        |
+        |private data class Builder(
+        |  private val localSource: FeatureStorage,
+        |  private val remoteSources: Map<String, FeatureStorage>,
+        |) : ChildStep,
+        |    GrandparentStep,
+        |    ParentStep,
+        |    BuildingStep {
+        |  override fun childSource(source: FeatureStorage): GrandparentStep = copy(
+        |    remoteSources = remoteSources + ("Child" to source)
+        |  )
+        |
+        |  override fun grandparentSource(source: FeatureStorage): ParentStep = copy(
+        |    remoteSources = remoteSources + ("Grandparent" to source)
+        |  )
+        |
+        |  override fun parentSource(source: FeatureStorage): BuildingStep = copy(
+        |    remoteSources = remoteSources + ("Parent" to source)
+        |  )
+        |
+        |  override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+        |}
+        """
+          .trimMargin()
+    }
+  })

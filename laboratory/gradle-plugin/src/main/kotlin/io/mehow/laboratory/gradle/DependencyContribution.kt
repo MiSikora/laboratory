@@ -1,8 +1,8 @@
 package io.mehow.laboratory.gradle
 
 /**
- * Possible contributions of a dependency to feature flag generation. See [LaboratoryExtension.dependency]
- * for more info.
+ * Possible contributions of a dependency to feature flag generation. See
+ * [LaboratoryExtension.dependency] for more info.
  */
 public enum class DependencyContribution {
   /** Contribute to [LaboratoryExtension.featureFactory]. */

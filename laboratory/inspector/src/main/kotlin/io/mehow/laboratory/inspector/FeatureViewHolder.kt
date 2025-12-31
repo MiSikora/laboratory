@@ -15,23 +15,27 @@ import io.mehow.laboratory.inspector.DeprecationPhenotype.Strikethrough
 import io.mehow.laboratory.inspector.R.string
 import io.mehow.laboratory.supervisorOption
 
-internal class FeatureViewHolder(
-  itemView: View,
-  listener: FeatureAdapter.Listener,
-) : ViewHolder(itemView) {
+internal class FeatureViewHolder(itemView: View, listener: FeatureAdapter.Listener) :
+  ViewHolder(itemView) {
   private var uiModel: FeatureUiModel? = null
   private val context = itemView.context
-  private val nameControl = itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_name)
-  private val supervisorControl = itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_supervisor)
-  private val descriptionControl = itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_description)
-  private val sourcesControl = itemView.findViewById<SourceViewGroup>(R.id.io_mehow_laboratory_feature_sources)
+  private val nameControl =
+    itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_name)
+  private val supervisorControl =
+    itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_supervisor)
+  private val descriptionControl =
+    itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_description)
+  private val sourcesControl =
+    itemView.findViewById<SourceViewGroup>(R.id.io_mehow_laboratory_feature_sources)
   private val dividerControl = itemView.findViewById<View>(R.id.io_mehow_laboratory_sources_divider)
-  private val optionsControl = itemView.findViewById<OptionViewGroup>(R.id.io_mehow_laboratory_feature_options)
-  private val goToSupervisor = object : ClickableSpan() {
-    override fun onClick(widget: View) {
-      listener.onGoToFeature(uiModel!!.supervisorOption!!.javaClass)
+  private val optionsControl =
+    itemView.findViewById<OptionViewGroup>(R.id.io_mehow_laboratory_feature_options)
+  private val goToSupervisor =
+    object : ClickableSpan() {
+      override fun onClick(widget: View) {
+        listener.onGoToFeature(uiModel!!.supervisorOption!!.javaClass)
+      }
     }
-  }
 
   init {
     sourcesControl.setOnSelectSourceListener(listener)
@@ -53,25 +57,36 @@ internal class FeatureViewHolder(
 
   private fun FeatureUiModel.bindName() {
     nameControl.text = this.name
-    nameControl.paintFlags = when (deprecationPhenotype) {
-      null, Show -> nameControl.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
-      Strikethrough -> nameControl.paintFlags or STRIKE_THRU_TEXT_FLAG
-      Hide -> nameControl.paintFlags
-    }
+    nameControl.paintFlags =
+      when (deprecationPhenotype) {
+        null,
+        Show -> nameControl.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
+        Strikethrough -> nameControl.paintFlags or STRIKE_THRU_TEXT_FLAG
+        Hide -> nameControl.paintFlags
+      }
   }
 
-  private fun FeatureUiModel.bindSupervisor() = with(type) {
-    supervisorControl.isVisible = supervisorOption != null
-    supervisorControl.text = supervisorOption?.let { supervisorOption ->
-      SpannableStringBuilder().run {
-        append(context.getString(string.io_mehow_laboratory_feature_supervisor_prefix))
-        val linkStart = length
-        append(supervisorOption::class.simpleName)
-        setSpan(goToSupervisor, linkStart, length, SPAN_EXCLUSIVE_EXCLUSIVE)
-        append(context.getString(string.io_mehow_laboratory_feature_supervisor_suffix, supervisorOption))
-      }.let(::SpannedString)
+  private fun FeatureUiModel.bindSupervisor() =
+    with(type) {
+      supervisorControl.isVisible = supervisorOption != null
+      supervisorControl.text =
+        supervisorOption?.let { supervisorOption ->
+          SpannableStringBuilder()
+            .run {
+              append(context.getString(string.io_mehow_laboratory_feature_supervisor_prefix))
+              val linkStart = length
+              append(supervisorOption::class.simpleName)
+              setSpan(goToSupervisor, linkStart, length, SPAN_EXCLUSIVE_EXCLUSIVE)
+              append(
+                context.getString(
+                  string.io_mehow_laboratory_feature_supervisor_suffix,
+                  supervisorOption,
+                )
+              )
+            }
+            .let(::SpannedString)
+        }
     }
-  }
 
   private fun FeatureUiModel.bindDescription() {
     descriptionControl.setTextTokens(description)

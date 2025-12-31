@@ -11,6 +11,7 @@ import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import io.mehow.laboratory.options
 import io.mehow.laboratory.source
 import io.mehow.laboratory.supervisorOption
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,6 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.milliseconds
 
 @Suppress("LongParameterList")
 internal class InspectorViewModel(
@@ -47,25 +47,32 @@ internal class InspectorViewModel(
 ) : ViewModel() {
   private val metadataFactory = FeatureMetadata.Factory(deprecationHandler, featureFactories)
 
-  private val initiatedSearchQueries = flow {
-    emit(SearchQuery.Empty)
-    emitAll(searchQueries)
-  }.distinctUntilChanged()
-
-  private val sectionFlows = featureFactories.mapValues { (_, featureFactory) ->
+  private val initiatedSearchQueries =
     flow {
-      val groups = withContext(computationDispatcher) {
-        featureFactory.create()
-          .mapNotNull(metadataFactory::create)
-          .map { it.observeGroup(laboratory) }
-          .combineLatest()
+        emit(SearchQuery.Empty)
+        emitAll(searchQueries)
       }
-      val searchedGroups = combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
-        .map { it.sortedWith(FeatureUiModel.NaturalComparator) }
-        .flowOn(computationDispatcher)
-      emitAll(searchedGroups)
-    }.shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
-  }
+      .distinctUntilChanged()
+
+  private val sectionFlows =
+    featureFactories.mapValues { (_, featureFactory) ->
+      flow {
+          val groups =
+            withContext(computationDispatcher) {
+              featureFactory
+                .create()
+                .mapNotNull(metadataFactory::create)
+                .map { it.observeGroup(laboratory) }
+                .combineLatest()
+            }
+          val searchedGroups =
+            combine(groups, initiatedSearchQueries) { group, query -> group.search(query) }
+              .map { it.sortedWith(FeatureUiModel.NaturalComparator) }
+              .flowOn(computationDispatcher)
+          emitAll(searchedGroups)
+        }
+        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    }
 
   fun sectionFlow(sectionName: String) = sectionFlows[sectionName] ?: emptyFlow()
 
@@ -75,15 +82,19 @@ internal class InspectorViewModel(
 
   private val mutableNavigationFlow = MutableSharedFlow<FeatureCoordinates>()
 
-  val featureCoordinatesFlow: Flow<FeatureCoordinates> get() = mutableNavigationFlow
+  val featureCoordinatesFlow: Flow<FeatureCoordinates>
+    get() = mutableNavigationFlow
 
-  suspend fun goTo(feature: Class<out Feature<*>>) = sectionFlows.values.asFlow().withIndex()
-    .mapNotNull { (sectionIndex, sectionFlow) ->
-      val listIndex = sectionFlow.first().map(FeatureUiModel::type).indexOf(feature)
-      if (listIndex == -1) null else FeatureCoordinates(sectionIndex, listIndex)
-    }
-    .firstOrNull()
-    ?.also { mutableNavigationFlow.emit(it) }
+  suspend fun goTo(feature: Class<out Feature<*>>) =
+    sectionFlows.values
+      .asFlow()
+      .withIndex()
+      .mapNotNull { (sectionIndex, sectionFlow) ->
+        val listIndex = sectionFlow.first().map(FeatureUiModel::type).indexOf(feature)
+        if (listIndex == -1) null else FeatureCoordinates(sectionIndex, listIndex)
+      }
+      .firstOrNull()
+      ?.also { mutableNavigationFlow.emit(it) }
 
   private class FeatureMetadata(
     private val feature: Class<out Feature<*>>,
@@ -94,12 +105,11 @@ internal class InspectorViewModel(
 
     private val options = feature.options.toList()
 
-    private val sourceMetadata = feature.source?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
+    private val sourceMetadata =
+      feature.source?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
 
-    private val deprecationLevel = feature.annotations
-      .filterIsInstance<Deprecated>()
-      .firstOrNull()
-      ?.level
+    private val deprecationLevel =
+      feature.annotations.filterIsInstance<Deprecated>().firstOrNull()?.level
 
     private val deprecationPhenotype = deprecationLevel?.let(deprecationHandler::getPhenotype)
 
@@ -108,10 +118,12 @@ internal class InspectorViewModel(
     fun observeGroup(laboratory: Laboratory): Flow<FeatureUiModel> {
       val featureEmissions = observeOptions(laboratory)
       val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
-      val supervisorEmissions = feature.supervisorOption
-        ?.let { laboratory.observe(it::class.java) }
-        ?: flowOf(null)
-      return combine(featureEmissions, sourceEmissions, supervisorEmissions) { features, sources, supervisor ->
+      val supervisorEmissions =
+        feature.supervisorOption?.let { laboratory.observe(it::class.java) } ?: flowOf(null)
+      return combine(featureEmissions, sourceEmissions, supervisorEmissions) {
+        features,
+        sources,
+        supervisor ->
         FeatureUiModel(
           type = feature,
           name = simpleReadableName,
@@ -125,27 +137,27 @@ internal class InspectorViewModel(
       }
     }
 
-    private fun observeOptions(laboratory: Laboratory) = laboratory.observe(feature).map { selectedFeature ->
-      options.map { option ->
-        val supervisedFeatures = allFeatures.filter { it.supervisorOption == option }
-        OptionUiModel(option, isSelected = selectedFeature == option, supervisedFeatures.toList())
+    private fun observeOptions(laboratory: Laboratory) =
+      laboratory.observe(feature).map { selectedFeature ->
+        options.map { option ->
+          val supervisedFeatures = allFeatures.filter { it.supervisorOption == option }
+          OptionUiModel(option, isSelected = selectedFeature == option, supervisedFeatures.toList())
+        }
       }
-    }
 
     class Factory(
       private val deprecationHandler: DeprecationHandler,
       private val featureFactories: Map<String, FeatureFactory>,
     ) {
       private val allFeatures by lazy {
-        featureFactories.values
-          .flatMap { it.create() }
-          .filterNot { it.options.isEmpty() }
+        featureFactories.values.flatMap { it.create() }.filterNot { it.options.isEmpty() }
       }
 
-      fun create(feature: Class<out Feature<*>>) = feature
-        .takeUnless { it.options.isEmpty() }
-        ?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
-        ?.takeIf { it.deprecationPhenotype != DeprecationPhenotype.Hide }
+      fun create(feature: Class<out Feature<*>>) =
+        feature
+          .takeUnless { it.options.isEmpty() }
+          ?.let { FeatureMetadata(it, allFeatures, deprecationHandler) }
+          ?.takeIf { it.deprecationPhenotype != DeprecationPhenotype.Hide }
     }
   }
 
@@ -155,15 +167,15 @@ internal class InspectorViewModel(
   ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
       require(modelClass == InspectorViewModel::class.java) { "Cannot create $modelClass" }
-      @Suppress("UNCHECKED_CAST")
-      @OptIn(FlowPreview::class)
+      @Suppress("UNCHECKED_CAST") @OptIn(FlowPreview::class)
       return InspectorViewModel(
         configuration.laboratory,
         searchViewModel.uiModels.debounce(200.milliseconds).map { it.query },
         configuration.featureFactories,
         configuration.deprecation,
         Dispatchers.Default,
-      ) as T
+      )
+        as T
     }
   }
 

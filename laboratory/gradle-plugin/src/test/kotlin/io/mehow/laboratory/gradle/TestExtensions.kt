@@ -13,18 +13,18 @@ internal fun File.sourcedStorageFile(fqcn: String) = codeGenFile("sourced-storag
 
 internal fun File.optionFactoryFile(fqcn: String) = codeGenFile("option-factory", fqcn)
 
-internal fun File.featureSourceStorageFile(fqcn: String) = codeGenFile("feature-source-factory", fqcn)
+internal fun File.featureSourceStorageFile(fqcn: String) =
+  codeGenFile("feature-source-factory", fqcn)
 
-private fun File.codeGenFile(
-  dir: String,
-  fqcn: String,
-) = File(this, "build/generated/laboratory/code/$dir/${fqcn.replace(".", "/")}.kt")
+private fun File.codeGenFile(dir: String, fqcn: String) =
+  File(this, "build/generated/laboratory/code/$dir/${fqcn.replace(".", "/")}.kt")
 
 internal fun TestConfiguration.cleanBuildDirs() = beforeSpec {
   File("src/test/projects").getBuildDirs().forEach { it.deleteRecursively() }
 }
 
-private fun File.getBuildDirs(): List<File> = when (name) {
-  "build" -> listOf(this)
-  else -> listFiles().orEmpty().flatMap(File::getBuildDirs)
-}
+private fun File.getBuildDirs(): List<File> =
+  when (name) {
+    "build" -> listOf(this)
+    else -> listFiles().orEmpty().flatMap(File::getBuildDirs)
+  }

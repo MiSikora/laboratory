@@ -10,21 +10,21 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 public class LaboratoryPlugin : Plugin<Project> {
   override fun apply(target: Project) {
-    val extension = target.extensions.create(PluginName, LaboratoryExtension::class.java).apply {
-      this.project = target
-    }
+    val extension =
+      target.extensions.create(PluginName, LaboratoryExtension::class.java).apply {
+        this.project = target
+      }
 
     target.checkKotlinPlugin()
     target.setUpProject(extension)
   }
 
   private fun Project.checkKotlinPlugin() {
-    val hasKotlin = with(plugins) {
-      hasPlugin("org.jetbrains.kotlin.jvm") || hasPlugin("org.jetbrains.kotlin.android")
-    }
-    check(hasKotlin) {
-      "Laboratory Gradle plugin applied in '$path' requires Kotlin plugin."
-    }
+    val hasKotlin =
+      with(plugins) {
+        hasPlugin("org.jetbrains.kotlin.jvm") || hasPlugin("org.jetbrains.kotlin.android")
+      }
+    check(hasKotlin) { "Laboratory Gradle plugin applied in '$path' requires Kotlin plugin." }
   }
 
   private fun Project.setUpProject(extension: LaboratoryExtension) {
@@ -62,8 +62,12 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.group = PluginName
       task.description = "Generate feature factory"
       task.factory.set(extension.factoryInput)
-      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureFactory))
-      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-factory"))
+      task.features.set(
+        extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureFactory)
+      )
+      task.outputDirectory.set(
+        layout.buildDirectory.dir("generated/laboratory/code/feature-factory")
+      )
     }
   }
 
@@ -71,12 +75,17 @@ public class LaboratoryPlugin : Plugin<Project> {
     extension: LaboratoryExtension,
     hasAndroid: Boolean,
   ) {
-    registerOutputTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage", hasAndroid) { task ->
+    registerOutputTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage", hasAndroid) {
+      task ->
       task.group = PluginName
       task.description = "Generate sourced feature storage"
       task.storage.set(extension.storageInput)
-      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.SourcedStorage))
-      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/sourced-storage"))
+      task.features.set(
+        extension.factoryFeatureFlags.getValue(DependencyContribution.SourcedStorage)
+      )
+      task.outputDirectory.set(
+        layout.buildDirectory.dir("generated/laboratory/code/sourced-storage")
+      )
     }
   }
 
@@ -88,8 +97,12 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.group = PluginName
       task.description = "Generate option factory"
       task.factory.set(extension.optionFactoryInput)
-      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.OptionFactory))
-      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/option-factory"))
+      task.features.set(
+        extension.factoryFeatureFlags.getValue(DependencyContribution.OptionFactory)
+      )
+      task.outputDirectory.set(
+        layout.buildDirectory.dir("generated/laboratory/code/option-factory")
+      )
     }
   }
 
@@ -97,12 +110,17 @@ public class LaboratoryPlugin : Plugin<Project> {
     extension: LaboratoryExtension,
     hasAndroid: Boolean,
   ) {
-    registerOutputTask<FeatureSourceFactoryTask>("generateFeatureSourceFactory", hasAndroid) { task ->
+    registerOutputTask<FeatureSourceFactoryTask>("generateFeatureSourceFactory", hasAndroid) { task
+      ->
       task.group = PluginName
       task.description = "Generate feature source factory"
       task.factory.set(extension.featureSourcesFactory)
-      task.features.set(extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureSourceFactory))
-      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-source-factory"))
+      task.features.set(
+        extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureSourceFactory)
+      )
+      task.outputDirectory.set(
+        layout.buildDirectory.dir("generated/laboratory/code/feature-source-factory")
+      )
     }
   }
 
@@ -126,23 +144,20 @@ public class LaboratoryPlugin : Plugin<Project> {
   private fun Project.contributeToSourceSets(
     task: TaskProvider<out OutputTask>,
     hasAndroid: Boolean,
-  ) = if (hasAndroid) {
-    contributeToAndroid(task)
-  } else {
-    contributeToKotlin(task)
-  }
+  ) =
+    if (hasAndroid) {
+      contributeToAndroid(task)
+    } else {
+      contributeToKotlin(task)
+    }
 
-  private fun Project.contributeToKotlin(
-    task: TaskProvider<out OutputTask>,
-  ) {
+  private fun Project.contributeToKotlin(task: TaskProvider<out OutputTask>) {
     val sourceSets = extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets
     val kotlinSourceSet = sourceSets.getByName("main").kotlin
     kotlinSourceSet.srcDir(task)
   }
 
-  private fun Project.contributeToAndroid(
-    task: TaskProvider<out OutputTask>,
-  ) {
+  private fun Project.contributeToAndroid(task: TaskProvider<out OutputTask>) {
     extensions.getByType(AndroidComponentsExtension::class.java).onVariants { variant ->
       // 'kotlin' sources do not include
       variant.sources.java?.addGeneratedSourceDirectory(task, OutputTask::outputDirectory)

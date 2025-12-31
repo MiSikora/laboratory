@@ -15,19 +15,20 @@ import org.junit.Test
 class SharedPreferencesFeaturesStorageTest {
   enum class FeatureA : Feature<FeatureA> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
-  private val preferences = ApplicationProvider
-    .getApplicationContext<Context>()
-    .getSharedPreferences("laboratory", MODE_PRIVATE)
+  private val preferences =
+    ApplicationProvider.getApplicationContext<Context>()
+      .getSharedPreferences("laboratory", MODE_PRIVATE)
   private val storage = FeatureStorage.sharedPreferences(preferences)
   private val laboratory = Laboratory.create(storage)
 
-  @Test fun readsStoredOption() {
+  @Test
+  fun readsStoredOption() {
     runBlocking {
       storage.setOption(FeatureA.B)
 
@@ -35,7 +36,8 @@ class SharedPreferencesFeaturesStorageTest {
     }
   }
 
-  @Test fun usesDefaultOptionForCorruptedData() {
+  @Test
+  fun usesDefaultOptionForCorruptedData() {
     runBlocking {
       storage.setOption(FeatureA.B)
       preferences.edit().putInt(FeatureA::class.java.name, 1).commit()
@@ -44,7 +46,8 @@ class SharedPreferencesFeaturesStorageTest {
     }
   }
 
-  @Test fun emitsFeatureOptionChanges() = runBlocking {
+  @Test
+  fun emitsFeatureOptionChanges() = runBlocking {
     storage.observeFeatureName(FeatureA::class.java).test {
       awaitItem() shouldBe null
 
@@ -59,7 +62,8 @@ class SharedPreferencesFeaturesStorageTest {
     }
   }
 
-  @Test fun clearsStorage() {
+  @Test
+  fun clearsStorage() {
     runBlocking {
       storage.setOption(FeatureA.B)
       storage.clear()
@@ -68,7 +72,8 @@ class SharedPreferencesFeaturesStorageTest {
     }
   }
 
-  @Test fun emitsClearedState() {
+  @Test
+  fun emitsClearedState() {
     runBlocking {
       storage.observeFeatureName(FeatureA::class.java).test {
         awaitItem() shouldBe null

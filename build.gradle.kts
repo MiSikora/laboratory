@@ -36,7 +36,7 @@ tasks.dokkaHtmlMultiModule {
 }
 
 val javaTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
-val ktlintVersion = libs.versions.ktlint.get()
+val ktfmtVersion = libs.versions.ktfmt.get()
 val mavenPublishId = libs.plugins.maven.publish.get().pluginId
 
 allprojects {
@@ -47,18 +47,30 @@ allprojects {
       target("src/**/*.kt")
       trimTrailingWhitespace()
       endWithNewline()
-      ktlint(ktlintVersion).setEditorConfigPath(rootProject.file(".editorconfig"))
+      ktfmt(ktfmtVersion).googleStyle()
     }
 
     kotlinGradle {
       target("*.kts")
       trimTrailingWhitespace()
       endWithNewline()
-      ktlint(ktlintVersion).setEditorConfigPath(rootProject.file(".editorconfig"))
+      ktfmt(ktfmtVersion).googleStyle()
     }
 
     format("misc") {
-      target("*.md", "*.yml", "*.proto", "*.properties", "*.toml", "*.xml", "*.txt", "*.html", "*.css", ".gitignore", ".editorconfig")
+      target(
+        "*.md",
+        "*.yml",
+        "*.proto",
+        "*.properties",
+        "*.toml",
+        "*.xml",
+        "*.txt",
+        "*.html",
+        "*.css",
+        ".gitignore",
+        ".editorconfig",
+      )
       trimTrailingWhitespace()
       endWithNewline()
     }

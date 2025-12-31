@@ -11,14 +11,10 @@ android {
   namespace = "io.mehow.laboratory.inspector"
   resourcePrefix = "io_mehow_laboratory_"
 
-  defaultConfig {
-    consumerProguardFile("io-mehow-laboratory-inspector.pro")
-  }
+  defaultConfig { consumerProguardFile("io-mehow-laboratory-inspector.pro") }
 }
 
-tasks.withType<Test>().configureEach {
-  useJUnitPlatform()
-}
+tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 dependencies {
   api(projects.laboratory.runtime)

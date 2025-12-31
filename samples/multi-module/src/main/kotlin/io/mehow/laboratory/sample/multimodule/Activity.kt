@@ -1,5 +1,6 @@
 package io.mehow.laboratory.sample.multimodule
 
+import android.app.Activity as AndroidActivity
 import android.os.Bundle
 import android.widget.TextView
 import io.mehow.laboratory.Feature
@@ -21,7 +22,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import android.app.Activity as AndroidActivity
 
 class Activity : AndroidActivity() {
   private val mainScope = MainScope()
@@ -29,19 +29,20 @@ class Activity : AndroidActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val binding = MainBinding.inflate(layoutInflater).apply {
-      launchLaboratory.setOnClickListener { LaboratoryActivity.start(this@Activity) }
-      authentication.observeFeature<Authentication>()
-      logType.observeFeature<LogType>()
-      showAds.observeFeature<ShowAds>()
-      camera.observeFeature<Camera>()
-      livestreamPreview.observeFeature<LivestreamPreview>()
-      recordingQuality.observeFeature<RecordingQuality>()
-      recordingDirectory.observeFeature<RecordingDirectory>()
-      videoFilter.observeFeature<VideoFilter>()
-      motionDetection.observeFeature<MotionDetection>()
-      nightMode.observeFeature<NightMode>()
-    }
+    val binding =
+      MainBinding.inflate(layoutInflater).apply {
+        launchLaboratory.setOnClickListener { LaboratoryActivity.start(this@Activity) }
+        authentication.observeFeature<Authentication>()
+        logType.observeFeature<LogType>()
+        showAds.observeFeature<ShowAds>()
+        camera.observeFeature<Camera>()
+        livestreamPreview.observeFeature<LivestreamPreview>()
+        recordingQuality.observeFeature<RecordingQuality>()
+        recordingDirectory.observeFeature<RecordingDirectory>()
+        videoFilter.observeFeature<VideoFilter>()
+        motionDetection.observeFeature<MotionDetection>()
+        nightMode.observeFeature<NightMode>()
+      }
     setContentView(binding.root)
   }
 
@@ -51,7 +52,8 @@ class Activity : AndroidActivity() {
   }
 
   private inline fun <reified T : Feature<T>> TextView.observeFeature() {
-    laboratory.observe<T>()
+    laboratory
+      .observe<T>()
       .map { "${it.javaClass.simpleName}: $it" }
       .onEach { text = it }
       .launchIn(mainScope)

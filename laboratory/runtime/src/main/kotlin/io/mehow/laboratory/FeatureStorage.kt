@@ -2,19 +2,17 @@ package io.mehow.laboratory
 
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Persistence mechanism for feature flags.
- */
+/** Persistence mechanism for feature flags. */
 public interface FeatureStorage {
   /**
-   * Observes changes to currently selected feature flag name.
-   * If feature flag is not available, it should emit `null`.
+   * Observes changes to currently selected feature flag name. If feature flag is not available, it
+   * should emit `null`.
    */
   public fun observeFeatureName(feature: Class<out Feature<*>>): Flow<String?>
 
   /**
-   * Returns the current value of a selected feature flag name.
-   * If feature flag is not available, it should return `null`.
+   * Returns the current value of a selected feature flag name. If feature flag is not available, it
+   * should return `null`.
    */
   public suspend fun getFeatureName(feature: Class<out Feature<*>>): String?
 
@@ -26,9 +24,7 @@ public interface FeatureStorage {
    */
   public suspend fun setOptions(vararg options: Feature<*>): Boolean
 
-  /**
-   * Removes all stored feature flag options.
-   */
+  /** Removes all stored feature flag options. */
   public suspend fun clear(): Boolean
 
   /**
@@ -45,7 +41,8 @@ public interface FeatureStorage {
    * @return `true` if the value was set successfully, `false` otherwise.
    */
   @Suppress("SpreadOperator") // Implementations override this to be more efficient
-  public suspend fun setOptions(options: Collection<Feature<*>>): Boolean = setOptions(*options.toTypedArray())
+  public suspend fun setOptions(options: Collection<Feature<*>>): Boolean =
+    setOptions(*options.toTypedArray())
 
   /**
    * Allows implementation to handle default option overrides provided via [factory] if necessary.
@@ -53,15 +50,14 @@ public interface FeatureStorage {
   public fun withDefaultOptionFactory(factory: DefaultOptionFactory): FeatureStorage = this
 
   public companion object {
-    /**
-     * Creates [FeatureStorage] that saves feature flags in app's memory.
-     */
+    /** Creates [FeatureStorage] that saves feature flags in app's memory. */
     public fun inMemory(): FeatureStorage = InMemoryFeatureStorage()
 
     /**
-     * Creates [FeatureStorage] that is aware of different sources for feature flag values.
-     * For example, the following code will be able to produce values for local, Firebase and Aws sources,
-     * and will automatically switch reads based on currently selected sources for feature flags.
+     * Creates [FeatureStorage] that is aware of different sources for feature flag values. For
+     * example, the following code will be able to produce values for local, Firebase and Aws
+     * sources, and will automatically switch reads based on currently selected sources for feature
+     * flags.
      *
      * ```
      * FeatureStorage.sourced(
@@ -73,9 +69,10 @@ public interface FeatureStorage {
      * )
      * ```
      *
-     * In order to connect remote sources with sources of feature flag sources they need to match their names.
-     * If you use Gradle plugin, you should not use this method as a more specialised factory method
-     * will be generated for you, that will make sure that all remote sources are configured.
+     * In order to connect remote sources with sources of feature flag sources they need to match
+     * their names. If you use Gradle plugin, you should not use this method as a more specialised
+     * factory method will be generated for you, that will make sure that all remote sources are
+     * configured.
      *
      * @see [Feature.source]
      */

@@ -11,18 +11,21 @@ internal class SourcedFeatureStorage(
   private val remoteSources: Map<String, FeatureStorage>,
   defaultOptionFactory: DefaultOptionFactory? = null,
 ) : FeatureStorage {
-  private val localLaboratory = Laboratory.builder()
-    .featureStorage(localSource)
-    .let { builder -> defaultOptionFactory?.let(builder::defaultOptionFactory) ?: builder }
-    .build()
+  private val localLaboratory =
+    Laboratory.builder()
+      .featureStorage(localSource)
+      .let { builder -> defaultOptionFactory?.let(builder::defaultOptionFactory) ?: builder }
+      .build()
 
-  override fun observeFeatureName(feature: Class<out Feature<*>>) = feature.observeSource()
-    .map { source -> remoteSources[source.name] ?: localSource }
-    .onEmpty { emit(localSource) }
-    .let {
-      @OptIn(ExperimentalCoroutinesApi::class)
-      it.flatMapLatest { storage -> storage.observeFeatureName(feature) }
-    }
+  override fun observeFeatureName(feature: Class<out Feature<*>>) =
+    feature
+      .observeSource()
+      .map { source -> remoteSources[source.name] ?: localSource }
+      .onEmpty { emit(localSource) }
+      .let {
+        @OptIn(ExperimentalCoroutinesApi::class)
+        it.flatMapLatest { storage -> storage.observeFeatureName(feature) }
+      }
 
   override suspend fun getFeatureName(feature: Class<out Feature<*>>): String? {
     val storage = feature.getSource()?.let { remoteSources[it.name] } ?: localSource
@@ -35,21 +38,15 @@ internal class SourcedFeatureStorage(
 
   override suspend fun clear() = localSource.clear()
 
-  private fun <T : Feature<*>> Class<out T>.observeSource() = validatedSource()
-    ?.let { localLaboratory.observe(it) }
-    ?: emptyFlow()
+  private fun <T : Feature<*>> Class<out T>.observeSource() =
+    validatedSource()?.let { localLaboratory.observe(it) } ?: emptyFlow()
 
-  private suspend fun <T : Feature<*>> Class<out T>.getSource() = validatedSource()
-    ?.let { localLaboratory.experiment(it) }
+  private suspend fun <T : Feature<*>> Class<out T>.getSource() =
+    validatedSource()?.let { localLaboratory.experiment(it) }
 
-  private fun <T : Feature<*>> Class<out T>.validatedSource() = options
-    .firstOrNull()
-    ?.source
-    ?.takeUnless { it.options.isEmpty() }
+  private fun <T : Feature<*>> Class<out T>.validatedSource() =
+    options.firstOrNull()?.source?.takeUnless { it.options.isEmpty() }
 
-  override fun withDefaultOptionFactory(factory: DefaultOptionFactory) = SourcedFeatureStorage(
-    localSource,
-    remoteSources,
-    factory,
-  )
+  override fun withDefaultOptionFactory(factory: DefaultOptionFactory) =
+    SourcedFeatureStorage(localSource, remoteSources, factory)
 }

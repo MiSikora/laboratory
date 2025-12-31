@@ -8,37 +8,35 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 
-internal class SharedPreferencesFeatureStorage(
-  private val preferences: SharedPreferences,
-) : FeatureStorage {
-  override fun observeFeatureName(feature: Class<out Feature<*>>) = callbackFlow {
-    val listener = OnSharedPreferenceChangeListener { _, key ->
-      if (key != null && key == feature.name) {
-        trySend(getStringSafe(key))
+internal class SharedPreferencesFeatureStorage(private val preferences: SharedPreferences) :
+  FeatureStorage {
+  override fun observeFeatureName(feature: Class<out Feature<*>>) =
+    callbackFlow {
+        val listener = OnSharedPreferenceChangeListener { _, key ->
+          if (key != null && key == feature.name) {
+            trySend(getStringSafe(key))
+          }
+        }
+        send(getStringSafe(feature.name))
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
       }
-    }
-    send(getStringSafe(feature.name))
-    preferences.registerOnSharedPreferenceChangeListener(listener)
-    awaitClose {
-      preferences.unregisterOnSharedPreferenceChangeListener(listener)
-    }
-  }.conflate()
+      .conflate()
 
   override suspend fun getFeatureName(feature: Class<out Feature<*>>) = getStringSafe(feature.name)
 
-  private fun getStringSafe(key: String) = try {
-    preferences.getString(key, null)
-  } catch (_: ClassCastException) {
-    null
-  }
+  private fun getStringSafe(key: String) =
+    try {
+      preferences.getString(key, null)
+    } catch (_: ClassCastException) {
+      null
+    }
 
-  override suspend fun setOptions(
-    vararg options: Feature<*>,
-  ) = setOptions(options.associate { it.javaClass.name to it.name })
+  override suspend fun setOptions(vararg options: Feature<*>) =
+    setOptions(options.associate { it.javaClass.name to it.name })
 
-  override suspend fun setOptions(
-    options: Collection<Feature<*>>,
-  ) = setOptions(options.associate { it.javaClass.name to it.name })
+  override suspend fun setOptions(options: Collection<Feature<*>>) =
+    setOptions(options.associate { it.javaClass.name to it.name })
 
   private fun setOptions(options: Map<String, String>): Boolean {
     preferences.edit {
@@ -58,12 +56,13 @@ internal class SharedPreferencesFeatureStorage(
     return true
   }
 
-  private fun SharedPreferences.edit(block: SharedPreferences.Editor.() -> Unit) = edit().apply(block).apply()
+  private fun SharedPreferences.edit(block: SharedPreferences.Editor.() -> Unit) =
+    edit().apply(block).apply()
 }
 
-/**
- * Creates a [FeatureStorage] that is backed by [SharedPreferences].
- */
-public fun FeatureStorage.Companion.sharedPreferences(preferences: SharedPreferences): FeatureStorage {
+/** Creates a [FeatureStorage] that is backed by [SharedPreferences]. */
+public fun FeatureStorage.Companion.sharedPreferences(
+  preferences: SharedPreferences
+): FeatureStorage {
   return SharedPreferencesFeatureStorage(preferences)
 }

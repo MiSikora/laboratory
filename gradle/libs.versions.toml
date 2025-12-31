@@ -22,7 +22,7 @@ kotlin = "2.2.0"
 kotlinpoet = "2.2.0"
 kotlinx-coroutines = "1.10.2"
 ksp = "2.2.0-2.0.2"
-ktlint = "1.2.1"
+ktfmt = "0.59"
 maven-publish = "0.34.0"
 spotless = "7.2.1"
 turbine = "1.2.1"
@@ -72,4 +72,6 @@ kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", vers
 kotest-property = { group = "io.kotest", name = "kotest-property-jvm", version.ref = "kotest" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
+# Included to be picked up by dependencies update automation
+ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }

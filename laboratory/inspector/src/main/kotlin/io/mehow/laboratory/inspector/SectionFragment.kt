@@ -16,51 +16,60 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 internal class SectionFragment : Fragment(R.layout.io_mehow_laboratory_feature_group) {
-  val sectionName get() = requireStringArgument(sectionKey)
-  val inspectorViewModel by activityViewModels<InspectorViewModel> {
-    InspectorViewModel.Factory(LaboratoryActivity.configuration, searchViewModel)
-  }
+  val sectionName
+    get() = requireStringArgument(sectionKey)
+
+  val inspectorViewModel by
+    activityViewModels<InspectorViewModel> {
+      InspectorViewModel.Factory(LaboratoryActivity.configuration, searchViewModel)
+    }
   private val searchViewModel by activityViewModels<SearchViewModel> { SearchViewModel.Factory }
 
   private lateinit var layoutManager: SmoothScrollingLinearLayoutManager
-  private val featureAdapter = FeatureAdapter(object : FeatureAdapter.Listener {
-    override fun onSelectOption(option: Feature<*>) = inspectorViewModel.selectFeature(option)
+  private val featureAdapter =
+    FeatureAdapter(
+      object : FeatureAdapter.Listener {
+        override fun onSelectOption(option: Feature<*>) = inspectorViewModel.selectFeature(option)
 
-    override fun onGoToFeature(feature: Class<out Feature<*>>) {
-      lifecycleScope.launch {
-        val coordinates = inspectorViewModel.goTo(feature)
-        if (coordinates == null) {
-          val root = requireActivity().findViewById<CoordinatorLayout>(R.id.io_mehow_laboratory_root)
-          val message = getString(R.string.io_mehow_laboratory_feature_not_found, feature.simpleName)
-          Snackbar.make(root, message, Snackbar.LENGTH_SHORT).show()
+        override fun onGoToFeature(feature: Class<out Feature<*>>) {
+          lifecycleScope.launch {
+            val coordinates = inspectorViewModel.goTo(feature)
+            if (coordinates == null) {
+              val root =
+                requireActivity().findViewById<CoordinatorLayout>(R.id.io_mehow_laboratory_root)
+              val message =
+                getString(R.string.io_mehow_laboratory_feature_not_found, feature.simpleName)
+              Snackbar.make(root, message, Snackbar.LENGTH_SHORT).show()
+            }
+          }
         }
       }
-    }
-  })
+    )
 
-  override fun onViewCreated(
-    view: View,
-    inState: Bundle?,
-  ) {
+  override fun onViewCreated(view: View, inState: Bundle?) {
     view.findViewById<RecyclerView>(R.id.io_mehow_laboratory_feature_section).apply {
-      layoutManager = SmoothScrollingLinearLayoutManager(requireActivity()).also {
-        this@SectionFragment.layoutManager = it
-      }
+      layoutManager =
+        SmoothScrollingLinearLayoutManager(requireActivity()).also {
+          this@SectionFragment.layoutManager = it
+        }
       adapter = featureAdapter
       hideKeyboardOnScroll()
       doOnApplyWindowInsets { view, insets, padding ->
-        val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-        view.updatePadding(
-          bottom = padding.bottom + bars.bottom,
-        )
+        val bars =
+          insets.getInsets(
+            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+          )
+        view.updatePadding(bottom = padding.bottom + bars.bottom)
       }
     }
     observeGroup()
   }
 
-  private fun observeGroup() = inspectorViewModel.sectionFlow(sectionName)
-    .onEach { featureAdapter.submitList(it) }
-    .launchIn(viewLifecycleOwner.lifecycleScope)
+  private fun observeGroup() =
+    inspectorViewModel
+      .sectionFlow(sectionName)
+      .onEach { featureAdapter.submitList(it) }
+      .launchIn(viewLifecycleOwner.lifecycleScope)
 
   fun scrollTo(index: Int) = layoutManager.smoothScrollTo(index)
 
@@ -69,9 +78,7 @@ internal class SectionFragment : Fragment(R.layout.io_mehow_laboratory_feature_g
 
     fun create(section: String): SectionFragment {
       return SectionFragment().apply {
-        arguments = Bundle().apply {
-          putString(sectionKey, section)
-        }
+        arguments = Bundle().apply { putString(sectionKey, section) }
       }
     }
   }

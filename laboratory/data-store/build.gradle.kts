@@ -8,21 +8,15 @@ plugins {
   alias(libs.plugins.wire)
 }
 
-wire {
-  kotlin {}
-}
+wire { kotlin {} }
 
 android {
   namespace = "io.mehow.laboratory.datastore"
 
-  sourceSets {
-    getByName("main").java.srcDirs("${layout.buildDirectory}/generated/source/wire/")
-  }
+  sourceSets { getByName("main").java.srcDirs("${layout.buildDirectory}/generated/source/wire/") }
 }
 
-tasks.withType<Test>().configureEach {
-  useJUnitPlatform()
-}
+tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 dependencies {
   api(projects.laboratory.runtime)

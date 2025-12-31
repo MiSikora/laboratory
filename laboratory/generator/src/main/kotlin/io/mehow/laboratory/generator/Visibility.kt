@@ -4,9 +4,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.PUBLIC
 
-public enum class Visibility(
-  internal val modifier: KModifier,
-) {
+public enum class Visibility(internal val modifier: KModifier) {
   Public(PUBLIC),
   Internal(INTERNAL),
 }

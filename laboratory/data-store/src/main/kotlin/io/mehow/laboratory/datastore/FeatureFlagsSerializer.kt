@@ -5,8 +5,8 @@ import java.io.InputStream
 import java.io.OutputStream
 
 /**
- * [Serializer] that is capable of writing and reading of feature flags. It can be used, for example,
- * as a delegate of encryption serializer.
+ * [Serializer] that is capable of writing and reading of feature flags. It can be used, for
+ * example, as a delegate of encryption serializer.
  */
 public object FeatureFlagsSerializer : Serializer<FeatureFlags> {
   override val defaultValue: FeatureFlags = FeatureFlags()
@@ -15,10 +15,7 @@ public object FeatureFlagsSerializer : Serializer<FeatureFlags> {
     return FeatureFlags.ADAPTER.decode(input)
   }
 
-  override suspend fun writeTo(
-    t: FeatureFlags,
-    output: OutputStream,
-  ) {
+  override suspend fun writeTo(t: FeatureFlags, output: OutputStream) {
     FeatureFlags.ADAPTER.encode(output, t)
   }
 }

@@ -5,36 +5,36 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 
 class FeatureFactorySpec : FunSpec() {
   enum class FeatureA : Feature<FeatureA> {
-    A,
-    ;
+    A;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   enum class FeatureB : Feature<FeatureB> {
-    A,
-    ;
+    A;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   init {
-    val firstFactory = object : FeatureFactory {
-      override fun create(): Set<Class<out Feature<*>>> = setOf(FeatureA::class.java)
-    }
+    val firstFactory =
+      object : FeatureFactory {
+        override fun create(): Set<Class<out Feature<*>>> = setOf(FeatureA::class.java)
+      }
 
-    val secondFactory = object : FeatureFactory {
-      override fun create(): Set<Class<out Feature<*>>> = setOf(FeatureB::class.java)
-    }
+    val secondFactory =
+      object : FeatureFactory {
+        override fun create(): Set<Class<out Feature<*>>> = setOf(FeatureB::class.java)
+      }
 
     context("factory created from sum") {
       val factory = firstFactory + secondFactory
 
       test("return features available in all sub-factories") {
-        factory.create() shouldContainExactlyInAnyOrder setOf(
-          FeatureA::class.java,
-          FeatureB::class.java,
-        )
+        factory.create() shouldContainExactlyInAnyOrder
+          setOf(FeatureA::class.java, FeatureB::class.java)
       }
     }
   }

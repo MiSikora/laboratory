@@ -6,9 +6,7 @@ plugins {
   alias(libs.plugins.spotless)
 }
 
-android {
-  namespace = "io.mehow.laboratory.sample.supervision"
-}
+android { namespace = "io.mehow.laboratory.sample.supervision" }
 
 laboratory {
   packageName = "io.mehow.laboratory.sample.supervision"

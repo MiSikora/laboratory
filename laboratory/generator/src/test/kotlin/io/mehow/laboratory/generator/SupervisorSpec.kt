@@ -9,34 +9,30 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.stringPattern
 import io.kotest.property.checkAll
 
-class SupervisorSpec : FunSpec({
-  test("does not fail when it has an option") {
-    checkAll(Arb.stringPattern("[a-z](0)([a-z]{0,10})")) { optionName ->
-      val option = FeatureFlagOption(optionName, isDefault = true)
-      val feature = FeatureFlagModel(
-        ClassName("io.mehow", "FeatureA"),
-        listOf(option),
-      )
+class SupervisorSpec :
+  FunSpec({
+    test("does not fail when it has an option") {
+      checkAll(Arb.stringPattern("[a-z](0)([a-z]{0,10})")) { optionName ->
+        val option = FeatureFlagOption(optionName, isDefault = true)
+        val feature = FeatureFlagModel(ClassName("io.mehow", "FeatureA"), listOf(option))
 
-      shouldNotThrowAny {
-        Supervisor(feature, option)
+        shouldNotThrowAny { Supervisor(feature, option) }
       }
     }
-  }
 
-  test("fails when it has no options") {
-    checkAll(Arb.stringPattern("[a-z](0)([a-z]{0,10})")) { optionName ->
-      val feature = FeatureFlagModel(
-        ClassName("io.mehow", "FeatureA"),
-        listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-      )
-      val option = FeatureFlagOption(optionName, isDefault = true)
+    test("fails when it has no options") {
+      checkAll(Arb.stringPattern("[a-z](0)([a-z]{0,10})")) { optionName ->
+        val feature =
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+          )
+        val option = FeatureFlagOption(optionName, isDefault = true)
 
-      val exception = shouldThrow<IllegalArgumentException> {
-        Supervisor(feature, option)
+        val exception = shouldThrow<IllegalArgumentException> { Supervisor(feature, option) }
+
+        exception shouldHaveMessage
+          "Feature flag io.mehow.FeatureA does not contain option $optionName"
       }
-
-      exception shouldHaveMessage "Feature flag io.mehow.FeatureA does not contain option $optionName"
     }
-  }
-})
+  })

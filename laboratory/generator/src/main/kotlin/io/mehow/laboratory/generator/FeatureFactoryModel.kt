@@ -9,5 +9,6 @@ public class FeatureFactoryModel(
   public val features: List<FeatureFlagModel>,
   public val visibility: Visibility = Internal,
 ) {
-  public fun prepare(functionName: String): FileSpec = FeatureFactoryGenerator(this, functionName).fileSpec()
+  public fun prepare(functionName: String): FileSpec =
+    FeatureFactoryGenerator(this, functionName).fileSpec()
 }

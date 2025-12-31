@@ -15,18 +15,18 @@ class LaboratorySpec : FunSpec() {
   enum class FeatureA : Feature<FeatureA> {
     A,
     B,
-    C,
-    ;
+    C;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   enum class FeatureB : Feature<FeatureB> {
     A,
-    B,
-    ;
+    B;
 
-    override val defaultOption get() = A
+    override val defaultOption
+      get() = A
   }
 
   init {
@@ -105,42 +105,42 @@ class LaboratorySpec : FunSpec() {
     }
 
     test("uses default option if no match is found") {
-      val nullStorage = object : FeatureStorage {
-        override fun observeFeatureName(feature: Class<out Feature<*>>): Flow<String?> =
-          flowOf(null)
+      val nullStorage =
+        object : FeatureStorage {
+          override fun observeFeatureName(feature: Class<out Feature<*>>): Flow<String?> =
+            flowOf(null)
 
-        override suspend fun getFeatureName(feature: Class<out Feature<*>>): String? = null
+          override suspend fun getFeatureName(feature: Class<out Feature<*>>): String? = null
 
-        override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
+          override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
 
-        override suspend fun clear() = fail("Unexpected call")
-      }
+          override suspend fun clear() = fail("Unexpected call")
+        }
       val laboratory = Laboratory.create(nullStorage)
 
       laboratory.experiment<FeatureA>() shouldBe FeatureA.A
     }
 
     context("default options factory") {
-      val factory = object : DefaultOptionFactory {
-        override fun <T : Feature<out T>> create(feature: T) = when (feature) {
-          is FeatureA -> FeatureA.C
-          is FeatureB -> FeatureA.C // Intentional wrong class
-          else -> null
+      val factory =
+        object : DefaultOptionFactory {
+          override fun <T : Feature<out T>> create(feature: T) =
+            when (feature) {
+              is FeatureA -> FeatureA.C
+              is FeatureB -> FeatureA.C // Intentional wrong class
+              else -> null
+            }
         }
-      }
 
-      val laboratory = Laboratory.builder()
-        .featureStorage(FeatureStorage.inMemory())
-        .defaultOptionFactory(factory)
-        .build()
+      val laboratory =
+        Laboratory.builder()
+          .featureStorage(FeatureStorage.inMemory())
+          .defaultOptionFactory(factory)
+          .build()
 
-      beforeTest {
-        laboratory.clear()
-      }
+      beforeTest { laboratory.clear() }
 
-      test("overrides default options") {
-        laboratory.experiment<FeatureA>() shouldBe FeatureA.C
-      }
+      test("overrides default options") { laboratory.experiment<FeatureA>() shouldBe FeatureA.C }
 
       test("does not override changed options") {
         for (option in FeatureA::class.java.options) {
@@ -163,26 +163,29 @@ class LaboratorySpec : FunSpec() {
       test("fails when provided default option uses wrong type") {
         shouldThrowExactly<IllegalStateException> {
           laboratory.experiment<FeatureB>()
-        } shouldHaveMessage "Tried to use FeatureA.C as a default option for io.mehow.laboratory.LaboratorySpec.FeatureB"
+        } shouldHaveMessage
+          "Tried to use FeatureA.C as a default option for io.mehow.laboratory.LaboratorySpec.FeatureB"
       }
     }
 
     test("fails to use feature with no values") {
-      val throwingStorage = object : FeatureStorage {
-        override fun observeFeatureName(feature: Class<out Feature<*>>) = fail("Unexpected call")
+      val throwingStorage =
+        object : FeatureStorage {
+          override fun observeFeatureName(feature: Class<out Feature<*>>) = fail("Unexpected call")
 
-        override suspend fun getFeatureName(feature: Class<out Feature<*>>) =
-          fail("Unexpected call")
+          override suspend fun getFeatureName(feature: Class<out Feature<*>>) =
+            fail("Unexpected call")
 
-        override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
+          override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
 
-        override suspend fun clear() = fail("Unexpected call")
-      }
+          override suspend fun clear() = fail("Unexpected call")
+        }
       val laboratory = Laboratory.create(throwingStorage)
 
       shouldThrowExactly<IllegalStateException> {
         laboratory.experiment<NoValuesFeature>()
-      } shouldHaveMessage "io.mehow.laboratory.LaboratorySpec.NoValuesFeature must have at least one option"
+      } shouldHaveMessage
+        "io.mehow.laboratory.LaboratorySpec.NoValuesFeature must have at least one option"
     }
   }
 }
