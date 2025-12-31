@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to Android Gradle Plugin `8.12.0`
 - Upgrade to target Android SDK `36`
 - Upgrade to Kotlin `2.2.0`
-- Upgrade to Wire `5.3.5`
+- Upgrade to Wire `5.4.0`
 - Upgrade to Coroutines `1.10.2`
 - Upgrade to KotlinPoet `2.2.0`
 - Upgrade to DataStore `1.2.0`

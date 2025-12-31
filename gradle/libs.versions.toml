@@ -25,7 +25,7 @@ ktfmt = "0.61"
 maven-publish = "0.35.0"
 spotless = "8.1.0"
 turbine = "1.2.1"
-wire = "5.3.5"
+wire = "5.4.0"
 
 jvmTarget = "11"
 compileSdk = "36"
