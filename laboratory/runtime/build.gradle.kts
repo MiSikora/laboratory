@@ -4,8 +4,6 @@ plugins {
   alias(libs.plugins.dokka)
 }
 
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
-
 dependencies {
   api(libs.coroutines.core)
 

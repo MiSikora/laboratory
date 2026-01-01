@@ -27,8 +27,6 @@ buildConfig {
   buildConfigField("String", "PluginName", "\"${pluginName}\"")
 }
 
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
-
 val fixtureClasspath: Configuration by configurations.creating
 
 tasks.withType<PluginUnderTestMetadata>().configureEach { pluginClasspath.from(fixtureClasspath) }

@@ -12,6 +12,9 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.VersionConstraint
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
@@ -43,6 +46,7 @@ class ConventionPlugin : Plugin<Project> {
       target.version = target.requireProperty("VERSION_NAME")
       target.configureAndroid(minSdk = 23, compileSdk = 36)
       target.configureKotlin()
+      target.configureTesting()
     }
   }
 }
@@ -85,6 +89,19 @@ private fun Project.configureAndroid(minSdk: Int, compileSdk: Int) {
         checkReleaseBuilds = false // Execute explicitly on CI instead
       }
     }
+  }
+}
+
+private fun Project.configureTesting() {
+  tasks.withType<Test>().configureEach {
+    testLogging {
+      if (isCiRun()) {
+        events(TestLogEvent.SKIPPED, TestLogEvent.FAILED, TestLogEvent.PASSED)
+      }
+      exceptionFormat = TestExceptionFormat.FULL
+      showStandardStreams = false
+    }
+    useJUnitPlatform()
   }
 }
 

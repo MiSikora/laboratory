@@ -12,8 +12,6 @@ android {
   defaultConfig { consumerProguardFile("io-mehow-laboratory-inspector.pro") }
 }
 
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
-
 dependencies {
   api(projects.laboratory.runtime)
   implementation(libs.hyperion.plugin)

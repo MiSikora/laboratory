@@ -14,8 +14,6 @@ android {
   sourceSets { getByName("main").java.srcDirs("${layout.buildDirectory}/generated/source/wire/") }
 }
 
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
-
 dependencies {
   api(projects.laboratory.runtime)
   api(libs.androidx.datastore)
