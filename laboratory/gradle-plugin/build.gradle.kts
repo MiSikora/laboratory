@@ -2,7 +2,6 @@ plugins {
   `java-gradle-plugin`
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.maven.publish)
-  alias(libs.plugins.spotless)
   alias(libs.plugins.dokka)
   alias(libs.plugins.buildconfig)
 }

@@ -15,6 +15,8 @@ dependencyResolutionManagement {
   }
 }
 
+includeBuild("build-logic")
+
 include(
   ":laboratory:runtime",
   ":laboratory:shared-preferences",

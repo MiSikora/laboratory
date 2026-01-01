@@ -24,10 +24,10 @@ ksp = "2.2.0-2.0.2"
 ktfmt = "0.61"
 maven-publish = "0.35.0"
 spotless = "8.1.0"
+tapmoc = "0.4.0"
 turbine = "1.2.1"
 wire = "5.4.0"
 
-jvmTarget = "11"
 compileSdk = "36"
 minSdk = "23"
 targetSdk = "36"
@@ -73,3 +73,6 @@ kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotli
 # Included to be picked up by dependencies update automation
 ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+
+gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+gradle-tapmoc = { group = "com.gradleup.tapmoc", name = "tapmoc-gradle-plugin", version.ref = "tapmoc" }
