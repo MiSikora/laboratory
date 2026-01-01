@@ -107,9 +107,6 @@ jobs:
       - name: Run Spotless
         run: ./gradlew spotlessCheck --stacktrace
 
-      - name: Run Build Logic Spotless
-        run: ./gradlew -p build-logic spotlessCheck --stacktrace
-
       - name: Run Samples Spotless
         working-directory: ./samples
         run: ./gradlew spotlessCheck

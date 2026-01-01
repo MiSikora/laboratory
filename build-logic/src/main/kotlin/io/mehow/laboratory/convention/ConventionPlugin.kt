@@ -113,14 +113,26 @@ class ConventionPlugin : Plugin<Project> {
       lineEndings = LineEnding.UNIX
 
       kotlin {
-        target("src/**/*.kt")
+        val targets = buildList {
+          add("src/**/*.kt")
+          if (project.isRoot) {
+            add("build-logic/src/**/*.kt")
+          }
+        }
+        target(*targets.toTypedArray())
         trimTrailingWhitespace()
         endWithNewline()
         ktfmt(libs.ktfmtVersion).googleStyle()
       }
 
       kotlinGradle {
-        target("*.kts")
+        val targets = buildList {
+          add("*.kts")
+          if (project.isRoot) {
+            add("build-logic/**/*.kts")
+          }
+        }
+        target(*targets.toTypedArray())
         trimTrailingWhitespace()
         endWithNewline()
         ktfmt(libs.ktfmtVersion).googleStyle()
