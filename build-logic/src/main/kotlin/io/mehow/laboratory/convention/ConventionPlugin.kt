@@ -33,21 +33,19 @@ class ConventionPlugin : Plugin<Project> {
       target.subprojects { plugins.apply("io.mehow.laboratory.convention") }
     }
 
+    target.group = target.requireProperty("GROUP")
+    target.version = target.requireProperty("VERSION_NAME")
+
     val libs = target.rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
     target.configureJavaCompatibility(11)
     target.configureKotlinCompatibility(libs.requireVersion("kotlin").requiredVersion)
+    target.configureKotlin()
+    target.configureAndroid(minSdk = 23, compileSdk = 36)
+    target.configureTesting()
     target.configureSpotless(
       spotlessId = libs.requirePlugin("spotless").pluginId,
       ktfmtVersion = libs.requireVersion("ktfmt").requiredVersion,
     )
-
-    if (!target.isRoot) {
-      target.group = target.requireProperty("GROUP")
-      target.version = target.requireProperty("VERSION_NAME")
-      target.configureAndroid(minSdk = 23, compileSdk = 36)
-      target.configureKotlin()
-      target.configureTesting()
-    }
   }
 }
 
