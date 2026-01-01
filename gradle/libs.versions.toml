@@ -71,5 +71,6 @@ gradle-agp = { group = "com.android.tools.build", name = "gradle", version.ref =
 gradle-agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
 gradle-kgp = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-kgp-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api", version.ref = "kotlin" }
+gradle-maven-publish = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "maven-publish" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 gradle-tapmoc = { group = "com.gradleup.tapmoc", name = "tapmoc-gradle-plugin", version.ref = "tapmoc" }

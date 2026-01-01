@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.MavenPublishBaseExtension
-
 plugins {
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.kotlin.android) apply false
@@ -17,15 +15,4 @@ tasks.dokkaHtmlMultiModule {
   moduleName.set("Laboratory")
   moduleVersion.set(project.property("VERSION_NAME") as String)
   outputDirectory.set(rootDir.resolve("docs/api"))
-}
-
-val mavenPublishId = libs.plugins.maven.publish.get().pluginId
-
-subprojects {
-  pluginManager.withPlugin(mavenPublishId) {
-    configure<MavenPublishBaseExtension> {
-      publishToMavenCentral()
-      signAllPublications()
-    }
-  }
 }

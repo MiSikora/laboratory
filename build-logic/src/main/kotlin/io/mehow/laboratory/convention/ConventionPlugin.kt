@@ -6,6 +6,7 @@ import com.android.build.gradle.LibraryPlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import com.diffplug.spotless.LineEnding
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import kotlin.jvm.optionals.getOrNull
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -46,6 +47,7 @@ class ConventionPlugin : Plugin<Project> {
       spotlessId = libs.requirePlugin("spotless").pluginId,
       ktfmtVersion = libs.requireVersion("ktfmt").requiredVersion,
     )
+    target.configureMavenPublishing(libs.requirePlugin("maven-publish").pluginId)
   }
 }
 
@@ -148,6 +150,15 @@ private fun Project.configureSpotless(spotlessId: String, ktfmtVersion: String) 
   }
   if (project.isRoot) {
     configure<SpotlessExtensionPredeclare> { applyConfiguration() }
+  }
+}
+
+private fun Project.configureMavenPublishing(pluginId: String) {
+  plugins.withId(pluginId) {
+    configure<MavenPublishBaseExtension> {
+      publishToMavenCentral()
+      signAllPublications()
+    }
   }
 }
 
