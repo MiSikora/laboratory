@@ -1,7 +1,10 @@
 package io.mehow.laboratory.convention
 
+import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
+import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
@@ -34,8 +37,10 @@ class ConventionPlugin : Plugin<Project> {
   override fun apply(target: Project) {
     libs = target.requireVersionCatalog()
 
-    target.group = target.requireProperty("GROUP")
-    target.version = target.requireProperty("VERSION_NAME")
+    if (!target.isSample) {
+      target.group = target.requireProperty("GROUP")
+      target.version = target.requireProperty("VERSION_NAME")
+    }
     target.configureCompatibility()
     target.configureKotlin()
     target.configureAndroid()
@@ -49,13 +54,17 @@ class ConventionPlugin : Plugin<Project> {
   }
 
   private fun Project.configureCompatibility() {
-    configureJavaCompatibility(11)
+    configureJavaCompatibility(libs.jvmTarget)
     configureKotlinCompatibility(libs.kotlinVersion)
   }
 
   private fun Project.configureKotlin() {
     plugins.withType<KotlinBasePlugin>().configureEach {
-      configure<KotlinBaseExtension> { explicitApi() }
+      configure<KotlinBaseExtension> {
+        if (!project.isSample) {
+          explicitApi()
+        }
+      }
     }
     tasks.withType<KotlinCompilationTask<KotlinJvmCompilerOptions>>().configureEach {
       compilerOptions {
@@ -74,8 +83,8 @@ class ConventionPlugin : Plugin<Project> {
       }
 
       configure<LibraryExtension> {
-        compileSdk = 36
-        defaultConfig.minSdk = 21
+        compileSdk = libs.androidCompileSdk
+        defaultConfig.minSdk = libs.androidMinSdk
         testOptions.targetSdk = compileSdk
 
         lint {
@@ -90,6 +99,25 @@ class ConventionPlugin : Plugin<Project> {
           checkTestSources = false
           checkReleaseBuilds = false // Execute explicitly on CI instead
         }
+      }
+    }
+
+    plugins.withType<AppPlugin>().configureEach {
+      configure<ApplicationAndroidComponentsExtension> {
+        beforeVariants { builder -> builder.enable = builder.buildType == "debug" }
+      }
+
+      configure<ApplicationExtension> {
+        compileSdk = libs.androidCompileSdk
+        defaultConfig {
+          minSdk = libs.androidMinSdk
+          targetSdk = compileSdk
+
+          versionCode = 1
+          versionName = "1.0.0"
+        }
+
+        buildTypes { debug { matchingFallbacks.add("release") } }
       }
     }
   }
@@ -180,10 +208,22 @@ class ConventionPlugin : Plugin<Project> {
 private val Project.isRoot
   get() = this == rootProject
 
+private val Project.isSample
+  get() = rootProject.name == "samples-root"
+
 private fun Project.requireProperty(name: String) =
   requireNotNull(property(name)) { "Project $this has no '$name' property." }
 
 private fun isCiRun() = System.getProperty("CI").toBoolean()
+
+private val VersionCatalog.jvmTarget
+  get() = requireVersion("jvm-target").requiredVersion.toInt()
+
+private val VersionCatalog.androidMinSdk
+  get() = requireVersion("android-min-sdk").requiredVersion.toInt()
+
+private val VersionCatalog.androidCompileSdk
+  get() = requireVersion("android-compile-sdk").requiredVersion.toInt()
 
 private val VersionCatalog.kotlinVersion
   get() = requireVersion("kotlin").requiredVersion
