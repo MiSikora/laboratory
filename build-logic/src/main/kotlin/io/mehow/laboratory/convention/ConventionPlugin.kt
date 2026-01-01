@@ -29,135 +29,138 @@ import tapmoc.configureKotlinCompatibility
 
 @Suppress("Unused") // Used by Gradle to configure projects.
 class ConventionPlugin : Plugin<Project> {
+  private lateinit var libs: VersionCatalog
+
   override fun apply(target: Project) {
-    if (target.isRoot) {
-      target.subprojects { plugins.apply("io.mehow.laboratory.convention") }
-    }
+    libs = target.requireVersionCatalog()
 
     target.group = target.requireProperty("GROUP")
     target.version = target.requireProperty("VERSION_NAME")
-
-    val libs = target.rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
-    target.configureJavaCompatibility(javaVersion = 11)
-    target.configureKotlinCompatibility(version = libs.requireVersion("kotlin").requiredVersion)
+    target.configureCompatibility()
     target.configureKotlin()
-    target.configureAndroid(minSdk = 23, compileSdk = 36)
+    target.configureAndroid()
     target.configureTesting()
-    target.configureSpotless(
-      pluginId = libs.requirePlugin("spotless").pluginId,
-      ktfmtVersion = libs.requireVersion("ktfmt").requiredVersion,
-    )
-    target.configureMavenPublishing(pluginId = libs.requirePlugin("maven-publish").pluginId)
-  }
-}
+    target.configureSpotless()
+    target.configureMavenPublishing()
 
-private fun Project.configureKotlin() {
-  plugins.withType<KotlinBasePlugin>().configureEach {
-    configure<KotlinBaseExtension> { explicitApi() }
-  }
-  tasks.withType<KotlinCompilationTask<KotlinJvmCompilerOptions>>().configureEach {
-    compilerOptions {
-      freeCompilerArgs.addAll("-Xjvm-default=all")
-      progressiveMode.set(true)
-      allWarningsAsErrors.set(true)
-      optIn.addAll("kotlin.RequiresOptIn")
+    if (target.isRoot) {
+      target.subprojects { plugins.apply("io.mehow.laboratory.convention") }
     }
   }
-}
 
-private fun Project.configureAndroid(minSdk: Int, compileSdk: Int) {
-  plugins.withType<LibraryPlugin>().configureEach {
-    configure<LibraryAndroidComponentsExtension> {
-      beforeVariants { builder -> builder.enable = builder.buildType == "release" }
+  private fun Project.configureCompatibility() {
+    configureJavaCompatibility(11)
+    configureKotlinCompatibility(libs.kotlinVersion)
+  }
+
+  private fun Project.configureKotlin() {
+    plugins.withType<KotlinBasePlugin>().configureEach {
+      configure<KotlinBaseExtension> { explicitApi() }
     }
-
-    configure<LibraryExtension> {
-      this.compileSdk = compileSdk
-      defaultConfig.minSdk = minSdk
-      testOptions.targetSdk = compileSdk
-
-      lint {
-        lintConfig = rootProject.file("lint.xml")
-        warningsAsErrors = true
-
-        htmlReport = isCiRun()
-        xmlReport = isCiRun()
-        textReport = isCiRun()
-
-        checkGeneratedSources = true
-        checkTestSources = false
-        checkReleaseBuilds = false // Execute explicitly on CI instead
+    tasks.withType<KotlinCompilationTask<KotlinJvmCompilerOptions>>().configureEach {
+      compilerOptions {
+        freeCompilerArgs.addAll("-Xjvm-default=all")
+        progressiveMode.set(true)
+        allWarningsAsErrors.set(true)
+        optIn.addAll("kotlin.RequiresOptIn")
       }
     }
   }
-}
 
-private fun Project.configureTesting() {
-  tasks.withType<Test>().configureEach {
-    testLogging {
-      if (isCiRun()) {
-        events(TestLogEvent.SKIPPED, TestLogEvent.FAILED, TestLogEvent.PASSED)
+  private fun Project.configureAndroid() {
+    plugins.withType<LibraryPlugin>().configureEach {
+      configure<LibraryAndroidComponentsExtension> {
+        beforeVariants { builder -> builder.enable = builder.buildType == "release" }
       }
-      exceptionFormat = TestExceptionFormat.FULL
-      showStandardStreams = false
-    }
-    useJUnitPlatform()
-  }
-}
 
-private fun Project.configureSpotless(pluginId: String, ktfmtVersion: String) {
-  plugins.apply(pluginId)
-  val applyConfiguration: SpotlessExtension.() -> Unit = {
-    lineEndings = LineEnding.UNIX
+      configure<LibraryExtension> {
+        compileSdk = 36
+        defaultConfig.minSdk = 21
+        testOptions.targetSdk = compileSdk
 
-    kotlin {
-      target("src/**/*.kt")
-      trimTrailingWhitespace()
-      endWithNewline()
-      ktfmt(ktfmtVersion).googleStyle()
-    }
+        lint {
+          lintConfig = rootProject.file("lint.xml")
+          warningsAsErrors = true
 
-    kotlinGradle {
-      target("*.kts")
-      trimTrailingWhitespace()
-      endWithNewline()
-      ktfmt(ktfmtVersion).googleStyle()
-    }
+          htmlReport = isCiRun()
+          xmlReport = isCiRun()
+          textReport = isCiRun()
 
-    format("misc") {
-      target(
-        "*.md",
-        "*.yml",
-        "*.proto",
-        "*.properties",
-        "*.toml",
-        "*.xml",
-        "*.txt",
-        "*.html",
-        "*.css",
-        ".gitignore",
-        ".editorconfig",
-      )
-      trimTrailingWhitespace()
-      endWithNewline()
+          checkGeneratedSources = true
+          checkTestSources = false
+          checkReleaseBuilds = false // Execute explicitly on CI instead
+        }
+      }
     }
   }
-  configure<SpotlessExtension> {
-    applyConfiguration()
-    if (project.rootProject == project) {
-      predeclareDeps()
+
+  private fun Project.configureTesting() {
+    tasks.withType<Test>().configureEach {
+      testLogging {
+        if (isCiRun()) {
+          events(TestLogEvent.SKIPPED, TestLogEvent.FAILED, TestLogEvent.PASSED)
+        }
+        exceptionFormat = TestExceptionFormat.FULL
+        showStandardStreams = false
+      }
+      useJUnitPlatform()
     }
   }
-  if (project.isRoot) {
-    configure<SpotlessExtensionPredeclare> { applyConfiguration() }
-  }
-}
 
-private fun Project.configureMavenPublishing(pluginId: String) {
-  plugins.withId(pluginId) {
-    configure<MavenPublishBaseExtension> {
-      publishToMavenCentral()
-      signAllPublications()
+  private fun Project.configureSpotless() {
+    plugins.apply(libs.spotlessId)
+    val applyConfiguration: SpotlessExtension.() -> Unit = {
+      lineEndings = LineEnding.UNIX
+
+      kotlin {
+        target("src/**/*.kt")
+        trimTrailingWhitespace()
+        endWithNewline()
+        ktfmt(libs.ktfmtVersion).googleStyle()
+      }
+
+      kotlinGradle {
+        target("*.kts")
+        trimTrailingWhitespace()
+        endWithNewline()
+        ktfmt(libs.ktfmtVersion).googleStyle()
+      }
+
+      format("misc") {
+        target(
+          "*.md",
+          "*.yml",
+          "*.proto",
+          "*.properties",
+          "*.toml",
+          "*.xml",
+          "*.txt",
+          "*.html",
+          "*.css",
+          ".gitignore",
+          ".editorconfig",
+        )
+        trimTrailingWhitespace()
+        endWithNewline()
+      }
+    }
+    configure<SpotlessExtension> {
+      applyConfiguration()
+      if (project.rootProject == project) {
+        predeclareDeps()
+      }
+    }
+    if (project.isRoot) {
+      configure<SpotlessExtensionPredeclare> { applyConfiguration() }
+    }
+  }
+
+  private fun Project.configureMavenPublishing() {
+    plugins.withId(libs.mavenPublishId) {
+      configure<MavenPublishBaseExtension> {
+        publishToMavenCentral()
+        signAllPublications()
+      }
     }
   }
 }
@@ -169,6 +172,22 @@ private fun Project.requireProperty(name: String) =
   requireNotNull(property(name)) { "Project $this has no '$name' property." }
 
 private fun isCiRun() = System.getProperty("CI").toBoolean()
+
+private val VersionCatalog.kotlinVersion
+  get() = requireVersion("kotlin").requiredVersion
+
+private val VersionCatalog.ktfmtVersion
+  get() = requireVersion("ktfmt").requiredVersion
+
+private val VersionCatalog.spotlessId
+  get() = requirePlugin("spotless").pluginId
+
+private val VersionCatalog.mavenPublishId
+  get() = requirePlugin("maven-publish").pluginId
+
+private fun Project.requireVersionCatalog(): VersionCatalog {
+  return rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
+}
 
 private fun VersionCatalog.requireVersion(alias: String): VersionConstraint {
   return requireNotNull(findVersion(alias).getOrNull()) { "No version defined for '$alias'." }
