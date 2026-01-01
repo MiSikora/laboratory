@@ -1,8 +1,4 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
-import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
   alias(libs.plugins.kotlin.jvm) apply false
@@ -28,19 +24,6 @@ val mavenPublishId = libs.plugins.maven.publish.get().pluginId
 subprojects {
   group = project.property("GROUP") as String
   version = project.property("VERSION_NAME") as String
-
-  plugins.withType<KotlinBasePlugin>().configureEach {
-    tasks.withType<KotlinCompilationTask<KotlinJvmCompilerOptions>>().configureEach {
-      compilerOptions {
-        progressiveMode.set(true)
-        allWarningsAsErrors.set(true)
-        optIn.addAll("kotlin.RequiresOptIn")
-        freeCompilerArgs.addAll("-Xjvm-default=all")
-      }
-    }
-
-    configure<KotlinProjectExtension> { explicitApi() }
-  }
 
   tasks.withType<Test>().configureEach { testLogging.events("skipped", "failed", "passed") }
 

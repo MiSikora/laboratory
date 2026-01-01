@@ -59,7 +59,6 @@ coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 hyperion-core = { group = "com.willowtreeapps.hyperion", name = "hyperion-core", version.ref = "hyperion" }
 hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plugin", version.ref = "hyperion" }
-kgp = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property-jvm", version.ref = "kotest" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
@@ -70,5 +69,7 @@ turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine
 
 gradle-agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 gradle-agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
+gradle-kgp = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+gradle-kgp-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api", version.ref = "kotlin" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 gradle-tapmoc = { group = "com.gradleup.tapmoc", name = "tapmoc-gradle-plugin", version.ref = "tapmoc" }

@@ -37,7 +37,7 @@ dependencies {
   compileOnly(libs.gradle.agp.api)
 
   implementation(projects.laboratory.generator)
-  implementation(libs.kgp)
+  implementation(libs.gradle.kgp)
 
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)

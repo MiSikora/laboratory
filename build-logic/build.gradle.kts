@@ -34,6 +34,7 @@ spotless {
 
 dependencies {
   implementation(libs.gradle.agp.api)
+  implementation(libs.gradle.kgp.api)
   implementation(libs.gradle.spotless)
   implementation(libs.gradle.tapmoc)
 }

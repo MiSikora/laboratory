@@ -6,7 +6,6 @@ import com.android.build.gradle.LibraryPlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import com.diffplug.spotless.LineEnding
-import kotlin.jvm.optionals.getOrNull
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
@@ -16,8 +15,13 @@ import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.gradle.plugin.use.PluginDependency
+import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
+import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import tapmoc.configureJavaCompatibility
 import tapmoc.configureKotlinCompatibility
+import kotlin.jvm.optionals.getOrNull
 
 @Suppress("Unused") // Used by Gradle to configure projects.
 class ConventionPlugin : Plugin<Project> {
@@ -36,6 +40,21 @@ class ConventionPlugin : Plugin<Project> {
 
     if (!target.isRoot) {
       target.configureAndroid(minSdk = 23, compileSdk = 36)
+      target.configureKotlin()
+    }
+  }
+}
+
+private fun Project.configureKotlin() {
+  plugins.withType<KotlinBasePlugin>().configureEach {
+    configure<KotlinBaseExtension> { explicitApi() }
+  }
+  tasks.withType<KotlinCompilationTask<KotlinJvmCompilerOptions>>().configureEach {
+    compilerOptions {
+      freeCompilerArgs.addAll("-Xjvm-default=all")
+      progressiveMode.set(true)
+      allWarningsAsErrors.set(true)
+      optIn.addAll("kotlin.RequiresOptIn")
     }
   }
 }
