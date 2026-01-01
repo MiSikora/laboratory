@@ -1,5 +1,8 @@
 package io.mehow.laboratory.convention
 
+import com.android.build.api.dsl.LibraryExtension
+import com.android.build.api.variant.LibraryAndroidComponentsExtension
+import com.android.build.gradle.LibraryPlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import com.diffplug.spotless.LineEnding
@@ -11,6 +14,7 @@ import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.VersionConstraint
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.withType
 import org.gradle.plugin.use.PluginDependency
 import tapmoc.configureJavaCompatibility
 import tapmoc.configureKotlinCompatibility
@@ -29,6 +33,37 @@ class ConventionPlugin : Plugin<Project> {
       spotlessId = libs.requirePlugin("spotless").pluginId,
       ktfmtVersion = libs.requireVersion("ktfmt").requiredVersion,
     )
+
+    if (!target.isRoot) {
+      target.configureAndroid(minSdk = 23, compileSdk = 36)
+    }
+  }
+}
+
+private fun Project.configureAndroid(minSdk: Int, compileSdk: Int) {
+  plugins.withType<LibraryPlugin>().configureEach {
+    configure<LibraryAndroidComponentsExtension> {
+      beforeVariants { builder -> builder.enable = builder.buildType == "release" }
+    }
+
+    configure<LibraryExtension> {
+      this.compileSdk = compileSdk
+      defaultConfig.minSdk = minSdk
+      testOptions.targetSdk = compileSdk
+
+      lint {
+        lintConfig = rootProject.file("lint.xml")
+        warningsAsErrors = true
+
+        htmlReport = isCiRun()
+        xmlReport = isCiRun()
+        textReport = isCiRun()
+
+        checkGeneratedSources = true
+        checkTestSources = false
+        checkReleaseBuilds = false // Execute explicitly on CI instead
+      }
+    }
   }
 }
 
@@ -82,6 +117,8 @@ private fun Project.configureSpotless(spotlessId: String, ktfmtVersion: String) 
 
 private val Project.isRoot
   get() = this == rootProject
+
+private fun isCiRun() = System.getProperty("CI").toBoolean()
 
 private fun VersionCatalog.requireVersion(alias: String): VersionConstraint {
   return requireNotNull(findVersion(alias).getOrNull()) { "No version defined for '$alias'." }

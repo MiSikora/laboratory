@@ -1,6 +1,3 @@
-import com.android.build.api.variant.LibraryAndroidComponentsExtension
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.LibraryPlugin
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
@@ -46,31 +43,6 @@ subprojects {
   }
 
   tasks.withType<Test>().configureEach { testLogging.events("skipped", "failed", "passed") }
-
-  plugins.withType<LibraryPlugin>().configureEach {
-    configure<LibraryExtension> {
-      compileSdk = libs.versions.compileSdk.get().toInt()
-      defaultConfig.minSdk = libs.versions.minSdk.get().toInt()
-      testOptions.targetSdk = libs.versions.targetSdk.get().toInt()
-
-      lint {
-        lintConfig = rootProject.file("lint.xml")
-        warningsAsErrors = true
-
-        htmlReport = true
-        xmlReport = true
-        textReport = true
-
-        checkGeneratedSources = true
-        checkTestSources = false
-        checkReleaseBuilds = false // Execute explicitly on CI instead
-      }
-    }
-
-    configure<LibraryAndroidComponentsExtension> {
-      beforeVariants { builder -> builder.enable = builder.buildType == "release" }
-    }
-  }
 
   pluginManager.withPlugin(mavenPublishId) {
     configure<MavenPublishBaseExtension> {

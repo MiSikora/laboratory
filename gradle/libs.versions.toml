@@ -28,10 +28,6 @@ tapmoc = "0.4.0"
 turbine = "1.2.1"
 wire = "5.4.0"
 
-compileSdk = "36"
-minSdk = "23"
-targetSdk = "36"
-
 [plugins]
 agp-application = { id = "com.android.application", version.ref = "agp" }
 agp-library = { id = "com.android.library", version.ref = "agp" }
@@ -46,8 +42,6 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 wire = { id = "com.squareup.wire", version.ref = "wire" }
 
 [libraries]
-agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
-agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore-core", version.ref = "androidx-datastore" }
@@ -74,5 +68,7 @@ kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotli
 ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
+gradle-agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+gradle-agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 gradle-tapmoc = { group = "com.gradleup.tapmoc", name = "tapmoc-gradle-plugin", version.ref = "tapmoc" }
