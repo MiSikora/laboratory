@@ -24,13 +24,13 @@ ksp = "2.2.0-2.0.2"
 ktfmt = "0.61"
 maven-publish = "0.35.0"
 spotless = "8.1.0"
+tapmoc = "0.4.0"
 turbine = "1.2.1"
 wire = "5.4.0"
 
-jvmTarget = "11"
-compileSdk = "36"
-minSdk = "23"
-targetSdk = "36"
+jvm-target = "11"
+android-min-sdk = "23"
+android-compile-sdk = "36"
 
 [plugins]
 agp-application = { id = "com.android.application", version.ref = "agp" }
@@ -46,8 +46,6 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 wire = { id = "com.squareup.wire", version.ref = "wire" }
 
 [libraries]
-agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
-agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore-core", version.ref = "androidx-datastore" }
@@ -65,7 +63,6 @@ coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 hyperion-core = { group = "com.willowtreeapps.hyperion", name = "hyperion-core", version.ref = "hyperion" }
 hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plugin", version.ref = "hyperion" }
-kgp = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property-jvm", version.ref = "kotest" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
@@ -73,3 +70,11 @@ kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotli
 # Included to be picked up by dependencies update automation
 ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+
+gradle-agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+gradle-agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
+gradle-kgp = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+gradle-kgp-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api", version.ref = "kotlin" }
+gradle-maven-publish = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "maven-publish" }
+gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+gradle-tapmoc = { group = "com.gradleup.tapmoc", name = "tapmoc-gradle-plugin", version.ref = "tapmoc" }

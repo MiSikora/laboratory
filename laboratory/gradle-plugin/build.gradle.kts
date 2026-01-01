@@ -2,7 +2,6 @@ plugins {
   `java-gradle-plugin`
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.maven.publish)
-  alias(libs.plugins.spotless)
   alias(libs.plugins.dokka)
   alias(libs.plugins.buildconfig)
 }
@@ -28,20 +27,18 @@ buildConfig {
   buildConfigField("String", "PluginName", "\"${pluginName}\"")
 }
 
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
-
 val fixtureClasspath: Configuration by configurations.creating
 
 tasks.withType<PluginUnderTestMetadata>().configureEach { pluginClasspath.from(fixtureClasspath) }
 
 dependencies {
-  compileOnly(libs.agp.api)
+  compileOnly(libs.gradle.agp.api)
 
   implementation(projects.laboratory.generator)
-  implementation(libs.kgp)
+  implementation(libs.gradle.kgp)
 
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)
 
-  fixtureClasspath(libs.agp)
+  fixtureClasspath(libs.gradle.agp)
 }

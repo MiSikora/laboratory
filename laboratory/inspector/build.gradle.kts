@@ -2,7 +2,6 @@ plugins {
   alias(libs.plugins.agp.library)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.maven.publish)
-  alias(libs.plugins.spotless)
   alias(libs.plugins.dokka)
 }
 
@@ -12,8 +11,6 @@ android {
 
   defaultConfig { consumerProguardFile("io-mehow-laboratory-inspector.pro") }
 }
-
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 dependencies {
   api(projects.laboratory.runtime)

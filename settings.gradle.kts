@@ -1,3 +1,5 @@
+rootProject.name = "laboratory-root"
+
 pluginManagement {
   repositories {
     mavenCentral()
@@ -13,20 +15,16 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "laboratory-root"
+includeBuild("build-logic")
+
+include(
+  ":laboratory:runtime",
+  ":laboratory:shared-preferences",
+  ":laboratory:data-store",
+  ":laboratory:generator",
+  ":laboratory:gradle-plugin",
+  ":laboratory:inspector",
+  ":laboratory:hyperion-plugin",
+)
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-include(":laboratory:runtime")
-
-include(":laboratory:shared-preferences")
-
-include(":laboratory:data-store")
-
-include(":laboratory:generator")
-
-include(":laboratory:gradle-plugin")
-
-include(":laboratory:inspector")
-
-include(":laboratory:hyperion-plugin")

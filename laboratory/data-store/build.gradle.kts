@@ -2,7 +2,6 @@ plugins {
   alias(libs.plugins.agp.library)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.maven.publish)
-  alias(libs.plugins.spotless)
   alias(libs.plugins.dokka)
   alias(libs.plugins.wire)
 }
@@ -14,8 +13,6 @@ android {
 
   sourceSets { getByName("main").java.srcDirs("${layout.buildDirectory}/generated/source/wire/") }
 }
-
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 dependencies {
   api(projects.laboratory.runtime)

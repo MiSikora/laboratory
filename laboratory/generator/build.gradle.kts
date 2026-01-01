@@ -1,11 +1,8 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.maven.publish)
-  alias(libs.plugins.spotless)
   alias(libs.plugins.dokka)
 }
-
-tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 dependencies {
   api(libs.kotlinpoet)
