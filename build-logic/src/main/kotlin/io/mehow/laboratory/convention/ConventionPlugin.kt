@@ -6,6 +6,7 @@ import com.android.build.gradle.LibraryPlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessExtensionPredeclare
 import com.diffplug.spotless.LineEnding
+import kotlin.jvm.optionals.getOrNull
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
@@ -21,7 +22,6 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinBasePlugin
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import tapmoc.configureJavaCompatibility
 import tapmoc.configureKotlinCompatibility
-import kotlin.jvm.optionals.getOrNull
 
 @Suppress("Unused") // Used by Gradle to configure projects.
 class ConventionPlugin : Plugin<Project> {
@@ -39,6 +39,8 @@ class ConventionPlugin : Plugin<Project> {
     )
 
     if (!target.isRoot) {
+      target.group = target.requireProperty("GROUP")
+      target.version = target.requireProperty("VERSION_NAME")
       target.configureAndroid(minSdk = 23, compileSdk = 36)
       target.configureKotlin()
     }
@@ -136,6 +138,9 @@ private fun Project.configureSpotless(spotlessId: String, ktfmtVersion: String) 
 
 private val Project.isRoot
   get() = this == rootProject
+
+private fun Project.requireProperty(name: String) =
+  requireNotNull(property(name)) { "Project $this has no '$name' property." }
 
 private fun isCiRun() = System.getProperty("CI").toBoolean()
 

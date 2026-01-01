@@ -22,9 +22,6 @@ tasks.dokkaHtmlMultiModule {
 val mavenPublishId = libs.plugins.maven.publish.get().pluginId
 
 subprojects {
-  group = project.property("GROUP") as String
-  version = project.property("VERSION_NAME") as String
-
   tasks.withType<Test>().configureEach { testLogging.events("skipped", "failed", "passed") }
 
   pluginManager.withPlugin(mavenPublishId) {
