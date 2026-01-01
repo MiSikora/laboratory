@@ -38,16 +38,16 @@ class ConventionPlugin : Plugin<Project> {
     target.version = target.requireProperty("VERSION_NAME")
 
     val libs = target.rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
-    target.configureJavaCompatibility(11)
-    target.configureKotlinCompatibility(libs.requireVersion("kotlin").requiredVersion)
+    target.configureJavaCompatibility(javaVersion = 11)
+    target.configureKotlinCompatibility(version = libs.requireVersion("kotlin").requiredVersion)
     target.configureKotlin()
     target.configureAndroid(minSdk = 23, compileSdk = 36)
     target.configureTesting()
     target.configureSpotless(
-      spotlessId = libs.requirePlugin("spotless").pluginId,
+      pluginId = libs.requirePlugin("spotless").pluginId,
       ktfmtVersion = libs.requireVersion("ktfmt").requiredVersion,
     )
-    target.configureMavenPublishing(libs.requirePlugin("maven-publish").pluginId)
+    target.configureMavenPublishing(pluginId = libs.requirePlugin("maven-publish").pluginId)
   }
 }
 
@@ -105,8 +105,8 @@ private fun Project.configureTesting() {
   }
 }
 
-private fun Project.configureSpotless(spotlessId: String, ktfmtVersion: String) {
-  plugins.apply(spotlessId)
+private fun Project.configureSpotless(pluginId: String, ktfmtVersion: String) {
+  plugins.apply(pluginId)
   val applyConfiguration: SpotlessExtension.() -> Unit = {
     lineEndings = LineEnding.UNIX
 
