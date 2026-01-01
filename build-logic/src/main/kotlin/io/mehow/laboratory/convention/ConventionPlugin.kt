@@ -183,6 +183,15 @@ class ConventionPlugin : Plugin<Project> {
         trimTrailingWhitespace()
         endWithNewline()
       }
+
+      if (project.isRoot) {
+        java {
+          target("scripts/**/*.java")
+          trimTrailingWhitespace()
+          endWithNewline()
+          googleJavaFormat()
+        }
+      }
     }
     configure<SpotlessExtension> {
       applyConfiguration()

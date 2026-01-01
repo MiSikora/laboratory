@@ -7,20 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Upgrade Android min SDK to 23.
-- Upgrade Gradle to `9.0.0`
-- Upgrade to Android Gradle Plugin `8.12.0`
-- Upgrade to target Android SDK `36`
-- Upgrade to Kotlin `2.2.0`
-- Upgrade to Wire `5.4.0`
-- Upgrade to Coroutines `1.10.2`
-- Upgrade to KotlinPoet `2.2.0`
-- Upgrade to DataStore `1.2.0`
-- Upgrade to AppCompat `1.7.1`
-- Upgrade to ViewModel-ktx `2.10.0`
-- Upgrade to Fragment-ktx `1.8.9`
-- Upgrade to RecyclerView `1.4.0`
-- Upgrade to Material `1.13.0`
+- Upgrade to min Android SDK to `23`.
+- Upgrade to target Android SDK `36`.
 
 ## [1.1.2] - 2025-08-04
 
