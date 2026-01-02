@@ -13,15 +13,11 @@ private constructor(
   public val description: String,
   public val deprecation: Deprecation?,
   public val source: FeatureFlagModel?,
-  public val supervisor: Supervisor?,
 ) {
   init {
     require(options.isNotEmpty()) { "${className.canonicalName} must have at least one option" }
     require(options.count(FeatureFlagOption::isDefault) == 1) {
       "${className.canonicalName} must have exactly one default option"
-    }
-    require(supervisor?.featureFlag != this) {
-      "${className.canonicalName} cannot supervise itself"
     }
   }
 
@@ -33,7 +29,6 @@ private constructor(
     description: String = "",
     deprecation: Deprecation? = null,
     sourceOptions: List<FeatureFlagOption> = emptyList(),
-    supervisor: Supervisor? = null,
   ) : this(
     className,
     options,
@@ -42,7 +37,6 @@ private constructor(
     description,
     deprecation,
     createSource(visibility, className, sourceOptions),
-    supervisor,
   )
 
   public fun prepare(): FileSpec = FeatureFlagGenerator(this).fileSpec()

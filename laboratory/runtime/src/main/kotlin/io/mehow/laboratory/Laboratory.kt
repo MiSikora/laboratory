@@ -1,8 +1,6 @@
 package io.mehow.laboratory
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /** High-level API for interaction with feature flags. It allows to read and write their options. */
@@ -33,17 +31,10 @@ public class Laboratory internal constructor(builder: Builder) {
     val options = feature.options
     val defaultOption = getDefaultOption(feature)
 
-    val activeOption =
-      storage.observeFeatureName(feature).map { parentName ->
-        val expectedName = parentName ?: defaultOption.name
-        options.firstOrNull { it.name == expectedName } ?: defaultOption
-      }
-
-    val supervisor = feature.supervisorOption ?: return activeOption
-    return combine(activeOption, observeRaw(supervisor.javaClass)) { option, parentOption ->
-        if (option.supervisorOption != parentOption) defaultOption else option
-      }
-      .distinctUntilChanged()
+    return storage.observeFeatureName(feature).map { parentName ->
+      val expectedName = parentName ?: defaultOption.name
+      options.firstOrNull { it.name == expectedName } ?: defaultOption
+    }
   }
 
   /** Returns the current option of the input [Feature]. */
@@ -58,14 +49,7 @@ public class Laboratory internal constructor(builder: Builder) {
     val options = feature.options
     val defaultOption = getDefaultOption(feature)
     val expectedName = storage.getFeatureName(defaultOption.javaClass) ?: defaultOption.name
-    val activeOption = options.firstOrNull { it.name == expectedName } ?: defaultOption
-
-    val parent = feature.supervisorOption ?: return activeOption
-    return if (activeOption.supervisorOption != experimentRaw(parent.javaClass)) {
-      defaultOption
-    } else {
-      activeOption
-    }
+    return options.firstOrNull { it.name == expectedName } ?: defaultOption
   }
 
   /** Checks if a [Feature] is set to the input [option]. */

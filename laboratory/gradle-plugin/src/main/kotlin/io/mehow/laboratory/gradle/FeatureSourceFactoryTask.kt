@@ -27,10 +27,7 @@ internal abstract class FeatureSourceFactoryTask @Inject constructor(objects: Ob
     outputDirectory.get().asFile.deleteRecursively()
     factory.orNull
       ?.toModel(
-        features
-          .get()
-          .flatMap(FeatureFlagInput::toModelsWithChildren)
-          .mapNotNull(FeatureFlagModel::source),
+        features.get().map(FeatureFlagInput::toModel).mapNotNull(FeatureFlagModel::source),
         "GeneratedFeatureSourceFactory",
       )
       ?.prepare("featureSourceGenerated")

@@ -9,6 +9,6 @@ internal class DeprecationInput(private val message: String, private val level: 
   fun toModel() = Deprecation(message, level)
 
   internal companion object {
-    private const val serialVersionUID = 0L
+    private const val serialVersionUID = 1L
   }
 }

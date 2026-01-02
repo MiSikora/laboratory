@@ -25,7 +25,7 @@ internal abstract class OptionFactoryTask @Inject constructor(objects: ObjectFac
   fun generateSourcedFeatureStorage() {
     outputDirectory.get().asFile.deleteRecursively()
     factory.orNull
-      ?.toModel(features.get().flatMap(FeatureFlagInput::toModelsWithChildren))
+      ?.toModel(features.get().map(FeatureFlagInput::toModel))
       ?.prepare()
       ?.writeTo(outputDirectory.get().asFile)
   }

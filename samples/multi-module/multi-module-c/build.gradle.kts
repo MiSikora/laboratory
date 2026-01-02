@@ -8,42 +8,36 @@ laboratory {
 
   featureFactory { isPublic = true }
 
-  feature("Camera") {
-    withDefaultOption("Disabled")
+  feature("LivestreamPreview") {
+    withDefaultOption("Enabled")
+    withOption("Disabled")
+  }
 
-    withOption("Enabled") {
-      feature("LivestreamPreview") {
-        withDefaultOption("Enabled")
-        withOption("Disabled")
-      }
+  feature("RecordingQuality") {
+    withDefaultOption("SD")
+    withOption("HD")
+    withOption("QHD")
+  }
 
-      feature("RecordingQuality") {
-        withDefaultOption("SD")
-        withOption("HD")
-        withOption("QHD")
-      }
+  feature("RecordingDirectory") {
+    withDefaultOption("Internal")
+    withOption("External")
+  }
 
-      feature("RecordingDirectory") {
-        withDefaultOption("Internal")
-        withOption("External")
-      }
+  feature("VideoFilter") {
+    withDefaultOption("NoFilter")
+    withOption("Retro")
+    withOption("Sepia")
+    withOption("EightBit")
+  }
 
-      feature("VideoFilter") {
-        withDefaultOption("NoFilter")
-        withOption("Retro")
-        withOption("Sepia")
-        withOption("EightBit")
-      }
+  feature("MotionDetection") {
+    withDefaultOption("Enabled")
+    withOption("Disabled")
+  }
 
-      feature("MotionDetection") {
-        withDefaultOption("Enabled")
-        withOption("Disabled")
-      }
-
-      feature("NightMode") {
-        withDefaultOption("Enabled")
-        withOption("Disabled")
-      }
-    }
+  feature("NightMode") {
+    withDefaultOption("Enabled")
+    withOption("Disabled")
   }
 }

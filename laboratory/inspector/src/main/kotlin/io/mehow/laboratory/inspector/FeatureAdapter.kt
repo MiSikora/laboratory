@@ -31,9 +31,5 @@ internal class FeatureAdapter(private val listener: Listener) :
 
   interface Listener : OptionGroupListener, OnSelectSourceListener {
     override fun onSelectSource(option: Feature<*>) = onSelectOption(option)
-
-    override fun onSelectSupervisedFeature(feature: Class<out Feature<*>>) = onGoToFeature(feature)
-
-    fun onGoToFeature(feature: Class<out Feature<*>>)
   }
 }
