@@ -1,0 +1,2 @@
+com.squareup:kotlinpoet:1.16.0
+org.jetbrains.kotlin:kotlin-stdlib:1.9.24
