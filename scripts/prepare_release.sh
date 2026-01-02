@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
 if [[ $(git rev-parse --abbrev-ref HEAD) != trunk ]]; then
   echo "Release version can be prepared only from the trunk branch."
