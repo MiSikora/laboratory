@@ -303,42 +303,6 @@ class FeatureFlagModelSpec :
           .trimMargin()
     }
 
-    test("can have supervisor") {
-      val supervisor =
-        FeatureFlagModel(
-          ClassName("io.mehow.supervisor", "Supervisor"),
-          listOf(FeatureFlagOption("First", isDefault = true)),
-        )
-      val model =
-        FeatureFlagModel(
-          ClassName("io.mehow", "FeatureA"),
-          listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
-          supervisor = Supervisor(supervisor, supervisor.options.first()),
-        )
-
-      val fileSpec = model.prepare()
-
-      fileSpec shouldSpecify
-        """
-        |package io.mehow
-        |
-        |import io.mehow.laboratory.Feature
-        |import io.mehow.supervisor.Supervisor
-        |
-        |public enum class FeatureA : Feature<FeatureA> {
-        |  First,
-        |  Second,
-        |  ;
-        |
-        |  override val defaultOption: FeatureA
-        |    get() = First
-        |
-        |  override val supervisorOption: Feature<*> = Supervisor.First
-        |}
-        |"""
-          .trimMargin()
-    }
-
     test("description is added as KDoc") {
       val model =
         FeatureFlagModel(
@@ -536,24 +500,5 @@ class FeatureFlagModelSpec :
 
         exception shouldHaveMessage "io.mehow.FeatureA must have exactly one default option"
       }
-    }
-
-    test("fails to supervise itself") {
-      val model =
-        FeatureFlagModel(
-          ClassName("io.mehow", "FeatureA"),
-          listOf(FeatureFlagOption("First", isDefault = true)),
-        )
-
-      val exception =
-        shouldThrow<IllegalArgumentException> {
-          FeatureFlagModel(
-            model.className,
-            model.options,
-            supervisor = Supervisor(model, model.options.first()),
-          )
-        }
-
-      exception shouldHaveMessage "io.mehow.FeatureA cannot supervise itself"
     }
   })

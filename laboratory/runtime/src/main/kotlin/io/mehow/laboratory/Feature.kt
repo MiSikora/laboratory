@@ -51,15 +51,6 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
    */
   public val description: String
     get() = ""
-
-  /**
-   * Option of another feature flag that controls value of this child flag. When supervisor feature
-   * flag has an option different from this value then the child does not produce values other than
-   * the default one. Option can still be set via `Laboratory` but it will not be exposed as long as
-   * a feature flag is not supervised.
-   */
-  public val supervisorOption: Feature<*>?
-    get() = null
 }
 
 /**
@@ -85,14 +76,6 @@ public val Class<out Feature<*>>.source: Class<out Feature<*>>?
  */
 public val Class<out Feature<*>>.description: String
   get() = firstOption.description
-
-/**
- * Supervisor of a feature flag.
- *
- * @see Feature.supervisorOption
- */
-public val Class<out Feature<*>>.supervisorOption: Feature<*>?
-  get() = firstOption.supervisorOption
 
 /** All available options of a feature flag. */
 public val <T : Feature<out T>> Class<out T>.options: Array<out T>

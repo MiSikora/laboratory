@@ -10,7 +10,6 @@ import io.mehow.laboratory.sample.multimodule.databinding.MainBinding
 import io.mehow.laboratory.smaple.multimodule.a.Authentication
 import io.mehow.laboratory.smaple.multimodule.b.LogType
 import io.mehow.laboratory.smaple.multimodule.b.ShowAds
-import io.mehow.laboratory.smaple.multimodule.c.Camera
 import io.mehow.laboratory.smaple.multimodule.c.LivestreamPreview
 import io.mehow.laboratory.smaple.multimodule.c.MotionDetection
 import io.mehow.laboratory.smaple.multimodule.c.NightMode
@@ -35,7 +34,6 @@ class Activity : AndroidActivity() {
         authentication.observeFeature<Authentication>()
         logType.observeFeature<LogType>()
         showAds.observeFeature<ShowAds>()
-        camera.observeFeature<Camera>()
         livestreamPreview.observeFeature<LivestreamPreview>()
         recordingQuality.observeFeature<RecordingQuality>()
         recordingDirectory.observeFeature<RecordingDirectory>()

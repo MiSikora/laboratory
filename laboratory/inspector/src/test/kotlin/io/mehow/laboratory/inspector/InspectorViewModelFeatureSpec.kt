@@ -12,7 +12,6 @@ import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.TextToken.Link
 import io.mehow.laboratory.inspector.TextToken.Regular
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 
@@ -149,64 +148,6 @@ class InspectorViewModelFeatureSpec :
           listOf(Regular("Description without a link")),
         )
     }
-
-    test("emits feature flags supervision") {
-      val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
-
-      viewModel.observeSelectedFeaturesAndEnabledState().test {
-        awaitItem() shouldContainExactly listOf(Child.A to false, Parent.Disabled to true)
-
-        viewModel.selectFeature(Parent.Enabled)
-        awaitItemEventually {
-          it shouldContainExactly listOf(Child.A to true, Parent.Enabled to true)
-        }
-
-        viewModel.selectFeature(Child.B)
-        awaitItem() shouldContainExactly listOf(Child.B to true, Parent.Enabled to true)
-
-        viewModel.selectFeature(Parent.Disabled)
-        awaitItemEventually {
-          it shouldContainExactly listOf(Child.A to false, Parent.Disabled to true)
-        }
-
-        cancel()
-      }
-    }
-
-    test("includes supervised features to options") {
-      val viewModel = InspectorViewModel(Laboratory.inMemory(), SupervisedFeatureFactory)
-
-      viewModel.supervisedFeaturesFlow().first() shouldContainExactly
-        listOf(
-          Child.A to emptyList(),
-          Child.B to emptyList(),
-          Parent.Enabled to listOf(Child::class.java),
-          Parent.Disabled to emptyList(),
-        )
-    }
-
-    test("includes supervised features to options from different sections") {
-      val parentFactory =
-        object : FeatureFactory {
-          override fun create(): Set<Class<out Feature<*>>> = setOf(Parent::class.java)
-        }
-      val childFactory =
-        object : FeatureFactory {
-          override fun create(): Set<Class<out Feature<*>>> = setOf(Child::class.java)
-        }
-
-      val viewModel =
-        InspectorViewModel(
-          Laboratory.inMemory(),
-          searchQueries = emptyFlow(),
-          mapOf("Parent" to parentFactory, "Child" to childFactory),
-          DeprecationHandler({ fail("Unexpected call") }, { fail("Unexpected call") }),
-          Dispatchers.Unconfined,
-        )
-
-      viewModel.supervisedFeaturesFlow("Parent").first() shouldContainExactly
-        listOf(Parent.Enabled to listOf(Child::class.java), Parent.Disabled to emptyList())
-    }
   })
 
 private object NoSourceFeatureFactory : FeatureFactory {
@@ -220,10 +161,6 @@ private object SourcedFeatureFactory : FeatureFactory {
 
 private object AllFeatureFactory : FeatureFactory {
   override fun create() = NoSourceFeatureFactory.create() + SourcedFeatureFactory.create()
-}
-
-private object SupervisedFeatureFactory : FeatureFactory {
-  override fun create(): Set<Class<out Feature<*>>> = setOf(Parent::class.java, Child::class.java)
 }
 
 private enum class First : Feature<First> {
@@ -267,25 +204,6 @@ private enum class Sourced : Feature<Sourced> {
     override val defaultOption
       get() = Local
   }
-}
-
-private enum class Parent : Feature<Parent> {
-  Enabled,
-  Disabled;
-
-  override val defaultOption
-    get() = Disabled
-}
-
-private enum class Child : Feature<Child> {
-  A,
-  B;
-
-  override val defaultOption
-    get() = A
-
-  override val supervisorOption
-    get() = Parent.Enabled
 }
 
 private fun InspectorViewModel(laboratory: Laboratory, factory: FeatureFactory) =

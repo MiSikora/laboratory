@@ -28,6 +28,6 @@ public class OptionFactoryInput internal constructor(packageNameProvider: Packag
     )
 
   internal companion object {
-    private const val serialVersionUID = 0L
+    private const val serialVersionUID = 1L
   }
 }

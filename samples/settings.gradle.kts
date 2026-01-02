@@ -100,7 +100,6 @@ includeBuild("..") {
 include(
   ":basic",
   ":default-option",
-  ":supervision",
   ":multi-module",
   ":multi-module:multi-module-a",
   ":multi-module:multi-module-b",

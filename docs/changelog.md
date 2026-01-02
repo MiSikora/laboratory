@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to min Android SDK to `23`.
 - Upgrade to target Android SDK `36`.
 
+### Removed
+- Feature flags can no longer be supervised.
+
 ## [1.1.2] - 2025-08-04
 
 ### Fixed

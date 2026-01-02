@@ -15,8 +15,8 @@ public final class io/mehow/laboratory/generator/FeatureFactoryModel {
 }
 
 public final class io/mehow/laboratory/generator/FeatureFlagModel {
-	public fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/util/List;Lio/mehow/laboratory/generator/Supervisor;)V
-	public synthetic fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/util/List;Lio/mehow/laboratory/generator/Supervisor;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/util/List;)V
+	public synthetic fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;Ljava/lang/String;Ljava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getClassName ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getDeprecation ()Lio/mehow/laboratory/generator/Deprecation;
@@ -24,7 +24,6 @@ public final class io/mehow/laboratory/generator/FeatureFlagModel {
 	public final fun getKey ()Ljava/lang/String;
 	public final fun getOptions ()Ljava/util/List;
 	public final fun getSource ()Lio/mehow/laboratory/generator/FeatureFlagModel;
-	public final fun getSupervisor ()Lio/mehow/laboratory/generator/Supervisor;
 	public final fun getVisibility ()Lio/mehow/laboratory/generator/Visibility;
 	public fun hashCode ()I
 	public final fun prepare ()Lcom/squareup/kotlinpoet/FileSpec;
@@ -61,12 +60,6 @@ public final class io/mehow/laboratory/generator/SourcedFeatureStorageModel {
 	public final fun getSourceNames ()Ljava/util/List;
 	public final fun getVisibility ()Lio/mehow/laboratory/generator/Visibility;
 	public final fun prepare ()Lcom/squareup/kotlinpoet/FileSpec;
-}
-
-public final class io/mehow/laboratory/generator/Supervisor {
-	public fun <init> (Lio/mehow/laboratory/generator/FeatureFlagModel;Lio/mehow/laboratory/generator/FeatureFlagOption;)V
-	public final fun getFeatureFlag ()Lio/mehow/laboratory/generator/FeatureFlagModel;
-	public final fun getOption ()Lio/mehow/laboratory/generator/FeatureFlagOption;
 }
 
 public final class io/mehow/laboratory/generator/Visibility : java/lang/Enum {

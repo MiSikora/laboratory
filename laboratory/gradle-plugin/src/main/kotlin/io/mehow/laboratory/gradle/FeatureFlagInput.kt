@@ -4,7 +4,6 @@ import com.squareup.kotlinpoet.ClassName
 import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.Visibility
 import java.io.Serializable
-import org.gradle.api.Action
 
 /**
  * Representation of a feature flag with multiple options. Can be either [MultiOption] or
@@ -13,7 +12,6 @@ import org.gradle.api.Action
 public sealed class FeatureFlagInput(
   private val name: String,
   packageNameProvider: PackageNameProvider,
-  private val supervisor: SupervisorInput?,
 ) : Serializable {
   /** Sets whether the generated feature flag should be public or internal. */
   public abstract var isPublic: Boolean
@@ -33,17 +31,8 @@ public sealed class FeatureFlagInput(
 
   private val options = mutableMapOf<String, FeatureFlagOptionInput>()
 
-  private val childFeatureInputs = mutableMapOf<String, ChildFeatureFlagsInput>()
-
-  internal fun withOption(
-    name: String,
-    isDefault: Boolean,
-    action: Action<ChildFeatureFlagsInput>,
-  ) {
+  internal fun withOption(name: String, isDefault: Boolean) {
     val option = FeatureFlagOptionInput(name, isDefault)
-    val supervisor = SupervisorInput(this, option)
-    childFeatureInputs +=
-      name to ChildFeatureFlagsInput(packageNameProvider, supervisor).apply(action::execute)
     options += name to option
   }
 
@@ -84,24 +73,15 @@ public sealed class FeatureFlagInput(
       key = key,
       description = description.orEmpty(),
       deprecation = deprecation?.toModel(),
-      supervisor = supervisor?.toModel(),
     )
-
-  internal fun toModelsWithChildren() = buildList {
-    add(toModel())
-    addAll(childFeatureInputs.values.flatMap(ChildFeatureFlagsInput::toModels))
-  }
 
   /**
    * Representation of a feature flag with multiple options. It must have at least one option and
    * exactly one default option.
    */
   public class MultiOption
-  internal constructor(
-    name: String,
-    packageNameProvider: PackageNameProvider,
-    supervisor: SupervisorInput?,
-  ) : FeatureFlagInput(name, packageNameProvider, supervisor) {
+  internal constructor(name: String, packageNameProvider: PackageNameProvider) :
+    FeatureFlagInput(name, packageNameProvider) {
     override var isPublic: Boolean = true
 
     override var description: String? = null
@@ -109,38 +89,23 @@ public sealed class FeatureFlagInput(
     override var key: String? = null
 
     /** Adds a feature option. */
-    public fun withOption(name: String): Unit = withOption(name, action = {})
-
-    /** Adds a feature option and configures features flags supervised by it. */
-    public fun withOption(name: String, action: Action<ChildFeatureFlagsInput>): Unit =
-      withOption(name, isDefault = false, action = action)
+    public fun withOption(name: String): Unit = withOption(name, isDefault = false)
 
     /**
      * Adds a feature value that will be used as a default value. Exactly one value must be set with
      * this method.
      */
-    public fun withDefaultOption(name: String): Unit = withDefaultOption(name, action = {})
-
-    /**
-     * Adds a feature value that will be used as a default value and configures features flags
-     * supervised by it. Exactly one value must be set with this method.
-     */
-    public fun withDefaultOption(name: String, action: Action<ChildFeatureFlagsInput>): Unit =
-      withOption(name, isDefault = true, action = action)
+    public fun withDefaultOption(name: String): Unit = withOption(name, isDefault = true)
 
     internal companion object {
-      private const val serialVersionUID = 0L
+      private const val serialVersionUID = 1L
     }
   }
 
   /** Representation of a feature flag with only two options - "Enabled" and "Disabled". */
   public class BinaryOption
-  internal constructor(
-    name: String,
-    private val isEnabled: Boolean,
-    packageNameProvider: PackageNameProvider,
-    supervisor: SupervisorInput?,
-  ) : FeatureFlagInput(name, packageNameProvider, supervisor) {
+  internal constructor(name: String, isEnabled: Boolean, packageNameProvider: PackageNameProvider) :
+    FeatureFlagInput(name, packageNameProvider) {
     override var isPublic: Boolean = true
 
     override var description: String? = null
@@ -148,26 +113,16 @@ public sealed class FeatureFlagInput(
     override var key: String? = null
 
     init {
-      withOption("Enabled", isDefault = isEnabled, action = {})
-      withOption("Disabled", isDefault = !isEnabled, action = {})
-    }
-
-    /** Configures "Enabled" option. */
-    public fun withEnabled(action: Action<ChildFeatureFlagsInput>) {
-      withOption("Enabled", isDefault = isEnabled, action)
-    }
-
-    /** Configures "Disabled" option. */
-    public fun withDisabled(action: Action<ChildFeatureFlagsInput>) {
-      withOption("Disabled", isDefault = !isEnabled, action)
+      withOption("Enabled", isDefault = isEnabled)
+      withOption("Disabled", isDefault = !isEnabled)
     }
 
     internal companion object {
-      private const val serialVersionUID = 0L
+      private const val serialVersionUID = 1L
     }
   }
 
   internal companion object {
-    private const val serialVersionUID = 0L
+    private const val serialVersionUID = 1L
   }
 }

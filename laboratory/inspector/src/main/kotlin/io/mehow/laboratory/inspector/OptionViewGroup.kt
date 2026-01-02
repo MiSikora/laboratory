@@ -4,8 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.CompoundButton
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.PopupMenu
 import com.google.android.material.R as MaterialR
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -38,11 +36,6 @@ constructor(context: Context, attrs: AttributeSet, defStyle: Int = MaterialR.att
     return chip.apply {
       text = model.option.name
       isChecked = model.isSelected
-      if (model.supervisedFeatures.isNotEmpty()) {
-        chipIcon =
-          AppCompatResources.getDrawable(context, R.drawable.io_mehow_laboratory_supervisor)
-        setOnLongClickListener { showSupervisedFeaturesMenu(this, model.supervisedFeatures) }
-      }
       isActivated = isEnabled
       this.isEnabled = isEnabled
       setOnCheckedChangeListener(createListener(model))
@@ -64,22 +57,6 @@ constructor(context: Context, attrs: AttributeSet, defStyle: Int = MaterialR.att
 
   private fun removeOnCheckedChangeListener(chip: Chip) = chip.setOnCheckedChangeListener(null)
 
-  private fun showSupervisedFeaturesMenu(
-    anchor: Chip,
-    features: List<Class<out Feature<*>>>,
-  ): Boolean {
-    PopupMenu(context, anchor)
-      .apply {
-        features.forEachIndexed { index, feature -> menu.add(0, index, index, feature.simpleName) }
-        setOnMenuItemClickListener {
-          listener?.onSelectSupervisedFeature(features[it.order])
-          true
-        }
-      }
-      .show()
-    return true
-  }
-
   private val chips: Sequence<Chip>
     get() = sequence {
       for (index in 0 until childCount) {
@@ -90,7 +67,5 @@ constructor(context: Context, attrs: AttributeSet, defStyle: Int = MaterialR.att
 
   interface OptionGroupListener {
     fun onSelectOption(option: Feature<*>)
-
-    fun onSelectSupervisedFeature(feature: Class<out Feature<*>>)
   }
 }

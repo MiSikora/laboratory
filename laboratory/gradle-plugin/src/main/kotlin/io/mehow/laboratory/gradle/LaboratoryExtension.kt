@@ -36,13 +36,12 @@ public abstract class LaboratoryExtension {
   /** Generates a new [multi-option][FeatureFlagInput.MultiOption] feature flag. */
   public fun feature(name: String, action: Action<FeatureFlagInput.MultiOption>) {
     mutableFeatureInputs +=
-      FeatureFlagInput.MultiOption(name, packageNameProvider, supervisor = null)
-        .apply(action::execute)
+      FeatureFlagInput.MultiOption(name, packageNameProvider).apply(action::execute)
   }
 
   /**
-   * Generates a new supervised [binary][FeatureFlagInput.BinaryOption] feature flag that is enabled
-   * by default.
+   * Generates a new [binary][FeatureFlagInput.BinaryOption] feature flag that is enabled by
+   * default.
    */
   @JvmOverloads
   public fun enabledFeature(
@@ -53,8 +52,8 @@ public abstract class LaboratoryExtension {
   }
 
   /**
-   * Generates a new supervised [binary][FeatureFlagInput.BinaryOption] feature flag that is
-   * disabled by default.
+   * Generates a new [binary][FeatureFlagInput.BinaryOption] feature flag that is disabled by
+   * default.
    */
   @JvmOverloads
   public fun disabledFeature(
@@ -70,8 +69,7 @@ public abstract class LaboratoryExtension {
     action: Action<FeatureFlagInput.BinaryOption>,
   ) {
     mutableFeatureInputs +=
-      FeatureFlagInput.BinaryOption(name, isEnabled, packageNameProvider, supervisor = null)
-        .apply(action::execute)
+      FeatureFlagInput.BinaryOption(name, isEnabled, packageNameProvider).apply(action::execute)
   }
 
   internal var factoryInput: FeatureFactoryInput? = null

@@ -98,69 +98,6 @@ internal enum class LocationTracking : LocationTracking<Authentication> {
 }
 ```
 
-### Supervision
-
-Gradle plugin supports generation of [supervised feature flags](user-guide.md#feature-flag-supervision).
-
-!!! tip
-    Check [the sample](https://github.com/MiSikora/laboratory/tree/trunk/samples/supervision) with demo configuration.
-
-```groovy
-laboratory {
-  feature("ChristmasTheme") {
-    withDefaultOption("Disabled")
-
-    withOption("Enabled") { enabledChristmas ->
-      enabledChristmas.feature("Greeting") { greeting ->
-        greeting.withDefaultOption("Hello")
-        greeting.withOption("HoHoHo")
-      }
-
-      enabledChristmas.feature("Background") { background ->
-        background.withDefaultOption("White")
-        background.withOption("Reindeer")
-        background.withOption("Snowman")
-      }
-    }
-  }
-}
-```
-
-This configuration generates the code below.
-
-```kotlin
-enum class ChristmasTheme : Feature<ChristmasTheme> {
-  Enabled,
-  Disabled,
-  ;
-
-  public override val defaultOption get() = Disabled
-}
-
-enum class Greeting : Feature<Greeting> {
-  Hello,
-  HoHoHo,
-  ;
-
-  public override val defaultOption get() = Hello
-
-  public override val supervisorOption get() = ChristmasTheme.Enabled
-}
-
-enum class Background : Feature<Background> {
-  White,
-  Reindeer,
-  Snowman,
-  ;
-
-  public override val defaultOption get() = White
-
-  public override val supervisorOption get() = ChristmasTheme.Enabled
-}
-```
-
-DSL for supervised feature flags is recursive allowing to nest them in `withOption()` and `withDefaultOption()` functions.
-
 ## Feature flags storage
 
 If your feature flags use multiple sources, you can configure the Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage` builder.
@@ -578,46 +515,18 @@ laboratory {
     // At most, one of the source options can be set with this function.
     // By default, 'Local' sources are considered to be default options.
     withDefaultSource("Aws")
-
-    // Same as `withDefaultOption(option)` without lambda except that it generates supervised feature flags
-    // defined in the lambda.
-    withDefaultOption("Option") { option ->
-      option.feature("SupervisedFeature") {
-        // recursive feature generation
-      }
-    }
-
-    // Same as `withOption(option)` without lambda except that it generates supervised feature flags
-    // defined in the lambda.
-    withOption("Option") { option ->
-      option.feature("SupervisedFeature") {
-        // recursive feature generation
-      }
-    }
   }
 
   // Informs plugin to create 'enum class SomeFeature' during the generation period with two options.
   // 'Enabled' and 'Disabled' and uses 'Enabled' as the default one.
   enabledFeature("SomeFeature") {
     // Uses the same options as feature() block except for `withOption()` and `withDefaultOption()`.
-    
-    withEnabled { option ->
-      option.feature("SupervisedFeature") {
-        // recursive feature generation
-      }
-    }
   }
 
   // Informs plugin to create 'enum class SomeFeature' during the generation period with two options.
   // 'Enabled' and 'Disabled' and uses 'Disabled' as the default one.
   disabled("SomeFeature") {
     // Uses the same options as feature() block except for `withOption()` and `withDefaultOption()`.
-
-    withEnabled { option ->
-      option.feature("SupervisedFeature") {
-        // recursive feature generation
-      }
-    }
   }
 
   // Configures feature flags storage. Useful when feature flags have multiple sources.

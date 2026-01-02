@@ -10,7 +10,6 @@ import io.mehow.laboratory.description
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration
 import io.mehow.laboratory.options
 import io.mehow.laboratory.source
-import io.mehow.laboratory.supervisorOption
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -117,12 +116,7 @@ internal class InspectorViewModel(
     fun observeGroup(laboratory: Laboratory): Flow<FeatureUiModel> {
       val featureEmissions = observeOptions(laboratory)
       val sourceEmissions = sourceMetadata?.observeOptions(laboratory) ?: flowOf(emptyList())
-      val supervisorEmissions =
-        feature.supervisorOption?.let { laboratory.observe(it::class.java) } ?: flowOf(null)
-      return combine(featureEmissions, sourceEmissions, supervisorEmissions) {
-        features,
-        sources,
-        supervisor ->
+      return combine(featureEmissions, sourceEmissions) { features, sources ->
         FeatureUiModel(
           type = feature,
           name = simpleReadableName,
@@ -131,17 +125,13 @@ internal class InspectorViewModel(
           sources = sources,
           deprecationAlignment = deprecationPlacement,
           deprecationPhenotype = deprecationPhenotype,
-          supervisorOption = supervisor,
         )
       }
     }
 
     private fun observeOptions(laboratory: Laboratory) =
       laboratory.observe(feature).map { selectedFeature ->
-        options.map { option ->
-          val supervisedFeatures = allFeatures.filter { it.supervisorOption == option }
-          OptionUiModel(option, isSelected = selectedFeature == option, supervisedFeatures.toList())
-        }
+        options.map { option -> OptionUiModel(option, isSelected = selectedFeature == option) }
       }
 
     class Factory(

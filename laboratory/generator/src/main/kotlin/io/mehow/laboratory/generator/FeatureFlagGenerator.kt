@@ -52,13 +52,6 @@ internal class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
         .build()
     }
 
-  private val supervisorOptionProperty =
-    feature.supervisor?.let { supervisor ->
-      PropertySpec.builder(supervisorOptionPropertyName, featureType, OVERRIDE)
-        .initializer("%T.%L", supervisor.featureFlag.className, supervisor.option.name)
-        .build()
-    }
-
   private val typeSpec: TypeSpec =
     TypeSpec.enumBuilder(feature.className)
       .apply { deprecated?.let { addAnnotation(it) } }
@@ -84,7 +77,6 @@ internal class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
       }
       .apply { kdocCodeBlock?.let { addKdoc(it) } }
       .apply { descriptionProperty?.let { addProperty(it) } }
-      .apply { supervisorOptionProperty?.let { addProperty(it) } }
       .build()
 
   private val fileSpec =
@@ -98,7 +90,6 @@ internal class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
     const val defaultOptionPropertyName = "defaultOption"
     const val sourcePropertyName = "source"
     const val descriptionPropertyName = "description"
-    const val supervisorOptionPropertyName = "supervisorOption"
 
     val featureType = Feature::class(STAR)
     val featureClassType = Class::class(WildcardTypeName.producerOf(featureType))

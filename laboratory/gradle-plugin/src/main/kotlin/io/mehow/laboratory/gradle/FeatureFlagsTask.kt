@@ -20,7 +20,7 @@ internal abstract class FeatureFlagsTask @Inject constructor(objects: ObjectFact
   fun generateFeatureFlags() {
     outputDirectory.get().asFile.deleteRecursively()
     val outputPath = outputDirectory.get().asFile
-    inputFlags.get().flatMap(FeatureFlagInput::toModelsWithChildren).forEach { model ->
+    inputFlags.get().map(FeatureFlagInput::toModel).forEach { model ->
       model.prepare().writeTo(outputPath)
     }
   }

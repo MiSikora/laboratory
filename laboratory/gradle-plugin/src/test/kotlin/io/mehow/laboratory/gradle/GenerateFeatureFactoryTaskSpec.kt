@@ -205,30 +205,4 @@ class GenerateFeatureFactoryTaskSpec :
         """
           .trimMargin()
     }
-
-    test("generates factory with supervised feature flags") {
-      val fixture = "factory-generate-supervised-feature-flags".toFixture()
-
-      val result = gradleRunner.withProjectDir(fixture).build()
-
-      result.task(":generateFeatureFactory")!!.outcome shouldBe SUCCESS
-
-      val factory = fixture.featureFactoryFile("GeneratedFeatureFactory")
-      factory.shouldExist()
-
-      factory.readText() shouldContain
-        """
-        |fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
-        |
-        |private object GeneratedFeatureFactory : FeatureFactory {
-        |  @Suppress("UNCHECKED_CAST")
-        |  override fun create(): Set<Class<out Feature<*>>> = setOf(
-        |    Class.forName("Child"),
-        |    Class.forName("Grandparent"),
-        |    Class.forName("Parent")
-        |  ) as Set<Class<out Feature<*>>>
-        |}
-        """
-          .trimMargin()
-    }
   })

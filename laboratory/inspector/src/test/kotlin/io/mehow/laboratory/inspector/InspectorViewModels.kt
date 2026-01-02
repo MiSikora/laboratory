@@ -47,10 +47,3 @@ internal fun InspectorViewModel(
   )
 
 internal fun InspectorViewModel.sectionFlow() = sectionFlow(InspectorViewModel.defaultSection)
-
-internal fun InspectorViewModel.supervisedFeaturesFlow(
-  sectionName: String = InspectorViewModel.defaultSection
-) =
-  sectionFlow(sectionName).map { uiModels ->
-    uiModels.flatMap { it.models }.map { it.option to it.supervisedFeatures }
-  }
