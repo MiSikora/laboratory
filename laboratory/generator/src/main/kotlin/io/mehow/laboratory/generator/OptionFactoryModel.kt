@@ -32,11 +32,15 @@ public class OptionFactoryModel(
           groupedFeatures
             .filterValues { it.size > 1 }
             .mapValues { (_, features) -> features.map(FeatureFlagModel::toString) }
-        """
-        |Feature flags must have unique keys. Found following duplicates:
-        | - ${duplicates.toList().joinToString(separator = "\n - ") { (key, fqcns) -> "$key: $fqcns" }}
-        """
-          .trimMargin()
+        buildString {
+          append("Feature flags must have unique keys. Found following duplicates:")
+          for ((key, fqcns) in duplicates) {
+            append("\n - ")
+            append(key)
+            append(": ")
+            append(fqcns)
+          }
+        }
       }
     }
   }
@@ -44,24 +48,18 @@ public class OptionFactoryModel(
 
 private class OptionFactoryGenerator(private val model: OptionFactoryModel) {
   private val nameMatcher =
-    model.features
-      .associateBy { it.className }
-      .mapValues { (className, feature) ->
-        val whenExpression =
-          feature.options
-            .map { CodeBlock.of("%S·->·%T.%L", it.name, className, it.name) }
-            .joinToCode(
-              prefix = "when·(name)·{\n⇥",
-              separator = "\n",
-              suffix = "\nelse·->·null⇤\n}",
-            )
-        val deprecation = feature.deprecation?.suppressSpec
-        if (deprecation != null) {
-          CodeBlock.of("%L·%L", deprecation, whenExpression)
-        } else {
-          whenExpression
-        }
+    model.features.associateBy(FeatureFlagModel::className).mapValues { (className, feature) ->
+      val whenExpression =
+        feature.options
+          .map { CodeBlock.of("%S·->·%T.%L", it.name, className, it.name) }
+          .joinToCode(prefix = "when·(name)·{\n⇥", separator = "\n", suffix = "\nelse·->·null⇤\n}")
+      val deprecation = feature.deprecation?.suppressSpec
+      if (deprecation != null) {
+        CodeBlock.of("%L·%L", deprecation, whenExpression)
+      } else {
+        whenExpression
       }
+    }
 
   private val keyMatcher =
     model.features
@@ -82,8 +80,11 @@ private class OptionFactoryGenerator(private val model: OptionFactoryModel) {
       .addParameter("name", String::class)
       .returns(Feature::class(STAR).copy(nullable = true))
       .apply {
-        if (model.features.isEmpty()) addStatement("return null")
-        else addStatement("return %L", keyMatcher)
+        if (model.features.isEmpty()) {
+          addStatement("return null")
+        } else {
+          addStatement("return %L", keyMatcher)
+        }
       }
       .build()
 

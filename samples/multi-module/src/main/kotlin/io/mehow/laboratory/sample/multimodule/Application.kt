@@ -4,12 +4,12 @@ import android.app.Application as AndroidApplication
 import android.content.Context
 import androidx.datastore.core.DataStoreFactory
 import io.mehow.laboratory.FeatureFactory
-import io.mehow.laboratory.FeatureStorage
 import io.mehow.laboratory.Laboratory
-import io.mehow.laboratory.datastore.FeatureFlagsSerializer
+import io.mehow.laboratory.Storage
+import io.mehow.laboratory.datastore.StorageDataSerializer
 import io.mehow.laboratory.datastore.dataStore
 import io.mehow.laboratory.inspector.LaboratoryActivity
-import io.mehow.laboratory.smaple.multimodule.c.featureGenerated as cameraFeatureGenerated
+import io.mehow.laboratory.smaple.multimodule.c.generated as cameraFeatureGenerated
 import java.io.File
 
 class Application : AndroidApplication() {
@@ -18,12 +18,12 @@ class Application : AndroidApplication() {
   override fun onCreate() {
     super.onCreate()
     val dataStore =
-      DataStoreFactory.create(FeatureFlagsSerializer) { File(filesDir, "datastore/local") }
-    val storage = FeatureStorage.dataStore(dataStore)
+      DataStoreFactory.create(StorageDataSerializer) { File(filesDir, "datastore/local") }
+    val storage = Storage.dataStore(dataStore)
     laboratory = Laboratory.create(storage)
     LaboratoryActivity.configure(
       laboratory,
-      mainFactory = FeatureFactory.featureGenerated(),
+      mainFactory = FeatureFactory.generated(),
       externalFactories = mapOf("Camera" to FeatureFactory.cameraFeatureGenerated()),
     )
   }

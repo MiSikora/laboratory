@@ -2,17 +2,14 @@ package io.mehow.laboratory.gradle
 
 import kotlin.DeprecationLevel as KotlinDeprecationLevel
 
-/**
- * Possible levels of a deprecation. The level specifies how the deprecated element usages are
- * reported in code.
- */
+/** Defines how strictly deprecated feature flags are treated by the compiler. */
 public enum class DeprecationLevel(internal val kotlinLevel: KotlinDeprecationLevel) {
-  /** Usage of the deprecated element will be reported as a warning. */
+  /** Using the feature produces a compile-time warning. */
   Warning(KotlinDeprecationLevel.WARNING),
 
-  /** Usage of the deprecated element will be reported as an error. */
+  /** Using the feature produces a compile-time error. */
   Error(KotlinDeprecationLevel.ERROR),
 
-  /** Deprecated element will not be accessible from code. */
+  /** The feature is hidden and cannot be referenced from the source code. */
   Hidden(KotlinDeprecationLevel.HIDDEN),
 }

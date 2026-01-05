@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="io_mehow_laboratory">Laboratory</string>
-  <string name="io_mehow_laboratory_reset_features">Reset features</string>
   <string name="io_mehow_laboratory_reset_title">Reset feature flags</string>
   <string name="io_mehow_laboratory_reset_message">Are you sure you want to reset feature flags to their default values?</string>
   <string name="io_mehow_laboratory_cancel">Cancel</string>
   <string name="io_mehow_laboratory_reset">Reset</string>
-  <string name="io_mehow_laboratory_reset_success">Feature flags reset successfully</string>
-  <string name="io_mehow_laboratory_reset_failure">Failed to reset feature flags</string>
   <string name="io_mehow_laboratory_search_features_hint">Search features…</string>
   <string name="io_mehow_laboratory_open_search">Open search</string>
   <string name="io_mehow_laboratory_close_search">Close search</string>
   <string name="io_mehow_laboratory_clear_query">Clear query</string>
-  <string name="io_mehow_laboratory_feature_not_found">Feature %1$s is hidden or unavailable</string>
+  <string name="io_mehow_laboratory_use_remote_source">Use remote source</string>
 </resources>

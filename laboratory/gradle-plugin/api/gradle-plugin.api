@@ -1,8 +1,6 @@
 public final class io/mehow/laboratory/gradle/DependencyContribution : java/lang/Enum {
 	public static final field FeatureFactory Lio/mehow/laboratory/gradle/DependencyContribution;
-	public static final field FeatureSourceFactory Lio/mehow/laboratory/gradle/DependencyContribution;
 	public static final field OptionFactory Lio/mehow/laboratory/gradle/DependencyContribution;
-	public static final field SourcedStorage Lio/mehow/laboratory/gradle/DependencyContribution;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/gradle/DependencyContribution;
 	public static fun values ()[Lio/mehow/laboratory/gradle/DependencyContribution;
@@ -33,36 +31,42 @@ public abstract class io/mehow/laboratory/gradle/FeatureFlagInput : java/io/Seri
 	public abstract fun getKey ()Ljava/lang/String;
 	public final fun getPackageName ()Ljava/lang/String;
 	public abstract fun isPublic ()Z
+	public abstract fun isRemote ()Z
 	public abstract fun setDescription (Ljava/lang/String;)V
 	public abstract fun setKey (Ljava/lang/String;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public abstract fun setPublic (Z)V
-	public final fun withDefaultSource (Ljava/lang/String;)V
-	public final fun withSource (Ljava/lang/String;)V
+	public abstract fun setRemote (Z)V
 }
 
 public final class io/mehow/laboratory/gradle/FeatureFlagInput$BinaryOption : io/mehow/laboratory/gradle/FeatureFlagInput {
 	public fun getDescription ()Ljava/lang/String;
 	public fun getKey ()Ljava/lang/String;
 	public fun isPublic ()Z
+	public fun isRemote ()Z
 	public fun setDescription (Ljava/lang/String;)V
 	public fun setKey (Ljava/lang/String;)V
 	public fun setPublic (Z)V
+	public fun setRemote (Z)V
 }
 
 public final class io/mehow/laboratory/gradle/FeatureFlagInput$MultiOption : io/mehow/laboratory/gradle/FeatureFlagInput {
 	public fun getDescription ()Ljava/lang/String;
 	public fun getKey ()Ljava/lang/String;
 	public fun isPublic ()Z
+	public fun isRemote ()Z
 	public fun setDescription (Ljava/lang/String;)V
 	public fun setKey (Ljava/lang/String;)V
 	public fun setPublic (Z)V
+	public fun setRemote (Z)V
 	public final fun withDefaultOption (Ljava/lang/String;)V
 	public final fun withOption (Ljava/lang/String;)V
 }
 
+public abstract interface annotation class io/mehow/laboratory/gradle/LaboratoryDsl : java/lang/annotation/Annotation {
+}
+
 public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
-	public fun <init> ()V
 	public final fun dependency (Lorg/gradle/api/Project;)V
 	public final fun dependency (Lorg/gradle/api/Project;Ljava/util/Collection;)V
 	public final fun dependency (Lorg/gradle/api/artifacts/ProjectDependency;)V
@@ -78,14 +82,12 @@ public abstract class io/mehow/laboratory/gradle/LaboratoryExtension {
 	public final fun feature (Ljava/lang/String;Lorg/gradle/api/Action;)V
 	public final fun featureFactory ()V
 	public final fun featureFactory (Lorg/gradle/api/Action;)V
-	public final fun featureSourceFactory ()V
-	public final fun featureSourceFactory (Lorg/gradle/api/Action;)V
+	public static synthetic fun featureFactory$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Lorg/gradle/api/Action;ILjava/lang/Object;)V
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun optionFactory ()V
 	public final fun optionFactory (Lorg/gradle/api/Action;)V
+	public static synthetic fun optionFactory$default (Lio/mehow/laboratory/gradle/LaboratoryExtension;Lorg/gradle/api/Action;ILjava/lang/Object;)V
 	public final fun setPackageName (Ljava/lang/String;)V
-	public final fun sourcedStorage ()V
-	public final fun sourcedStorage (Lorg/gradle/api/Action;)V
 }
 
 public final class io/mehow/laboratory/gradle/LaboratoryPlugin : org/gradle/api/Plugin {
@@ -95,13 +97,6 @@ public final class io/mehow/laboratory/gradle/LaboratoryPlugin : org/gradle/api/
 }
 
 public final class io/mehow/laboratory/gradle/OptionFactoryInput : java/io/Serializable {
-	public final fun getPackageName ()Ljava/lang/String;
-	public final fun isPublic ()Z
-	public final fun setPackageName (Ljava/lang/String;)V
-	public final fun setPublic (Z)V
-}
-
-public final class io/mehow/laboratory/gradle/SourcedFeatureStorageInput : java/io/Serializable {
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun isPublic ()Z
 	public final fun setPackageName (Ljava/lang/String;)V

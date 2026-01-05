@@ -11,42 +11,65 @@ import io.mehow.laboratory.Feature
 
 internal class OptionViewGroup
 @JvmOverloads
-constructor(context: Context, attrs: AttributeSet, defStyle: Int = MaterialR.attr.chipGroupStyle) :
-  ChipGroup(context, attrs, defStyle) {
-  private val inflater = LayoutInflater.from(context)
-  private var listener: OptionGroupListener? = null
-
+constructor(
+  context: Context,
+  attrs: AttributeSet? = null,
+  defStyle: Int = MaterialR.attr.chipGroupStyle,
+) : ChipGroup(context, attrs, defStyle) {
   init {
     isSelectionRequired = true
   }
+
+  private val inflater = LayoutInflater.from(context)
+  private var listener: OptionGroupListener? = null
+  private var options = emptyList<Feature<*>>()
+  private var selectedOption: Feature<*>? = null
+  private var isSelectionEnabled = false
 
   fun setOnSelectFeatureListener(listener: OptionGroupListener?) {
     this.listener = listener
   }
 
-  fun render(models: List<OptionUiModel>, isEnabled: Boolean) {
+  fun setOptions(options: List<Feature<*>>) {
+    this.options = options
     chips.forEach(::removeOnCheckedChangeListener)
     removeAllViews()
-    models.map { createChip(it, isEnabled) }.forEach(::addView)
+    val selectedOption = selectedOption ?: options.firstOrNull()?.defaultOption
+    options.forEach { option -> addChip(option, option == selectedOption, isSelectionEnabled) }
   }
 
-  private fun createChip(model: OptionUiModel, isEnabled: Boolean): Chip {
-    val chip =
-      inflater.inflate(R.layout.io_mehow_laboratory_feature_option_chip, this, false) as Chip
-    return chip.apply {
-      text = model.option.name
-      isChecked = model.isSelected
-      isActivated = isEnabled
-      this.isEnabled = isEnabled
-      setOnCheckedChangeListener(createListener(model))
+  fun setSelectedOption(option: Feature<*>) {
+    selectedOption = option
+    chips.forEach { chip -> chip.isChecked = chip.tag == option }
+  }
+
+  fun setSelectionEnabled(enable: Boolean) {
+    this.isSelectionEnabled = enable
+    chips.forEach { chip ->
+      chip.isActivated = enable
+      chip.isEnabled = enable
     }
   }
 
-  private fun createListener(model: OptionUiModel) =
+  private fun addChip(option: Feature<*>, select: Boolean, enable: Boolean) {
+    val chip =
+      inflater.inflate(R.layout.io_mehow_laboratory_feature_option_chip, this, false) as Chip
+    chip.apply {
+      tag = option
+      text = option.name
+      isChecked = select
+      isActivated = enable
+      isEnabled = enable
+      setOnCheckedChangeListener(createListener(option))
+    }
+    addView(chip)
+  }
+
+  private fun createListener(option: Feature<*>) =
     CompoundButton.OnCheckedChangeListener { chip, isChecked ->
       if (isChecked) {
         (chip as Chip).deselectOtherChips()
-        listener?.onSelectOption(model.option)
+        listener?.onSelectOption(option)
       }
     }
 

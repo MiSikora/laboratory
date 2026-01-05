@@ -6,11 +6,11 @@ import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
 
 infix fun FileSpec.shouldSpecify(value: String) = assertSoftly {
-  val actualLines = toString().split("\n")
-  val expectedLines = value.split("\n")
+  val actualLines = toString().trimEnd().split("\n")
+  val expectedLines = value.trimEnd().trimIndent().split("\n")
   val maxSize = maxOf(actualLines.size, expectedLines.size)
   repeat(maxSize) { line ->
-    withClue("Line $line does not match") {
+    withClue("Line ${line + 1} does not match") {
       actualLines.getOrNull(line) shouldBe expectedLines.getOrNull(line)
     }
   }

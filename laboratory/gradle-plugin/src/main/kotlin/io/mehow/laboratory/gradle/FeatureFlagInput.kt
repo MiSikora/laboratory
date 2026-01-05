@@ -5,29 +5,30 @@ import io.mehow.laboratory.generator.FeatureFlagModel
 import io.mehow.laboratory.generator.Visibility
 import java.io.Serializable
 
-/**
- * Representation of a feature flag with multiple options. Can be either [MultiOption] or
- * [BinaryOption].
- */
+/** Base configuration type for a feature flag definition. */
+@LaboratoryDsl
 public sealed class FeatureFlagInput(
   private val name: String,
   packageNameProvider: PackageNameProvider,
 ) : Serializable {
-  /** Sets whether the generated feature flag should be public or internal. */
-  public abstract var isPublic: Boolean
-
-  /** Sets package name of the generated feature flag. Overwrites any previously set values. */
+  /** Overrides the package name for the generated feature flag. */
   public var packageName: String?
     get() = packageNameProvider.value
     set(value) = packageNameProvider.setValue(value)
 
   private val packageNameProvider = PackageNameProvider(packageNameProvider)
 
-  /** Sets description of the generated feature flag. */
+  /** External key used to identify the feature flag in remote systems or option factories. */
+  public abstract var key: String?
+
+  /** Marks the feature flag as remotely sourced by default. */
+  public abstract var isRemote: Boolean
+
+  /** Human-readable description of the feature flag. */
   public abstract var description: String?
 
-  /** Sets a custom key that will be used for generated option factory. */
-  public abstract var key: String?
+  /** Controls whether the generated feature flag is public or internal. */
+  public abstract var isPublic: Boolean
 
   private val options = mutableMapOf<String, FeatureFlagOptionInput>()
 
@@ -36,29 +37,9 @@ public sealed class FeatureFlagInput(
     options += name to option
   }
 
-  private val sources = mutableListOf<FeatureFlagOptionInput>()
-
-  /**
-   * Adds a feature flag source. Any sources that are named "Local", or any variation of this word,
-   * will be filtered out.
-   */
-  public fun withSource(name: String): Unit = withSource(name, isDefault = false)
-
-  /**
-   * Adds a feature flag source that will be used a default source. Any sources that are named
-   * "Local", or any variation of this word, will be filtered out. At most one value can be set with
-   * this method.
-   */
-  public fun withDefaultSource(name: String): Unit = withSource(name, isDefault = true)
-
-  private fun withSource(name: String, isDefault: Boolean) {
-    val option = FeatureFlagOptionInput(name, isDefault)
-    sources += option
-  }
-
   private var deprecation: DeprecationInput? = null
 
-  /** Annotates a feature flag as deprecated. */
+  /** Marks the feature flag as deprecated. */
   @JvmOverloads
   public fun deprecated(message: String, level: DeprecationLevel = DeprecationLevel.Warning) {
     deprecation = DeprecationInput(message, level.kotlinLevel)
@@ -66,51 +47,58 @@ public sealed class FeatureFlagInput(
 
   internal fun toModel(): FeatureFlagModel =
     FeatureFlagModel(
-      visibility = if (isPublic) Visibility.Public else Visibility.Internal,
       className = ClassName(packageName.orEmpty(), name),
       options = options.values.map(FeatureFlagOptionInput::toModel),
-      sourceOptions = sources.map(FeatureFlagOptionInput::toModel),
-      key = key,
+      visibility = if (isPublic) Visibility.Public else Visibility.Internal,
+      isRemote = isRemote,
       description = description.orEmpty(),
       deprecation = deprecation?.toModel(),
+      key = key,
     )
 
   /**
-   * Representation of a feature flag with multiple options. It must have at least one option and
-   * exactly one default option.
+   * Feature flag with multiple selectable options. Exactly one option must be marked as the
+   * default.
    */
+  @LaboratoryDsl
   public class MultiOption
   internal constructor(name: String, packageNameProvider: PackageNameProvider) :
     FeatureFlagInput(name, packageNameProvider) {
-    override var isPublic: Boolean = true
+    override var key: String? = null
+
+    override var isRemote: Boolean = false
 
     override var description: String? = null
 
-    override var key: String? = null
-
-    /** Adds a feature option. */
-    public fun withOption(name: String): Unit = withOption(name, isDefault = false)
+    override var isPublic: Boolean = true
 
     /**
-     * Adds a feature value that will be used as a default value. Exactly one value must be set with
-     * this method.
+     * Adds an option and marks it as the default value.
+     *
+     * This must be called exactly once.
      */
     public fun withDefaultOption(name: String): Unit = withOption(name, isDefault = true)
+
+    /** Adds a non-default option to the feature flag. */
+    public fun withOption(name: String): Unit = withOption(name, isDefault = false)
 
     internal companion object {
       private const val serialVersionUID = 1L
     }
   }
 
-  /** Representation of a feature flag with only two options - "Enabled" and "Disabled". */
+  /** Binary feature flag with `Enabled` and `Disabled` states. */
+  @LaboratoryDsl
   public class BinaryOption
   internal constructor(name: String, isEnabled: Boolean, packageNameProvider: PackageNameProvider) :
     FeatureFlagInput(name, packageNameProvider) {
-    override var isPublic: Boolean = true
+    override var key: String? = null
+
+    override var isRemote: Boolean = false
 
     override var description: String? = null
 
-    override var key: String? = null
+    override var isPublic: Boolean = true
 
     init {
       withOption("Enabled", isDefault = isEnabled)

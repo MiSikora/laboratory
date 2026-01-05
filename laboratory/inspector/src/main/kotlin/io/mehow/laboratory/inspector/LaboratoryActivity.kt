@@ -4,17 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.View.OVER_SCROLL_NEVER
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.willowtreeapps.hyperion.plugin.v1.HyperionIgnore
@@ -23,18 +20,18 @@ import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.LaboratoryActivity.Companion.configure
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Limited
 import io.mehow.laboratory.inspector.LaboratoryActivity.Configuration.OffscreenSectionsBehavior.Unlimited
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-/** Entry point for QA module that allows to interact with feature flags. */
+/**
+ * Activity that serves as the entry point to the QA inspector module, providing a UI to browse and
+ * modify feature flags at runtime.
+ */
 @HyperionIgnore // https://github.com/willowtreeapps/Hyperion-Android/issues/194
 public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory_inspector) {
   private val sectionNames = configuration.sectionNames.toList()
-  private val searchViewModel by viewModels<SearchViewModel> { SearchViewModel.Factory }
-  private val inspectorViewModel by
-    viewModels<InspectorViewModel> { InspectorViewModel.Factory(configuration, searchViewModel) }
+
+  internal val toolbarViewModel by
+    viewModels<ToolbarViewModel> { ToolbarViewModel.Factory(configuration) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -44,27 +41,11 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
   }
 
   private fun setUpToolbar() {
-    findViewById<View>(R.id.io_mehow_laboratory_toolbar).doOnApplyWindowInsets {
-      view,
-      insets,
-      padding ->
-      val bars =
-        insets.getInsets(
-          WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-        )
-      view.updatePadding(
-        left = padding.left + bars.left,
-        top = padding.top + bars.top,
-        right = padding.right + bars.right,
-      )
+    val toolbar = findViewById<View>(R.id.io_mehow_laboratory_toolbar)
+    val binding = ToolbarBinding(toolbar)
+    lifecycleScope.launch {
+      toolbarViewModel.uiModels.flowWithLifecycle(lifecycle).collect(binding::render)
     }
-    val binding =
-      ToolbarBinding(
-        view = window.decorView,
-        onSearchEventsListener = { event -> searchViewModel.sendEvent(event) },
-        onResetEventsListener = { resetFeatureFlags() },
-      )
-    searchViewModel.uiModels.onEach { uiModel -> binding.render(uiModel) }.launchIn(lifecycleScope)
   }
 
   private fun setUpViewPager() {
@@ -74,79 +55,55 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
         offscreenPageLimit = configuration.offscreenSectionCount
         disableScrollEffect()
         doOnApplyWindowInsets { view, insets, padding ->
-          val bars =
-            insets.getInsets(
-              WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            )
-          view.updatePadding(left = padding.left + bars.left, right = padding.right + bars.right)
+          val insets = insets.getTopInsets()
+          view.updatePadding(
+            left = padding.left + insets.left,
+            right = padding.right + insets.right,
+          )
         }
       }
-    observeNavigationEvents(viewPager)
 
-    if (sectionNames.size <= 1) return
-    val tabLayout =
-      findViewById<TabLayout>(R.id.io_mehow_laboratory_tab_layout).apply { isVisible = true }
-    TabLayoutMediator(tabLayout, viewPager) { tab, position -> tab.text = sectionNames[position] }
-      .attach()
+    if (sectionNames.size > 1) {
+      val tabLayout =
+        findViewById<TabLayout>(R.id.io_mehow_laboratory_tab_layout).apply { isVisible = true }
+      TabLayoutMediator(tabLayout, viewPager, ::setTabName).attach()
+    }
   }
 
-  private fun observeNavigationEvents(viewPager: ViewPager2) =
-    inspectorViewModel.featureCoordinatesFlow
-      .onEach { (sectionIndex, featureIndex) ->
-        viewPager.currentItem = sectionIndex
-        awaitSectionFragment(sectionNames[sectionIndex]).scrollTo(featureIndex)
-      }
-      .launchIn(lifecycleScope)
-
-  private suspend fun awaitSectionFragment(sectionName: String): SectionFragment =
-    supportFragmentManager.fragments.filterIsInstance<SectionFragment>().firstOrNull {
-      it.sectionName == sectionName
-    }
-      ?: run {
-        delay(100) // ¯\_(ツ)_/¯
-        awaitSectionFragment(sectionName)
-      }
-
-  private fun resetFeatureFlags() =
-    lifecycleScope.launch {
-      val isCleared = configuration.laboratory.clear()
-      val messageId =
-        if (isCleared) {
-          R.string.io_mehow_laboratory_reset_success
-        } else {
-          R.string.io_mehow_laboratory_reset_failure
-        }
-      val root = findViewById<CoordinatorLayout>(R.id.io_mehow_laboratory_root)
-      Snackbar.make(root, messageId, Snackbar.LENGTH_SHORT).show()
-    }
-
-  // TODO: Set this from XML. https://issuetracker.google.com/issues/134912610
-  private fun ViewPager2.disableScrollEffect() {
-    (getChildAt(0) as? RecyclerView)?.overScrollMode = OVER_SCROLL_NEVER
+  private fun setTabName(tab: TabLayout.Tab, position: Int) {
+    tab.text = sectionNames[position]
   }
 
-  /** Configuration data for QA module. */
+  /** Configuration settings for the QA module. */
   public class Configuration internal constructor(builder: Builder) {
     internal val laboratory = builder.laboratory
-    internal val featureFactories = builder.featureFactories
-    internal val sectionNames = featureFactories.keys
-    internal val deprecation =
-      DeprecationHandler(builder.phenotypeSelector, builder.alignmentSelector)
+
+    internal val metadataLoaders = run {
+      val deprecationHandler = DeprecationHandler(builder.styleSelector, builder.alignmentSelector)
+      builder.featureFactories.mapValues { (_, featureFactory) ->
+        FeatureMetadata.Loader(featureFactory, deprecationHandler)
+      }
+    }
+
+    internal val sectionNames = metadataLoaders.keys
+
     internal val offscreenSectionCount =
       when (val behavior = builder.offscreenSectionsBehavior) {
         is Limited -> behavior.limit
-        is Unlimited -> featureFactories.size
+        is Unlimited -> metadataLoaders.size
       }
 
-    /** Behavior of feature sections that are not currently displayed. */
+    /**
+     * Determines how the inspector handles feature sections (tabs) that are not currently visible.
+     */
     public sealed class OffscreenSectionsBehavior {
       /**
-       * All sections are always kept in memory. This makes navigation smoother but might result in
-       * slower load time of the inspector.
+       * Keeps all feature sections in memory, providing smoother navigation between sections at the
+       * cost of a potentially slower initial load time.
        */
       public object Unlimited : OffscreenSectionsBehavior()
 
-      /** Number of sections is limited. */
+      /** Limits the number of offscreen sections retained in memory to the specified [limit]. */
       public class Limited(public val limit: Int) : OffscreenSectionsBehavior()
     }
 
@@ -163,18 +120,18 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
         this.featureFactories = factories
       }
 
-      internal var phenotypeSelector =
-        DeprecationPhenotype.Selector { DeprecationPhenotype.Strikethrough }
+      internal var styleSelector = FeatureStyle.Selector { FeatureStyle.Strikethrough }
 
-      override fun deprecationPhenotypeSelector(
-        selector: DeprecationPhenotype.Selector
-      ): BuildingStep = apply { this.phenotypeSelector = selector }
+      override fun deprecationStyleSelector(selector: FeatureStyle.Selector): BuildingStep = apply {
+        this.styleSelector = selector
+      }
 
-      internal var alignmentSelector = DeprecationAlignment.Selector { DeprecationAlignment.Bottom }
+      internal var alignmentSelector = FeatureAlignment.Selector { FeatureAlignment.Bottom }
 
-      override fun deprecationAlignmentSelector(
-        selector: DeprecationAlignment.Selector
-      ): BuildingStep = apply { this.alignmentSelector = selector }
+      override fun deprecationAlignmentSelector(selector: FeatureAlignment.Selector): BuildingStep =
+        apply {
+          this.alignmentSelector = selector
+        }
 
       internal var offscreenSectionsBehavior: OffscreenSectionsBehavior = Unlimited
 
@@ -187,59 +144,81 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
     }
 
     public companion object {
-      /** Creates [Configuration] with provided [laboratory] and [featureFactories]. */
+      /** Creates a [Configuration] using the given [Laboratory] instance and feature factories. */
       public fun create(
         laboratory: Laboratory,
         featureFactories: Map<String, FeatureFactory>,
       ): Configuration = builder().laboratory(laboratory).featureFactories(featureFactories).build()
 
-      /** Creates a builder that allows to customize [Configuration]. */
+      /**
+       * Returns a new [Configuration] builder, allowing customization of optional settings before
+       * creating the configuration.
+       */
       public fun builder(): LaboratoryStep = Builder()
     }
 
-    /** A step of a fluent builder that requires [Laboratory] to proceed. */
+    /**
+     * First step in constructing a [Configuration]. This step requires providing a [Laboratory]
+     * instance.
+     */
     public interface LaboratoryStep {
       /**
-       * Sets laboratory. Its instance should share
-       * [FeatureStorage][io.mehow.laboratory.FeatureStorage] instance with your application.
+       * Specifies the [Laboratory] instance to use. The provided instance should share the same
+       * option storage as the application.
        */
       public fun laboratory(laboratory: Laboratory): FeatureFactoriesStep
     }
 
-    /** A step of a fluent builder that requires [feature factories][FeatureFactory] to proceed. */
+    /** Second step in the [Configuration] builder, requiring specification of feature factories. */
     public interface FeatureFactoriesStep {
       /**
-       * Sets feature factories. Each entry in this map will result in a separate tab in the QA
-       * module. Key is used as a tab name, and each tab displays all feature flags provided by
-       * [FeatureFactory] from value.
+       * Specifies the feature factories to include. Each entry in the map adds a section (tab) to
+       * the inspector: the map key is the section title, and the [FeatureFactory] value provides
+       * the feature flags for that section.
        */
       public fun featureFactories(factories: Map<String, FeatureFactory>): BuildingStep
     }
 
-    /** The final step of a fluent builder that can set optional parameters. */
+    /**
+     * Final step in building a [Configuration], where optional settings can be provided before
+     * creating the configuration.
+     */
     public interface BuildingStep {
-      /** Sets how deprecated feature flags will be displayed to the user. */
-      public fun deprecationPhenotypeSelector(selector: DeprecationPhenotype.Selector): BuildingStep
+      /**
+       * Sets a custom [FeatureStyle.Selector] to control the visual styling for deprecated feature
+       * flags.
+       */
+      public fun deprecationStyleSelector(selector: FeatureStyle.Selector): BuildingStep
 
-      /** Sets how deprecated feature flags will be sorted in a displayed group. */
-      public fun deprecationAlignmentSelector(selector: DeprecationAlignment.Selector): BuildingStep
+      /**
+       * Sets a custom [FeatureAlignment.Selector] to control the ordering of deprecated feature
+       * flags in their list.
+       */
+      public fun deprecationAlignmentSelector(selector: FeatureAlignment.Selector): BuildingStep
 
-      /** Sets how many offscreen feature sections will be kept in memory. */
+      /**
+       * Configures how the inspector handles offscreen feature sections. Provide an
+       * [OffscreenSectionsBehavior] to either keep all sections in memory or limit the number
+       * retained.
+       */
       public fun offscreenSectionBehavior(behavior: OffscreenSectionsBehavior): BuildingStep
 
-      /** Creates a new [Configuration] with provided parameters. */
+      /** Builds and returns the [Configuration] instance with all specified settings. */
       public fun build(): Configuration
     }
   }
 
   public companion object {
     private const val featuresLabel = "Features"
-    internal lateinit var configuration: Configuration
-      private set
+    private var _configuration: Configuration? = null
+    internal val configuration
+      get() = requireNotNull(_configuration) { "Configuration was not initialized." }
 
     /**
-     * Configures [LaboratoryActivity] with a default "Features" tab, where feature flags are taken
-     * from the [mainFactory]. Any additional tabs can be added in [externalFactories].
+     * Initializes the Laboratory inspector with a default "Features" section using the provided
+     * [mainFactory]. Additional sections can be added via [externalFactories], a map of section
+     * name to [FeatureFactory]. Call this to set up LaboratoryActivity with a custom configuration
+     * before invoking [start].
      */
     public fun configure(
       laboratory: Laboratory,
@@ -250,22 +229,25 @@ public class LaboratoryActivity : AppCompatActivity(R.layout.io_mehow_laboratory
       configure(
         Configuration.create(
           laboratory,
-          featureFactories = linkedMapOf(featuresLabel to mainFactory) + filteredFactories,
+          featureFactories = mapOf(featuresLabel to mainFactory) + filteredFactories,
         )
       )
     }
 
-    /** Configures [LaboratoryActivity] with an input [configuration]. */
+    /**
+     * Applies a pre-built [Configuration] for the Laboratory inspector. Call this to set up
+     * LaboratoryActivity with a custom configuration before invoking [start].
+     */
     public fun configure(configuration: Configuration) {
-      this.configuration = configuration
+      this._configuration = configuration
     }
 
     /**
-     * Opens QA module. [Configure][configure] needs to be called before you interact with
-     * [LaboratoryActivity].
+     * Launches the Laboratory inspector UI. Ensure that you have called one of the [configure]
+     * methods beforehand to properly initialize the LaboratoryActivity.
      */
     public fun start(context: Context) {
-      check(::configuration.isInitialized) {
+      check(_configuration != null) {
         "${LaboratoryActivity::class.java} must be initialized before using it."
       }
       context.startActivity(Intent(context, LaboratoryActivity::class.java))

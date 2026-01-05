@@ -1,13 +1,20 @@
 package io.mehow.laboratory
 
-/** Factory that returns a matching option. */
+/**
+ * Factory that returns a matching feature option based on class and option name.
+ *
+ * Used during deserialization or lookup when resolving features from string identifiers.
+ */
 public interface OptionFactory {
-  /** Returns a feature matching class name and option name or null if no match is found. */
+  /**
+   * Returns the feature option associated with the provided key and option name, or `null` if none
+   * match.
+   */
   public fun create(key: String, name: String): Feature<*>?
 
   /**
-   * Creates a new [OptionFactory] that will first look for an option in this factory and then in
-   * the other factory.
+   * Combines this factory with another. The resulting factory first checks this factory, and then
+   * the provided one if no match is found.
    */
   public operator fun plus(factory: OptionFactory): OptionFactory =
     object : OptionFactory {

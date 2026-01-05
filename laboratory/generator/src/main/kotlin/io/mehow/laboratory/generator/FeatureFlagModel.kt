@@ -1,18 +1,28 @@
 package io.mehow.laboratory.generator
 
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.STAR
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeSpec
+import io.mehow.laboratory.Feature
+import io.mehow.laboratory.generator.TextToken.Link
+import io.mehow.laboratory.generator.TextToken.Regular
 import io.mehow.laboratory.generator.Visibility.Public
 
-public class FeatureFlagModel
-private constructor(
+public class FeatureFlagModel(
   public val className: ClassName,
   public val options: List<FeatureFlagOption>,
-  public val visibility: Visibility,
-  public val key: String?,
-  public val description: String,
-  public val deprecation: Deprecation?,
-  public val source: FeatureFlagModel?,
+  public val visibility: Visibility = Public,
+  public val isRemote: Boolean = false,
+  public val description: String = "",
+  public val deprecation: Deprecation? = null,
+  public val key: String? = null,
 ) {
   init {
     require(options.isNotEmpty()) { "${className.canonicalName} must have at least one option" }
@@ -20,24 +30,6 @@ private constructor(
       "${className.canonicalName} must have exactly one default option"
     }
   }
-
-  public constructor(
-    className: ClassName,
-    options: List<FeatureFlagOption>,
-    visibility: Visibility = Public,
-    key: String? = null,
-    description: String = "",
-    deprecation: Deprecation? = null,
-    sourceOptions: List<FeatureFlagOption> = emptyList(),
-  ) : this(
-    className,
-    options,
-    visibility,
-    key,
-    description,
-    deprecation,
-    createSource(visibility, className, sourceOptions),
-  )
 
   public fun prepare(): FileSpec = FeatureFlagGenerator(this).fileSpec()
 
@@ -47,27 +39,143 @@ private constructor(
   override fun hashCode(): Int = className.reflectionName().hashCode()
 
   override fun toString(): String = className.canonicalName
+}
+
+private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
+  private val deprecated =
+    feature.deprecation?.let { deprecation ->
+      AnnotationSpec.builder(Deprecated::class)
+        .addMember("message = %S", deprecation.message)
+        .addMember("level = %T.%L", DeprecationLevel::class, deprecation.level)
+        .build()
+    }
+
+  private val suppressDeprecation = feature.deprecation?.suppressSpec
+
+  private val defaultOptionProperty =
+    feature.options.toList().single(FeatureFlagOption::isDefault).let { option ->
+      PropertySpec.builder(defaultOptionPropertyName, feature.className, OVERRIDE)
+        .apply { suppressDeprecation?.let { addAnnotation(it) } }
+        .getter(FunSpec.getterBuilder().addCode("return %L", option.name).build())
+        .build()
+    }
+
+  private val defaultSourceProperty =
+    if (feature.isRemote) {
+      PropertySpec.builder(defaultSourcePropertyName, sourceType, OVERRIDE)
+        .getter(
+          FunSpec.getterBuilder().addCode("return %T.%L", sourceType, Feature.Source.Remote).build()
+        )
+        .build()
+    } else {
+      null
+    }
+
+  private val description: String? = feature.description.takeIf(String::isNotBlank)
+
+  private val kdocCodeBlock = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
+
+  private val descriptionProperty =
+    description?.let { description ->
+      PropertySpec.builder(descriptionPropertyName, String::class, OVERRIDE)
+        .initializer("%S", description)
+        .build()
+    }
+
+  private val typeSpec: TypeSpec =
+    TypeSpec.enumBuilder(feature.className)
+      .apply { deprecated?.let(::addAnnotation) }
+      .addModifiers(feature.visibility.modifier)
+      .apply {
+        var parametrizedType: TypeName = feature.className
+        if (suppressDeprecation != null) {
+          parametrizedType = parametrizedType.copy(annotations = listOf(suppressDeprecation))
+        }
+        addSuperinterface(Feature::class(parametrizedType))
+      }
+      .addProperty(defaultOptionProperty)
+      .apply {
+        feature.options.fold(this) { builder, featureOption ->
+          builder.addEnumConstant(featureOption.name)
+        }
+      }
+      .apply { defaultSourceProperty?.let(::addProperty) }
+      .apply { kdocCodeBlock?.let(::addKdoc) }
+      .apply { descriptionProperty?.let(::addProperty) }
+      .build()
+
+  private val fileSpec =
+    FileSpec.builder(feature.className.packageName, feature.className.simpleName)
+      .addType(typeSpec)
+      .build()
+
+  fun fileSpec() = fileSpec
 
   private companion object {
-    fun createSource(
-      visibility: Visibility,
-      featureName: ClassName,
-      options: List<FeatureFlagOption>,
-    ) =
-      options.toSourceOptions()?.let { sourceOptions ->
-        FeatureFlagModel(featureName.toSourceName(), sourceOptions, visibility)
-      }
+    const val defaultOptionPropertyName = "defaultOption"
+    const val defaultSourcePropertyName = "defaultSource"
+    const val descriptionPropertyName = "description"
 
-    private fun ClassName.toSourceName() = ClassName(packageName, simpleNames + "Source")
-
-    private fun List<FeatureFlagOption>.toSourceOptions() =
-      filterNot { it.name.equals("local", ignoreCase = true) }
-        .takeIf { it.isNotEmpty() }
-        ?.let { options ->
-          buildList {
-            add(FeatureFlagOption("Local", isDefault = options.none(FeatureFlagOption::isDefault)))
-            addAll(options)
-          }
-        }
+    val featureType = Feature::class(STAR)
+    val sourceType = Feature.Source::class
   }
 }
+
+public data class FeatureFlagOption(public val name: String, public val isDefault: Boolean = false)
+
+private val extractLinkRegex = """\[([^\[\]]+)]\(([^()]+)\)""".toRegex()
+
+// TODO: https://github.com/MiSikora/laboratory/issues/71
+internal fun String.prepareKdocHyperlinks(): String {
+  val matches = extractLinkRegex.findAll(this)
+  val regularTokens = matches.toRegularTokens(this)
+  val linkTokens = matches.toLinkTokens()
+  val tokens =
+    (regularTokens + linkTokens)
+      .sortedBy { (_, startIndex) -> startIndex }
+      .map { (token, _) -> token }
+  return buildString {
+    for (token in tokens) {
+      token.append(this)
+    }
+  }
+}
+
+private sealed class TextToken {
+  abstract fun append(builder: StringBuilder)
+
+  data class Regular(private val text: String) : TextToken() {
+    override fun append(builder: StringBuilder) {
+      builder.append(text)
+    }
+  }
+
+  data class Link(private val text: String, private val url: String) : TextToken() {
+    override fun append(builder: StringBuilder) {
+      builder.append('[')
+      builder.append(text.replace(' ', '·'))
+      builder.append(']')
+      builder.append('(')
+      builder.append(url)
+      builder.append(')')
+    }
+  }
+}
+
+private fun Sequence<MatchResult>.toLinkTokens() = map { matchResult ->
+  val (text, url) = matchResult.destructured
+  Link(text, url) to matchResult.range.first
+}
+
+private fun Sequence<MatchResult>.toRegularTokens(text: String) =
+  toUnmatchedRanges(text).map { range -> Regular(text.substring(range)) to range.first }
+
+private fun Sequence<MatchResult>.toUnmatchedRanges(text: String) =
+  sequence {
+      yield(Int.MIN_VALUE..0)
+      yieldAll(map { it.range }.map { it.first - 1..it.last + 1 })
+      yield(text.length - 1..Int.MAX_VALUE)
+    }
+    .windowed(2, 1)
+    .map { (start, end) -> start.last..end.first }
+    .filterNot { range -> range.isEmpty() }

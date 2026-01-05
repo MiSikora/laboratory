@@ -1,190 +1,217 @@
 package io.mehow.laboratory
 
 import app.cash.turbine.test
-import io.kotest.assertions.fail
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import io.mehow.laboratory.testing.FeatureA
+import io.mehow.laboratory.testing.FeatureB
+import io.mehow.laboratory.testing.FeatureWithoutValues
+import io.mehow.laboratory.testing.RemoteFeatureA
+import io.mehow.laboratory.testing.RemoteFeatureB
 
 class LaboratorySpec : FunSpec() {
-  enum class NoValuesFeature : Feature<NoValuesFeature>
-
-  enum class FeatureA : Feature<FeatureA> {
-    A,
-    B,
-    C;
-
-    override val defaultOption
-      get() = A
-  }
-
-  enum class FeatureB : Feature<FeatureB> {
-    A,
-    B;
-
-    override val defaultOption
-      get() = A
-  }
-
   init {
-    test("reads feature option saved in storage") {
-      val storage = FeatureStorage.inMemory()
-      val laboratory = Laboratory.create(storage)
+    val laboratory =
+      Laboratory.builder()
+        .localStorage(Storage.inMemory())
+        .remoteStorage(Storage.inMemory())
+        .build()
 
-      for (option in FeatureA::class.java.options) {
-        storage.setOption(option)
-
-        laboratory.experiment<FeatureA>() shouldBe option
-        laboratory.experimentIs(option) shouldBe true
-      }
+    beforeTest {
+      laboratory.localStorage().clear()
+      laboratory.remoteStorage()?.clear()
     }
 
-    test("changes feature option") {
-      val laboratory = Laboratory.inMemory()
-
+    test("change feature option") {
       for (option in FeatureA::class.java.options) {
-        laboratory.setOption(option)
+        laboratory.localStorage().setOptions(option)
 
         laboratory.experiment<FeatureA>() shouldBe option
       }
     }
 
-    test("changes options for multiple features") {
-      val laboratory = Laboratory.inMemory()
-
-      laboratory.setOptions(FeatureA.C, FeatureB.B)
+    test("change multiple feature options") {
+      laboratory.localStorage().setOptions(FeatureA.C, FeatureB.B)
 
       laboratory.experiment<FeatureA>() shouldBe FeatureA.C
       laboratory.experiment<FeatureB>() shouldBe FeatureB.B
     }
 
-    test("emits feature changes") {
-      val laboratory = Laboratory.inMemory()
+    test("fail to use feature with no values") {
+      val exception =
+        shouldThrow<IllegalStateException> { laboratory.experiment<FeatureWithoutValues>() }
+      exception shouldHaveMessage
+        "io.mehow.laboratory.testing.FeatureWithoutValues must have at least one option"
+    }
 
+    test("read local feature") {
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+
+      laboratory.localStorage().setOptions(FeatureA.B)
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.B
+    }
+
+    test("read remote feature") {
+      laboratory.experiment<RemoteFeatureA>() shouldBe RemoteFeatureA.A
+
+      laboratory.remoteStorage()?.setOptions(RemoteFeatureA.B)
+      laboratory.experiment<RemoteFeatureA>() shouldBe RemoteFeatureA.B
+    }
+
+    test("change feature to remote") {
+      laboratory.remoteStorage()?.setOptions(FeatureA.C)
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+
+      laboratory.localStorage().setRemoteSource<FeatureA>()
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.C
+    }
+
+    test("change feature to local") {
+      laboratory.localStorage().setOptions(RemoteFeatureA.C)
+      laboratory.experiment<RemoteFeatureA>() shouldBe RemoteFeatureA.A
+
+      laboratory.localStorage().setLocalSource<RemoteFeatureA>()
+      laboratory.experiment<RemoteFeatureA>() shouldBe RemoteFeatureA.C
+    }
+
+    test("clear local features") {
+      laboratory.localStorage().setOptions(FeatureA.C, FeatureB.C)
+      laboratory.localStorage().clear()
+
+      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+      laboratory.experiment<FeatureB>() shouldBe FeatureB.B
+    }
+
+    test("clear remote features") {
+      laboratory.remoteStorage()?.setOptions(RemoteFeatureA.C, RemoteFeatureB.C)
+      laboratory.remoteStorage()?.clear()
+
+      laboratory.experiment<RemoteFeatureA>() shouldBe RemoteFeatureA.A
+      laboratory.experiment<RemoteFeatureB>() shouldBe RemoteFeatureB.B
+    }
+
+    test("observe feature") {
       laboratory.observe<FeatureA>().test {
         awaitItem() shouldBe FeatureA.A
 
-        laboratory.setOption(FeatureA.B)
-        awaitItem() shouldBe FeatureA.B
-
-        laboratory.setOption(FeatureA.C)
-        awaitItem() shouldBe FeatureA.C
-
-        laboratory.setOption(FeatureA.C)
+        laboratory.localStorage().setRemoteSource<FeatureA>()
         expectNoEvents()
 
-        laboratory.setOption(FeatureA.B)
+        laboratory.localStorage().setLocalSource<FeatureA>()
+        expectNoEvents()
+
+        laboratory.localStorage().setOptions(FeatureA.B)
         awaitItem() shouldBe FeatureA.B
+
+        laboratory.localStorage().setRemoteSource<FeatureA>()
+        awaitItem() shouldBe FeatureA.A
+
+        laboratory.remoteStorage()?.setOptions(FeatureA.C)
+        awaitItem() shouldBe FeatureA.C
       }
     }
 
-    test("clears all features") {
-      val laboratory = Laboratory.inMemory()
-
-      laboratory.setOptions(FeatureA.B, FeatureB.B)
-      laboratory.clear()
-
-      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
-      laboratory.experiment<FeatureB>() shouldBe FeatureB.A
-    }
-
-    test("does not share instances between in memory implementations") {
-      val firstLaboratory = Laboratory.inMemory()
-      val secondLaboratory = Laboratory.inMemory()
-
-      firstLaboratory.setOption(FeatureA.B)
-      firstLaboratory.experiment<FeatureA>() shouldBe FeatureA.B
-      secondLaboratory.experiment<FeatureA>() shouldBe FeatureA.A
-
-      secondLaboratory.setOption(FeatureA.C)
-      firstLaboratory.experiment<FeatureA>() shouldBe FeatureA.B
-      secondLaboratory.experiment<FeatureA>() shouldBe FeatureA.C
-    }
-
-    test("uses default option if no match is found") {
-      val nullStorage =
-        object : FeatureStorage {
-          override fun observeFeatureName(feature: Class<out Feature<*>>): Flow<String?> =
-            flowOf(null)
-
-          override suspend fun getFeatureName(feature: Class<out Feature<*>>): String? = null
-
-          override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
-
-          override suspend fun clear() = fail("Unexpected call")
-        }
-      val laboratory = Laboratory.create(nullStorage)
-
-      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
-    }
-
-    context("default options factory") {
+    context("default option factory") {
       val factory =
         object : DefaultOptionFactory {
           override fun <T : Feature<out T>> create(feature: T) =
             when (feature) {
               is FeatureA -> FeatureA.C
-              is FeatureB -> FeatureA.C // Intentional wrong class
+              is FeatureB -> FeatureA.C // Intentionally wrong class
+              else -> null
+            }
+        }
+
+      val laboratory =
+        Laboratory.builder().localStorage(Storage.inMemory()).defaultOptionFactory(factory).build()
+
+      beforeTest { laboratory.localStorage().clear() }
+
+      test("override default option") { laboratory.experiment<FeatureA>() shouldBe FeatureA.C }
+
+      test("do not override changed option") {
+        for (option in FeatureA::class.java.options) {
+          laboratory.localStorage().setOptions(option)
+
+          laboratory.experiment<FeatureA>() shouldBe option
+        }
+      }
+
+      test("override default option in flow") {
+        laboratory.observe<FeatureA>().test {
+          awaitItem() shouldBe FeatureA.C
+
+          laboratory.localStorage().setOptions(FeatureA.B)
+          awaitItem() shouldBe FeatureA.B
+        }
+      }
+
+      test("fail when provided default option uses wrong type") {
+        val exception = shouldThrow<IllegalStateException> { laboratory.experiment<FeatureB>() }
+        exception shouldHaveMessage
+          "Tried to use FeatureA.C as a default option for io.mehow.laboratory.testing.FeatureB"
+      }
+    }
+
+    context("default source factory") {
+      val factory =
+        object : DefaultSourceFactory {
+          override fun <T : Feature<out T>> create(feature: T) =
+            when (feature) {
+              is FeatureA -> Feature.Source.Remote
+              is RemoteFeatureA -> Feature.Source.Local
               else -> null
             }
         }
 
       val laboratory =
         Laboratory.builder()
-          .featureStorage(FeatureStorage.inMemory())
-          .defaultOptionFactory(factory)
+          .localStorage(Storage.inMemory())
+          .remoteStorage(Storage.inMemory())
+          .defaultSourceFactory(factory)
           .build()
 
-      beforeTest { laboratory.clear() }
-
-      test("overrides default options") { laboratory.experiment<FeatureA>() shouldBe FeatureA.C }
-
-      test("does not override changed options") {
-        for (option in FeatureA::class.java.options) {
-          laboratory.setOption(option)
-
-          laboratory.experiment<FeatureA>() shouldBe option
-        }
+      beforeTest {
+        laboratory.localStorage().clear()
+        laboratory.remoteStorage()?.clear()
       }
 
-      test("overrides emitted default options") {
-        laboratory.observe<FeatureA>().test {
-          awaitItem() shouldBe FeatureA.C
+      test("override default local source") {
+        laboratory.remoteStorage()?.setOptions(FeatureA.C)
 
-          laboratory.setOption(FeatureA.B)
+        laboratory.experiment<FeatureA>() shouldBe FeatureA.C
+      }
+
+      test("override default remote source") {
+        laboratory.localStorage().setOptions(RemoteFeatureA.C)
+
+        laboratory.experiment<RemoteFeatureA>() shouldBe RemoteFeatureA.C
+      }
+
+      test("do not override changed local source") {
+        laboratory.localStorage().setLocalSource<FeatureA>()
+        laboratory.remoteStorage()?.setOptions(FeatureA.C)
+
+        laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+      }
+
+      test("do not override changed remote source") {
+        laboratory.localStorage().setRemoteSource<RemoteFeatureA>()
+        laboratory.localStorage().setOptions(RemoteFeatureA.C)
+
+        laboratory.experiment<RemoteFeatureA>() shouldBe RemoteFeatureA.A
+      }
+
+      test("override default source in flow") {
+        laboratory.observe<FeatureA>().test {
+          awaitItem() shouldBe FeatureA.A
+
+          laboratory.remoteStorage()?.setOptions(FeatureA.B)
           awaitItem() shouldBe FeatureA.B
         }
       }
-
-      test("fails when provided default option uses wrong type") {
-        shouldThrowExactly<IllegalStateException> {
-          laboratory.experiment<FeatureB>()
-        } shouldHaveMessage
-          "Tried to use FeatureA.C as a default option for io.mehow.laboratory.LaboratorySpec.FeatureB"
-      }
-    }
-
-    test("fails to use feature with no values") {
-      val throwingStorage =
-        object : FeatureStorage {
-          override fun observeFeatureName(feature: Class<out Feature<*>>) = fail("Unexpected call")
-
-          override suspend fun getFeatureName(feature: Class<out Feature<*>>) =
-            fail("Unexpected call")
-
-          override suspend fun setOptions(vararg options: Feature<*>) = fail("Unexpected call")
-
-          override suspend fun clear() = fail("Unexpected call")
-        }
-      val laboratory = Laboratory.create(throwingStorage)
-
-      shouldThrowExactly<IllegalStateException> {
-        laboratory.experiment<NoValuesFeature>()
-      } shouldHaveMessage
-        "io.mehow.laboratory.LaboratorySpec.NoValuesFeature must have at least one option"
     }
   }
 }

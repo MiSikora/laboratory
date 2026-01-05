@@ -4,6 +4,16 @@ plugins {
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.dokka)
   alias(libs.plugins.ksp)
+  alias(libs.plugins.buildconfig)
+}
+
+buildConfig {
+  useKotlinOutput {
+    internalVisibility = true
+    topLevelConstants = true
+  }
+  packageName("io.mehow.laboratory.hyperion")
+  buildConfigField("Int", "MinSdk", rootProject.libs.versions.android.min.sdk.get())
 }
 
 android {

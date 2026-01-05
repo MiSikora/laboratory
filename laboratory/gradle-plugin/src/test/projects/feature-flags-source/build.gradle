@@ -1,0 +1,15 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("LocalFeature") {
+    isRemote = false
+    withDefaultOption("A")
+  }
+  feature("RemoteFeature") {
+    isRemote = true
+    withDefaultOption("A")
+  }
+}

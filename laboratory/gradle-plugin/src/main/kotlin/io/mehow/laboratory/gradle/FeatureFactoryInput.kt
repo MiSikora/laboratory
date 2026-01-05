@@ -7,13 +7,19 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import java.io.Serializable
 
-/** Representation of a generated feature factory class. */
+/**
+ * Configuration for generating a feature factory or feature source factory.
+ *
+ * Feature factories aggregate feature flags or feature sources into a single generated utility
+ * class.
+ */
+@LaboratoryDsl
 public class FeatureFactoryInput internal constructor(packageNameProvider: PackageNameProvider) :
   Serializable {
-  /** Sets whether the generated feature factory should be public or internal. */
+  /** Controls whether the generated factory is public or internal. */
   public var isPublic: Boolean = false
 
-  /** Sets package name of the generated feature factory. Overwrites any previously set values. */
+  /** Overrides the package name for the generated factory. */
   public var packageName: String?
     get() = packageNameProvider.value
     set(value) = packageNameProvider.setValue(value)

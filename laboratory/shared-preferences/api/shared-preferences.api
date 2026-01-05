@@ -1,4 +1,4 @@
-public final class io/mehow/laboratory/sharedpreferences/SharedPreferencesFeatureStorageKt {
-	public static final fun sharedPreferences (Lio/mehow/laboratory/FeatureStorage$Companion;Landroid/content/SharedPreferences;)Lio/mehow/laboratory/FeatureStorage;
+public final class io/mehow/laboratory/sharedpreferences/SharedPreferencesStorageKt {
+	public static final fun sharedPreferences (Lio/mehow/laboratory/Storage$Companion;Landroid/content/SharedPreferences;)Lio/mehow/laboratory/Storage;
 }
 

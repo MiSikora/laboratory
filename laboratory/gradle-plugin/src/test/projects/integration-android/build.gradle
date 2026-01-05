@@ -1,0 +1,19 @@
+plugins {
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "io.mehow.laboratory"
+}
+
+android {
+  namespace "io.mehow.laboratory.sample"
+  compileSdkVersion 36
+}
+
+laboratory {
+  optionFactory()
+  featureFactory()
+
+  feature("Feature") {
+    withDefaultOption("A")
+  }
+}

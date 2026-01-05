@@ -2,38 +2,17 @@ package io.mehow.laboratory
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.mehow.laboratory.testing.FeatureA
+import io.mehow.laboratory.testing.FeatureB
+import io.mehow.laboratory.testing.FeatureC
 
 class DefaultOptionFactorySpec : FunSpec() {
-  enum class FeatureA : Feature<FeatureA> {
-    A,
-    B,
-    C;
-
-    override val defaultOption
-      get() = A
-  }
-
-  enum class FeatureB : Feature<FeatureB> {
-    A,
-    B;
-
-    override val defaultOption
-      get() = A
-  }
-
-  enum class FeatureC : Feature<FeatureC> {
-    A;
-
-    override val defaultOption
-      get() = A
-  }
-
   init {
     val firstFactory =
       object : DefaultOptionFactory {
         override fun <T : Feature<out T>> create(feature: T): Feature<*>? =
           when (feature) {
-            is FeatureA -> FeatureA.C
+            is FeatureA -> FeatureA.B
             else -> null
           }
       }
@@ -42,26 +21,20 @@ class DefaultOptionFactorySpec : FunSpec() {
       object : DefaultOptionFactory {
         override fun <T : Feature<out T>> create(feature: T): Feature<*>? =
           when (feature) {
-            is FeatureA -> FeatureA.B
-            is FeatureB -> FeatureB.B
+            is FeatureA -> FeatureA.C
+            is FeatureB -> FeatureB.C
             else -> null
           }
       }
 
-    context("factory created from sum") {
+    context("combined factory") {
       val factory = firstFactory + secondFactory
 
-      test("prioritizes first factory when option is available in it") {
-        factory.create(FeatureA.A) shouldBe FeatureA.C
-      }
+      test("use first factory") { factory.create(FeatureA.A) shouldBe FeatureA.B }
 
-      test("falls back to second factory when option is not available in first factory") {
-        factory.create(FeatureB.A) shouldBe FeatureB.B
-      }
+      test("use second factory") { factory.create(FeatureB.A) shouldBe FeatureB.C }
 
-      test("does not handle options unknown to any of sub-factories") {
-        factory.create(FeatureC.A) shouldBe null
-      }
+      test("use no factories") { factory.create(FeatureC.A) shouldBe null }
     }
   }
 }

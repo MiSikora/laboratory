@@ -6,7 +6,7 @@ import com.willowtreeapps.hyperion.plugin.v1.PluginModule as HyperionPluginModul
 
 @AutoService(HyperionPlugin::class)
 internal class Plugin : HyperionPlugin() {
-  override fun minimumRequiredApi() = 21
+  override fun minimumRequiredApi() = MinSdk
 
   override fun createPluginModule(): HyperionPluginModule = PluginModule()
 }

@@ -2,8 +2,7 @@ package io.mehow.laboratory.inspector
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.OVER_SCROLL_NEVER
 import android.view.ViewConfiguration
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
@@ -11,7 +10,9 @@ import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.absoluteValue
 
 internal fun View.focusAndShowKeyboard() {
@@ -61,17 +62,10 @@ internal fun RecyclerView.hideKeyboardOnScroll() {
   )
 }
 
-internal var View.isVisible: Boolean
-  get() = visibility == VISIBLE
-  set(value) {
-    visibility = if (value) VISIBLE else GONE
-  }
-
-internal var View.isGone: Boolean
-  get() = visibility == GONE
-  set(value) {
-    visibility = if (value) GONE else VISIBLE
-  }
+// TODO: Set this from XML. https://issuetracker.google.com/issues/134912610
+internal fun ViewPager2.disableScrollEffect() {
+  (getChildAt(0) as? RecyclerView)?.overScrollMode = OVER_SCROLL_NEVER
+}
 
 internal fun View.doOnApplyWindowInsets(block: (View, WindowInsetsCompat, InitialPadding) -> Unit) {
   val initialPadding = initialPadding()
@@ -80,6 +74,9 @@ internal fun View.doOnApplyWindowInsets(block: (View, WindowInsetsCompat, Initia
     insets
   }
 }
+
+internal fun WindowInsetsCompat.getTopInsets() =
+  getInsets(Type.systemBars() or Type.displayCutout())
 
 internal data class InitialPadding(val left: Int, val top: Int, val right: Int, val bottom: Int)
 

@@ -7,13 +7,18 @@ import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import java.io.Serializable
 
-/** Representation of a generated option factory that is aware of feature flags. */
+/**
+ * Configuration for generating an option factory.
+ *
+ * Option factories create feature flag instances from string-based keys and option names.
+ */
+@LaboratoryDsl
 public class OptionFactoryInput internal constructor(packageNameProvider: PackageNameProvider) :
   Serializable {
-  /** Sets whether the generated option factory should be public or internal. */
+  /** Controls whether the generated option factory is public or internal. */
   public var isPublic: Boolean = false
 
-  /** Sets package name of the generated option factory. Overwrites any previously set values. */
+  /** Overrides the package name for the generated option factory. */
   public var packageName: String?
     get() = packageNameProvider.value
     set(value) = packageNameProvider.setValue(value)

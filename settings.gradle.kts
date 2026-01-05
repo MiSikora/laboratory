@@ -25,6 +25,7 @@ include(
   ":laboratory:gradle-plugin",
   ":laboratory:inspector",
   ":laboratory:hyperion-plugin",
+  ":laboratory:testing",
 )
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

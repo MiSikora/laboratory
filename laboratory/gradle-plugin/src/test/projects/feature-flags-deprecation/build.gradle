@@ -1,0 +1,21 @@
+import io.mehow.laboratory.gradle.DeprecationLevel
+
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  feature("WarningFeature") {
+    deprecated("Message", DeprecationLevel.Warning)
+    withDefaultOption("A")
+  }
+  feature("ErrorFeature") {
+    deprecated("Message", DeprecationLevel.Error)
+    withDefaultOption("A")
+  }
+  feature("HiddenFeature") {
+    deprecated("Message", DeprecationLevel.Hidden)
+    withDefaultOption("A")
+  }
+}

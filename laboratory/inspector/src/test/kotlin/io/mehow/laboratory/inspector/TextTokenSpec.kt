@@ -1,39 +1,35 @@
 package io.mehow.laboratory.inspector
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.data.blocking.forAll
-import io.kotest.data.row
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.mehow.laboratory.inspector.TextToken.Link
 import io.mehow.laboratory.inspector.TextToken.Regular
 
-class TextTokenSpec :
-  FunSpec({
-    test("can be empty") { "".tokenize().shouldBeEmpty() }
+class TextTokenSpec : FunSpec() {
+  init {
+    test("empty text") { "".tokenize().shouldBeEmpty() }
 
-    test("can be blank") { "   ".tokenize() shouldContainExactly listOf(Regular("   ")) }
+    test("blank text") { "   ".tokenize() shouldContainExactly listOf(Regular("   ")) }
 
-    test("can have regular text") {
-      "Hello".tokenize() shouldContainExactly listOf(Regular("Hello"))
-    }
+    test("simple text") { "Hello".tokenize() shouldContainExactly listOf(Regular("Hello")) }
 
-    test("can have a link") {
+    test("link text") {
       "[Hello](https://mehow.io)".tokenize() shouldContainExactly
         listOf(Link("Hello", "https://mehow.io"))
     }
 
-    test("can start with regular text followed by a link") {
+    test("prefix text with link") {
       "Hello [there](https://github.com/MiSikora/)".tokenize() shouldContainExactly
         listOf(Regular("Hello "), Link("there", "https://github.com/MiSikora/"))
     }
 
-    test("can start with a link followed by a regular text") {
+    test("postfix text with link") {
       "[General](https://google.com) Kenobi".tokenize() shouldContainExactly
         listOf(Link("General", "https://google.com"), Regular(" Kenobi"))
     }
 
-    test("can have multiple regular texts and links") {
+    test("text with link") {
       val input = "Hello [there](https://github.com)… [General](https://sample.org) Kenobi"
       input.tokenize() shouldContainExactly
         listOf(
@@ -45,7 +41,7 @@ class TextTokenSpec :
         )
     }
 
-    test("can have multiple consecutive links") {
+    test("multiple links") {
       val input = "[One,](https://one.com)[ Two](https://two.com)[, Three](https://three.com)"
       input.tokenize() shouldContainExactly
         listOf(
@@ -55,17 +51,20 @@ class TextTokenSpec :
         )
     }
 
-    test("ignores malformed link syntax") {
-      forAll(
-        row("[One[](https://one.com)"),
-        row("[One](https://one.com()"),
-        row("[](https://one.com"),
-        row("[One]()"),
-        row("[One]((https://one.com)"),
-        row("[O]ne](https://one.com)"),
-        row("[One](h(ttps://one.com)"),
-      ) {
-        it.tokenize() shouldContainExactly listOf(Regular(it))
+    test("malformed links") {
+      val inputs =
+        listOf(
+          "[One[](https://one.com)",
+          "[One](https://one.com()",
+          "[](https://one.com",
+          "[One]()",
+          "[One]((https://one.com)",
+          "[O]ne](https://one.com)",
+          "[One](h(ttps://one.com)",
+        )
+      for (input in inputs) {
+        input.tokenize() shouldContainExactly listOf(Regular(input))
       }
     }
-  })
+  }
+}

@@ -8,12 +8,18 @@ import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+/**
+ * Applies the Laboratory Gradle plugin to a project.
+ *
+ * When applied, the plugin:
+ * - Registers the `laboratory` extension used for configuration.
+ * - Configures code generation tasks for feature flags and related helpers.
+ *
+ * The Kotlin Gradle plugin must be applied before this plugin.
+ */
 public class LaboratoryPlugin : Plugin<Project> {
   override fun apply(target: Project) {
-    val extension =
-      target.extensions.create(PluginName, LaboratoryExtension::class.java).apply {
-        this.project = target
-      }
+    val extension = target.extensions.create(PluginName, LaboratoryExtension::class.java)
 
     target.checkKotlinPlugin()
     target.setUpProject(extension)
@@ -33,9 +39,7 @@ public class LaboratoryPlugin : Plugin<Project> {
     val hasAndroid = plugins.hasPlugin("com.android.base")
     registerFeatureFlagsTask(extension, hasAndroid)
     registerFeatureFactoryTask(extension, hasAndroid)
-    registerSourcedFeatureStorageTask(extension, hasAndroid)
     registerOptionFactoryTask(extension, hasAndroid)
-    registerFeatureSourcesFactoryTask(extension, hasAndroid)
   }
 
   private fun Project.addLaboratoryDependency() {
@@ -49,7 +53,7 @@ public class LaboratoryPlugin : Plugin<Project> {
     registerOutputTask<FeatureFlagsTask>("generateFeatureFlags", hasAndroid) { task ->
       task.group = PluginName
       task.description = "Generate feature flags"
-      task.inputFlags.set(extension.featureFlags)
+      task.inputFlags.set(extension.featureInputs)
       task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-flags"))
     }
   }
@@ -63,28 +67,10 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.description = "Generate feature factory"
       task.factory.set(extension.factoryInput)
       task.features.set(
-        extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureFactory)
+        extension.factoryFeatureInputs.getValue(DependencyContribution.FeatureFactory)
       )
       task.outputDirectory.set(
         layout.buildDirectory.dir("generated/laboratory/code/feature-factory")
-      )
-    }
-  }
-
-  private fun Project.registerSourcedFeatureStorageTask(
-    extension: LaboratoryExtension,
-    hasAndroid: Boolean,
-  ) {
-    registerOutputTask<SourcedFeatureStorageTask>("generateSourcedFeatureStorage", hasAndroid) {
-      task ->
-      task.group = PluginName
-      task.description = "Generate sourced feature storage"
-      task.storage.set(extension.storageInput)
-      task.features.set(
-        extension.factoryFeatureFlags.getValue(DependencyContribution.SourcedStorage)
-      )
-      task.outputDirectory.set(
-        layout.buildDirectory.dir("generated/laboratory/code/sourced-storage")
       )
     }
   }
@@ -98,28 +84,10 @@ public class LaboratoryPlugin : Plugin<Project> {
       task.description = "Generate option factory"
       task.factory.set(extension.optionFactoryInput)
       task.features.set(
-        extension.factoryFeatureFlags.getValue(DependencyContribution.OptionFactory)
+        extension.factoryFeatureInputs.getValue(DependencyContribution.OptionFactory)
       )
       task.outputDirectory.set(
         layout.buildDirectory.dir("generated/laboratory/code/option-factory")
-      )
-    }
-  }
-
-  private fun Project.registerFeatureSourcesFactoryTask(
-    extension: LaboratoryExtension,
-    hasAndroid: Boolean,
-  ) {
-    registerOutputTask<FeatureSourceFactoryTask>("generateFeatureSourceFactory", hasAndroid) { task
-      ->
-      task.group = PluginName
-      task.description = "Generate feature source factory"
-      task.factory.set(extension.featureSourcesFactory)
-      task.features.set(
-        extension.factoryFeatureFlags.getValue(DependencyContribution.FeatureSourceFactory)
-      )
-      task.outputDirectory.set(
-        layout.buildDirectory.dir("generated/laboratory/code/feature-source-factory")
       )
     }
   }

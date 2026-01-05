@@ -1,26 +1,26 @@
-public final class io/mehow/laboratory/inspector/DeprecationAlignment : java/lang/Enum {
-	public static final field Bottom Lio/mehow/laboratory/inspector/DeprecationAlignment;
-	public static final field Regular Lio/mehow/laboratory/inspector/DeprecationAlignment;
+public final class io/mehow/laboratory/inspector/FeatureAlignment : java/lang/Enum {
+	public static final field Bottom Lio/mehow/laboratory/inspector/FeatureAlignment;
+	public static final field Regular Lio/mehow/laboratory/inspector/FeatureAlignment;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/inspector/DeprecationAlignment;
-	public static fun values ()[Lio/mehow/laboratory/inspector/DeprecationAlignment;
+	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/inspector/FeatureAlignment;
+	public static fun values ()[Lio/mehow/laboratory/inspector/FeatureAlignment;
 }
 
-public abstract interface class io/mehow/laboratory/inspector/DeprecationAlignment$Selector {
-	public abstract fun select (Lkotlin/DeprecationLevel;)Lio/mehow/laboratory/inspector/DeprecationAlignment;
+public abstract interface class io/mehow/laboratory/inspector/FeatureAlignment$Selector {
+	public abstract fun select (Lkotlin/DeprecationLevel;)Lio/mehow/laboratory/inspector/FeatureAlignment;
 }
 
-public final class io/mehow/laboratory/inspector/DeprecationPhenotype : java/lang/Enum {
-	public static final field Hide Lio/mehow/laboratory/inspector/DeprecationPhenotype;
-	public static final field Show Lio/mehow/laboratory/inspector/DeprecationPhenotype;
-	public static final field Strikethrough Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+public final class io/mehow/laboratory/inspector/FeatureStyle : java/lang/Enum {
+	public static final field Hide Lio/mehow/laboratory/inspector/FeatureStyle;
+	public static final field Show Lio/mehow/laboratory/inspector/FeatureStyle;
+	public static final field Strikethrough Lio/mehow/laboratory/inspector/FeatureStyle;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/inspector/DeprecationPhenotype;
-	public static fun values ()[Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/inspector/FeatureStyle;
+	public static fun values ()[Lio/mehow/laboratory/inspector/FeatureStyle;
 }
 
-public abstract interface class io/mehow/laboratory/inspector/DeprecationPhenotype$Selector {
-	public abstract fun select (Lkotlin/DeprecationLevel;)Lio/mehow/laboratory/inspector/DeprecationPhenotype;
+public abstract interface class io/mehow/laboratory/inspector/FeatureStyle$Selector {
+	public abstract fun select (Lkotlin/DeprecationLevel;)Lio/mehow/laboratory/inspector/FeatureStyle;
 }
 
 public final class io/mehow/laboratory/inspector/LaboratoryActivity : androidx/appcompat/app/AppCompatActivity {
@@ -41,8 +41,8 @@ public final class io/mehow/laboratory/inspector/LaboratoryActivity$Configuratio
 
 public abstract interface class io/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep {
 	public abstract fun build ()Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration;
-	public abstract fun deprecationAlignmentSelector (Lio/mehow/laboratory/inspector/DeprecationAlignment$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
-	public abstract fun deprecationPhenotypeSelector (Lio/mehow/laboratory/inspector/DeprecationPhenotype$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
+	public abstract fun deprecationAlignmentSelector (Lio/mehow/laboratory/inspector/FeatureAlignment$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
+	public abstract fun deprecationStyleSelector (Lio/mehow/laboratory/inspector/FeatureStyle$Selector;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
 	public abstract fun offscreenSectionBehavior (Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$OffscreenSectionsBehavior;)Lio/mehow/laboratory/inspector/LaboratoryActivity$Configuration$BuildingStep;
 }
 

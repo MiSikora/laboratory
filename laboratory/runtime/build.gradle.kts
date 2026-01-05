@@ -7,6 +7,7 @@ plugins {
 dependencies {
   api(libs.coroutines.core)
 
+  testImplementation(projects.laboratory.testing)
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)
   testImplementation(libs.turbine)
