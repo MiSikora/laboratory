@@ -22,16 +22,20 @@ android {
       signingConfig = signingConfigs.getByName("debug")
     }
   }
+
+  packaging.resources.excludes.add("META-INF/**")
 }
 
 dependencies {
   api(projects.laboratory.runtime)
   implementation(libs.coroutines.core)
 
+  androidTestImplementation(projects.laboratory.testing)
+  androidTestImplementation(libs.kotest.runner.android)
   androidTestImplementation(libs.kotest.assertions)
   androidTestImplementation(libs.turbine)
-  androidTestUtil(libs.androidx.test.orchestrator)
   androidTestImplementation(libs.androidx.test.core.ktx)
   androidTestImplementation(libs.androidx.test.runner)
   androidTestImplementation(libs.androidx.test.junit.ktx)
+  androidTestUtil(libs.androidx.test.orchestrator)
 }

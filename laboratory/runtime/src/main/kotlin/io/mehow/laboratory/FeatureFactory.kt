@@ -1,17 +1,16 @@
 package io.mehow.laboratory
 
 /**
- * Factory that should provide all available feature flags. There shouldn't be any need to use it in
- * a regular application code. Its main purpose is for QA inspection module.
+ * Factory that provides a set of known feature flags.
+ *
+ * Mainly used in QA tooling and debug inspection modules to expose available features. This should
+ * not be needed in normal application logic.
  */
 public interface FeatureFactory {
-  /** Returns set of all available feature flags. */
+  /** Returns all known feature flag types. */
   public fun create(): Set<Class<out Feature<*>>>
 
-  /**
-   * Creates a new [FeatureFactory] that will return a combined set of this factory and the other
-   * factory.
-   */
+  /** Combines this factory with another. The resulting factory returns the union of both sets. */
   public operator fun plus(factory: FeatureFactory): FeatureFactory =
     object : FeatureFactory {
       override fun create() = this@FeatureFactory.create() + factory.create()

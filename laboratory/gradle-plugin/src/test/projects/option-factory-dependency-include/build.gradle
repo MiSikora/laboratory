@@ -1,0 +1,16 @@
+import io.mehow.laboratory.gradle.DependencyContribution
+
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  dependency(project(":child"), [DependencyContribution.OptionFactory])
+
+  optionFactory()
+
+  feature("RootFeature") {
+    withDefaultOption("A")
+  }
+}

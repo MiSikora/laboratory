@@ -37,6 +37,7 @@ dependencies {
   implementation(projects.laboratory.generator)
   implementation(libs.gradle.kgp)
 
+  testImplementation(projects.laboratory.testing)
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)
 

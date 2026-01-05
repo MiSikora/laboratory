@@ -1,83 +1,50 @@
 package io.mehow.laboratory
 
 /**
- * A feature flag that has one active option. Options are selected by interaction of this interface
- * with [Laboratory]. Feature flag is a enum that implements this interface.
+ * A feature flag with a single active option, selected through interaction with [Laboratory].
  *
- * **Warning**: Enum values cannot individually override any functions. Otherwise serialization, and
- * consequentially discovery of a selection option, will not work as it is based on a class name.
+ * Feature flags are defined as enum classes that implement this interface. Each enum constant
+ * represents a possible option of the feature, and one of them must be marked as the default.
+ *
+ * Warning: Enum values must not override any methods. Serialization and option discovery rely on
+ * stable class and enum constant names. Overriding methods on individual enum constants may break
+ * this.
  */
 public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
-  /** A name of an option that should uniquely identify it within this feature flag. */
+  /** Unique name of this feature option, used to identify it within its feature flag. */
   public val name: String
 
-  /** Determines which option is a default for this feature flag. */
+  /** The default option for this feature. This will be used if no other option is selected. */
   public val defaultOption: T
 
-  /**
-   * Source of feature flag values. When `null` it is assumed that the feature flag has only local
-   * source of values. Source is also a feature flag, which means it can be controlled by
-   * [Laboratory] as well. By convention, if this property is not `null`, one of the source values
-   * should be `Local`. For example, the following code will result in a flag that can be controlled
-   * by local, Firebase or Aws source.
-   *
-   * ```
-   * enum class SomeFeature : Feature<SomeFeature> {
-   *   FirstValue,
-   *   SecondValue,
-   *   ;
-   *
-   *   override val defaultOption get() = FirstValue
-   *
-   *   override val source = Source::class.java
-   *
-   *   enum class Source : Feature<Source> {
-   *     Local,
-   *     Firebase,
-   *     Aws,
-   *     ;
-   *
-   *     override val defaultOption get() = Local
-   *   }
-   * }
-   * ```
-   */
-  public val source: Class<out Feature<*>>?
-    get() = null
+  /** The default source for resolving this feature's value. */
+  public val defaultSource: Source
+    get() = Source.Local
 
   /**
-   * Description of the feature flag that can be used for more contextual information. Markdown
-   * formatted links will be picked up by the QA module and represented as hyperlinks.
+   * Optional description for this feature. Can be used to add context in debugging or QA tools.
+   * Markdown-formatted links will be recognized and rendered as clickable hyperlinks in the QA UI.
    */
   public val description: String
     get() = ""
+
+  /**
+   * Represents a source of feature values.
+   *
+   * Features can have their active option resolved from either a local or remote source, depending
+   * on configuration. The local source typically reflects user or app-provided overrides, while the
+   * remote source may be populated from a backend or experimentation service.
+   */
+  public enum class Source(public val isLocal: Boolean) {
+    Local(isLocal = true),
+    Remote(isLocal = false);
+
+    public val isRemote: Boolean
+      get() = !isLocal
+  }
 }
 
-/**
- * Default option of a feature flag.
- *
- * @see Feature.defaultOption
- */
-public val <T : Feature<out T>> Class<out T>.defaultOption: T
-  get() = firstOption.defaultOption
-
-/**
- * Source of feature flag values.
- *
- * @see Feature.source
- */
-public val Class<out Feature<*>>.source: Class<out Feature<*>>?
-  get() = firstOption.source
-
-/**
- * Description of a feature flag.
- *
- * @see Feature.description
- */
-public val Class<out Feature<*>>.description: String
-  get() = firstOption.description
-
-/** All available options of a feature flag. */
+/** All available options for this feature, as declared in the enum class. */
 public val <T : Feature<out T>> Class<out T>.options: Array<out T>
   get() = enumConstants
 

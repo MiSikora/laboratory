@@ -19,11 +19,30 @@ public abstract interface class io/mehow/laboratory/DefaultOptionFactory {
 public final class io/mehow/laboratory/DefaultOptionFactory$Companion {
 }
 
+public abstract interface class io/mehow/laboratory/DefaultSourceFactory {
+	public static final field Companion Lio/mehow/laboratory/DefaultSourceFactory$Companion;
+	public abstract fun create (Lio/mehow/laboratory/Feature;)Lio/mehow/laboratory/Feature$Source;
+	public fun plus (Lio/mehow/laboratory/DefaultSourceFactory;)Lio/mehow/laboratory/DefaultSourceFactory;
+}
+
+public final class io/mehow/laboratory/DefaultSourceFactory$Companion {
+}
+
 public abstract interface class io/mehow/laboratory/Feature : java/lang/Comparable {
 	public abstract fun getDefaultOption ()Ljava/lang/Enum;
+	public fun getDefaultSource ()Lio/mehow/laboratory/Feature$Source;
 	public fun getDescription ()Ljava/lang/String;
 	public abstract fun getName ()Ljava/lang/String;
-	public fun getSource ()Ljava/lang/Class;
+}
+
+public final class io/mehow/laboratory/Feature$Source : java/lang/Enum {
+	public static final field Local Lio/mehow/laboratory/Feature$Source;
+	public static final field Remote Lio/mehow/laboratory/Feature$Source;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun isLocal ()Z
+	public final fun isRemote ()Z
+	public static fun valueOf (Ljava/lang/String;)Lio/mehow/laboratory/Feature$Source;
+	public static fun values ()[Lio/mehow/laboratory/Feature$Source;
 }
 
 public abstract interface class io/mehow/laboratory/FeatureFactory {
@@ -36,26 +55,7 @@ public final class io/mehow/laboratory/FeatureFactory$Companion {
 }
 
 public final class io/mehow/laboratory/FeatureKt {
-	public static final fun getDefaultOption (Ljava/lang/Class;)Lio/mehow/laboratory/Feature;
-	public static final fun getDescription (Ljava/lang/Class;)Ljava/lang/String;
 	public static final fun getOptions (Ljava/lang/Class;)[Lio/mehow/laboratory/Feature;
-	public static final fun getSource (Ljava/lang/Class;)Ljava/lang/Class;
-}
-
-public abstract interface class io/mehow/laboratory/FeatureStorage {
-	public static final field Companion Lio/mehow/laboratory/FeatureStorage$Companion;
-	public abstract fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getFeatureName (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun observeFeatureName (Ljava/lang/Class;)Lkotlinx/coroutines/flow/Flow;
-	public fun setOption (Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun setOptions (Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun setOptions ([Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun withDefaultOptionFactory (Lio/mehow/laboratory/DefaultOptionFactory;)Lio/mehow/laboratory/FeatureStorage;
-}
-
-public final class io/mehow/laboratory/FeatureStorage$Companion {
-	public final fun inMemory ()Lio/mehow/laboratory/FeatureStorage;
-	public final fun sourced (Lio/mehow/laboratory/FeatureStorage;Ljava/util/Map;)Lio/mehow/laboratory/FeatureStorage;
 }
 
 public final class io/mehow/laboratory/Laboratory {
@@ -64,7 +64,9 @@ public final class io/mehow/laboratory/Laboratory {
 	public final fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun experiment (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun experimentIs (Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun localStorage ()Lio/mehow/laboratory/SourceOptionStorage;
 	public final fun observe (Ljava/lang/Class;)Lkotlinx/coroutines/flow/Flow;
+	public final fun remoteStorage ()Lio/mehow/laboratory/OptionStorage;
 	public final fun setOption (Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setOptions (Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setOptions ([Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -73,16 +75,18 @@ public final class io/mehow/laboratory/Laboratory {
 public abstract interface class io/mehow/laboratory/Laboratory$BuildingStep {
 	public abstract fun build ()Lio/mehow/laboratory/Laboratory;
 	public abstract fun defaultOptionFactory (Lio/mehow/laboratory/DefaultOptionFactory;)Lio/mehow/laboratory/Laboratory$BuildingStep;
+	public abstract fun defaultSourceFactory (Lio/mehow/laboratory/DefaultSourceFactory;)Lio/mehow/laboratory/Laboratory$BuildingStep;
+	public abstract fun remoteStorage (Lio/mehow/laboratory/Storage;)Lio/mehow/laboratory/Laboratory$BuildingStep;
 }
 
 public final class io/mehow/laboratory/Laboratory$Companion {
-	public final fun builder ()Lio/mehow/laboratory/Laboratory$FeatureStorageStep;
-	public final fun create (Lio/mehow/laboratory/FeatureStorage;)Lio/mehow/laboratory/Laboratory;
+	public final fun builder ()Lio/mehow/laboratory/Laboratory$LocalStorageStep;
+	public final fun create (Lio/mehow/laboratory/Storage;)Lio/mehow/laboratory/Laboratory;
 	public final fun inMemory ()Lio/mehow/laboratory/Laboratory;
 }
 
-public abstract interface class io/mehow/laboratory/Laboratory$FeatureStorageStep {
-	public abstract fun featureStorage (Lio/mehow/laboratory/FeatureStorage;)Lio/mehow/laboratory/Laboratory$BuildingStep;
+public abstract interface class io/mehow/laboratory/Laboratory$LocalStorageStep {
+	public abstract fun localStorage (Lio/mehow/laboratory/Storage;)Lio/mehow/laboratory/Laboratory$BuildingStep;
 }
 
 public abstract interface class io/mehow/laboratory/OptionFactory {
@@ -92,5 +96,38 @@ public abstract interface class io/mehow/laboratory/OptionFactory {
 }
 
 public final class io/mehow/laboratory/OptionFactory$Companion {
+}
+
+public class io/mehow/laboratory/OptionStorage {
+	public final fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getOption (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun getStorage ()Lio/mehow/laboratory/Storage;
+	public final fun observeOption (Ljava/lang/Class;)Lkotlinx/coroutines/flow/Flow;
+	public final fun setOptions (Lio/mehow/laboratory/Feature;[Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setOptions (Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/mehow/laboratory/SourceOptionStorage : io/mehow/laboratory/OptionStorage {
+	public final fun getSource (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun observeSource (Ljava/lang/Class;)Lkotlinx/coroutines/flow/Flow;
+	public final fun setLocalSource (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun setRemoteSource (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class io/mehow/laboratory/Storage {
+	public static final field Companion Lio/mehow/laboratory/Storage$Companion;
+	public abstract fun booleanFlow (Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public abstract fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getBoolean (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getString (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun setBoolean (Ljava/lang/String;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun setBooleans (Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun setString (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun setStrings (Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun stringFlow (Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class io/mehow/laboratory/Storage$Companion {
+	public final fun inMemory ()Lio/mehow/laboratory/Storage;
 }
 

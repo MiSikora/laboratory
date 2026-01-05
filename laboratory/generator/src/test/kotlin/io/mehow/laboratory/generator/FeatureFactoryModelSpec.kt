@@ -10,117 +10,110 @@ class FeatureFactoryModelSpec :
   FunSpec({
     val featureA =
       FeatureFlagModel(
-        className = ClassName("io.mehow", "FeatureA"),
-        options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+        ClassName("io.mehow", "FeatureA"),
+        listOf(FeatureFlagOption("A", isDefault = true)),
       )
 
     val featureB =
       FeatureFlagModel(
-        className = ClassName("io.mehow", "FeatureB"),
-        options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+        ClassName("io.mehow", "FeatureB"),
+        listOf(FeatureFlagOption("A", isDefault = true)),
       )
 
     val featureC =
       FeatureFlagModel(
-        className = ClassName("io.mehow.c", "FeatureA"),
-        options = listOf(FeatureFlagOption("First", isDefault = true), FeatureFlagOption("Second")),
+        ClassName("io.mehow.c", "FeatureA"),
+        listOf(FeatureFlagOption("A", isDefault = true)),
       )
 
-    test("can be internal") {
+    test("internal visibility") {
       val model =
         FeatureFactoryModel(
-          ClassName("io.mehow", "GeneratedFeatureFactory"),
+          ClassName("io.mehow", "Factory"),
           listOf(featureA, featureB, featureC),
           visibility = Internal,
         )
 
-      val fileSpec = model.prepare("generated")
+      val fileSpec = model.prepare()
 
       fileSpec shouldSpecify
         """
-        |package io.mehow
-        |
-        |import io.mehow.laboratory.Feature
-        |import io.mehow.laboratory.FeatureFactory
-        |import java.lang.Class
-        |import kotlin.Suppress
-        |import kotlin.collections.Set
-        |import kotlin.collections.setOf
-        |
-        |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
-        |
-        |private object GeneratedFeatureFactory : FeatureFactory {
-        |  @Suppress("UNCHECKED_CAST")
-        |  override fun create(): Set<Class<out Feature<*>>> = setOf(
-        |    Class.forName("io.mehow.FeatureA"),
-        |    Class.forName("io.mehow.FeatureB"),
-        |    Class.forName("io.mehow.c.FeatureA")
-        |  ) as Set<Class<out Feature<*>>>
-        |}
-        |"""
-          .trimMargin()
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.FeatureFactory
+        import java.lang.Class
+        import kotlin.Suppress
+        import kotlin.collections.Set
+        import kotlin.collections.setOf
+
+        internal fun FeatureFactory.Companion.generated(): FeatureFactory = Factory
+
+        private object Factory : FeatureFactory {
+          @Suppress("UNCHECKED_CAST")
+          override fun create(): Set<Class<out Feature<*>>> = setOf(
+            Class.forName("io.mehow.FeatureA"),
+            Class.forName("io.mehow.FeatureB"),
+            Class.forName("io.mehow.c.FeatureA")
+          ) as Set<Class<out Feature<*>>>
+        }
+        """
     }
 
-    test("can be public") {
+    test("public visibility") {
       val model =
         FeatureFactoryModel(
-          ClassName("io.mehow", "GeneratedFeatureFactory"),
+          ClassName("io.mehow", "Factory"),
           listOf(featureA, featureB, featureC),
           visibility = Public,
         )
 
-      val fileSpec = model.prepare("generated")
+      val fileSpec = model.prepare()
 
       fileSpec shouldSpecify
         """
-        |package io.mehow
-        |
-        |import io.mehow.laboratory.Feature
-        |import io.mehow.laboratory.FeatureFactory
-        |import java.lang.Class
-        |import kotlin.Suppress
-        |import kotlin.collections.Set
-        |import kotlin.collections.setOf
-        |
-        |public fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
-        |
-        |private object GeneratedFeatureFactory : FeatureFactory {
-        |  @Suppress("UNCHECKED_CAST")
-        |  override fun create(): Set<Class<out Feature<*>>> = setOf(
-        |    Class.forName("io.mehow.FeatureA"),
-        |    Class.forName("io.mehow.FeatureB"),
-        |    Class.forName("io.mehow.c.FeatureA")
-        |  ) as Set<Class<out Feature<*>>>
-        |}
-        |"""
-          .trimMargin()
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.FeatureFactory
+        import java.lang.Class
+        import kotlin.Suppress
+        import kotlin.collections.Set
+        import kotlin.collections.setOf
+
+        public fun FeatureFactory.Companion.generated(): FeatureFactory = Factory
+
+        private object Factory : FeatureFactory {
+          @Suppress("UNCHECKED_CAST")
+          override fun create(): Set<Class<out Feature<*>>> = setOf(
+            Class.forName("io.mehow.FeatureA"),
+            Class.forName("io.mehow.FeatureB"),
+            Class.forName("io.mehow.c.FeatureA")
+          ) as Set<Class<out Feature<*>>>
+        }
+        """
     }
 
-    test("is optimized when there are no features") {
-      val model =
-        FeatureFactoryModel(
-          ClassName("io.mehow", "GeneratedFeatureFactory"),
-          features = emptyList(),
-        )
+    test("no features") {
+      val model = FeatureFactoryModel(ClassName("io.mehow", "Factory"), features = emptyList())
 
-      val fileSpec = model.prepare("generated")
+      val fileSpec = model.prepare()
 
       fileSpec shouldSpecify
         """
-        |package io.mehow
-        |
-        |import io.mehow.laboratory.Feature
-        |import io.mehow.laboratory.FeatureFactory
-        |import java.lang.Class
-        |import kotlin.collections.Set
-        |import kotlin.collections.emptySet
-        |
-        |internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
-        |
-        |private object GeneratedFeatureFactory : FeatureFactory {
-        |  override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
-        |}
-        |"""
-          .trimMargin()
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.FeatureFactory
+        import java.lang.Class
+        import kotlin.collections.Set
+        import kotlin.collections.emptySet
+
+        internal fun FeatureFactory.Companion.generated(): FeatureFactory = Factory
+
+        private object Factory : FeatureFactory {
+          override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
+        }
+        """
     }
   })

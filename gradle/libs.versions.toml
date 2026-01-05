@@ -17,6 +17,7 @@ buildconfig = "6.0.7"
 dokka = "2.0.0"
 hyperion = "0.9.38"
 kotest = "5.9.1"
+kotest-android = "1.1.1"
 kotlin = "2.2.0"
 kotlinpoet = "2.2.0"
 kotlinx-coroutines = "1.10.2"
@@ -28,6 +29,7 @@ tapmoc = "0.4.0"
 turbine = "1.2.1"
 wire = "5.4.0"
 
+# Used by convention plugin
 jvm-target = "11"
 android-min-sdk = "23"
 android-compile-sdk = "36"
@@ -42,6 +44,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
+# Used by convention plugin
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 wire = { id = "com.squareup.wire", version.ref = "wire" }
 
@@ -64,7 +67,8 @@ coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 hyperion-core = { group = "com.willowtreeapps.hyperion", name = "hyperion-core", version.ref = "hyperion" }
 hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plugin", version.ref = "hyperion" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
-kotest-property = { group = "io.kotest", name = "kotest-property-jvm", version.ref = "kotest" }
+kotest-framework-api = { group = "io.kotest", name = "kotest-framework-api", version.ref = "kotest" }
+kotest-runner-android = { group = "br.com.colman", name = "kotest-runner-android", version.ref = "kotest-android" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 # Included to be picked up by dependencies update automation

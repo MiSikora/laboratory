@@ -11,6 +11,8 @@ plugins {
   id("io.mehow.laboratory.convention")
 }
 
+apiValidation { ignoredProjects.add("testing") }
+
 tasks.dokkaHtmlMultiModule {
   moduleName.set("Laboratory")
   moduleVersion.set(project.property("VERSION_NAME") as String)

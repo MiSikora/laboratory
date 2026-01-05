@@ -3,6 +3,7 @@
 
   <style name="IoMehowLaboratory.Theme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
     <item name="colorPrimary">#81d4fa</item>
+    <item name="colorSecondary">#5fbfec</item>
   </style>
 
 </resources>

@@ -18,6 +18,7 @@ dependencies {
   api(projects.laboratory.runtime)
   api(libs.androidx.datastore)
 
+  testImplementation(projects.laboratory.testing)
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)
   testImplementation(libs.turbine)

@@ -2,24 +2,10 @@ package io.mehow.laboratory
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.mehow.laboratory.testing.FeatureA
+import io.mehow.laboratory.testing.FeatureB
 
 class OptionFactorySpec : FunSpec() {
-  enum class FeatureA : Feature<FeatureA> {
-    A,
-    B;
-
-    override val defaultOption
-      get() = A
-  }
-
-  enum class FeatureB : Feature<FeatureB> {
-    A,
-    B;
-
-    override val defaultOption
-      get() = A
-  }
-
   init {
     val firstFactory =
       object : OptionFactory {
@@ -40,20 +26,14 @@ class OptionFactorySpec : FunSpec() {
           }
       }
 
-    context("factory created from sum") {
+    context("combined factory") {
       val factory = firstFactory + secondFactory
 
-      test("prioritizes first factory when feature is available in it") {
-        factory.create("FeatureA", "") shouldBe FeatureA.A
-      }
+      test("use first factory") { factory.create("FeatureA", "") shouldBe FeatureA.A }
 
-      test("falls back to second factory when feature is not available in first factory") {
-        factory.create("FeatureB", "") shouldBe FeatureB.B
-      }
+      test("use second factory") { factory.create("FeatureB", "") shouldBe FeatureB.B }
 
-      test("does not handle features unknown to any of sub-factories") {
-        factory.create("Unknown", "") shouldBe null
-      }
+      test("use no factories") { factory.create("Unknown", "") shouldBe null }
     }
   }
 }

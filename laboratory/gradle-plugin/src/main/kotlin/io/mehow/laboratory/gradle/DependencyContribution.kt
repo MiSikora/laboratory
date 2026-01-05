@@ -1,19 +1,9 @@
 package io.mehow.laboratory.gradle
 
-/**
- * Possible contributions of a dependency to feature flag generation. See
- * [LaboratoryExtension.dependency] for more info.
- */
+/** Specifies which generated outputs should include feature flags from a dependent project. */
 public enum class DependencyContribution {
-  /** Contribute to [LaboratoryExtension.featureFactory]. */
+  /** Include dependent features in the generated feature factory. */
   FeatureFactory,
-
-  /** Contribute to [LaboratoryExtension.featureSourceFactory]. */
-  FeatureSourceFactory,
-
-  /** Contribute to [LaboratoryExtension.optionFactory]. */
+  /** Include dependent features in the generated option factory. */
   OptionFactory,
-
-  /** Contribute to [LaboratoryExtension.sourcedStorage]. */
-  SourcedStorage,
 }

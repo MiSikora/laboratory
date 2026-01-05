@@ -1,9 +1,0 @@
-plugins {
-  id("com.android.application")
-  id("io.mehow.laboratory")
-}
-
-android {
-  namespace "io.mehow.laboratory.sample"
-  compileSdkVersion 33
-}

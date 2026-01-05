@@ -6,12 +6,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- A new `Storage` interface that replaces `FeatureStorage`. It provides lower-level APIs for storing strings and booleans.
+- Built-in implementations of the `Storage` interface for in-memory, `SharedPreferences`, and `DataStore`.
+- A `Feature.Source` enum to define whether a feature flag uses local or remote storage by default.
+- `DefaultSourceFactory` to allow overriding default feature sources at runtime.
+
 ### Changed
-- Upgrade to min Android SDK to `23`.
-- Upgrade to target Android SDK `36`.
+- Feature flags no longer supports an arbitrary number of remote sources. Instead, only one local and one remote source can be provided when creating `Laboratory`.
+- Features declared in the Gradle build script can no longer define arbitrary sources. Use the `isRemote` property to indicate a remote source.
+    ```groovy
+    laboratory {
+      feature("Feature") {
+        isRemote = true
+      }
+    }
+    ```
+- The Gradle plugin’s `featureFactory()` now generates `FeatureFactory.Companion.generated()` instead of `FeatureFactory.Companion.featureGenerated()`.
+- The Gradle plugin’s extension is now marked with the `@DslMarker` annotation to avoid nested calls.
+- Replaced the `FeatureFlags` type with `StorageData`. It is used as the serialization type for `DataStore`-backed `Storage`.
+- Renamed `DeprecationAlignment` to `FeatureAlignment`.
+- Renamed `DeprecationPhenotype` to `FeatureStyle`.
+- Minimum Android SDK increased to `23`.
+- Target Android SDK updated to `36`.
 
 ### Removed
-- Feature flags can no longer be supervised.
+- Feature supervision support. All supervision-related APIs have been removed.
+- The `FeatureStorage` interface.
+- The `Feature.source` property.
+- Extensions on `Class<Feature<*>>` that exposed feature properties such as `description`, `defaultOption`, etc.
+- Gradle plugin support for `sourcedStorage()`.
+- Gradle plugin support for `featureSourceFactory()`.
 
 ## [1.1.2] - 2025-08-04
 

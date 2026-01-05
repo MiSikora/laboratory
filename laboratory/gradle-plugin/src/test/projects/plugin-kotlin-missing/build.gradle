@@ -1,4 +1,0 @@
-plugins {
-  id "application"
-  id "io.mehow.laboratory"
-}

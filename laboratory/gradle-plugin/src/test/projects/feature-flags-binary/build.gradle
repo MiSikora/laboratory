@@ -1,0 +1,9 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "io.mehow.laboratory"
+}
+
+laboratory {
+  enabledFeature("FeatureA")
+  disabledFeature("FeatureB")
+}
