@@ -16,7 +16,7 @@ public interface DefaultOptionFactory {
    * Warning: The returned option must match the runtime type of the feature. Returning an option of
    * an incorrect type will cause a runtime exception.
    */
-  public fun <T : Feature<out T>> create(feature: T): Feature<*>?
+  public fun <T : Feature<T>> create(feature: T): Feature<*>?
 
   /**
    * Combines this factory with another. The resulting factory first checks this factory, and then
@@ -24,7 +24,7 @@ public interface DefaultOptionFactory {
    */
   public operator fun plus(factory: DefaultOptionFactory): DefaultOptionFactory =
     object : DefaultOptionFactory {
-      override fun <T : Feature<out T>> create(feature: T) =
+      override fun <T : Feature<T>> create(feature: T) =
         this@DefaultOptionFactory.create(feature) ?: factory.create(feature)
     }
 
@@ -32,7 +32,7 @@ public interface DefaultOptionFactory {
 }
 
 internal class SafeDefaultOptionFactory(private val delegate: DefaultOptionFactory?) {
-  fun <T : Feature<out T>> create(feature: Class<out T>): T {
+  fun <T : Feature<T>> create(feature: Class<T>): T {
     val defaultOption = delegate?.create(feature.firstOption) ?: return feature.defaultOption
     check(defaultOption::class.java == feature) {
       val optionName = "${defaultOption::class.java.simpleName}.$defaultOption"
@@ -44,5 +44,5 @@ internal class SafeDefaultOptionFactory(private val delegate: DefaultOptionFacto
   }
 }
 
-private val <T : Feature<out T>> Class<out T>.defaultOption: T
+private val <T : Feature<T>> Class<T>.defaultOption: T
   get() = firstOption.defaultOption

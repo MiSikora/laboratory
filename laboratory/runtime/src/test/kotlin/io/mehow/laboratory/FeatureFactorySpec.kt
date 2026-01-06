@@ -9,12 +9,14 @@ class FeatureFactorySpec : FunSpec() {
   init {
     val firstFactory =
       object : FeatureFactory {
-        override fun create(): Set<Class<out Feature<*>>> = setOf(FeatureA::class.java)
+        @Suppress("UNCHECKED_CAST")
+        override fun create() = setOf(FeatureA::class.java) as Set<Class<Feature<*>>>
       }
 
     val secondFactory =
       object : FeatureFactory {
-        override fun create(): Set<Class<out Feature<*>>> = setOf(FeatureB::class.java)
+        @Suppress("UNCHECKED_CAST")
+        override fun create() = setOf(FeatureB::class.java) as Set<Class<Feature<*>>>
       }
 
     context("combined factory") {

@@ -37,7 +37,7 @@ public class Laboratory internal constructor(builder: Builder) {
    * configured source: if a remote source is set for the feature and a remote storage is configured
    * in this Laboratory, the flow will reflect changes from the appropriate storage.
    */
-  public inline fun <reified T : Feature<out T>> observe(): Flow<T> = observe(T::class.java)
+  public inline fun <reified T : Feature<T>> observe(): Flow<T> = observe(T::class.java)
 
   /**
    * Observes changes to the specified [Feature] type. This returns a cold [Flow] that will emit the
@@ -46,7 +46,7 @@ public class Laboratory internal constructor(builder: Builder) {
    * configured source: if a remote source is set for the feature and a remote storage is configured
    * in this Laboratory, the flow will reflect changes from the appropriate storage.
    */
-  public fun <T : Feature<out T>> observe(feature: Class<out T>): Flow<T> =
+  public fun <T : Feature<T>> observe(feature: Class<T>): Flow<T> =
     @OptIn(ExperimentalCoroutinesApi::class)
     localStorage
       .observeSource(feature)
@@ -61,14 +61,14 @@ public class Laboratory internal constructor(builder: Builder) {
    * remote storage is configured, this function will automatically fetch the option from the remote
    * storage when the feature's source is set to remote (and from local storage otherwise).
    */
-  public suspend inline fun <reified T : Feature<out T>> experiment(): T = experiment(T::class.java)
+  public suspend inline fun <reified T : Feature<T>> experiment(): T = experiment(T::class.java)
 
   /**
    * Returns the current option of the specified [Feature]. If the feature has a remote source and a
    * remote storage is configured, this function will automatically fetch the option from the remote
    * storage when the feature's source is set to remote (and from local storage otherwise).
    */
-  public suspend fun <T : Feature<out T>> experiment(feature: Class<out T>): T {
+  public suspend fun <T : Feature<T>> experiment(feature: Class<T>): T {
     val selectedSource = localStorage.getSource(feature)
     val selectedOption = getStorage(feature, selectedSource).getOption(feature)
     return getOption(feature, selectedOption)
@@ -79,8 +79,10 @@ public class Laboratory internal constructor(builder: Builder) {
    * feature's current option (from the appropriate source) and compares it to [option]. It returns
    * `true` if the feature is presently set to [option], or `false` otherwise.
    */
-  public suspend fun <T : Feature<out T>> experimentIs(option: T): Boolean =
-    experiment(option::class.java) == option
+  public suspend fun <T : Feature<T>> experimentIs(option: T): Boolean {
+    @Suppress("UNCHECKED_CAST")
+    return experiment(option::class.java as Class<T>) == option
+  }
 
   /**
    * Sets the specified [Feature] [option] as the active option.
@@ -90,7 +92,7 @@ public class Laboratory internal constructor(builder: Builder) {
    *
    * The result indicates whether the value was stored successfully.
    */
-  public suspend fun <T : Feature<out T>> setOption(option: T): Boolean =
+  public suspend fun <T : Feature<T>> setOption(option: T): Boolean =
     localStorage.setOptions(option)
 
   /**
@@ -129,8 +131,8 @@ public class Laboratory internal constructor(builder: Builder) {
    */
   public suspend fun clear(): Boolean = localStorage.clear()
 
-  private fun <T : Feature<out T>> getStorage(
-    feature: Class<out T>,
+  private fun <T : Feature<T>> getStorage(
+    feature: Class<T>,
     selectedSource: Feature.Source?,
   ): OptionStorage {
     return when (selectedSource) {
@@ -140,10 +142,10 @@ public class Laboratory internal constructor(builder: Builder) {
     } ?: localStorage
   }
 
-  private fun <T : Feature<out T>> getSource(feature: Class<out T>): Feature.Source =
+  private fun <T : Feature<T>> getSource(feature: Class<T>): Feature.Source =
     sourceFactory.create(feature.firstOption)
 
-  private fun <T : Feature<out T>> getOption(feature: Class<out T>, selectedOption: T?): T =
+  private fun <T : Feature<T>> getOption(feature: Class<T>, selectedOption: T?): T =
     selectedOption ?: optionFactory.create(feature)
 
   public companion object {

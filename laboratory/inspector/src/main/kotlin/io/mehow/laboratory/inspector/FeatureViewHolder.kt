@@ -25,8 +25,8 @@ internal class FeatureViewHolder(
   listener: FeatureAdapter.Listener,
   private val lifecycle: Lifecycle,
   private val isRemoteSourceAvailable: Boolean,
-  private val selectedOptionFlow: (Class<out Feature<*>>) -> Flow<Feature<*>>,
-  private val selectedSourceFlow: (Class<out Feature<*>>) -> Flow<Feature.Source>,
+  private val selectedOptionFlow: (Class<Feature<*>>) -> Flow<Feature<*>>,
+  private val selectedSourceFlow: (Class<Feature<*>>) -> Flow<Feature.Source>,
 ) : ViewHolder(itemView) {
   private val nameControl =
     itemView.findViewById<MaterialTextView>(R.id.io_mehow_laboratory_feature_name)

@@ -10,7 +10,7 @@ package io.mehow.laboratory
  * stable class and enum constant names. Overriding methods on individual enum constants may break
  * this.
  */
-public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
+public interface Feature<out T> where T : Feature<T>, T : Enum<out T> {
   /** Unique name of this feature option, used to identify it within its feature flag. */
   public val name: String
 
@@ -45,8 +45,8 @@ public interface Feature<T> : Comparable<T> where T : Feature<T>, T : Enum<T> {
 }
 
 /** All available options for this feature, as declared in the enum class. */
-public val <T : Feature<out T>> Class<out T>.options: Array<out T>
+public val <T : Feature<T>> Class<T>.options: Array<T>
   get() = enumConstants
 
-internal val <T : Feature<out T>> Class<out T>.firstOption: T
+internal val <T : Feature<T>> Class<T>.firstOption: T
   get() = options.firstOrNull() ?: error("$canonicalName must have at least one option")

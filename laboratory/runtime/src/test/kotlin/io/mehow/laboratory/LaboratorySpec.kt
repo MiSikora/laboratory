@@ -116,7 +116,7 @@ class LaboratorySpec : FunSpec() {
     context("default option factory") {
       val factory =
         object : DefaultOptionFactory {
-          override fun <T : Feature<out T>> create(feature: T) =
+          override fun <T : Feature<T>> create(feature: T) =
             when (feature) {
               is FeatureA -> FeatureA.C
               is FeatureB -> FeatureA.C // Intentionally wrong class
@@ -158,7 +158,7 @@ class LaboratorySpec : FunSpec() {
     context("default source factory") {
       val factory =
         object : DefaultSourceFactory {
-          override fun <T : Feature<out T>> create(feature: T) =
+          override fun <T : Feature<T>> create(feature: T) =
             when (feature) {
               is FeatureA -> Feature.Source.Remote
               is RemoteFeatureA -> Feature.Source.Local

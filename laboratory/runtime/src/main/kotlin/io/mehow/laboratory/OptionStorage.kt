@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.map
  */
 public open class OptionStorage internal constructor(protected val storage: Storage) {
   /** Gets the selected option for the feature or `null` if unset. */
-  public suspend fun <T : Feature<out T>> getOption(feature: Class<out T>): T? =
+  public suspend fun <T : Feature<T>> getOption(feature: Class<T>): T? =
     storage.getString(feature.storageKey)?.let(feature::findOption)
 
   /** Observes changes to the feature's selected option. */
-  public fun <T : Feature<out T>> observeOption(feature: Class<out T>): Flow<T?> =
+  public fun <T : Feature<T>> observeOption(feature: Class<T>): Flow<T?> =
     storage.stringFlow(feature.storageKey).map { value -> value?.let(feature::findOption) }
 
   /** Stores one or more feature options. */
@@ -40,31 +40,31 @@ public open class OptionStorage internal constructor(protected val storage: Stor
 /** Extension of [OptionStorage] that also manages feature source selection. */
 public class SourceOptionStorage internal constructor(storage: Storage) : OptionStorage(storage) {
   /** Gets the selected source for the feature or `null` if unset. */
-  public suspend fun <T : Feature<out T>> getSource(feature: Class<out T>): Feature.Source? =
+  public suspend fun <T : Feature<T>> getSource(feature: Class<T>): Feature.Source? =
     storage.getBoolean(feature.storageKey)?.let(Boolean::toFeatureSource)
 
   /** Observes changes to the feature's source. */
-  public fun <T : Feature<out T>> observeSource(feature: Class<out T>): Flow<Feature.Source?> =
+  public fun <T : Feature<T>> observeSource(feature: Class<T>): Flow<Feature.Source?> =
     storage.booleanFlow(feature.storageKey).map { value -> value?.let(Boolean::toFeatureSource) }
 
   /** Sets the feature source to local. */
-  public suspend inline fun <reified T : Feature<out T>> setLocalSource(): Boolean =
+  public suspend inline fun <reified T : Feature<T>> setLocalSource(): Boolean =
     setLocalSource(T::class.java)
 
   /** Sets the feature source to local. */
-  public suspend fun <T : Feature<out T>> setLocalSource(feature: Class<out T>): Boolean =
+  public suspend fun <T : Feature<T>> setLocalSource(feature: Class<T>): Boolean =
     storage.setBoolean(feature.storageKey, false)
 
   /** Sets the feature source to remote. */
-  public suspend inline fun <reified T : Feature<out T>> setRemoteSource(): Boolean =
+  public suspend inline fun <reified T : Feature<T>> setRemoteSource(): Boolean =
     setRemoteSource(T::class.java)
 
   /** Sets the feature source to remote. */
-  public suspend fun <T : Feature<out T>> setRemoteSource(feature: Class<out T>): Boolean =
+  public suspend fun <T : Feature<T>> setRemoteSource(feature: Class<T>): Boolean =
     storage.setBoolean(feature.storageKey, true)
 }
 
-private fun <T : Feature<out T>> Class<out T>.findOption(value: String) =
+private fun <T : Feature<T>> Class<T>.findOption(value: String) =
   options.firstOrNull { option -> option.name == value }
 
 private val Class<out Feature<*>>.storageKey

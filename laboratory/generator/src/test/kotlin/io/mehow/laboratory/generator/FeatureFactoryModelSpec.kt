@@ -51,11 +51,11 @@ class FeatureFactoryModelSpec :
 
         private object Factory : FeatureFactory {
           @Suppress("UNCHECKED_CAST")
-          override fun create(): Set<Class<out Feature<*>>> = setOf(
+          override fun create(): Set<Class<Feature<*>>> = setOf(
             Class.forName("io.mehow.FeatureA"),
             Class.forName("io.mehow.FeatureB"),
             Class.forName("io.mehow.c.FeatureA")
-          ) as Set<Class<out Feature<*>>>
+          ) as Set<Class<Feature<*>>>
         }
         """
     }
@@ -85,11 +85,11 @@ class FeatureFactoryModelSpec :
 
         private object Factory : FeatureFactory {
           @Suppress("UNCHECKED_CAST")
-          override fun create(): Set<Class<out Feature<*>>> = setOf(
+          override fun create(): Set<Class<Feature<*>>> = setOf(
             Class.forName("io.mehow.FeatureA"),
             Class.forName("io.mehow.FeatureB"),
             Class.forName("io.mehow.c.FeatureA")
-          ) as Set<Class<out Feature<*>>>
+          ) as Set<Class<Feature<*>>>
         }
         """
     }
@@ -112,7 +112,7 @@ class FeatureFactoryModelSpec :
         internal fun FeatureFactory.Companion.generated(): FeatureFactory = Factory
 
         private object Factory : FeatureFactory {
-          override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
+          override fun create(): Set<Class<Feature<*>>> = emptySet<Class<Feature<*>>>()
         }
         """
     }

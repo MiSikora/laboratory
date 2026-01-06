@@ -4,7 +4,7 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.options
 import kotlin.reflect.KClass
 
-val <T : Feature<out T>> KClass<out T>.options: List<T>
+val <T : Feature<T>> KClass<T>.options: List<T>
   get() = java.options.toList()
 
 enum class FeatureA : Feature<FeatureA> {

@@ -52,13 +52,11 @@ internal class FeatureAdapter(
   }
 
   interface Listener : OptionGroupListener {
-    fun onSelectSource(feature: Class<out Feature<*>>, source: Feature.Source)
+    fun onSelectSource(feature: Class<Feature<*>>, source: Feature.Source)
   }
 }
 
-private fun <T : Feature<out T>> Laboratory.observeSource(
-  feature: Class<out T>
-): Flow<Feature.Source> {
+private fun <T : Feature<T>> Laboratory.observeSource(feature: Class<T>): Flow<Feature.Source> {
   val defaultSource = feature.options[0].defaultSource
   return localStorage().observeSource(feature).map { source -> source ?: defaultSource }
 }

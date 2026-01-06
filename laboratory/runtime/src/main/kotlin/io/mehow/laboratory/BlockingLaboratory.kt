@@ -32,23 +32,23 @@ public annotation class BlockingIoCall
 public class BlockingLaboratory internal constructor(private val laboratory: Laboratory) {
   /** The blocking equivalent of [Laboratory.experiment]. */
   @BlockingIoCall
-  public inline fun <reified T : Feature<out T>> experiment(): T = experiment(T::class.java)
+  public inline fun <reified T : Feature<T>> experiment(): T = experiment(T::class.java)
 
   /** The blocking equivalent of [Laboratory.experiment]. */
   @BlockingIoCall
-  public fun <T : Feature<out T>> experiment(feature: Class<out T>): T = runBlocking {
+  public fun <T : Feature<T>> experiment(feature: Class<T>): T = runBlocking {
     laboratory.experiment(feature)
   }
 
   /** The blocking equivalent of [Laboratory.experimentIs]. */
   @BlockingIoCall
-  public fun <T : Feature<out T>> experimentIs(option: T): Boolean = runBlocking {
+  public fun <T : Feature<T>> experimentIs(option: T): Boolean = runBlocking {
     laboratory.experimentIs(option)
   }
 
   /** The blocking equivalent of [Laboratory.setOption]. */
   @BlockingIoCall
-  public fun <T : Feature<*>> setOption(option: T): Boolean = runBlocking {
+  public fun <T : Feature<T>> setOption(option: T): Boolean = runBlocking {
     laboratory.setOption(option)
   }
 
