@@ -39,7 +39,7 @@ jobs:
         run: ./gradlew publish --stacktrace
 
       - name: Build HTML Docs
-        run: ./gradlew dokkaHtmlMultiModule --stacktrace
+        run: ./gradlew dokkaGenerateHtml --stacktrace
 
       - name: Stop Gradle
         run: ./gradlew --stop
