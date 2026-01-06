@@ -43,10 +43,3 @@ public interface Feature<out T> where T : Feature<T>, T : Enum<out T> {
       get() = !isLocal
   }
 }
-
-/** All available options for this feature, as declared in the enum class. */
-public val <T : Feature<T>> Class<T>.options: Array<T>
-  get() = enumConstants
-
-internal val <T : Feature<T>> Class<T>.firstOption: T
-  get() = options.firstOrNull() ?: error("$canonicalName must have at least one option")

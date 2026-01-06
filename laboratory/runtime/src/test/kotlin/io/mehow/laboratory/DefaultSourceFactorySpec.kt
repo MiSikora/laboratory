@@ -10,7 +10,7 @@ class DefaultSourceFactorySpec : FunSpec() {
   init {
     val firstFactory =
       object : DefaultSourceFactory {
-        override fun <T : Feature<T>> create(feature: T): Feature.Source? =
+        override fun create(feature: Feature<*>): Feature.Source? =
           when (feature) {
             is FeatureA -> Feature.Source.Remote
             else -> null
@@ -19,7 +19,7 @@ class DefaultSourceFactorySpec : FunSpec() {
 
     val secondFactory =
       object : DefaultSourceFactory {
-        override fun <T : Feature<T>> create(feature: T): Feature.Source? =
+        override fun create(feature: Feature<*>): Feature.Source? =
           when (feature) {
             is FeatureA -> Feature.Source.Local
             is FeatureB -> Feature.Source.Remote

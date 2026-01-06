@@ -25,7 +25,7 @@ class LaboratorySpec : FunSpec() {
     }
 
     test("change feature option") {
-      for (option in FeatureA::class.java.options) {
+      for (option in FeatureA::class.java.enumConstants) {
         laboratory.localStorage().setOptions(option)
 
         laboratory.experiment<FeatureA>() shouldBe option
@@ -41,7 +41,7 @@ class LaboratorySpec : FunSpec() {
 
     test("fail to use feature with no values") {
       val exception =
-        shouldThrow<IllegalStateException> { laboratory.experiment<FeatureWithoutValues>() }
+        shouldThrow<IllegalArgumentException> { laboratory.experiment<FeatureWithoutValues>() }
       exception shouldHaveMessage
         "io.mehow.laboratory.testing.FeatureWithoutValues must have at least one option"
     }
@@ -116,7 +116,7 @@ class LaboratorySpec : FunSpec() {
     context("default option factory") {
       val factory =
         object : DefaultOptionFactory {
-          override fun <T : Feature<T>> create(feature: T) =
+          override fun create(feature: Feature<*>) =
             when (feature) {
               is FeatureA -> FeatureA.C
               is FeatureB -> FeatureA.C // Intentionally wrong class
@@ -132,7 +132,7 @@ class LaboratorySpec : FunSpec() {
       test("override default option") { laboratory.experiment<FeatureA>() shouldBe FeatureA.C }
 
       test("do not override changed option") {
-        for (option in FeatureA::class.java.options) {
+        for (option in FeatureA::class.java.enumConstants) {
           laboratory.localStorage().setOptions(option)
 
           laboratory.experiment<FeatureA>() shouldBe option
@@ -158,7 +158,7 @@ class LaboratorySpec : FunSpec() {
     context("default source factory") {
       val factory =
         object : DefaultSourceFactory {
-          override fun <T : Feature<T>> create(feature: T) =
+          override fun create(feature: Feature<*>) =
             when (feature) {
               is FeatureA -> Feature.Source.Remote
               is RemoteFeatureA -> Feature.Source.Local

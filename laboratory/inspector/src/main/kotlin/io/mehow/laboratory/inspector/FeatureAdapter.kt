@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.OptionViewGroup.OptionGroupListener
-import io.mehow.laboratory.options
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import io.mehow.laboratory.internal.InternalLaboratoryApi
 
 internal class FeatureAdapter(
   private val laboratory: Laboratory,
@@ -25,6 +23,7 @@ internal class FeatureAdapter(
 
   override fun getItemViewType(position: Int) = R.layout.io_mehow_laboratory_feature_item
 
+  @OptIn(InternalLaboratoryApi::class)
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeatureViewHolder {
     val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
     return FeatureViewHolder(
@@ -32,8 +31,8 @@ internal class FeatureAdapter(
       listener = listener,
       isRemoteSourceAvailable = laboratory.remoteStorage() != null,
       lifecycle = lifecycle,
-      selectedOptionFlow = laboratory::observe,
-      selectedSourceFlow = laboratory::observeSource,
+      selectedOptionFlow = laboratory::observeRaw,
+      selectedSourceFlow = laboratory::observeSourceRaw,
     )
   }
 
@@ -52,11 +51,6 @@ internal class FeatureAdapter(
   }
 
   interface Listener : OptionGroupListener {
-    fun onSelectSource(feature: Class<Feature<*>>, source: Feature.Source)
+    fun onSelectSource(feature: Class<out Feature<*>>, source: Feature.Source)
   }
-}
-
-private fun <T : Feature<T>> Laboratory.observeSource(feature: Class<T>): Flow<Feature.Source> {
-  val defaultSource = feature.options[0].defaultSource
-  return localStorage().observeSource(feature).map { source -> source ?: defaultSource }
 }

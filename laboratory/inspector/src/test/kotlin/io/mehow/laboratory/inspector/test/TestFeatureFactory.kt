@@ -4,7 +4,7 @@ import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
 
 object TestFeatureFactory : FeatureFactory {
-  @Suppress("UNCHECKED_CAST", "DEPRECATION", "DEPRECATION_ERROR")
+  @Suppress("DEPRECATION", "DEPRECATION_ERROR")
   override fun create() =
     setOf(
       LocalFeature::class.java,
@@ -13,7 +13,7 @@ object TestFeatureFactory : FeatureFactory {
       DeprecatedErrorFeature::class.java,
       FeatureWithDescription::class.java,
     )
-      as Set<Class<Feature<*>>>
+      as Set<Class<out Feature<*>>>
 }
 
 enum class LocalFeature : Feature<LocalFeature> {

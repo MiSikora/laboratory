@@ -10,7 +10,7 @@ class DefaultOptionFactorySpec : FunSpec() {
   init {
     val firstFactory =
       object : DefaultOptionFactory {
-        override fun <T : Feature<T>> create(feature: T): Feature<*>? =
+        override fun create(feature: Feature<*>): Feature<*>? =
           when (feature) {
             is FeatureA -> FeatureA.B
             else -> null
@@ -19,7 +19,7 @@ class DefaultOptionFactorySpec : FunSpec() {
 
     val secondFactory =
       object : DefaultOptionFactory {
-        override fun <T : Feature<T>> create(feature: T): Feature<*>? =
+        override fun create(feature: Feature<*>): Feature<*>? =
           when (feature) {
             is FeatureA -> FeatureA.C
             is FeatureB -> FeatureB.C

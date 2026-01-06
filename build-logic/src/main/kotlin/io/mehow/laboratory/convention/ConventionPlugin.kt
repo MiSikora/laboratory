@@ -68,7 +68,6 @@ class ConventionPlugin : Plugin<Project> {
     }
     tasks.withType<KotlinCompilationTask<KotlinJvmCompilerOptions>>().configureEach {
       compilerOptions {
-        freeCompilerArgs.addAll("-Xjvm-default=all")
         progressiveMode.set(true)
         allWarningsAsErrors.set(true)
         optIn.addAll("kotlin.RequiresOptIn")
