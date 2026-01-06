@@ -1,8 +1,8 @@
 package io.mehow.laboratory.inspector
 
 import app.cash.turbine.test
-import io.kotest.core.coroutines.backgroundScope
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.engine.coroutines.backgroundScope
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe

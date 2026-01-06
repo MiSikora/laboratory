@@ -10,7 +10,7 @@ import io.mehow.laboratory.Storage
 
 fun FunSpec.addStorageSpec(storage: Storage) {
   beforeTest { test ->
-    if (BaseSpec in test.config.tags) {
+    if (BaseSpec in test.config?.tags.orEmpty()) {
       storage.clear()
     }
   }

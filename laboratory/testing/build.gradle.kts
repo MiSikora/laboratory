@@ -7,7 +7,7 @@ kotlin { explicitApi = ExplicitApiMode.Disabled }
 dependencies {
   api(projects.laboratory.runtime)
 
-  api(libs.kotest.framework.api)
+  api(libs.kotest.framework.engine)
   implementation(libs.kotest.assertions)
   implementation(libs.turbine)
 }

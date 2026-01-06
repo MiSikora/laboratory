@@ -39,3 +39,9 @@ dependencies {
   androidTestImplementation(libs.androidx.test.junit.ktx)
   androidTestUtil(libs.androidx.test.orchestrator)
 }
+
+configurations.configureEach {
+  // Exclude mordant FFM modules that require minSdk 26+ (JVM 21+ feature not needed on Android)
+  exclude(group = "com.github.ajalt.mordant", module = "mordant-jvm-ffm-jvm")
+  exclude(group = "com.github.ajalt.mordant", module = "mordant-jvm-ffm")
+}

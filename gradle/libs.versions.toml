@@ -16,8 +16,8 @@ binary-compatibility-validator = "0.18.1"
 buildconfig = "6.0.7"
 dokka = "2.0.0"
 hyperion = "0.9.38"
-kotest = "5.9.1"
-kotest-android = "1.1.1"
+kotest = "6.0.7"
+kotest-android = "1.2.2"
 kotlin = "2.3.0"
 kotlinpoet = "2.2.0"
 kotlinx-coroutines = "1.10.2"
@@ -67,7 +67,7 @@ coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 hyperion-core = { group = "com.willowtreeapps.hyperion", name = "hyperion-core", version.ref = "hyperion" }
 hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plugin", version.ref = "hyperion" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
-kotest-framework-api = { group = "io.kotest", name = "kotest-framework-api", version.ref = "kotest" }
+kotest-framework-engine = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
 kotest-runner-android = { group = "br.com.colman", name = "kotest-runner-android", version.ref = "kotest-android" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
