@@ -1,5 +1,11 @@
 package io.mehow.laboratory
 
+import io.mehow.laboratory.internal.InternalLaboratoryApi
+import io.mehow.laboratory.internal.defaultOption
+import io.mehow.laboratory.internal.defaultOptionRaw
+import io.mehow.laboratory.internal.firstOption
+import io.mehow.laboratory.internal.firstOptionRaw
+
 /**
  * A factory for providing alternate default options for features.
  *
@@ -16,7 +22,7 @@ public interface DefaultOptionFactory {
    * Warning: The returned option must match the runtime type of the feature. Returning an option of
    * an incorrect type will cause a runtime exception.
    */
-  public fun <T : Feature<T>> create(feature: T): Feature<*>?
+  public fun create(feature: Feature<*>): Feature<*>?
 
   /**
    * Combines this factory with another. The resulting factory first checks this factory, and then
@@ -24,7 +30,7 @@ public interface DefaultOptionFactory {
    */
   public operator fun plus(factory: DefaultOptionFactory): DefaultOptionFactory =
     object : DefaultOptionFactory {
-      override fun <T : Feature<T>> create(feature: T) =
+      override fun create(feature: Feature<*>) =
         this@DefaultOptionFactory.create(feature) ?: factory.create(feature)
     }
 
@@ -32,7 +38,8 @@ public interface DefaultOptionFactory {
 }
 
 internal class SafeDefaultOptionFactory(private val delegate: DefaultOptionFactory?) {
-  fun <T : Feature<T>> create(feature: Class<T>): T {
+  @OptIn(InternalLaboratoryApi::class)
+  fun <T> create(feature: Class<out T>): T where T : Feature<T>, T : Enum<out T> {
     val defaultOption = delegate?.create(feature.firstOption) ?: return feature.defaultOption
     check(defaultOption::class.java == feature) {
       val optionName = "${defaultOption::class.java.simpleName}.$defaultOption"
@@ -42,7 +49,16 @@ internal class SafeDefaultOptionFactory(private val delegate: DefaultOptionFacto
     @Suppress("UNCHECKED_CAST")
     return defaultOption as T
   }
-}
 
-private val <T : Feature<T>> Class<T>.defaultOption: T
-  get() = firstOption.defaultOption
+  @OptIn(InternalLaboratoryApi::class)
+  fun createRaw(feature: Class<out Feature<*>>): Feature<*> {
+    val defaultOption = delegate?.create(feature.firstOptionRaw) ?: return feature.defaultOptionRaw
+    check(defaultOption::class.java == feature) {
+      val optionName = "${defaultOption::class.java.simpleName}.$defaultOption"
+      val featureName = feature.canonicalName
+      "Tried to use $optionName as a default option for $featureName"
+    }
+    @Suppress("UNCHECKED_CAST")
+    return defaultOption
+  }
+}

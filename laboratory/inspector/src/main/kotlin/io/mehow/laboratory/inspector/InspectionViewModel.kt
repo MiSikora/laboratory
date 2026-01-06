@@ -43,7 +43,7 @@ internal class InspectionViewModel(
     scope.launch { laboratory.setOption(feature) }
   }
 
-  fun selectSource(feature: Class<Feature<*>>, source: Feature.Source) {
+  fun selectSource(feature: Class<out Feature<*>>, source: Feature.Source) {
     scope.launch {
       val storage = laboratory.localStorage()
       when (source) {

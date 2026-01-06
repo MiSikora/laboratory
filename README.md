@@ -21,18 +21,6 @@ dependencies {
 }
 ```
 
-Enable [default methods generation](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-m3-generating-default-methods-in-interfaces/).
-
-```groovy
-android {
-  kotlinOptions {
-    freeCompilerArgs += [
-        "-Xjvm-default=all",
-    ]
-  }
-}
-```
-
 Define your feature flags.
 
 ```kotlin

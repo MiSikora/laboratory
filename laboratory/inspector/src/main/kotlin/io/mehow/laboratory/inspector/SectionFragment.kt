@@ -35,7 +35,7 @@ internal class SectionFragment : Fragment(R.layout.io_mehow_laboratory_feature_g
           override fun onSelectOption(option: Feature<*>) =
             inspectionViewModel.selectFeature(option)
 
-          override fun onSelectSource(feature: Class<Feature<*>>, source: Feature.Source) =
+          override fun onSelectSource(feature: Class<out Feature<*>>, source: Feature.Source) =
             inspectionViewModel.selectSource(feature, source)
         },
       )

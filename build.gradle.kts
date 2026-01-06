@@ -11,10 +11,14 @@ plugins {
   id("io.mehow.laboratory.convention")
 }
 
-apiValidation { ignoredProjects.add("testing") }
+apiValidation {
+  ignoredProjects.add("testing")
+  ignoredPackages.add("io.mehow.laboratory.internal")
+  nonPublicMarkers.add("io.mehow.laboratory.internal.InternalLaboratoryApi")
+}
 
 tasks.dokkaHtmlMultiModule {
   moduleName.set("Laboratory")
-  moduleVersion.set(project.property("VERSION_NAME") as String)
+  moduleVersion.set(project.name)
   outputDirectory.set(rootDir.resolve("docs/api"))
 }

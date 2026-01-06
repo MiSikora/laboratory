@@ -1,11 +1,13 @@
 package io.mehow.laboratory.testing
 
 import io.mehow.laboratory.Feature
-import io.mehow.laboratory.options
+import io.mehow.laboratory.internal.InternalLaboratoryApi
+import io.mehow.laboratory.internal.options
 import kotlin.reflect.KClass
 
-val <T : Feature<T>> KClass<T>.options: List<T>
-  get() = java.options.toList()
+@OptIn(InternalLaboratoryApi::class)
+val <T> KClass<T>.options: List<T> where T : Feature<T>, T : Enum<T>
+  get() = java.options
 
 enum class FeatureA : Feature<FeatureA> {
   A,

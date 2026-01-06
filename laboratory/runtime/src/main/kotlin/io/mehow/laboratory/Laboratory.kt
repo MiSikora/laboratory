@@ -1,5 +1,8 @@
 package io.mehow.laboratory
 
+import io.mehow.laboratory.internal.InternalLaboratoryApi
+import io.mehow.laboratory.internal.defaultSourceRaw
+import io.mehow.laboratory.internal.firstOptionRaw
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,6 +22,8 @@ public class Laboratory internal constructor(builder: Builder) {
   private val sourceFactory = SafeDefaultSourceFactory(builder.defaultSourceFactory)
   private val optionFactory = SafeDefaultOptionFactory(builder.defaultOptionFactory)
   private val blockingLaboratory = BlockingLaboratory(this)
+  private val rawLocalStorage = RawOptionStorage(builder.localStorage)
+  private val rawRemoteStorage = builder.remoteStorage?.let(::RawOptionStorage)
 
   public fun localStorage(): SourceOptionStorage = localStorage
 
@@ -37,7 +42,8 @@ public class Laboratory internal constructor(builder: Builder) {
    * configured source: if a remote source is set for the feature and a remote storage is configured
    * in this Laboratory, the flow will reflect changes from the appropriate storage.
    */
-  public inline fun <reified T : Feature<T>> observe(): Flow<T> = observe(T::class.java)
+  public inline fun <reified T> observe(): Flow<T> where T : Feature<T>, T : Enum<out T> =
+    observe(T::class.java)
 
   /**
    * Observes changes to the specified [Feature] type. This returns a cold [Flow] that will emit the
@@ -46,7 +52,7 @@ public class Laboratory internal constructor(builder: Builder) {
    * configured source: if a remote source is set for the feature and a remote storage is configured
    * in this Laboratory, the flow will reflect changes from the appropriate storage.
    */
-  public fun <T : Feature<T>> observe(feature: Class<T>): Flow<T> =
+  public fun <T> observe(feature: Class<out T>): Flow<T> where T : Feature<T>, T : Enum<out T> =
     @OptIn(ExperimentalCoroutinesApi::class)
     localStorage
       .observeSource(feature)
@@ -56,19 +62,36 @@ public class Laboratory internal constructor(builder: Builder) {
       .map { selectedOption -> getOption(feature, selectedOption) }
       .distinctUntilChanged()
 
-  /**
-   * Returns the current option of the specified [Feature]. If the feature has a remote source and a
-   * remote storage is configured, this function will automatically fetch the option from the remote
-   * storage when the feature's source is set to remote (and from local storage otherwise).
-   */
-  public suspend inline fun <reified T : Feature<T>> experiment(): T = experiment(T::class.java)
+  @InternalLaboratoryApi
+  public fun observeRaw(feature: Class<out Feature<*>>): Flow<Feature<*>> {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    return rawLocalStorage
+      .observeSource(feature)
+      .flatMapLatest { selectedSource ->
+        getStorageRaw(feature, selectedSource).observeOption(feature)
+      }
+      .map { selectedOption -> getOptionRaw(feature, selectedOption) }
+  }
+
+  @InternalLaboratoryApi
+  public fun observeSourceRaw(feature: Class<out Feature<*>>): Flow<Feature.Source> =
+    rawLocalStorage.observeSource(feature).map { source -> source ?: feature.defaultSourceRaw }
 
   /**
    * Returns the current option of the specified [Feature]. If the feature has a remote source and a
    * remote storage is configured, this function will automatically fetch the option from the remote
    * storage when the feature's source is set to remote (and from local storage otherwise).
    */
-  public suspend fun <T : Feature<T>> experiment(feature: Class<T>): T {
+  public suspend inline fun <reified T> experiment(): T where T : Feature<T>, T : Enum<out T> =
+    experiment(T::class.java)
+
+  /**
+   * Returns the current option of the specified [Feature]. If the feature has a remote source and a
+   * remote storage is configured, this function will automatically fetch the option from the remote
+   * storage when the feature's source is set to remote (and from local storage otherwise).
+   */
+  public suspend fun <T> experiment(feature: Class<out T>): T
+    where T : Feature<T>, T : Enum<out T> {
     val selectedSource = localStorage.getSource(feature)
     val selectedOption = getStorage(feature, selectedSource).getOption(feature)
     return getOption(feature, selectedOption)
@@ -79,9 +102,8 @@ public class Laboratory internal constructor(builder: Builder) {
    * feature's current option (from the appropriate source) and compares it to [option]. It returns
    * `true` if the feature is presently set to [option], or `false` otherwise.
    */
-  public suspend fun <T : Feature<T>> experimentIs(option: T): Boolean {
-    @Suppress("UNCHECKED_CAST")
-    return experiment(option::class.java as Class<T>) == option
+  public suspend fun <T> experimentIs(option: T): Boolean where T : Feature<T>, T : Enum<out T> {
+    return experiment(option::class.java) == option
   }
 
   /**
@@ -92,8 +114,7 @@ public class Laboratory internal constructor(builder: Builder) {
    *
    * The result indicates whether the value was stored successfully.
    */
-  public suspend fun <T : Feature<T>> setOption(option: T): Boolean =
-    localStorage.setOptions(option)
+  public suspend fun setOption(option: Feature<*>): Boolean = localStorage.setOption(option)
 
   /**
    * Sets multiple [Feature] [options] at once. If [options] contains more than one option for the
@@ -104,7 +125,7 @@ public class Laboratory internal constructor(builder: Builder) {
    *
    * The result indicates whether the batch was stored successfully.
    */
-  public suspend fun <T : Feature<*>> setOptions(vararg options: T): Boolean =
+  public suspend fun setOptions(vararg options: Feature<*>): Boolean =
     localStorage.setOptions(options.toSet())
 
   /**
@@ -116,7 +137,7 @@ public class Laboratory internal constructor(builder: Builder) {
    *
    * The result indicates whether the batch was stored successfully.
    */
-  public suspend fun <T : Feature<*>> setOptions(options: Collection<T>): Boolean =
+  public suspend fun setOptions(options: Collection<Feature<*>>): Boolean =
     localStorage.setOptions(options)
 
   /**
@@ -131,10 +152,8 @@ public class Laboratory internal constructor(builder: Builder) {
    */
   public suspend fun clear(): Boolean = localStorage.clear()
 
-  private fun <T : Feature<T>> getStorage(
-    feature: Class<T>,
-    selectedSource: Feature.Source?,
-  ): OptionStorage {
+  private fun <T> getStorage(feature: Class<out T>, selectedSource: Feature.Source?): OptionStorage
+    where T : Feature<T>, T : Enum<out T> {
     return when (selectedSource) {
       Feature.Source.Local -> localStorage
       Feature.Source.Remote -> remoteStorage
@@ -142,11 +161,26 @@ public class Laboratory internal constructor(builder: Builder) {
     } ?: localStorage
   }
 
-  private fun <T : Feature<T>> getSource(feature: Class<T>): Feature.Source =
-    sourceFactory.create(feature.firstOption)
+  private fun getStorageRaw(
+    feature: Class<out Feature<*>>,
+    selectedSource: Feature.Source?,
+  ): RawOptionStorage {
+    return when (selectedSource) {
+      Feature.Source.Local -> rawLocalStorage
+      Feature.Source.Remote -> rawRemoteStorage
+      null -> rawRemoteStorage?.takeIf { getSource(feature).isRemote }
+    } ?: rawLocalStorage
+  }
 
-  private fun <T : Feature<T>> getOption(feature: Class<T>, selectedOption: T?): T =
-    selectedOption ?: optionFactory.create(feature)
+  @OptIn(InternalLaboratoryApi::class)
+  private fun getSource(feature: Class<out Feature<*>>) =
+    sourceFactory.create(feature.firstOptionRaw)
+
+  private fun <T> getOption(feature: Class<out T>, selectedOption: T?)
+    where T : Feature<T>, T : Enum<out T> = selectedOption ?: optionFactory.create(feature)
+
+  private fun getOptionRaw(feature: Class<out Feature<*>>, selectedOption: Feature<*>?) =
+    selectedOption ?: optionFactory.createRaw(feature)
 
   public companion object {
     /**

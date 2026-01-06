@@ -14,11 +14,11 @@ public interface DefaultSourceFactory {
    * Combines this factory with another. The resulting factory first checks this factory, and then
    * the provided one if no override is found.
    */
-  public fun <T : Feature<T>> create(feature: T): Feature.Source?
+  public fun create(feature: Feature<*>): Feature.Source?
 
   public operator fun plus(factory: DefaultSourceFactory): DefaultSourceFactory =
     object : DefaultSourceFactory {
-      override fun <T : Feature<T>> create(feature: T) =
+      override fun create(feature: Feature<*>) =
         this@DefaultSourceFactory.create(feature) ?: factory.create(feature)
     }
 
@@ -26,7 +26,5 @@ public interface DefaultSourceFactory {
 }
 
 internal class SafeDefaultSourceFactory(private val delegate: DefaultSourceFactory?) {
-  fun <T : Feature<T>> create(feature: T): Feature.Source {
-    return delegate?.create(feature) ?: feature.defaultSource
-  }
+  fun create(feature: Feature<*>) = delegate?.create(feature) ?: feature.defaultSource
 }

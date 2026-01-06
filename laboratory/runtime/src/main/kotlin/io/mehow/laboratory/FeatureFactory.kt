@@ -8,7 +8,7 @@ package io.mehow.laboratory
  */
 public interface FeatureFactory {
   /** Returns all known feature flag types. */
-  public fun create(): Set<Class<Feature<*>>>
+  public fun create(): Set<Class<out Feature<*>>>
 
   /** Combines this factory with another. The resulting factory returns the union of both sets. */
   public operator fun plus(factory: FeatureFactory): FeatureFactory =

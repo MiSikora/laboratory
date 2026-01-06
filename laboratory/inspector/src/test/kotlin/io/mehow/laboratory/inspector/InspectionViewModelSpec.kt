@@ -70,9 +70,8 @@ class InspectionViewModelSpec : FunSpec() {
 private val TestLoader =
   FeatureMetadata.Loader(
     object : FeatureFactory {
-      @Suppress("UNCHECKED_CAST")
       override fun create() =
-        setOf(LocalFeature::class.java, RemoteFeature::class.java) as Set<Class<Feature<*>>>
+        setOf(LocalFeature::class.java, RemoteFeature::class.java) as Set<Class<out Feature<*>>>
     },
     NoOpDeprecationHandler,
   )

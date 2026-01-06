@@ -49,7 +49,7 @@ class Activity : AndroidActivity() {
     super.onDestroy()
   }
 
-  private inline fun <reified T : Feature<T>> TextView.observeFeature() {
+  private inline fun <reified T> TextView.observeFeature() where T : Feature<T>, T : Enum<T> {
     laboratory
       .observe<T>()
       .map { "${it.javaClass.simpleName}: $it" }

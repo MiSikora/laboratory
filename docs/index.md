@@ -51,21 +51,6 @@ suspend fun main() {
 }
 ```
 
-## Requirements
-
-
-Laboratory requires [default methods generation](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-m3-generating-default-methods-in-interfaces/). You can do this by adding a compiler flag in a `build.gradle` file.
-
-```groovy
-android {
-  kotlinOptions {
-    freeCompilerArgs += [
-        "-Xjvm-default=all",
-    ]
-  }
-}
-```
-
 ## R8
 
 Laboratory ships with R8 rules and doesn't require any extra configuration.

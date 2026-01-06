@@ -2,12 +2,13 @@ package io.mehow.laboratory.inspector
 
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.FeatureFactory
-import io.mehow.laboratory.options
+import io.mehow.laboratory.internal.InternalLaboratoryApi
+import io.mehow.laboratory.internal.optionsRaw
 import java.util.concurrent.atomic.AtomicReference
 
 internal class FeatureMetadata(
   val id: Long,
-  val type: Class<Feature<*>>,
+  val type: Class<out Feature<*>>,
   val name: String,
   val options: List<Feature<*>>,
   val defaultSource: Feature.Source,
@@ -44,11 +45,12 @@ internal class FeatureMetadata(
     private fun createMetadata() =
       featureFactory.create().mapIndexedNotNull(::createMetadata).sortedWith(Comparator)
 
-    private fun createMetadata(index: Int, type: Class<Feature<*>>): FeatureMetadata? {
+    @OptIn(InternalLaboratoryApi::class)
+    private fun createMetadata(index: Int, type: Class<out Feature<*>>): FeatureMetadata? {
       val level = type.annotations.filterIsInstance<Deprecated>().firstOrNull()?.level
       val style = level?.let(deprecationHandler::getPhenotype) ?: FeatureStyle.Show
       return if (style != FeatureStyle.Hide) {
-        val options = type.options
+        val options = type.optionsRaw
         return FeatureMetadata(
           id = index.toLong(),
           type = type,
