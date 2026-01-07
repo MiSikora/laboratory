@@ -8,7 +8,7 @@ import io.mehow.laboratory.gradle.test.cleanBuildResults
 import io.mehow.laboratory.gradle.test.toFixture
 import io.mehow.laboratory.testing.perTest
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 
@@ -47,7 +47,7 @@ class OptionFactoryTaskSpec : FunSpec() {
           .toFixture(expectFailure = true)
           .buildOptionFactory(gradleRunner)
 
-      result[LaboratoryTask.OptionFactory] shouldBe TaskOutcome.FAILED
+      result[LaboratoryTask.OptionFactory] shouldBe FAILED
     }
 
     test("implicit package name") {

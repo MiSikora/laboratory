@@ -9,7 +9,7 @@ import io.mehow.laboratory.gradle.test.cleanBuildResults
 import io.mehow.laboratory.gradle.test.toFixture
 import io.mehow.laboratory.testing.perTest
 import org.gradle.testkit.runner.GradleRunner
-import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.testkit.runner.TaskOutcome.FAILED
 import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 
@@ -53,7 +53,7 @@ class FeatureFlagsTaskSpec : FunSpec() {
       val result =
         "feature-flags-duplicate".toFixture(expectFailure = true).buildFeatureFlags(gradleRunner)
 
-      result[LaboratoryTask.FeatureFlags] shouldBe TaskOutcome.FAILED
+      result[LaboratoryTask.FeatureFlags] shouldBe FAILED
       result.output shouldContain
         "Feature flags must have unique fully qualified names. Found following duplicates: [Feature, io.mehow.Feature]"
     }
@@ -71,14 +71,14 @@ class FeatureFlagsTaskSpec : FunSpec() {
           .toFixture(expectFailure = true)
           .buildFeatureFlags(gradleRunner)
 
-      result[LaboratoryTask.FeatureFlags] shouldBe TaskOutcome.FAILED
+      result[LaboratoryTask.FeatureFlags] shouldBe FAILED
     }
 
     test("no options") {
       val result =
         "feature-flags-option-none".toFixture(expectFailure = true).buildFeatureFlags(gradleRunner)
 
-      result[LaboratoryTask.FeatureFlags] shouldBe TaskOutcome.FAILED
+      result[LaboratoryTask.FeatureFlags] shouldBe FAILED
     }
 
     test("no default option") {
@@ -87,7 +87,7 @@ class FeatureFlagsTaskSpec : FunSpec() {
           .toFixture(expectFailure = true)
           .buildFeatureFlags(gradleRunner)
 
-      result[LaboratoryTask.FeatureFlags] shouldBe TaskOutcome.FAILED
+      result[LaboratoryTask.FeatureFlags] shouldBe FAILED
     }
 
     test("multiple default options") {
@@ -96,7 +96,7 @@ class FeatureFlagsTaskSpec : FunSpec() {
           .toFixture(expectFailure = true)
           .buildFeatureFlags(gradleRunner)
 
-      result[LaboratoryTask.FeatureFlags] shouldBe TaskOutcome.FAILED
+      result[LaboratoryTask.FeatureFlags] shouldBe FAILED
     }
 
     test("key") {
