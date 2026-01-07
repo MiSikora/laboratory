@@ -3,6 +3,7 @@ package io.mehow.laboratory.gradle
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.mehow.laboratory.gradle.test.LaboratoryTask
 import io.mehow.laboratory.gradle.test.cleanBuildResults
 import io.mehow.laboratory.gradle.test.toFixture
@@ -46,6 +47,15 @@ class FeatureFlagsTaskSpec : FunSpec() {
       result[LaboratoryTask.FeatureFlags] shouldBe SUCCESS
       result shouldGenerateFeature "FeatureA"
       result shouldGenerateFeature "FeatureB"
+    }
+
+    test("duplicate feature flags") {
+      val result =
+        "feature-flags-duplicate".toFixture(expectFailure = true).buildFeatureFlags(gradleRunner)
+
+      result[LaboratoryTask.FeatureFlags] shouldBe TaskOutcome.FAILED
+      result.output shouldContain
+        "Feature flags must have unique fully qualified names. Found following duplicates: [Feature, io.mehow.Feature]"
     }
 
     test("multiple options") {

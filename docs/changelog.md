@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Built-in implementations of the `Storage` interface for in-memory, `SharedPreferences`, and `DataStore`.
 - A `Feature.Source` enum to define whether a feature flag uses local or remote storage by default.
 - `DefaultSourceFactory` to allow overriding default feature sources at runtime.
+- A check that fails if feature flags with the same FQCN are generated in a project. 
 
 ### Changed
 - Feature flags no longer supports an arbitrary number of remote sources. Instead, only one local and one remote source can be provided when creating `Laboratory`.
