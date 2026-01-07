@@ -22,6 +22,8 @@ public class OptionFactoryModel(
     requireNoDuplicates()
   }
 
+  public val binaryFeatures: List<FeatureFlagModel> = features.filter { it.trueOption != null }
+
   public fun prepare(): FileSpec = OptionFactoryGenerator(this).fileSpec
 
   private companion object {
@@ -73,6 +75,39 @@ private class OptionFactoryGenerator(private val model: OptionFactoryModel) {
       }
       .joinToCode(prefix = "when·(key)·{\n⇥", separator = "\n", suffix = "\nelse·->·null⇤\n}")
 
+  private val binaryValueMatcher =
+    model.binaryFeatures.associateBy(FeatureFlagModel::className).mapValues { (className, feature)
+      ->
+      val trueOption = feature.options.single { it.name == feature.trueOption?.name }
+      val falseOption = feature.options.single { it.name != feature.trueOption?.name }
+      val ifExpression =
+        CodeBlock.of(
+          "if·(binaryValue)·%T.%L·else·%T.%L",
+          className,
+          trueOption.name,
+          className,
+          falseOption.name,
+        )
+      val deprecation = feature.deprecation?.suppressSpec
+      if (deprecation != null) {
+        CodeBlock.of("%L·%L", deprecation, ifExpression)
+      } else {
+        ifExpression
+      }
+    }
+
+  private val binaryKeyMatcher =
+    model.binaryFeatures
+      .sortedWith(compareBy({ it.key == null }, { it.key }, { it.className.canonicalName }))
+      .map {
+        CodeBlock.of(
+          "%S·->·%L",
+          it.key ?: it.className.canonicalName,
+          binaryValueMatcher.getValue(it.className),
+        )
+      }
+      .joinToCode(prefix = "when·(key)·{\n⇥", separator = "\n", suffix = "\nelse·->·null⇤\n}")
+
   private val createFunctionOverride =
     FunSpec.builder("create")
       .addModifiers(OVERRIDE)
@@ -88,11 +123,27 @@ private class OptionFactoryGenerator(private val model: OptionFactoryModel) {
       }
       .build()
 
+  private val createBinaryFunctionOverride =
+    FunSpec.builder("create")
+      .addModifiers(OVERRIDE)
+      .addParameter("key", String::class)
+      .addParameter("binaryValue", Boolean::class)
+      .returns(Feature::class(STAR).copy(nullable = true))
+      .apply {
+        if (model.binaryFeatures.isEmpty()) {
+          addStatement("return null")
+        } else {
+          addStatement("return %L", binaryKeyMatcher)
+        }
+      }
+      .build()
+
   private val factoryType =
     TypeSpec.objectBuilder(model.className)
       .addModifiers(PRIVATE)
       .addSuperinterface(OptionFactory::class)
       .addFunction(createFunctionOverride)
+      .addFunction(createBinaryFunctionOverride)
       .build()
 
   private val factoryExtension =

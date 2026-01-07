@@ -116,6 +116,7 @@ public abstract interface class io/mehow/laboratory/Laboratory$LocalStorageStep 
 public abstract interface class io/mehow/laboratory/OptionFactory {
 	public static final field Companion Lio/mehow/laboratory/OptionFactory$Companion;
 	public abstract fun create (Ljava/lang/String;Ljava/lang/String;)Lio/mehow/laboratory/Feature;
+	public abstract fun create (Ljava/lang/String;Z)Lio/mehow/laboratory/Feature;
 	public fun plus (Lio/mehow/laboratory/OptionFactory;)Lio/mehow/laboratory/OptionFactory;
 }
 

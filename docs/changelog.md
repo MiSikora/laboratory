@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       }
     }
     ```
+- The Gradle plugin’s `enabledFeature()` and `disabledFeature()` now generate `BinaryFeature` instead of `Feature`.
 - The Gradle plugin’s `featureFactory()` now generates `FeatureFactory.Companion.generated()` instead of `FeatureFactory.Companion.featureGenerated()`.
 - The Gradle plugin’s extension is now marked with the `@DslMarker` annotation to avoid nested calls.
 - Replaced the `FeatureFlags` type with `StorageData`. It is used as the serialization type for `DataStore`-backed `Storage`.

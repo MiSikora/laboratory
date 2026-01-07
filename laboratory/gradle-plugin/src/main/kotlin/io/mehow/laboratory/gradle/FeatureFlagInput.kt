@@ -2,6 +2,7 @@ package io.mehow.laboratory.gradle
 
 import com.squareup.kotlinpoet.ClassName
 import io.mehow.laboratory.generator.FeatureFlagModel
+import io.mehow.laboratory.generator.FeatureFlagTrueOption
 import io.mehow.laboratory.generator.Visibility
 import java.io.Serializable
 
@@ -54,6 +55,11 @@ public sealed class FeatureFlagInput(
       description = description.orEmpty(),
       deprecation = deprecation?.toModel(),
       key = key,
+      trueOption =
+        when (this) {
+          is BinaryOption -> FeatureFlagTrueOption("Enabled")
+          is MultiOption -> null
+        },
     )
 
   /**

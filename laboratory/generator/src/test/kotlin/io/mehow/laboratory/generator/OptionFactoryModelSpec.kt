@@ -31,6 +31,7 @@ class OptionFactoryModelSpec :
 
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
         import kotlin.String
 
         internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
@@ -43,6 +44,8 @@ class OptionFactoryModelSpec :
             }
             else -> null
           }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
     }
@@ -68,6 +71,7 @@ class OptionFactoryModelSpec :
 
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
         import kotlin.String
 
         public fun OptionFactory.Companion.generated(): OptionFactory = Factory
@@ -80,6 +84,8 @@ class OptionFactoryModelSpec :
             }
             else -> null
           }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
     }
@@ -104,6 +110,7 @@ class OptionFactoryModelSpec :
 
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
         import kotlin.String
 
         internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
@@ -115,6 +122,52 @@ class OptionFactoryModelSpec :
               "B" -> FeatureA.B
               else -> null
             }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
+        }
+        """
+    }
+
+    test("single binary feature") {
+      val model =
+        OptionFactoryModel(
+          ClassName("io.mehow", "Factory"),
+          listOf(
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+              trueOption = FeatureFlagTrueOption("A"),
+            )
+          ),
+        )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify
+        """
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
+        import kotlin.String
+
+        internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
+
+        private object Factory : OptionFactory {
+          override fun create(key: String, name: String): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> when (name) {
+              "A" -> FeatureA.A
+              "B" -> FeatureA.B
+              else -> null
+            }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> if (binaryValue) FeatureA.A else FeatureA.B
             else -> null
           }
         }
@@ -145,6 +198,7 @@ class OptionFactoryModelSpec :
 
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
         import kotlin.String
 
         internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
@@ -163,6 +217,116 @@ class OptionFactoryModelSpec :
             }
             else -> null
           }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
+        }
+        """
+    }
+
+    test("multiple binary features") {
+      val model =
+        OptionFactoryModel(
+          ClassName("io.mehow", "Factory"),
+          listOf(
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
+              trueOption = FeatureFlagTrueOption("OneA"),
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureB"),
+              listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
+              trueOption = FeatureFlagTrueOption("TwoA"),
+            ),
+          ),
+        )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify
+        """
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
+        import kotlin.String
+
+        internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
+
+        private object Factory : OptionFactory {
+          override fun create(key: String, name: String): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> when (name) {
+              "OneA" -> FeatureA.OneA
+              "OneB" -> FeatureA.OneB
+              else -> null
+            }
+            "io.mehow.FeatureB" -> when (name) {
+              "TwoA" -> FeatureB.TwoA
+              "TwoB" -> FeatureB.TwoB
+              else -> null
+            }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> if (binaryValue) FeatureA.OneA else FeatureA.OneB
+            "io.mehow.FeatureB" -> if (binaryValue) FeatureB.TwoA else FeatureB.TwoB
+            else -> null
+          }
+        }
+        """
+    }
+
+    test("mixed features") {
+      val model =
+        OptionFactoryModel(
+          ClassName("io.mehow", "Factory"),
+          listOf(
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
+              trueOption = FeatureFlagTrueOption("OneA"),
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureB"),
+              listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
+            ),
+          ),
+        )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify
+        """
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
+        import kotlin.String
+
+        internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
+
+        private object Factory : OptionFactory {
+          override fun create(key: String, name: String): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> when (name) {
+              "OneA" -> FeatureA.OneA
+              "OneB" -> FeatureA.OneB
+              else -> null
+            }
+            "io.mehow.FeatureB" -> when (name) {
+              "TwoA" -> FeatureB.TwoA
+              "TwoB" -> FeatureB.TwoB
+              else -> null
+            }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> if (binaryValue) FeatureA.OneA else FeatureA.OneB
+            else -> null
+          }
         }
         """
     }
@@ -178,12 +342,15 @@ class OptionFactoryModelSpec :
 
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
         import kotlin.String
 
         internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
 
         private object Factory : OptionFactory {
           override fun create(key: String, name: String): Feature<*>? = null
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
     }
@@ -209,6 +376,7 @@ class OptionFactoryModelSpec :
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
         import io.mehow.other.FeatureA
+        import kotlin.Boolean
         import kotlin.String
 
         internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
@@ -221,11 +389,58 @@ class OptionFactoryModelSpec :
             }
             else -> null
           }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
     }
 
-    test("custom keys") {
+    test("binary feature with different package") {
+      val model =
+        OptionFactoryModel(
+          ClassName("io.mehow", "Factory"),
+          listOf(
+            FeatureFlagModel(
+              ClassName("io.mehow.other", "FeatureA"),
+              listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+              trueOption = FeatureFlagTrueOption("A"),
+            )
+          ),
+        )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify
+        """
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.OptionFactory
+        import io.mehow.other.FeatureA
+        import kotlin.Boolean
+        import kotlin.String
+
+        internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
+
+        private object Factory : OptionFactory {
+          override fun create(key: String, name: String): Feature<*>? = when (key) {
+            "io.mehow.other.FeatureA" -> when (name) {
+              "A" -> FeatureA.A
+              "B" -> FeatureA.B
+              else -> null
+            }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = when (key) {
+            "io.mehow.other.FeatureA" -> if (binaryValue) FeatureA.A else FeatureA.B
+            else -> null
+          }
+        }
+        """
+    }
+
+    test("feature with custom key") {
       val model =
         OptionFactoryModel(
           ClassName("io.mehow", "Factory"),
@@ -251,6 +466,7 @@ class OptionFactoryModelSpec :
 
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
         import kotlin.String
 
         internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
@@ -265,6 +481,65 @@ class OptionFactoryModelSpec :
               "TwoA" -> FeatureB.TwoA
               else -> null
             }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
+        }
+        """
+    }
+
+    test("binary feature with custom key") {
+      val model =
+        OptionFactoryModel(
+          ClassName("io.mehow", "Factory"),
+          listOf(
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
+              trueOption = FeatureFlagTrueOption("OneA"),
+              key = "custom-key-1",
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureB"),
+              listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
+              trueOption = FeatureFlagTrueOption("TwoA"),
+              key = "custom-key-2",
+            ),
+          ),
+        )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify
+        """
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
+        import kotlin.String
+
+        internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
+
+        private object Factory : OptionFactory {
+          override fun create(key: String, name: String): Feature<*>? = when (key) {
+            "custom-key-1" -> when (name) {
+              "OneA" -> FeatureA.OneA
+              "OneB" -> FeatureA.OneB
+              else -> null
+            }
+            "custom-key-2" -> when (name) {
+              "TwoA" -> FeatureB.TwoA
+              "TwoB" -> FeatureB.TwoB
+              else -> null
+            }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = when (key) {
+            "custom-key-1" -> if (binaryValue) FeatureA.OneA else FeatureA.OneB
+            "custom-key-2" -> if (binaryValue) FeatureB.TwoA else FeatureB.TwoB
             else -> null
           }
         }
@@ -320,7 +595,7 @@ class OptionFactoryModelSpec :
           .trimIndent()
     }
 
-    test("key matching self fqcn") {
+    test("feature with key matching self fqcn") {
       val model =
         OptionFactoryModel(
           ClassName("io.mehow", "Factory"),
@@ -341,6 +616,7 @@ class OptionFactoryModelSpec :
 
         import io.mehow.laboratory.Feature
         import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
         import kotlin.String
 
         internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
@@ -351,6 +627,53 @@ class OptionFactoryModelSpec :
               "A" -> FeatureA.A
               else -> null
             }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
+        }
+        """
+    }
+
+    test("binary feature with key matching self fqcn") {
+      val model =
+        OptionFactoryModel(
+          ClassName("io.mehow", "Factory"),
+          listOf(
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+              trueOption = FeatureFlagTrueOption("A"),
+              key = "io.mehow.FeatureA",
+            )
+          ),
+        )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify
+        """
+        package io.mehow
+
+        import io.mehow.laboratory.Feature
+        import io.mehow.laboratory.OptionFactory
+        import kotlin.Boolean
+        import kotlin.String
+
+        internal fun OptionFactory.Companion.generated(): OptionFactory = Factory
+
+        private object Factory : OptionFactory {
+          override fun create(key: String, name: String): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> when (name) {
+              "A" -> FeatureA.A
+              "B" -> FeatureA.B
+              else -> null
+            }
+            else -> null
+          }
+
+          override fun create(key: String, binaryValue: Boolean): Feature<*>? = when (key) {
+            "io.mehow.FeatureA" -> if (binaryValue) FeatureA.A else FeatureA.B
             else -> null
           }
         }

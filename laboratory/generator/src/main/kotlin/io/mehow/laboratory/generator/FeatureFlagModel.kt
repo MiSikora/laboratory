@@ -7,9 +7,9 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import io.mehow.laboratory.BinaryFeature
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.generator.TextToken.Link
 import io.mehow.laboratory.generator.TextToken.Regular
@@ -23,11 +23,21 @@ public class FeatureFlagModel(
   public val description: String = "",
   public val deprecation: Deprecation? = null,
   public val key: String? = null,
+  public val trueOption: FeatureFlagTrueOption? = null,
 ) {
   init {
     require(options.isNotEmpty()) { "${className.canonicalName} must have at least one option" }
     require(options.count(FeatureFlagOption::isDefault) == 1) {
       "${className.canonicalName} must have exactly one default option"
+    }
+    if (trueOption != null) {
+      val optionNames = options.map(FeatureFlagOption::name)
+      require(options.size == 2) {
+        "${className.canonicalName} must have exactly two options. Found: $optionNames"
+      }
+      require(trueOption.name in options.map(FeatureFlagOption::name)) {
+        "${className.canonicalName} has unknown 'true' option. Options: $optionNames, True option: ${trueOption.name}"
+      }
     }
   }
 
@@ -82,6 +92,22 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
         .build()
     }
 
+  private val binaryFeatureConstructor =
+    if (feature.trueOption != null) {
+      FunSpec.constructorBuilder().addParameter(binaryValuePropertyName, Boolean::class).build()
+    } else {
+      null
+    }
+
+  private val binaryValueProperty =
+    if (binaryFeatureConstructor != null) {
+      PropertySpec.builder(binaryValuePropertyName, Boolean::class, OVERRIDE)
+        .initializer(binaryValuePropertyName)
+        .build()
+    } else {
+      null
+    }
+
   private val typeSpec: TypeSpec =
     TypeSpec.enumBuilder(feature.className)
       .apply { deprecated?.let(::addAnnotation) }
@@ -91,12 +117,31 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
         if (suppressDeprecation != null) {
           parametrizedType = parametrizedType.copy(annotations = listOf(suppressDeprecation))
         }
-        addSuperinterface(Feature::class(parametrizedType))
+        val superType =
+          if (feature.trueOption != null) {
+            BinaryFeature::class
+          } else {
+            Feature::class
+          }
+        addSuperinterface(superType(parametrizedType))
       }
+      .apply { binaryFeatureConstructor?.let(::primaryConstructor) }
+      .apply { binaryValueProperty?.let(::addProperty) }
       .addProperty(defaultOptionProperty)
       .apply {
         feature.options.fold(this) { builder, featureOption ->
-          builder.addEnumConstant(featureOption.name)
+          val typeSpec =
+            TypeSpec.anonymousClassBuilder()
+              .apply {
+                if (feature.trueOption != null) {
+                  addSuperclassConstructorParameter(
+                    "%L",
+                    featureOption.name == feature.trueOption.name,
+                  )
+                }
+              }
+              .build()
+          builder.addEnumConstant(featureOption.name, typeSpec)
         }
       }
       .apply { defaultSourceProperty?.let(::addProperty) }
@@ -115,13 +160,15 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
     const val defaultOptionPropertyName = "defaultOption"
     const val defaultSourcePropertyName = "defaultSource"
     const val descriptionPropertyName = "description"
+    const val binaryValuePropertyName = "binaryValue"
 
-    val featureType = Feature::class(STAR)
     val sourceType = Feature.Source::class
   }
 }
 
 public data class FeatureFlagOption(public val name: String, public val isDefault: Boolean = false)
+
+public data class FeatureFlagTrueOption(public val name: String)
 
 private val extractLinkRegex = """\[([^\[\]]+)]\(([^()]+)\)""".toRegex()
 

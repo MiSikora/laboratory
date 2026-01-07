@@ -270,6 +270,82 @@ class FeatureFlagModelSpec : FunSpec() {
         """
     }
 
+    test("binary feature") {
+      val model =
+        FeatureFlagModel(
+          ClassName("io.mehow", "BinaryFeatureA"),
+          listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+          trueOption = FeatureFlagTrueOption("A"),
+        )
+
+      val fileSpec = model.prepare()
+
+      fileSpec shouldSpecify
+        """
+        package io.mehow
+
+        import io.mehow.laboratory.BinaryFeature
+        import kotlin.Boolean
+
+        public enum class BinaryFeatureA(
+          override val binaryValue: Boolean,
+        ) : BinaryFeature<BinaryFeatureA> {
+          A(true),
+          B(false),
+          ;
+
+          override val defaultOption: BinaryFeatureA
+            get() = A
+        }
+        """
+    }
+
+    test("binary feature with too few options") {
+      val exception =
+        shouldThrow<IllegalArgumentException> {
+          FeatureFlagModel(
+            ClassName("io.mehow", "BinaryFeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true)),
+            trueOption = FeatureFlagTrueOption("A"),
+          )
+        }
+
+      exception shouldHaveMessage
+        "io.mehow.BinaryFeatureA must have exactly two options. Found: [A]"
+    }
+
+    test("binary feature with too many options") {
+      val exception =
+        shouldThrow<IllegalArgumentException> {
+          FeatureFlagModel(
+            ClassName("io.mehow", "BinaryFeatureA"),
+            listOf(
+              FeatureFlagOption("A", isDefault = true),
+              FeatureFlagOption("B"),
+              FeatureFlagOption("C"),
+            ),
+            trueOption = FeatureFlagTrueOption("A"),
+          )
+        }
+
+      exception shouldHaveMessage
+        "io.mehow.BinaryFeatureA must have exactly two options. Found: [A, B, C]"
+    }
+
+    test("binary feature with unknown true binary option") {
+      val exception =
+        shouldThrow<IllegalArgumentException> {
+          FeatureFlagModel(
+            ClassName("io.mehow", "BinaryFeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+            trueOption = FeatureFlagTrueOption("C"),
+          )
+        }
+
+      exception shouldHaveMessage
+        "io.mehow.BinaryFeatureA has unknown 'true' option. Options: [A, B], True option: C"
+    }
+
     enumValues<DeprecationLevel>().forEach { level ->
       test("$level deprecation") {
         val model =

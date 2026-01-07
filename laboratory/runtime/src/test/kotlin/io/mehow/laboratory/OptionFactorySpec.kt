@@ -14,6 +14,12 @@ class OptionFactorySpec : FunSpec() {
             "FeatureA" -> FeatureA.A
             else -> null
           }
+
+        override fun create(key: String, binaryValue: Boolean): Feature<*>? =
+          when (key) {
+            "FeatureA" -> FeatureA.A
+            else -> null
+          }
       }
 
     val secondFactory =
@@ -24,16 +30,29 @@ class OptionFactorySpec : FunSpec() {
             "FeatureB" -> FeatureB.B
             else -> null
           }
+
+        override fun create(key: String, binaryValue: Boolean): Feature<*>? =
+          when (key) {
+            "FeatureA" -> FeatureA.B
+            "FeatureB" -> FeatureB.B
+            else -> null
+          }
       }
 
     context("combined factory") {
       val factory = firstFactory + secondFactory
 
-      test("use first factory") { factory.create("FeatureA", "") shouldBe FeatureA.A }
+      test("use first factory") {
+        factory.create("FeatureA", "") shouldBe FeatureA.A
+        factory.create("FeatureA", true) shouldBe FeatureA.A
+      }
 
-      test("use second factory") { factory.create("FeatureB", "") shouldBe FeatureB.B }
+      test("use second factory") {
+        factory.create("FeatureB", "") shouldBe FeatureB.B
+        factory.create("FeatureB", true) shouldBe FeatureB.B
+      }
 
-      test("use no factories") { factory.create("Unknown", "") shouldBe null }
+      test("use no factories") { factory.create("Unknown", true) shouldBe null }
     }
   }
 }
