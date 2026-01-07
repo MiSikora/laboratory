@@ -32,14 +32,14 @@ val fixtureClasspath: Configuration by configurations.creating
 tasks.withType<PluginUnderTestMetadata>().configureEach { pluginClasspath.from(fixtureClasspath) }
 
 dependencies {
-  compileOnly(libs.gradle.agp.api)
-
   implementation(projects.laboratory.generator)
-  implementation(libs.gradle.kgp)
+  implementation(libs.gradle.agp.api)
+  implementation(libs.gradle.kgp.api)
 
   testImplementation(projects.laboratory.testing)
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions)
 
   fixtureClasspath(libs.gradle.agp)
+  fixtureClasspath(libs.gradle.kgp)
 }

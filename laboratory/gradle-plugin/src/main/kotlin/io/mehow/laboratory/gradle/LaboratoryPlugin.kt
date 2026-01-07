@@ -6,7 +6,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 /**
  * Applies the Laboratory Gradle plugin to a project.
@@ -104,7 +104,7 @@ public class LaboratoryPlugin : Plugin<Project> {
   }
 
   private fun Project.makeKotlinDependOnTask(task: TaskProvider<out Task>) {
-    tasks.withType(KotlinCompile::class.java).configureEach { kotlinTask ->
+    tasks.withType(KotlinJvmCompile::class.java).configureEach { kotlinTask ->
       kotlinTask.dependsOn(task)
     }
   }

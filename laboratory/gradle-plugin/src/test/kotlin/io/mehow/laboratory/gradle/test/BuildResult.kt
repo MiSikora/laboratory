@@ -52,7 +52,7 @@ class Fixture(private val projectDir: File, private val expectFailure: Boolean) 
 }
 
 class BuildResult(private val projectDir: File, private val result: GradleBuildResult) {
-  val output
+  val output: String
     get() = result.output
 
   operator fun get(task: LaboratoryTask): TaskOutcome {
