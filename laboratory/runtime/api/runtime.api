@@ -1,3 +1,12 @@
+public abstract interface class io/mehow/laboratory/BinaryFeature : io/mehow/laboratory/Feature {
+	public abstract fun getBinaryValue ()Z
+}
+
+public final class io/mehow/laboratory/BinaryFeature$DefaultImpls {
+	public static fun getDefaultSource (Lio/mehow/laboratory/BinaryFeature;)Lio/mehow/laboratory/Feature$Source;
+	public static fun getDescription (Lio/mehow/laboratory/BinaryFeature;)Ljava/lang/String;
+}
+
 public abstract interface annotation class io/mehow/laboratory/BlockingIoCall : java/lang/annotation/Annotation {
 }
 
@@ -77,8 +86,10 @@ public final class io/mehow/laboratory/Laboratory {
 	public final fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun experiment (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun experimentIs (Ljava/lang/Enum;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun isEnabled (Ljava/lang/Class;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun localStorage ()Lio/mehow/laboratory/SourceOptionStorage;
 	public final fun observe (Ljava/lang/Class;)Lkotlinx/coroutines/flow/Flow;
+	public final fun observeBinary (Ljava/lang/Class;)Lkotlinx/coroutines/flow/Flow;
 	public final fun remoteStorage ()Lio/mehow/laboratory/OptionStorage;
 	public final fun setOption (Lio/mehow/laboratory/Feature;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun setOptions (Ljava/util/Collection;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

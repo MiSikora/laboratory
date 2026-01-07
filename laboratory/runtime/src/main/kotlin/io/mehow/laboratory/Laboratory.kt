@@ -36,21 +36,25 @@ public class Laboratory internal constructor(builder: Builder) {
   public fun blocking(): BlockingLaboratory = blockingLaboratory
 
   /**
-   * Observes changes to the specified [Feature] type. This returns a cold [Flow] that will emit the
-   * current option of the feature and continue to emit new options whenever the feature's value
-   * changes. The emission source (local or remote storage) is determined by the feature's
-   * configured source: if a remote source is set for the feature and a remote storage is configured
-   * in this Laboratory, the flow will reflect changes from the appropriate storage.
+   * Observes changes to the specified [Feature] type.
+   *
+   * This returns a cold [Flow] that will emit the current option of the feature and continue to
+   * emit new options whenever the feature's value changes. The emission source (local or remote
+   * storage) is determined by the feature's configured source: if a remote source is set for the
+   * feature and a remote storage is configured in this Laboratory, the flow will reflect changes
+   * from the appropriate storage.
    */
   public inline fun <reified T> observe(): Flow<T> where T : Feature<T>, T : Enum<out T> =
     observe(T::class.java)
 
   /**
-   * Observes changes to the specified [Feature] type. This returns a cold [Flow] that will emit the
-   * current option of the feature and continue to emit new options whenever the feature's value
-   * changes. The emission source (local or remote storage) is determined by the feature's
-   * configured source: if a remote source is set for the feature and a remote storage is configured
-   * in this Laboratory, the flow will reflect changes from the appropriate storage.
+   * Observes changes to the specified [Feature] type.
+   *
+   * This returns a cold [Flow] that will emit the current option of the feature and continue to
+   * emit new options whenever the feature's value changes. The emission source (local or remote
+   * storage) is determined by the feature's configured source: if a remote source is set for the
+   * feature and a remote storage is configured in this Laboratory, the flow will reflect changes
+   * from the appropriate storage.
    */
   public fun <T> observe(feature: Class<out T>): Flow<T> where T : Feature<T>, T : Enum<out T> =
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -62,6 +66,31 @@ public class Laboratory internal constructor(builder: Builder) {
       .map { selectedOption -> getOption(feature, selectedOption) }
       .distinctUntilChanged()
 
+  /**
+   * Observes changes to the specified binary [Feature] type and emits its resolved boolean value.
+   *
+   * This returns a cold [Flow] that will emit the current boolean value of the feature and continue
+   * to emit new values whenever the feature's option changes. The underlying option is resolved
+   * using the same rules as [observe].
+   *
+   * The boolean value is derived from the resolved option via [BinaryFeature.binaryValue].
+   */
+  public inline fun <reified T> observeBinary(): Flow<Boolean>
+    where T : BinaryFeature<T>, T : Feature<T>, T : Enum<out T> = observeBinary(T::class.java)
+
+  /**
+   * Observes changes to the specified binary [Feature] type and emits its resolved boolean value.
+   *
+   * This returns a cold [Flow] that will emit the current boolean value of the feature and continue
+   * to emit new values whenever the feature's option changes. The underlying option is resolved
+   * using the same rules as [observe].
+   *
+   * The boolean value is derived from the resolved option via [BinaryFeature.binaryValue].
+   */
+  public fun <T> observeBinary(feature: Class<out T>): Flow<Boolean>
+    where T : BinaryFeature<T>, T : Feature<T>, T : Enum<out T> =
+    observe(feature).map { it.binaryValue }.distinctUntilChanged()
+
   @InternalLaboratoryApi
   public fun observeRaw(feature: Class<out Feature<*>>): Flow<Feature<*>> {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -71,6 +100,7 @@ public class Laboratory internal constructor(builder: Builder) {
         getStorageRaw(feature, selectedSource).observeOption(feature)
       }
       .map { selectedOption -> getOptionRaw(feature, selectedOption) }
+      .distinctUntilChanged()
   }
 
   @InternalLaboratoryApi
@@ -105,6 +135,20 @@ public class Laboratory internal constructor(builder: Builder) {
   public suspend fun <T> experimentIs(option: T): Boolean where T : Feature<T>, T : Enum<out T> {
     return experiment(option::class.java) == option
   }
+
+  /**
+   * Returns whether the specified binary feature is currently enabled. This is a convenience
+   * wrapper over [experiment] that returns the resolved option's [BinaryFeature.binaryValue].
+   */
+  public suspend inline fun <reified T> isEnabled(): Boolean
+    where T : BinaryFeature<T>, T : Feature<T>, T : Enum<out T> = isEnabled(T::class.java)
+
+  /**
+   * Returns whether the specified binary feature is currently enabled. This is a convenience
+   * wrapper over [experiment] that returns the resolved option's [BinaryFeature.binaryValue].
+   */
+  public suspend fun <T> isEnabled(feature: Class<out T>): Boolean
+    where T : BinaryFeature<T>, T : Feature<T>, T : Enum<out T> = experiment(feature).binaryValue
 
   /**
    * Sets the specified [Feature] [option] as the active option.

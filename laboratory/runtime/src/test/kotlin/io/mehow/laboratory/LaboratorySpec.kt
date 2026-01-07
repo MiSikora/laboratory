@@ -3,8 +3,12 @@ package io.mehow.laboratory
 import app.cash.turbine.test
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
+import io.mehow.laboratory.testing.DisabledBinaryFeature
+import io.mehow.laboratory.testing.EnabledBinaryFeature
 import io.mehow.laboratory.testing.FeatureA
 import io.mehow.laboratory.testing.FeatureB
 import io.mehow.laboratory.testing.FeatureWithoutValues
@@ -37,6 +41,16 @@ class LaboratorySpec : FunSpec() {
 
       laboratory.experiment<FeatureA>() shouldBe FeatureA.C
       laboratory.experiment<FeatureB>() shouldBe FeatureB.B
+    }
+
+    test("read binary feature") {
+      laboratory.isEnabled<EnabledBinaryFeature>().shouldBeTrue()
+      laboratory.isEnabled<DisabledBinaryFeature>().shouldBeFalse()
+
+      laboratory.setOptions(EnabledBinaryFeature.Disabled, DisabledBinaryFeature.Enabled)
+
+      laboratory.isEnabled<EnabledBinaryFeature>().shouldBeFalse()
+      laboratory.isEnabled<DisabledBinaryFeature>().shouldBeTrue()
     }
 
     test("fail to use feature with no values") {
@@ -110,6 +124,27 @@ class LaboratorySpec : FunSpec() {
 
         laboratory.remoteStorage()?.setOptions(FeatureA.C)
         awaitItem() shouldBe FeatureA.C
+      }
+    }
+
+    test("observe binary feature") {
+      laboratory.observeBinary<EnabledBinaryFeature>().test {
+        awaitItem().shouldBeTrue()
+
+        laboratory.localStorage().setRemoteSource<EnabledBinaryFeature>()
+        expectNoEvents()
+
+        laboratory.localStorage().setLocalSource<EnabledBinaryFeature>()
+        expectNoEvents()
+
+        laboratory.setOptions(EnabledBinaryFeature.Disabled)
+        awaitItem().shouldBeFalse()
+
+        laboratory.localStorage().setRemoteSource<EnabledBinaryFeature>()
+        awaitItem().shouldBeTrue()
+
+        laboratory.remoteStorage()?.setOptions(EnabledBinaryFeature.Disabled)
+        awaitItem().shouldBeFalse()
       }
     }
 

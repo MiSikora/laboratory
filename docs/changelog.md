@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new `Storage` interface that replaces `FeatureStorage`. It provides lower-level APIs for storing strings and booleans.
 - Built-in implementations of the `Storage` interface for in-memory, `SharedPreferences`, and `DataStore`.
 - A `Feature.Source` enum to define whether a feature flag uses local or remote storage by default.
+- A `BinaryFeature` interface to define boolean-like feature flags.
+- `Laboratory.observeBinary()` and `Laboratory.isEnabled()` convenience methods to interact with binary features.
 - `DefaultSourceFactory` to allow overriding default feature sources at runtime.
 - A check that fails if feature flags with the same FQCN are generated in a project. 
 

@@ -43,3 +43,19 @@ public interface Feature<out T> where T : Feature<T>, T : Enum<out T> {
       get() = !isLocal
   }
 }
+
+/**
+ * A specialization of [Feature] representing a binary feature flag.
+ *
+ * Binary features are defined as enum classes with exactly two meaningful logical states: one
+ * representing `true` and one representing `false`, exposed via [binaryValue].
+ *
+ * Implementations are expected to define only two enum values: one with `binaryValue == true` and
+ * one with `binaryValue == false`. As with all [Feature] implementations, enum constants must not
+ * override methods. Stable enum names are required for correct serialization and option discovery.
+ */
+public interface BinaryFeature<out T> : Feature<T>
+  where T : BinaryFeature<T>, T : Feature<T>, T : Enum<out T> {
+  /** Boolean representation of this feature option. */
+  public val binaryValue: Boolean
+}

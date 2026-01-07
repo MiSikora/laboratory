@@ -1,5 +1,6 @@
 package io.mehow.laboratory.testing
 
+import io.mehow.laboratory.BinaryFeature
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.internal.InternalLaboratoryApi
 import io.mehow.laboratory.internal.options
@@ -90,3 +91,21 @@ enum class FeatureWithoutDescription : Feature<FeatureWithoutDescription> {
 }
 
 enum class FeatureWithoutValues : Feature<FeatureWithoutValues>
+
+enum class EnabledBinaryFeature(override val binaryValue: Boolean) :
+  BinaryFeature<EnabledBinaryFeature> {
+  Enabled(binaryValue = true),
+  Disabled(binaryValue = false);
+
+  override val defaultOption
+    get() = Enabled
+}
+
+enum class DisabledBinaryFeature(override val binaryValue: Boolean) :
+  BinaryFeature<DisabledBinaryFeature> {
+  Enabled(binaryValue = true),
+  Disabled(binaryValue = false);
+
+  override val defaultOption
+    get() = Disabled
+}
