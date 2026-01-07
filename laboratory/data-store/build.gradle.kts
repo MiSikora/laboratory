@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.dokka)
   alias(libs.plugins.wire)
+  alias(libs.plugins.laboratory.convention)
 }
 
 wire { kotlin {} }

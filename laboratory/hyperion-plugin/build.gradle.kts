@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.dokka)
   alias(libs.plugins.ksp)
   alias(libs.plugins.buildconfig)
+  alias(libs.plugins.laboratory.convention)
 }
 
 buildConfig {

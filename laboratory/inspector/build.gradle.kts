@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.dokka)
+  alias(libs.plugins.laboratory.convention)
 }
 
 android {

@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.maven.publish)
   alias(libs.plugins.dokka)
   alias(libs.plugins.buildconfig)
+  alias(libs.plugins.laboratory.convention)
 }
 
 val pluginName = "laboratory"

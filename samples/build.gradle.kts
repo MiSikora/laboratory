@@ -6,7 +6,7 @@ plugins {
   alias(libs.plugins.kotlin.android) apply false
   alias(libs.plugins.agp.application) apply false
   alias(libs.plugins.laboratory) apply false
-  id("io.mehow.laboratory.convention")
+  alias(libs.plugins.laboratory.convention) apply false
 }
 
 subprojects {

@@ -1,6 +1,7 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.laboratory)
+  alias(libs.plugins.laboratory.convention)
 }
 
 laboratory {

@@ -47,10 +47,6 @@ class ConventionPlugin : Plugin<Project> {
     target.configureTesting()
     target.configureSpotless()
     target.configureMavenPublishing()
-
-    if (target.isRoot) {
-      target.subprojects { plugins.apply("io.mehow.laboratory.convention") }
-    }
   }
 
   private fun Project.configureCompatibility() {
