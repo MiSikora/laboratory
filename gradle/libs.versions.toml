@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.0"
 android-material = "1.13.0"
 androidx-appcompat = "1.7.1"
 androidx-datastore = "1.2.0"
@@ -40,14 +40,12 @@ agp-library = { id = "com.android.library", version.ref = "agp" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 laboratory-convention = { id = "io.mehow.laboratory.convention" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 # Used by convention plugin
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-wire = { id = "com.squareup.wire", version.ref = "wire" }
 
 [libraries]
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
@@ -73,8 +71,9 @@ kotest-runner-android = { group = "br.com.colman", name = "kotest-runner-android
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 # Included to be picked up by dependencies update automation
-ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
+ktfmt = { group = "com.facebook", name = "ktfmt", version.ref = "ktfmt" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+wire = { group = "com.squareup.wire", name = "wire-runtime", version.ref = "wire" }
 
 gradle-agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 gradle-agp-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }

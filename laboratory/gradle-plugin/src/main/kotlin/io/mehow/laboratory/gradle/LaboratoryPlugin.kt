@@ -1,12 +1,10 @@
 package io.mehow.laboratory.gradle
 
+import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.variant.AndroidComponentsExtension
+import java.util.concurrent.atomic.AtomicBoolean
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.tasks.TaskProvider
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetContainer
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 /**
  * Applies the Laboratory Gradle plugin to a project.
@@ -18,117 +16,73 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
  * The Kotlin Gradle plugin must be applied before this plugin.
  */
 public class LaboratoryPlugin : Plugin<Project> {
+  private val hasKotlin = AtomicBoolean(false)
+  private val hasAndroid = AtomicBoolean(false)
+  private val isLaboratoryDependencyAdded = AtomicBoolean(false)
+
   override fun apply(target: Project) {
     val extension = target.extensions.create(PluginName, LaboratoryExtension::class.java)
+    val tasks = LaboratoryTasks.registerIn(target)
+    tasks.configureInput(target, extension)
+    tasks.configureKotlinDependency(target)
 
-    target.checkKotlinPlugin()
-    target.setUpProject(extension)
-  }
+    target.withPlugins(
+      "org.jetbrains.kotlin.jvm",
+      "org.jetbrains.kotlin.android",
+      "com.android.experimental.built-in-kotlin",
+    ) {
+      hasKotlin.set(true)
+    }
 
-  private fun Project.checkKotlinPlugin() {
-    val hasKotlin =
-      with(plugins) {
-        hasPlugin("org.jetbrains.kotlin.jvm") || hasPlugin("org.jetbrains.kotlin.android")
+    target.withPlugins(
+      "com.android.application",
+      "com.android.library",
+      "com.android.instantapp",
+      "com.android.feature",
+      "com.android.dynamic-feature",
+    ) {
+      hasAndroid.set(true)
+      target.evaluateKotlinInAndroid()
+      target.extensions.getByType(AndroidComponentsExtension::class.java).onVariants { variant ->
+        target.contributeToSources(tasks, ProjectSources.Android(variant))
       }
-    check(hasKotlin) { "Laboratory Gradle plugin applied in '$path' requires Kotlin plugin." }
+    }
+
+    target.afterEvaluate {
+      target.contributeToSources(tasks, ProjectSources.Kotlin(target))
+      target.addLaboratoryDependency()
+    }
   }
 
-  private fun Project.setUpProject(extension: LaboratoryExtension) {
-    addLaboratoryDependency()
+  private fun Project.evaluateKotlinInAndroid() {
+    val isPropEnabled = findProperty("android.builtInKotlin")?.toString()?.toBoolean()
+    extensions.getByType(AndroidComponentsExtension::class.java).finalizeDsl {
+      val commonExt = extensions.getByType(CommonExtension::class.java)
+      val isDslEnabled = commonExt.enableKotlin
+      hasKotlin.set(isDslEnabled && isPropEnabled != false)
+    }
+  }
 
-    val hasAndroid = plugins.hasPlugin("com.android.base")
-    registerFeatureFlagsTask(extension, hasAndroid)
-    registerFeatureFactoryTask(extension, hasAndroid)
-    registerOptionFactoryTask(extension, hasAndroid)
+  private fun Project.contributeToSources(tasks: LaboratoryTasks, sources: ProjectSources) {
+    val isKotlinContribution =
+      when (sources) {
+        is ProjectSources.Kotlin -> true
+        is ProjectSources.Android -> false
+      }
+    if (hasAndroid.get() && isKotlinContribution) {
+      return
+    }
+    check(hasKotlin.get()) { "Laboratory Gradle plugin applied in '$path' requires Kotlin plugin." }
+    tasks.contributeToSources(sources)
   }
 
   private fun Project.addLaboratoryDependency() {
     dependencies.add("api", "io.mehow.laboratory:laboratory:$LibraryVersion")
   }
+}
 
-  private fun Project.registerFeatureFlagsTask(
-    extension: LaboratoryExtension,
-    hasAndroid: Boolean,
-  ) {
-    registerOutputTask<FeatureFlagsTask>("generateFeatureFlags", hasAndroid) { task ->
-      task.group = PluginName
-      task.description = "Generate feature flags"
-      task.inputFlags.set(extension.featureInputs)
-      task.outputDirectory.set(layout.buildDirectory.dir("generated/laboratory/code/feature-flags"))
-    }
-  }
-
-  private fun Project.registerFeatureFactoryTask(
-    extension: LaboratoryExtension,
-    hasAndroid: Boolean,
-  ) {
-    registerOutputTask<FeatureFactoryTask>("generateFeatureFactory", hasAndroid) { task ->
-      task.group = PluginName
-      task.description = "Generate feature factory"
-      task.factory.set(extension.factoryInput)
-      task.features.set(
-        extension.factoryFeatureInputs.getValue(DependencyContribution.FeatureFactory)
-      )
-      task.outputDirectory.set(
-        layout.buildDirectory.dir("generated/laboratory/code/feature-factory")
-      )
-    }
-  }
-
-  private fun Project.registerOptionFactoryTask(
-    extension: LaboratoryExtension,
-    hasAndroid: Boolean,
-  ) {
-    registerOutputTask<OptionFactoryTask>("generateOptionFactory", hasAndroid) { task ->
-      task.group = PluginName
-      task.description = "Generate option factory"
-      task.factory.set(extension.optionFactoryInput)
-      task.features.set(
-        extension.factoryFeatureInputs.getValue(DependencyContribution.OptionFactory)
-      )
-      task.outputDirectory.set(
-        layout.buildDirectory.dir("generated/laboratory/code/option-factory")
-      )
-    }
-  }
-
-  private inline fun <reified T : OutputTask> Project.registerOutputTask(
-    name: String,
-    hasAndroid: Boolean,
-    crossinline action: (T) -> Unit,
-  ): TaskProvider<T> {
-    val task = tasks.register(name, T::class.java) { action(it) }
-    makeKotlinDependOnTask(task)
-    contributeToSourceSets(task, hasAndroid)
-    return task
-  }
-
-  private fun Project.makeKotlinDependOnTask(task: TaskProvider<out Task>) {
-    tasks.withType(KotlinJvmCompile::class.java).configureEach { kotlinTask ->
-      kotlinTask.dependsOn(task)
-    }
-  }
-
-  private fun Project.contributeToSourceSets(
-    task: TaskProvider<out OutputTask>,
-    hasAndroid: Boolean,
-  ) =
-    if (hasAndroid) {
-      contributeToAndroid(task)
-    } else {
-      contributeToKotlin(task)
-    }
-
-  private fun Project.contributeToKotlin(task: TaskProvider<out OutputTask>) {
-    val sourceSets = extensions.getByType(KotlinSourceSetContainer::class.java).sourceSets
-    val kotlinSourceSet = sourceSets.getByName("main").kotlin
-    kotlinSourceSet.srcDir(task)
-  }
-
-  private fun Project.contributeToAndroid(task: TaskProvider<out OutputTask>) {
-    extensions.getByType(AndroidComponentsExtension::class.java).onVariants { variant ->
-      // 'kotlin' sources do not include
-      variant.sources.java?.addGeneratedSourceDirectory(task, OutputTask::outputDirectory)
-    }
+private fun Project.withPlugins(vararg ids: String, action: (Plugin<*>) -> Unit) {
+  for (id in ids) {
+    plugins.withId(id, action)
   }
 }

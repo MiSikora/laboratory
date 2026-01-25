@@ -2,8 +2,6 @@ package io.mehow.laboratory.convention
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
-import com.android.build.api.variant.ApplicationAndroidComponentsExtension
-import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
 import com.diffplug.gradle.spotless.SpotlessExtension
@@ -73,10 +71,6 @@ class ConventionPlugin : Plugin<Project> {
 
   private fun Project.configureAndroid() {
     plugins.withType<LibraryPlugin>().configureEach {
-      configure<LibraryAndroidComponentsExtension> {
-        beforeVariants { builder -> builder.enable = builder.buildType == "release" }
-      }
-
       configure<LibraryExtension> {
         compileSdk = libs.androidCompileSdk
         defaultConfig.minSdk = libs.androidMinSdk
@@ -98,10 +92,6 @@ class ConventionPlugin : Plugin<Project> {
     }
 
     plugins.withType<AppPlugin>().configureEach {
-      configure<ApplicationAndroidComponentsExtension> {
-        beforeVariants { builder -> builder.enable = builder.buildType == "debug" }
-      }
-
       configure<ApplicationExtension> {
         compileSdk = libs.androidCompileSdk
         defaultConfig {
@@ -111,8 +101,6 @@ class ConventionPlugin : Plugin<Project> {
           versionCode = 1
           versionName = "1.0.0"
         }
-
-        buildTypes { debug { matchingFallbacks.add("release") } }
       }
     }
   }

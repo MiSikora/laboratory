@@ -2,6 +2,7 @@ package io.mehow.laboratory.gradle
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.mehow.laboratory.gradle.test.LaboratoryTask
 import io.mehow.laboratory.gradle.test.cleanBuildResults
 import io.mehow.laboratory.gradle.test.toFixture
@@ -21,6 +22,22 @@ class AndroidIntegrationSpec : FunSpec() {
       result[LaboratoryTask.FeatureFlags] shouldBe SUCCESS
       result[LaboratoryTask.OptionFactory] shouldBe SUCCESS
       result[LaboratoryTask.FeatureFactory] shouldBe SUCCESS
+    }
+
+    test("disabled kotlin dsl") {
+      val result =
+        "integration-android-no-kotlin-dsl".toFixture(expectFailure = true).buildAll(gradleRunner)
+
+      result.output shouldContain "Laboratory Gradle plugin applied in ':' requires Kotlin plugin."
+    }
+
+    test("disabled kotlin gradle property") {
+      val result =
+        "integration-android-no-kotlin-gradle"
+          .toFixture(expectFailure = true)
+          .buildAll(gradleRunner)
+
+      result.output shouldContain "Laboratory Gradle plugin applied in ':' requires Kotlin plugin."
     }
   }
 }
