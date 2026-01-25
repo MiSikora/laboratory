@@ -1,6 +1,5 @@
 plugins {
   alias(libs.plugins.agp.application)
-  alias(libs.plugins.kotlin.android)
   alias(libs.plugins.laboratory)
   alias(libs.plugins.laboratory.convention)
 }

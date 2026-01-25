@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+  enableKotlin false
   namespace "io.mehow.laboratory.sample"
   compileSdkVersion 36
 }
