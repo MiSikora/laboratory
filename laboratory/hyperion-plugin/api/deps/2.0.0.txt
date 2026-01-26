@@ -1,0 +1,3 @@
+androidx.appcompat:appcompat:1.7.1
+com.willowtreeapps.hyperion:hyperion-plugin:0.9.38
+org.jetbrains.kotlin:kotlin-stdlib:2.3.0

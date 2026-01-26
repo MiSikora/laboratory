@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-01-26
+
 ### Added
 - This release adds support for AGP 9, which means AGP 9 is now a requirement along with AGP 9's own requirements.
 - A new `Storage` interface that replaces `FeatureStorage`. It provides lower-level APIs for storing strings and booleans.
@@ -42,6 +44,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extensions on `Class<Feature<*>>` that exposed feature properties such as `description`, `defaultOption`, etc.
 - Gradle plugin support for `sourcedStorage()`.
 - Gradle plugin support for `featureSourceFactory()`.
+
+### Dependencies
+
+#### `io.mehow.laboratory:laboratory`
+- Changed `org.jetbrains.kotlinx:kotlinx-coroutines-core` from `1.8.1` to `1.10.2`.
+- Changed `org.jetbrains.kotlin:kotlin-stdlib` from `1.9.24` to `2.3.0`.
+
+#### `io.mehow.laboratory:laboratory-generator`
+- Changed `com.squareup:kotlinpoet` from `1.16.0` to `2.2.0`.
+- Changed `org.jetbrains.kotlin:kotlin-stdlib` from `1.9.24` to `2.3.0`.
+
+#### `io.mehow.laboratory:laboratory-gradle-plugin`
+- Added `com.android.tools.build:gradle-api:9.0.0`.
+- Added `org.jetbrains.kotlin:kotlin-gradle-plugin-api:2.3.0`.
+- Changed `org.jetbrains.kotlin:kotlin-stdlib` from `1.9.24` to `2.3.0`.
+- Removed `org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24`.
+
+#### `io.mehow.laboratory:laboratory-data-store'`
+- Changed `androidx.datastore:datastore-core` from `1.1.1` to `1.2.0`.
+- Changed `com.squareup.wire:wire-runtime` from `4.9.9` to `5.5.0`.
+- Changed `org.jetbrains.kotlin:kotlin-stdlib` from `1.9.24` to `2.3.0`.
+
+#### `io.mehow.laboratory:laboratory-shared-preferences`
+- Changed `org.jetbrains.kotlinx:kotlinx-coroutines-core` from `1.8.1` to `1.10.2`.
+- Changed `org.jetbrains.kotlin:kotlin-stdlib` from `1.9.24` to `2.3.0`.
+
+#### `io.mehow.laboratory:laboratory-inspector`
+- Changed `androidx.lifecycle:lifecycle-viewmodel-ktx` from `2.8.0` to `2.10.0`.
+- Changed `androidx.fragment:fragment-ktx` from `1.7.1` to `1.8.9`.
+- Changed `org.jetbrains.kotlinx:kotlinx-coroutines-android` from `1.8.1` to `1.10.2`.
+- Changed `org.jetbrains.kotlin:kotlin-stdlib` from `1.9.24` to `2.3.0`.
+- Changed `androidx.appcompat:appcompat` from `1.6.1` to `1.7.1`.
+- Changed `com.google.android.material:material` from `1.12.0` to `1.13.0`.
+- Changed `androidx.recyclerview:recyclerview` from `1.3.2` to `1.4.0`.
+
+#### `io.mehow.laboratory:laboratory-hyperion-plugin`
+- Changed `org.jetbrains.kotlin:kotlin-stdlib` from `1.9.24` to `2.3.0`.
+- Changed `androidx.appcompat:appcompat` from `1.6.1` to `1.7.1`.
 
 ## [1.1.2] - 2025-08-04
 
