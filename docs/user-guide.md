@@ -2,26 +2,113 @@
 
 ## Features
 
-Feature flags are nothing more than enums that implement the `Feature` interface. It allows us to define a default option, remote sources that can provide different options and descriptions for some human-readable metadata.
+Feature flags are defined as enum classes that implement `Feature` interface (or `BinaryFeature` for on/off flags). Each enum value is a possible option. You must provide a default option:
+
+```kotlin
+enum class MyFeature : Feature<MyFeature> {
+  OptionA,
+  OptionB,
+  OptionC,
+  ;
+
+  override val defaultOption get() = OptionA
+}
+
+enum class MyBinaryFeature(
+  override val binaryValue: Boolean,
+) : BinaryFeature<MyBinaryFeature> {
+  Enabled(true),
+  Disabled(false),
+  ;
+
+  override val defaultOption get() = Enabled
+}
+```
 
 !!! danger
     `Feature` enums must have at least one option. Defining an enum like below will make `Laboratory` throw an exception when used to read an option.
 
 ```kotlin
-enum class SomeFeature : Feature<SomeFeature>
+enum class MyFeature : Feature<MyFeature>
 ```
 
 !!! tip
     Check [the samples](https://github.com/MiSikora/laboratory/tree/trunk/samples) to learn by example.
 
-## I/O
+## Usage
 
-`Laboratory` is nothing more than a high-level API over the `FeatureStorage` interface responsible for persisting feature flags. All implementations that are provided by this library rely on a feature flag package name and an enum name.
+Once you have a `Laboratory` instance, you can use its API to read and modify flags:
+
+- `laboratory.experiment<FeatureType>()` to get the current option or `laboratory.observe<FeatureType>` to observe its value via `Flow`. If the flag has a remote source enabled, Laboratory will fetch from the appropriate storage based on the current source selection.
+- `laboratory.experimentIs(featureOption)` to quickly check if the feature flag is currently set to use `featureOption`.
+- `laboratory.isEnabled<BinaryFeatureType>` or `laboratory.observeBinary<BinaryFeatureType>` for convenient interactions with binary feature flags.
+- `laboratory.setOption(featureOption)` to change the current option. This write only to the local source.
+- `laboratory.localStorage().setLocalSource<FeatureType>()` or `laboratory.localStorage().setRemoteSource<FeatureType>()` to change the data source used for the feature flag when interacting with a `Laboratory` instance.
+
+```kotlin
+// Assume these are defined elsewhere
+enum class Theme : Feature<Theme> { 
+  Light,
+  Dark,
+  Contrast,
+  ;
+  
+  override val defaultOption get() = Light
+}
+
+enum class ShowAds(
+  override val binaryValue: Boolean,
+) : BinaryFeature<ShowAds> { 
+  Enabled(true),
+  Disabled(false),
+  ;
+  
+  override val defaultOption get() = Disabled
+}
+
+// Create the laboratory with in-memory storage
+val laboratory = Laboratory.inMemory()
+
+// Get current theme
+val currentTheme = laboratory.experiment<Theme>()
+
+// Toggle the theme
+laboratory.setOption(Theme.Dark)
+
+// Check if ads are enabled (binary flag)
+val adsEnabled = laboratory.isEnabled<ShowAds>()
+```
+
+## Storage
+
+By default all feature flags are configured to read their values from a local source. This can be changed overriding `Feature.source` value.
+
+```kotlin
+enum class MyFeature : Feature<MyFeature> {
+  OptionA,
+  OptionB,
+  OptionC,
+  ;
+
+  override val defaultOption get() = OptionA
+
+  override val defaultSource get() = Feature.Source.Remote
+}
+```
+
+Laboratory uses `Storage` interface for persistence. The library provides built-in Storage implementations (in-memory, `SharedPreferences`, `DataStore`). Configure Laboratory by supplying a local and optionally a remote storage. If `remoteStorage` is omitted, Laboratory operates with local storage only.
+
+```kotlin
+val laboratory = Laboratory.Builder()
+    .localStorage(Storage.inMemory())
+    .remoteStorage(Storage.inMemory())
+    .build()
+```
 
 !!! warning
     Because the persistence mechanism relies on package names and enum names, you should be careful when refactoring feature flags already available on production. Changing these options may result in a perception of unsaved feature flags.
 
-Because `FeatureStorage` is an interface that is meant to be used with I/O operations, it exposes only `suspend` functions. `Laboratory`, on the other hand, allows you to opt-into blocking equivalents of read and write functions. You can selectively do this by applying the `@BlockingIoCall` annotation or globally by adding a compiler flag.
+Because `Storage` is an interface that is meant to be used with I/O operations, it exposes only `suspend` functions. `Laboratory`, on the other hand, allows you to opt-into blocking equivalents of read and write functions. You can selectively do this by applying the `@BlockingIoCall` annotation or globally by adding a compiler flag.
 
 ```groovy
 android {
@@ -33,224 +120,33 @@ android {
 }
 ```
 
-In either case, a design that relies on non-blocking function calls is preferable.
-
-## Sources
-
-Feature flags, by default, have only a single source for their options. By convention, it is considered to be a local source. However, you might need to have different data sources for feature flags, depending on some runtime conditions or a build variant. For example, you might want to use a local source during debugging and rely on some remote services on production.
-
-Let's say that you want to have a feature flag that has three sources. One local, and two remote ones.
-
-!!! info
-    Notice that a feature flag source is also a feature flag. This allows us to change feature flag sources via `Laboratory` as well.
-
-```kotlin
-enum class PowerType : Feature<PowerType> {
-  Coal,
-  Wind,
-  Solar;
-
-  public override val defaultOption get() = Solar
-
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
-
-  enum class Source : Feature<Source> {
-    Local,
-    Firebase,
-    Azure;
-
-    public override val defaultOption get() = Firebase
-  }
-}
-```
-
-If you define multiple sources for a feature flag, you should add a `Local` option to them. This allows changing feature flag options at runtime from the [QA module](qa-module.md).
-
-This feature flag definition allows configuring `Laboratory` in a way that it is capable of recognizing that `PowerType` has different option providers and that the default provider is `Firebase`.
-
-Because the `Laboratory` only delegates its work to `FeatureStorage`, it is `FeatureStorage` that needs to understand how to connect feature flags with their sources. This is possible with a special implementation of this interface that is available as an extension function.
-
-```kotlin
-val sourcedFeatureStorage = FeatureStorage.sourced(
-  localSource = FeatureStorage.inMemory(),
-  remoteSources = mapOf(
-    "Firebase" to FeatureStorage.inMemory(),
-    "Azure" to FeatureStorage.inMemory(),
-  ),
-)
-```
-
-`sourcedFeatureStorage` delegates persistence mechanism to three different storage and is responsible for coordinating a selected source and a current feature flag option.
-
-One error-prone thing is that `sourcedFeatureStorage` relies on strings and source names to use the correct storage. The reason for this is that two different feature flags might share sources partially.
-
-!!! tip
-    Using [Gradle plugin](gradle-plugin.md) allows you to avoid this issue with the generation of a custom `FeatureStorage` that is always up-to-date.
-
-```kotlin
-enum class PowerType : Feature<PowerType> {
-  Coal,
-  Wind,
-  Solar;
-
-  public override val defaultOption get() = Solar
-
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
-
-  enum class Source : Feature<Source> {
-    Local,
-    Firebase,
-    Azure;
-
-    public override val defaultOption get() = Firebase
-  }
-}
-
-enum class Theme : Feature<PowerType> {
-  Night,
-  Day,
-  Christmas;
-
-  public override val defaultOption get() = Night
-
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
-
-  enum class Source : Feature<Source> {
-    Local,
-    Azure;
-
-    public override val defaultOption get() = Local
-  }
-}
-```
-
-In this case, `Theme` and `PowerType` feature flags share `Azure` source, but `Firebase` applies only to the `PowerType` flag.
-
-```kotlin
-// Create laboratory that understands sourced features
-val laboratory = Laboratory.create(sourcedFeatureStorage)
-
-// Check option of PowerType in Firebase FeatureStorage
-val powerTypeFirebaseValue = laboratory.experiment<PowerType>()
-
-// Check option of Theme in local FeatureStorage
-val themeLocalValue = laboratory.experiment<Theme>()
-
-// Set source of Theme source to Azure (PowerType is still unaffected and uses Firebase)
-val success = laboratory.setOption(Theme.Source.Azure)
-
-// Check option of Theme in Azure FeatureStorage
-val themeAzureValue = laboratory.experiment<Theme>()
-```
-
-!!! info
-    The implementation of `sourcedFeatureStorage` provided by the library saves data only in `localSource`.
-
-To propagate remote feature flag options on updates, they need to be connected to a remote source.
-
-```kotlin
-enum class ShowAds : Feature<ShowAds> {
-  Enabled,
-  Disabled;
-
-  public override val defaultOption get() = Disabled
-
-  @Suppress("UNCHECKED_CAST")
-  override val source = Source::class.java as Class<Feature<*>>
-
-  enum class Source : Feature<Source> {
-    Local,
-    Remote;
-
-    public override val defaultOption get() = Remote
-  }
-}
-
-val firebaseStorage = FeatureStorage.inMemory()
-val sourcedFeatureStorage = FeatureStorage.sourced(
-  localSource = FeatureStorage.inMemory(),
-  remoteSources = mapOf("Remote" to firebaseStorage),
-)
-
-// During application initialisation
-val laboratory = Laboratory.create(sourcedFeatureStorage)
-remoteService.observeShowAdsFlag()
-    // Some custom mapping between a service option and a feature flag
-    .map { showAds: Boolean ->
-      val showAdsFlag = if (showAds) ShowAds.Enabled else ShowAds.Disabled
-      laboratory.setOption(showAdsFlag)
-    }
-    // Scope should last for the lifetime of an application
-    .launchIn(GlobalScope)
-```
-
-## Default options override
-
-Whenever Laboratory reads an option for a feature flag, it falls back to a default option declared on a said flag. However, there might be cases when you'd like to change the default behavior. One example might be having features enabled by default in your debug builds and disabled on production. Or you might use feature flags for configuration, and you'd like to have a different configuration per build variant. Laboratory enables this with default options overrides.
-
-```kotlin
-enum class ShowAds : Feature<ShowAds> {
-  Enabled,
-  Disabled;
-
-  public override val defaultOption get() = Disabled
-}
-
-object DebugDefaultOptionFactory : DefaultOptionFactory {
-  override fun <T : Feature<T>> create(feature: T): Feature<*>? = when(feature) {
-    is ShowAds -> ShowAds.Enabled
-    else -> null
-  }
-}
-
-val laboratory = Laboratory.builder()
-    .featureStorage(FeatureStorage.inMemory())
-    .defaultOptionFactory(DebugDefaultOptionFactory)
-    .build()
-
-// Uses default option declared in DebugDefaultOptionFactory
-laboratory.experimentIs(ShowAds.Enabled)
-```
-
-You can be even more creative and, for example, enable all feature flags in your debug builds, which have an option `Enabled`.
-
-```kotlin
-class DebugDefaultOptionFactory : DefaultOptionFactory {
-  override fun <T : Feature<T>> create(feature: T): Feature<*>? {
-    return feature.options.associateBy { it.name }["Enabled"]
-  }
-
-  private val <T : Feature<T>> T.options get() = javaClass.options
-}
-```
-
-## Listening to remote change
-
-Feature flags can be synced with a remote source with a help of `OptionFactory`. Below is a sample setup using Firebase.
+Feature flags can be synced with a remote source with a help of `OptionFactory`. While it can be hand-written typically feature flags and option factory are generated using the [Gradle plugin](gradle-plugin.md). Below is a sample setup using Firebase.
 
 ```kotlin
 enum class ChristmasTheme : Feature<ChristmasTheme> {
-  Enabled,
+  Santa,
+  Elves,
   Disabled,
   ;
 
-  public val override val defaultOption get() = Disabled
+  override val defaultOption get() = Disabled
+
+  override val defaultSource get() = Feature.Source.Remote
 }
 
 enum class ShowAds : Feature<ShowAds> {
   Enabled,
   Disabled;
 
-  public override val defaultOption get() = Disabled
+  override val defaultOption get() = Disabled
+
+  override val defaultSource get() = Feature.Source.Remote
 }
 
 object CustomOptionFactory : OptionFactory {
   private val optionMapping = mapOf<String, (String) -> Feature<*>?>(
-    "ChristmasTheme" to { name -> ChristmasTheme::class.java.options.firstOrNull { it.name == name } },
-    "ShowAds" to { name -> ShowAds::class.java.options.firstOrNull { it.name == name } },
+    "ChristmasTheme" to { name -> ChristmasTheme::class.java.enumConstants!!.firstOrNull { it.name == name } },
+    "ShowAds" to { name -> ShowAds::class.java.enumConstants!!.firstOrNull { it.name == name } },
   )
 
   override fun create(key: String, name: String) = optionMapping[key]?.invoke(name)
@@ -258,8 +154,12 @@ object CustomOptionFactory : OptionFactory {
 
 class App : Application {
   override fun onCreate() {
-    val firebaseStorage = FeatureStorage.inMemory()
-    // Get a reference to a node where feature flags are kept
+    val laboratory = Laboratory.Builder()
+        .localStorage(Storage.inMemory())
+        .remoteStorage(Storage.inMemory())
+        .build()
+
+    // Get a reference to a node where feature flags are kept.
     val database = FirebaseDatabase.getInstance().reference.child("featureFlags")
 
     val featureFlagListener = object : ValueEventListener {
@@ -271,8 +171,9 @@ class App : Application {
               val stringValue = value as? String ?: return@mapNotNull null
               CustomOptionFactory.create(stringKey, stringValue)
             }
-        // Be cautious with using GlobalScope.
-        GlobalScope.launch { firebaseStorage.setOptions(newOptions) }
+
+        // Use a coroutine scope that is appropriate for you application.
+        GlobalScope.launch { laboratory.remoteStorage()?.setOptions(newOptions) }
       }
 
       override fun onCancelled(error: DatabaseError) = Unit

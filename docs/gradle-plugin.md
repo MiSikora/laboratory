@@ -31,172 +31,57 @@ laboratory {
     withDefaultOption("Retina")
   }
 
-  feature("LocationTracking") {
+  disabledFeature("LocationTracking") {
     packageName = "io.mehow.laboratory.location"
-
     isPublic = false
-
-    withOption("Enabled")
-    withDefaultOption("Disabled")
-
-    withDefaultSource("Firebase")
-    withSource("Aws")
+    isRemote = true
   }
 }
 ```
 
-This setup creates two feature flags. `Authentication` and `LocationTracking` with options taken from the `feature(name) { }` block. Key things that might not be that obvious.
-
-- Feature flag source visibility is inherited from a feature's visibility.
-- If a feature flag defines a remote source, a `Local` source is automatically added as an option. Any custom `Local` sources will be filtered out.
-- If all sources are added with `withSource()` function, `Local` source will be used as a default one.
+This setup creates two feature flags. `Authentication` and `LocationTracking` with options taken from the `feature(name) { }` and `disabledFeature(name) { }` blocks.
 
 ```kotlin
 package io.mehow.laboratory.sample
 
 import io.mehow.laboratory.Feature
-import kotlin.Boolean
 import kotlin.String
 
+/**
+ * Type of authentication when opening the app
+ */
 public enum class Authentication : Feature<Authentication> {
-  Password,
+  None,
   Fingerprint,
   Retina,
   ;
 
-  public override val defaultOption get() = Retina
+  override val defaultOption: Authentication
+    get() = Retina
 
-  public override val description: String = "Type of authentication when opening the app"
+  override val description: String = "Type of authentication when opening the app"
 }
 ```
 
 ```kotlin
 package io.mehow.laboratory.location
 
+import io.mehow.laboratory.BinaryFeature
 import io.mehow.laboratory.Feature
-import java.lang.Class
 import kotlin.Boolean
-import kotlin.Suppress
 
-internal enum class LocationTracking : LocationTracking<Authentication> {
-  Enabled,
-  Disabled,
+internal enum class LocationTracking(
+  override val binaryValue: Boolean,
+) : BinaryFeature<LocationTracking> {
+  Enabled(true),
+  Disabled(false),
   ;
 
-  public override val defaultOption get() = Disabled
+  override val defaultOption: LocationTracking
+    get() = Disabled
 
-  public override val source = Source::class.java
-
-  internal enum class Source : Feature<Source> {
-    Local,
-    Firebase,
-    Aws,
-    ;
-
-    public override val defaultOption get() = Firebase
-  }
-}
-```
-
-## Feature flags storage
-
-If your feature flags use multiple sources, you can configure the Gradle plugin to generate for you a quality of life extension function that returns a custom `FeatureStorage` builder.
-
-```groovy
-apply plugin: "io.mehow.laboratory"
-
-laboratory {
-  packageName = "io.mehow.laboratory.sample"
-
-  sourcedStorage()
-
-  feature("FeatureA") {
-    withOption("Enabled")
-    withDefaultOption("Disabled")
-
-    withSource("Azure")
-    withSource("Firebase")
-  }
-
-  feature("FeatureB") {
-    withOption("Enabled")
-    withDefaultOption("Disabled")
-
-    withSource("Azure")
-    withSource("Aws")
-  }
-
-  feature("FeatureC") {
-    withOption("Enabled")
-    withDefaultOption("Disabled")
-
-    withSource("Heroku")
-  }
-
-  feature("FeatureD") {
-    withDefaultOption("Enabled")
-    withOption("Disabled")
-  }
-}
-```
-
-`sourcedBuilder()` function uses `generateSourcedFeatureStorage` Gradle task that generates the code below.
-
-```kotlin
-package io.mehow.laboratory.sample
-
-import io.mehow.laboratory.FeatureStorage
-import io.mehow.laboratory.FeatureStorage.Companion.sourced
-import kotlin.String
-import kotlin.collections.Map
-import kotlin.collections.emptyMap
-import kotlin.collections.plus
-import kotlin.to
-
-internal fun FeatureStorage.Companion.sourcedBuilder(localSource: FeatureStorage): AwsStep =
-    Builder(localSource, emptyMap())
-
-internal interface AwsStep {
-  public fun awsSource(source: FeatureStorage): AzureStep
-}
-
-internal interface AzureStep {
-  public fun azureSource(source: FeatureStorage): FirebaseStep
-}
-
-internal interface FirebaseStep {
-  public fun firebaseSource(source: FeatureStorage): HerokuStep
-}
-
-internal interface HerokuStep {
-  public fun herokuSource(source: FeatureStorage): BuildingStep
-}
-
-internal interface BuildingStep {
-  public fun build(): FeatureStorage
-}
-
-private data class Builder(
-  private val localSource: FeatureStorage,
-  private val remoteSources: Map<String, FeatureStorage>
-) : AwsStep, AzureStep, FirebaseStep, HerokuStep, BuildingStep {
-  public override fun awsSourceSource(source: FeatureStorage): AzureStep = copy(
-    remoteSources = remoteSources + ("Firebase" to source)
-  )
-
-  public override fun azureSource(source: FeatureStorage): FirebaseStep = copy(
-    remoteSources = remoteSources + ("Azure" to source)
-  )
-
-  public override fun firebaseSource(source: FeatureStorage): HerokuStep = copy(
-    remoteSources = remoteSources + ("Firebase" to source)
-  )
-
-  public override fun herokuSource(source: FeatureStorage): BuildingStep = copy(
-    remoteSources = remoteSources + ("Heroku" to source)
-  )
-
-  public override fun build(): FeatureStorage = sourced(localSource, remoteSources)
+  override val defaultSource: Feature.Source
+    get() = Feature.Source.Remote
 }
 ```
 
@@ -244,7 +129,7 @@ import kotlin.Suppress
 import kotlin.collections.Set
 import kotlin.collections.setOf
 
-internal fun FeatureFactory.Companion.featureGenerated(): FeatureFactory = GeneratedFeatureFactory
+internal fun FeatureFactory.Companion.generated(): FeatureFactory = GeneratedFeatureFactory
 
 private object GeneratedFeatureFactory : FeatureFactory {
   @Suppress("UNCHECKED_CAST")
@@ -252,56 +137,6 @@ private object GeneratedFeatureFactory : FeatureFactory {
     Class.forName("io.mehow.laboratory.sample.FeatureA"),
     Class.forName("io.mehow.laboratory.sample.FeatureB"),
     Class.forName("io.mehow.laboratory.sample.FeatureC")
-  ) as Set<Class<Feature<*>>>
-}
-```
-
-## Feature flag sources factory
-
-If you want to group all feature flag sources similar to feature flags, you can use `featureSourceFactory()` function that collects them.
-
-```groovy
-laboratory {
-  packageName = "io.mehow.laboratory.sample"
-
-  featureSourceFactory()
-
-  feature("FeatureA") {
-    withOption("Enabled")
-    withDefaultOption("Disabled")
-
-    withSource(Remote)
-  }
-
-  feature("FeatureB") {
-    withOption("Enabled")
-    withDefaultOption("Disabled")
-
-    withSource(Remote)
-  }
-}
-```
-
-This uses the `generateFeatureSourceFactory` Gradle task that generates the code below.
-
-```kotlin
-package io.mehow.laboratory.sample
-
-import io.mehow.laboratory.Feature
-import io.mehow.laboratory.FeatureFactory
-import java.lang.Class
-import kotlin.Suppress
-import kotlin.collections.Set
-import kotlin.collections.setOf
-
-internal fun FeatureFactory.Companion.featureSourceGenerated(): FeatureFactory =
-    GeneratedFeatureSourceFactory
-
-private object GeneratedFeatureSourceFactory : FeatureFactory {
-  @Suppress("UNCHECKED_CAST")
-  override fun create(): Set<Class<out Feature<*>>> = setOf(
-    Class.forName("io.mehow.laboratory.sample.FeatureA${'$'}Source"),
-    Class.forName("io.mehow.laboratory.sample.FeatureB${'$'}Source")
   ) as Set<Class<Feature<*>>>
 }
 ```
@@ -323,19 +158,16 @@ laboratory {
   feature("FeatureA") {
     key = "FeatureA"
 
-    withOption("Enabled")
-    withDefaultOption("Disabled")
+    withOption("OptionA")
+    withDefaultOption("OptionB")
   }
 
   feature("FeatureB") {
-    withOption("Enabled")
-    withDefaultOption("Disabled")
+    withOption("OptionA")
+    withDefaultOption("OptionB")
   }
 
-  feature("FeatureC") {
-    withOption("Enabled")
-    withDefaultOption("Disabled")
-  }
+  enabledFeature("FeatureC")
 }
 ```
 
@@ -346,19 +178,21 @@ package io.mehow.laboratory.sample
 
 import io.mehow.laboratory.Feature
 import io.mehow.laboratory.OptionFactory
+import kotlin.Boolean
+import kotlin.String
 
 internal fun OptionFactory.Companion.generated(): OptionFactory = GeneratedOptionFactory
 
 private object GeneratedOptionFactory : OptionFactory {
   override fun create(key: String, name: String): Feature<*>? = when (key) {
     "FeatureA" -> when (name) {
-      "Enabled" -> FeatureA.Enabled
-      "Disabled" -> FeatureA.Disabled
+      "OptionA" -> FeatureA.OptionA
+      "OptionB" -> FeatureA.OptionB
       else -> null
     }
     "io.mehow.laboratory.sample.FeatureB" -> when (name) {
-      "Enabled" -> FeatureB.Enabled
-      "Disabled" -> FeatureB.Disabled
+      "OptionA" -> FeatureB.OptionA
+      "OptionB" -> FeatureB.OptionB
       else -> null
     }
     "io.mehow.laboratory.sample.FeatureC" -> when (name) {
@@ -366,6 +200,11 @@ private object GeneratedOptionFactory : OptionFactory {
       "Disabled" -> FeatureC.Disabled
       else -> null
     }
+    else -> null
+  }
+
+  override fun create(key: String, binaryValue: Boolean): Feature<*>? = when (key) {
+    "io.mehow.laboratory.sample.FeatureC" -> if (binaryValue) FeatureC.Enabled else FeatureC.Disabled
     else -> null
   }
 }
@@ -407,9 +246,6 @@ laboratory {
     withOption("Fingerprint")
     withOption("Retina")
     withOption("Face")
-
-    withSource("Firebase")
-    withSource("Aws")
   }
 
   feature("AllowScreenshots") {
@@ -437,9 +273,6 @@ laboratory {
     withOption("Cosine")
     withOption("Edit")
     withOption("Hamming")
-
-    withSource("Firebase")
-    withDefaultSource("Azure")
   }
 }
 
@@ -452,13 +285,11 @@ dependencies {
 // module-app
 plugins {
   id "com.android.application"
-  id "org.jetbrains.kotlin.android"
   id "io.mehow.laboratory"
 }
 
 laboratory {
   packageName = "com.sample"
-  sourcedStorage()
   featureFactory()
 
   dependency(project(":module-a"))
@@ -494,6 +325,9 @@ laboratory {
 
     // Sets the visibility of a feature flag to be either 'public' or 'internal'. 'true' by default.
     isPublic = false
+    
+    // Sets whether the feature flag uses remote source to reads its values. `false` by default.
+    isRemote = true
 
     // Deprecates a feature flag. `DeprecationLevel` argument is optional and uses `DeprecationLevel.Warning` by default.
     // Add the class to the import list in your Gradle script to avoid typing the whole package name.
@@ -505,16 +339,6 @@ laboratory {
 
     // Informs plugin to add 'ValueB' option to the generated feature flag.
     withOption("ValueB")
-
-    // Informs plugin to add 'Firebase' option to the list of sources controlling this flag.
-    // Adding any source automatically adds the 'Local' option to the source enum.
-    // Any custom 'Local' sources are ignored by the plugin.
-    withSource("Firebase")
-
-    // Informs plugin to add 'Aws' option to the list of sources controlling this flag and to set a default option.
-    // At most, one of the source options can be set with this function.
-    // By default, 'Local' sources are considered to be default options.
-    withDefaultSource("Aws")
   }
 
   // Informs plugin to create 'enum class SomeFeature' during the generation period with two options.
@@ -525,17 +349,8 @@ laboratory {
 
   // Informs plugin to create 'enum class SomeFeature' during the generation period with two options.
   // 'Enabled' and 'Disabled' and uses 'Disabled' as the default one.
-  disabled("SomeFeature") {
+  disabledFeature("SomeFeature") {
     // Uses the same options as feature() block except for `withOption()` and `withDefaultOption()`.
-  }
-
-  // Configures feature flags storage. Useful when feature flags have multiple sources.
-  sourcedStorage {
-    // Overrides globally declared namespace. No value by default.
-    packageName = "io.mehow.sample.storage"
-
-    // Sets visibility of a storage extension function to be either 'public' or 'internal'. 'false' by default.
-    isPublic = true
   }
 
   // Configures option factory. Useful for integration with remote service such as Firebase.
@@ -556,16 +371,7 @@ laboratory {
     isPublic = true
   }
 
-  // Configures feature flag sources factory.
-  featureSourceFactory {
-    // Overrides globally declared namespace. No value by default.
-    packageName = "io.mehow.sample.factory"
-
-    // Sets visibility of a factory extension function to be either 'public' or 'internal'. 'false' by default.
-    isPublic = true
-  }
-
-  // Includes feature flags that are used for generation of feature factories, sourced storage and option factory.
+  // Includes feature flags that are used for generation of feature factories and option factory.
   dependency(project(":some-project"))
   // By default dependency contributes to all declared generators but it can be selectively applied
   // by passing a contribution list.

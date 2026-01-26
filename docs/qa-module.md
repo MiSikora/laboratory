@@ -8,9 +8,9 @@ Feature flags inspection is available through the `laboratory-inspector` artifac
 
 ![Inspector](images/inspector_screenshot.jpg){: style="width:480px" .center }
 
-Inspector displays feature flags as cards and their options on chips. Active options of feature flags are marked with a highlight color. A local option of a feature flag can be changed by tapping on a chip. Chips that do not use `Local` sources cannot have their options changed. If a feature flag has multiple sources available, they can be switched from a drop down menu.
+Inspector displays feature flags as cards and their options on chips. Active options of feature flags are marked with a highlight color. A local option of a feature flag can be changed by tapping on a chip. Chips that do not use `Local` sources cannot have their options changed.
 
-Feature flags (including sources) can be reset to their default options with a button in an action bar.
+Feature flags can be reset to their default options with a button in an action bar.
 
 ## Configuration
 
@@ -23,15 +23,10 @@ Before `LaboratoryActivity` can be started, it has to be configured with an inst
     A lot of the boilerplate code presented here can be generated with the [Gradle plugin](gradle-plugin.md). It is highly recommended to rely on the plugin instead of handwriting the code.
 
 ```kotlin
-val sourcedFeatureStorage = FeatureStorage.sourced(
-  localSource = FeatureStorage.inMemory(),
-  remoteSources = mapOf(
-    "Firebase" to FeatureStorage.inMemory(),
-    "Aws" to FeatureStorage.inMemory(),
-    "Azure" to FeatureStorage.inMemory(),
-  ),
-)
-val laboratory = Laboratory.create(sourcedFeatureStorage)
+val laboratory = Laboratory.builder()
+    .localStorage(Storage.inMemory())
+    .remoteStorage(Storage.inMemory())
+    .build()
 
 LaboratoryActivity.configure(
   laboratory = laboratory,
@@ -54,8 +49,6 @@ enum class AllowScreenshots : Feature<AllowScreenshots> {
   Disabled;
 
   public override val defaultOption get() = Disabled
-
-  override val description: String = "Enables or disables screenshots during a video chat"
 }
 
 enum class Authentication : Feature<Authentication> {
@@ -65,16 +58,6 @@ enum class Authentication : Feature<Authentication> {
   Face;
 
   public override val defaultOption get() = Password
-
-  override val source = Source::class.java
-
-  enum class Source : Feature<Source> {
-    Local,
-    Firebase,
-    Aws;
-
-    public override val defaultOption get() = Local
-  }
 }
 
 enum class DistanceAlgorithm : Feature<DistanceAlgorithm> {
@@ -85,19 +68,6 @@ enum class DistanceAlgorithm : Feature<DistanceAlgorithm> {
   Hamming;
 
   public override val defaultOption get() = Euclidean
-
-  @Suppress("UNCHECKED_CAST")
-  override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
-
-  override val description: String = "Algorithm used for destination distance calculations"
-
-  enum class Source : Feature<Source> {
-    Local,
-    Firebase,
-    Azure;
-
-    public override val defaultOption get() = Azure
-  }
 }
 
 enum class LogType : Feature<LogType> {
@@ -118,16 +88,6 @@ enum class PowerSource : Feature<PowerSource> {
   ColdFusion;
 
   public override val defaultOption get() = Solar
-
-  @Suppress("UNCHECKED_CAST")
-  override val source: Class<Feature<*>> = Source::class.java as Class<Feature<*>>
-
-  enum class Source : Feature<Source> {
-    Local,
-    Firebase;
-
-    public override val defaultOption get() = Firebase
-  }
 }
 ```
 
@@ -139,8 +99,8 @@ You can configure how deprecated feature flags will be represented in the QA mod
 val configuration = LaboratoryActivity.Configuration.builder()
     .laboratory(laboratory)
     .featureFactories(mapOf("Features" to featureFactory))
-    .deprecationPhenotypeSelector { deprecationLevel -> DeprecationPhenotype.Strikethrough }
-    .deprecationAlignmentSelector { deprecationLevel -> DeprecationAlignment.Bottom }
+    .deprecationStyleSelector { deprecationLevel -> FeatureStyle.Strikethrough }
+    .deprecationAlignmentSelector { deprecationLevel -> FeatureAlignment.Bottom }
     .build()
 LaboratoryActivity.configure(configuration)
 ```

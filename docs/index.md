@@ -5,9 +5,9 @@
 A feature flags management library for multi-module Kotlin Android projects. Laboratory offers:
 
 - **Encapsulation**: Different feature flags can freely live in separate Gradle modules without being exposed outside.
-- **Type safety**: Feature flags are represented with concrete types instead of booleans or grouped enums.
-- **A/B/n testing**: Feature flags don't have to be constrained to provide only a binary choice. They can have as many states as you'd like.
-- **Multiple sources**: Feature flags can have different sources used for their current options. For example, you can have a feature flag that takes its option either from a local source or from any number of remote sources like, for instance, Firebase or Azure.
+- **Type safety**: Feature flags are concrete enum types, not just booleans or strings.
+- **A/B/n testing**: Feature flags don't have to be constrained to provide only a binary choice.
+- **Local and remote sources**: Feature flags can have different sources used for their current options. For example, you can have a feature flag that takes its option either from a local source or from any number of remote sources like, for instance, Firebase or Azure.
 - **QA integration**: Laboratory offers great [QA capabilities](qa-module.md) and easy integration with popular tools. It comes with an out-of-the-box [Hyperion](https://github.com/willowtreeapps/Hyperion-Android) plugin.
 - **Persistence ignorance**: Laboratory does not care how you want to store your feature flags. It provides implementations for most common scenarios, but you can always use an implementation for your custom storage mechanism.
 - **Testing support**: The in-memory implementation can be used as a drop-in substitute for Laboratory instances in tests.
@@ -74,8 +74,8 @@ Snapshots of the development version are available on [Sonatype's snapshots repo
 Here is the list of all available artifacts that Laboratory library provides.
 
 - **`io.mehow.laboratory:laboratory:1.1.2`**: Core of the library. Defines classes and interfaces that you can interact with from your application code. It also provides R8 rules.
-- **`io.mehow.laboratory:laboratory-shared-preferences:1.1.2`**: Provides implementation of `FeatureStorage` based on [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences).
-- **`io.mehow.laboratory:laboratory-data-store:1.1.2`**: Provides implementation of `FeatureStorage` based on [Jetpack `DataStore`](https://developer.android.com/topic/libraries/architecture/datastore).
+- **`io.mehow.laboratory:laboratory-shared-preferences:1.1.2`**: Provides implementation of `Storage` based on [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences).
+- **`io.mehow.laboratory:laboratory-data-store:1.1.2`**: Provides implementation of `Storage` based on [Jetpack `DataStore`](https://developer.android.com/topic/libraries/architecture/datastore).
 - **`io.mehow.laboratory:laboratory-inspector:1.1.2`**: QA module that allows users to preview all features and change them at runtime from one place.
 - **`io.mehow.laboratory:laboratory-hyperion-plugin:1.1.2`**: QA module that integrates `laboratory-inspector` with [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).
 - **`io.mehow.laboratory:laboratory-gradle-plugin:1.1.2`**: Gradle plugin for feature flags generation and other quality of life improvements. It is highly recommended to use it instead of manual class management.
