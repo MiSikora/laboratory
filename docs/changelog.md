@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- This release adds support for AGP 9, which means AGP 9 is now a requirement along with AGP 9's own requirements.
 - A new `Storage` interface that replaces `FeatureStorage`. It provides lower-level APIs for storing strings and booleans.
 - Built-in implementations of the `Storage` interface for in-memory, `SharedPreferences`, and `DataStore`.
 - A `Feature.Source` enum to define whether a feature flag uses local or remote storage by default.
