@@ -14,6 +14,7 @@ public final class io/mehow/laboratory/BlockingLaboratory {
 	public final fun clear ()Z
 	public final fun experiment (Ljava/lang/Class;)Ljava/lang/Enum;
 	public final fun experimentIs (Ljava/lang/Enum;)Z
+	public final fun isEnabled (Ljava/lang/Class;)Z
 	public final fun setOption (Ljava/lang/Enum;)Z
 	public final fun setOptions (Ljava/util/Collection;)Z
 	public final fun setOptions ([Ljava/lang/Enum;)Z

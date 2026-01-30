@@ -49,6 +49,18 @@ public class BlockingLaboratory internal constructor(private val laboratory: Lab
       laboratory.experimentIs(option)
     }
 
+  /** The blocking equivalent of [Laboratory.isEnabled]. */
+  @BlockingIoCall
+  public inline fun <reified T> isEnabled(): Boolean
+    where T : BinaryFeature<T>, T : Feature<T>, T : Enum<out T> = isEnabled(T::class.java)
+
+  /** The blocking equivalent of [Laboratory.isEnabled]. */
+  @BlockingIoCall
+  public fun <T> isEnabled(feature: Class<out T>): Boolean
+    where T : BinaryFeature<T>, T : Feature<T>, T : Enum<out T> = runBlocking {
+    laboratory.isEnabled(feature)
+  }
+
   /** The blocking equivalent of [Laboratory.setOption]. */
   @BlockingIoCall
   public fun <T> setOption(option: T): Boolean where T : Feature<T>, T : Enum<out T> = runBlocking {
