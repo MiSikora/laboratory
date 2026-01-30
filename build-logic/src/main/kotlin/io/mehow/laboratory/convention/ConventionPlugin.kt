@@ -114,7 +114,6 @@ class ConventionPlugin : Plugin<Project> {
         exceptionFormat = TestExceptionFormat.FULL
         showStandardStreams = false
       }
-      useJUnitPlatform()
     }
   }
 

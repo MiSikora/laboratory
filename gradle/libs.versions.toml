@@ -5,10 +5,6 @@ androidx-appcompat = "1.7.1"
 androidx-datastore = "1.2.0"
 androidx-fragment = "1.8.9"
 androidx-recyclerview = "1.4.0"
-androidx-test-core = "1.7.0"
-androidx-test-junit = "1.3.0"
-androidx-test-orchestrator = "1.6.1"
-androidx-test-runner = "1.7.0"
 androidx-viewmodel = "2.10.0"
 androidx-viewpager2 = "1.1.0"
 auto-service-ksp = "1.2.0"
@@ -16,14 +12,15 @@ binary-compatibility-validator = "0.18.1"
 buildconfig = "6.0.7"
 dokka = "2.1.0"
 hyperion = "0.9.38"
-kotest = "6.0.7"
-kotest-android = "1.2.2"
+junit = "4.13.2"
+kotest = "6.1.2"
 kotlin = "2.3.0"
 kotlinpoet = "2.2.0"
 kotlinx-coroutines = "1.10.2"
 ksp = "2.3.4"
 ktfmt = "0.61"
 maven-publish = "0.36.0"
+robolectric = "4.16.1"
 spotless = "8.2.0"
 tapmoc = "0.4.0"
 turbine = "1.2.1"
@@ -53,10 +50,6 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-datastore = { group = "androidx.datastore", name = "datastore-core", version.ref = "androidx-datastore" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidx-fragment" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidx-recyclerview" }
-androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidx-test-core" }
-androidx-test-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-junit" }
-androidx-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidx-test-orchestrator" }
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
 androidx-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-viewmodel" }
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "androidx-viewpager2" }
 auto-service-ksp = { group = "dev.zacsweers.autoservice", name = "auto-service-ksp", version.ref = "auto-service-ksp" }
@@ -65,13 +58,12 @@ coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 hyperion-core = { group = "com.willowtreeapps.hyperion", name = "hyperion-core", version.ref = "hyperion" }
 hyperion-plugin = { group = "com.willowtreeapps.hyperion", name = "hyperion-plugin", version.ref = "hyperion" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
-kotest-framework-engine = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
-kotest-runner-android = { group = "br.com.colman", name = "kotest-runner-android", version.ref = "kotest-android" }
-kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 # Included to be picked up by dependencies update automation
 ktfmt = { group = "com.facebook", name = "ktfmt", version.ref = "ktfmt" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 wire = { group = "com.squareup.wire", name = "wire-runtime", version.ref = "wire" }
 

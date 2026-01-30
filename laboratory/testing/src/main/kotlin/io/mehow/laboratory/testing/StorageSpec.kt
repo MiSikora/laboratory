@@ -1,29 +1,35 @@
 package io.mehow.laboratory.testing
 
 import app.cash.turbine.test
-import io.kotest.core.Tag
-import io.kotest.core.spec.style.FunSpec
-import io.kotest.core.test.TestScope
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mehow.laboratory.Storage
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
-fun FunSpec.addStorageSpec(storage: Storage) {
-  beforeTest { test ->
-    if (BaseSpec in test.config?.tags.orEmpty()) {
-      storage.clear()
-    }
+abstract class AbstractStorageTest {
+  abstract fun storage(): Storage
+
+  @Test
+  fun `read default string`() = runTest {
+    val storage = storage()
+
+    storage.getString("key").shouldBeNull()
   }
 
-  baseTest("read default string") { storage.getString("key").shouldBeNull() }
+  @Test
+  fun `store string`() = runTest {
+    val storage = storage()
 
-  baseTest("store string") {
     storage.setString("key", "value")
 
     storage.getString("key") shouldBe "value"
   }
 
-  baseTest("store different string") {
+  @Test
+  fun `store different string`() = runTest {
+    val storage = storage()
+
     storage.setString("key1", "value1")
     storage.setString("key2", "value2")
 
@@ -31,21 +37,30 @@ fun FunSpec.addStorageSpec(storage: Storage) {
     storage.getString("key2") shouldBe "value2"
   }
 
-  baseTest("update string") {
+  @Test
+  fun `update string`() = runTest {
+    val storage = storage()
+
     storage.setString("key", "value1")
     storage.setString("key", "value2")
 
     storage.getString("key") shouldBe "value2"
   }
 
-  baseTest("store strings") {
+  @Test
+  fun `store strings`() = runTest {
+    val storage = storage()
+
     storage.setStrings(mapOf("key1" to "value1", "key2" to "value2"))
 
     storage.getString("key1") shouldBe "value1"
     storage.getString("key2") shouldBe "value2"
   }
 
-  baseTest("observe string") {
+  @Test
+  fun `observe string`() = runTest {
+    val storage = storage()
+
     storage.stringFlow("key1").test {
       awaitItem().shouldBeNull()
 
@@ -66,15 +81,26 @@ fun FunSpec.addStorageSpec(storage: Storage) {
     }
   }
 
-  baseTest("read default boolean") { storage.getBoolean("key").shouldBeNull() }
+  @Test
+  fun `read default boolean`() = runTest {
+    val storage = storage()
 
-  baseTest("store boolean") {
+    storage.getBoolean("key").shouldBeNull()
+  }
+
+  @Test
+  fun `store boolean`() = runTest {
+    val storage = storage()
+
     storage.setBoolean("key", true)
 
     storage.getBoolean("key") shouldBe true
   }
 
-  baseTest("store different boolean") {
+  @Test
+  fun `store different boolean`() = runTest {
+    val storage = storage()
+
     storage.setBoolean("key1", true)
     storage.setBoolean("key2", false)
 
@@ -82,21 +108,30 @@ fun FunSpec.addStorageSpec(storage: Storage) {
     storage.getBoolean("key2") shouldBe false
   }
 
-  baseTest("update boolean") {
+  @Test
+  fun `update boolean`() = runTest {
+    val storage = storage()
+
     storage.setBoolean("key", true)
     storage.setBoolean("key", false)
 
     storage.getBoolean("key") shouldBe false
   }
 
-  baseTest("store booleans") {
+  @Test
+  fun `store booleans`() = runTest {
+    val storage = storage()
+
     storage.setBooleans(mapOf("key1" to true, "key2" to false))
 
     storage.getBoolean("key1") shouldBe true
     storage.getBoolean("key2") shouldBe false
   }
 
-  baseTest("observe boolean") {
+  @Test
+  fun `observe boolean`() = runTest {
+    val storage = storage()
+
     storage.booleanFlow("key1").test {
       awaitItem().shouldBeNull()
 
@@ -117,19 +152,28 @@ fun FunSpec.addStorageSpec(storage: Storage) {
     }
   }
 
-  baseTest("do not read boolean as string") {
+  @Test
+  fun `do not read boolean as string`() = runTest {
+    val storage = storage()
+
     storage.setBoolean("key", true)
 
     storage.getString("key").shouldBeNull()
   }
 
-  baseTest("do not read string as boolean") {
+  @Test
+  fun `do not read string as boolean`() = runTest {
+    val storage = storage()
+
     storage.setString("key", "value")
 
     storage.getBoolean("key").shouldBeNull()
   }
 
-  baseTest("save different value types separately for the same key") {
+  @Test
+  fun `save different value types separately for the same key`() = runTest {
+    val storage = storage()
+
     storage.setString("key", "value")
     storage.setBoolean("key", true)
 
@@ -137,7 +181,10 @@ fun FunSpec.addStorageSpec(storage: Storage) {
     storage.getBoolean("key") shouldBe true
   }
 
-  baseTest("clear data") {
+  @Test
+  fun `clear data`() = runTest {
+    val storage = storage()
+
     storage.setString("key1", "value")
     storage.setBoolean("key2", true)
 
@@ -147,9 +194,3 @@ fun FunSpec.addStorageSpec(storage: Storage) {
     storage.getBoolean("key2").shouldBeNull()
   }
 }
-
-private fun FunSpec.baseTest(name: String, test: suspend TestScope.() -> Unit) {
-  test(name).config(tags = setOf(BaseSpec), test = test)
-}
-
-private data object BaseSpec : Tag()

@@ -1,9 +1,6 @@
 package io.mehow.laboratory.inspector
 
 import app.cash.turbine.test
-import io.kotest.core.spec.style.FunSpec
-import io.kotest.core.test.TestScope
-import io.kotest.engine.coroutines.backgroundScope
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.mehow.laboratory.Feature
@@ -12,32 +9,40 @@ import io.mehow.laboratory.Laboratory
 import io.mehow.laboratory.inspector.test.LocalFeature
 import io.mehow.laboratory.inspector.test.NoOpDeprecationHandler
 import io.mehow.laboratory.inspector.test.RemoteFeature
-import io.mehow.laboratory.testing.perTest
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class InspectionViewModelSpec : FunSpec() {
-  init {
-    coroutineTestScope = true
+class InspectionViewModelTest {
+  val scope = TestScope()
 
-    val laboratory by perTest { Laboratory.inMemory() }
-    val searchQueries by perTest { MutableStateFlow(QueryString.Empty) }
-    val loaders by perTest { mapOf("test" to TestLoader) }
+  private val searchQueries = MutableStateFlow(QueryString.Empty)
 
-    fun TestScope.createViewModel() =
-      InspectionViewModel(
-        laboratory,
-        searchQueries,
-        loaders,
-        backgroundScope,
-        EmptyCoroutineContext,
-      )
+  private val viewModel =
+    InspectionViewModel(
+      laboratory = Laboratory.inMemory(),
+      searchQueries = searchQueries,
+      loaders =
+        mapOf(
+          "test" to
+            FeatureMetadata.Loader(
+              object : FeatureFactory {
+                override fun create() =
+                  setOf(LocalFeature::class.java, RemoteFeature::class.java)
+                    as Set<Class<out Feature<*>>>
+              },
+              NoOpDeprecationHandler,
+            )
+        ),
+      scope = scope.backgroundScope,
+      computationDispatcher = EmptyCoroutineContext,
+    )
 
-    test("search interaction") {
-      val viewModel = createViewModel()
-
+  @Test
+  fun `search interaction`() =
+    scope.runTest {
       viewModel.sectionFlow("test").test {
         awaitItem().shouldBeEmpty()
 
@@ -62,16 +67,8 @@ class InspectionViewModelSpec : FunSpec() {
 
         searchQueries.value = QueryString.create("unknown")
         awaitItem().shouldBeEmpty()
+
+        cancel()
       }
     }
-  }
 }
-
-private val TestLoader =
-  FeatureMetadata.Loader(
-    object : FeatureFactory {
-      override fun create() =
-        setOf(LocalFeature::class.java, RemoteFeature::class.java) as Set<Class<out Feature<*>>>
-    },
-    NoOpDeprecationHandler,
-  )

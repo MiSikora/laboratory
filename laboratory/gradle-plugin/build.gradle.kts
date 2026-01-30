@@ -38,7 +38,7 @@ dependencies {
   implementation(libs.gradle.kgp.api)
 
   testImplementation(projects.laboratory.testing)
-  testImplementation(libs.kotest.runner.junit5)
+  testImplementation(libs.junit)
   testImplementation(libs.kotest.assertions)
 
   fixtureClasspath(libs.gradle.agp)
