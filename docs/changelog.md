@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Check that fail when the Laboratory Gradle plugin is applied in a Kotlin Multiplatform project.
+- Fail when the Laboratory Gradle plugin is applied in a Kotlin Multiplatform project.
 
 ### Fixed
 - Broken packaging of the `laboratory-shared-preferences` making it unusable in Kotlin Multiplatform projects.
