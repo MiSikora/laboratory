@@ -18,13 +18,16 @@ import org.gradle.api.Project
 public class LaboratoryPlugin : Plugin<Project> {
   private val hasKotlin = AtomicBoolean(false)
   private val hasAndroid = AtomicBoolean(false)
-  private val isLaboratoryDependencyAdded = AtomicBoolean(false)
 
   override fun apply(target: Project) {
     val extension = target.extensions.create(PluginName, LaboratoryExtension::class.java)
     val tasks = LaboratoryTasks.registerIn(target)
     tasks.configureInput(target, extension)
     tasks.configureKotlinDependency(target)
+
+    target.withPlugins("org.jetbrains.kotlin.multiplatform") {
+      error("Laboratory Gradle plugin is not supported in Kotlin Multiplatform projects.")
+    }
 
     target.withPlugins(
       "org.jetbrains.kotlin.jvm",
