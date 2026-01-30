@@ -9,6 +9,6 @@ dependencies {
   api(libs.kotlinpoet)
   implementation(projects.laboratory.runtime)
 
-  testImplementation(libs.kotest.runner.junit5)
+  testImplementation(libs.junit)
   testImplementation(libs.kotest.assertions)
 }

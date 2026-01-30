@@ -25,7 +25,7 @@ internal class InspectionViewModel(
   private val searchQueries: StateFlow<QueryString>,
   private val loaders: Map<String, FeatureMetadata.Loader>,
   private val scope: CoroutineScope,
-  private val dispatcher: CoroutineContext,
+  private val computationDispatcher: CoroutineContext,
 ) : ViewModel() {
   private val featureFlows = mutableMapOf<String, Flow<List<FeatureMetadata>>>()
 
@@ -35,7 +35,7 @@ internal class InspectionViewModel(
           val metadata = loaders[name]?.load().orEmpty()
           emitAll(searchQueries.map(metadata::matches))
         }
-        .flowOn(dispatcher)
+        .flowOn(computationDispatcher)
         .stateIn(scope, SharingStarted.Eagerly, initialValue = emptyList())
     }
 

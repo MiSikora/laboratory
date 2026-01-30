@@ -2,31 +2,31 @@ package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.ClassName
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import io.mehow.laboratory.generator.test.shouldSpecify
+import org.junit.Test
 
-class OptionFactoryModelSpec :
-  FunSpec({
-    test("internal visibility") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("A", isDefault = true)),
-            )
-          ),
-          Internal,
-        )
+class OptionFactoryModelTest {
+  @Test
+  fun `internal visibility`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true)),
+          )
+        ),
+        Internal,
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -48,25 +48,26 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("public visibility") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("A", isDefault = true)),
-            )
-          ),
-          Public,
-        )
+  @Test
+  fun `public visibility`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true)),
+          )
+        ),
+        Public,
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -88,24 +89,25 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("single feature") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
-            )
-          ),
-        )
+  @Test
+  fun `single feature`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+          )
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -128,25 +130,26 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("single binary feature") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
-              trueOption = FeatureFlagTrueOption("A"),
-            )
-          ),
-        )
+  @Test
+  fun `single binary feature`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+            trueOption = FeatureFlagTrueOption("A"),
+          )
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -172,28 +175,29 @@ class OptionFactoryModelSpec :
           }
         }
         """
-    }
+  }
 
-    test("multiple features") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
-            ),
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureB"),
-              listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
-            ),
+  @Test
+  fun `multiple features`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
           ),
-        )
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureB"),
+            listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
+          ),
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -221,30 +225,31 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("multiple binary features") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
-              trueOption = FeatureFlagTrueOption("OneA"),
-            ),
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureB"),
-              listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
-              trueOption = FeatureFlagTrueOption("TwoA"),
-            ),
+  @Test
+  fun `multiple binary features`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
+            trueOption = FeatureFlagTrueOption("OneA"),
           ),
-        )
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureB"),
+            listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
+            trueOption = FeatureFlagTrueOption("TwoA"),
+          ),
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -276,29 +281,30 @@ class OptionFactoryModelSpec :
           }
         }
         """
-    }
+  }
 
-    test("mixed features") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
-              trueOption = FeatureFlagTrueOption("OneA"),
-            ),
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureB"),
-              listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
-            ),
+  @Test
+  fun `mixed features`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
+            trueOption = FeatureFlagTrueOption("OneA"),
           ),
-        )
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureB"),
+            listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
+          ),
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -329,15 +335,16 @@ class OptionFactoryModelSpec :
           }
         }
         """
-    }
+  }
 
-    test("no features") {
-      val model = OptionFactoryModel(ClassName("io.mehow", "Factory"), features = emptyList())
+  @Test
+  fun `no features`() {
+    val model = OptionFactoryModel(ClassName("io.mehow", "Factory"), features = emptyList())
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -353,24 +360,25 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("feature with different package") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow.other", "FeatureA"),
-              listOf(FeatureFlagOption("A", isDefault = true)),
-            )
-          ),
-        )
+  @Test
+  fun `feature with different package`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow.other", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true)),
+          )
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -393,25 +401,26 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("binary feature with different package") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow.other", "FeatureA"),
-              listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
-              trueOption = FeatureFlagTrueOption("A"),
-            )
-          ),
-        )
+  @Test
+  fun `binary feature with different package`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow.other", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+            trueOption = FeatureFlagTrueOption("A"),
+          )
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -438,30 +447,31 @@ class OptionFactoryModelSpec :
           }
         }
         """
-    }
+  }
 
-    test("feature with custom key") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("OneA", isDefault = true)),
-              key = "custom-key-1",
-            ),
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureB"),
-              listOf(FeatureFlagOption("TwoA", isDefault = true)),
-              key = "custom-key-2",
-            ),
+  @Test
+  fun `feature with custom key`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("OneA", isDefault = true)),
+            key = "custom-key-1",
           ),
-        )
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureB"),
+            listOf(FeatureFlagOption("TwoA", isDefault = true)),
+            key = "custom-key-2",
+          ),
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -487,32 +497,33 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("binary feature with custom key") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
-              trueOption = FeatureFlagTrueOption("OneA"),
-              key = "custom-key-1",
-            ),
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureB"),
-              listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
-              trueOption = FeatureFlagTrueOption("TwoA"),
-              key = "custom-key-2",
-            ),
+  @Test
+  fun `binary feature with custom key`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("OneA", isDefault = true), FeatureFlagOption("OneB")),
+            trueOption = FeatureFlagTrueOption("OneA"),
+            key = "custom-key-1",
           ),
-        )
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureB"),
+            listOf(FeatureFlagOption("TwoA", isDefault = true), FeatureFlagOption("TwoB")),
+            trueOption = FeatureFlagTrueOption("TwoA"),
+            key = "custom-key-2",
+          ),
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -544,74 +555,76 @@ class OptionFactoryModelSpec :
           }
         }
         """
-    }
+  }
 
-    test("duplicate keys") {
-      val exception =
-        shouldThrow<IllegalArgumentException> {
-          OptionFactoryModel(
-            ClassName("io.mehow", "Factory"),
-            listOf(
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureA"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-                key = "custom-key-1",
-              ),
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureB"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-                key = "custom-key-1",
-              ),
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureC"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-                key = "custom-key-1",
-              ),
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureD"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-                key = "custom-key-2",
-              ),
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureE"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-                key = "custom-key-2",
-              ),
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureF"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-                key = "custom-key-3",
-              ),
-            ),
-          )
-        }
-
-      exception shouldHaveMessage
-        """
-        Feature flags must have unique keys. Found following duplicates:
-         - custom-key-1: [io.mehow.FeatureA, io.mehow.FeatureB, io.mehow.FeatureC]
-         - custom-key-2: [io.mehow.FeatureD, io.mehow.FeatureE]
-        """
-          .trimIndent()
-    }
-
-    test("feature with key matching self fqcn") {
-      val model =
+  @Test
+  fun `duplicate keys`() {
+    val exception =
+      shouldThrow<IllegalArgumentException> {
         OptionFactoryModel(
           ClassName("io.mehow", "Factory"),
           listOf(
             FeatureFlagModel(
               ClassName("io.mehow", "FeatureA"),
               listOf(FeatureFlagOption("A", isDefault = true)),
-              key = "io.mehow.FeatureA",
-            )
+              key = "custom-key-1",
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureB"),
+              listOf(FeatureFlagOption("A", isDefault = true)),
+              key = "custom-key-1",
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureC"),
+              listOf(FeatureFlagOption("A", isDefault = true)),
+              key = "custom-key-1",
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureD"),
+              listOf(FeatureFlagOption("A", isDefault = true)),
+              key = "custom-key-2",
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureE"),
+              listOf(FeatureFlagOption("A", isDefault = true)),
+              key = "custom-key-2",
+            ),
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureF"),
+              listOf(FeatureFlagOption("A", isDefault = true)),
+              key = "custom-key-3",
+            ),
           ),
         )
+      }
 
-      val fileSpec = model.prepare()
+    exception shouldHaveMessage
+      """
+      Feature flags must have unique keys. Found following duplicates:
+       - custom-key-1: [io.mehow.FeatureA, io.mehow.FeatureB, io.mehow.FeatureC]
+       - custom-key-2: [io.mehow.FeatureD, io.mehow.FeatureE]
+      """
+        .trimIndent()
+  }
 
-      fileSpec shouldSpecify
-        """
+  @Test
+  fun `feature with key matching self fqcn`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true)),
+            key = "io.mehow.FeatureA",
+          )
+        ),
+      )
+
+    val fileSpec = model.prepare()
+
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -633,26 +646,27 @@ class OptionFactoryModelSpec :
           override fun create(key: String, binaryValue: Boolean): Feature<*>? = null
         }
         """
-    }
+  }
 
-    test("binary feature with key matching self fqcn") {
-      val model =
-        OptionFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(
-            FeatureFlagModel(
-              ClassName("io.mehow", "FeatureA"),
-              listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
-              trueOption = FeatureFlagTrueOption("A"),
-              key = "io.mehow.FeatureA",
-            )
-          ),
-        )
+  @Test
+  fun `binary feature with key matching self fqcn`() {
+    val model =
+      OptionFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(
+          FeatureFlagModel(
+            ClassName("io.mehow", "FeatureA"),
+            listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B")),
+            trueOption = FeatureFlagTrueOption("A"),
+            key = "io.mehow.FeatureA",
+          )
+        ),
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -678,32 +692,33 @@ class OptionFactoryModelSpec :
           }
         }
         """
-    }
+  }
 
-    test("key matching other fqcn") {
-      val exception =
-        shouldThrow<IllegalArgumentException> {
-          OptionFactoryModel(
-            ClassName("io.mehow", "Factory"),
-            listOf(
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureA"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-              ),
-              FeatureFlagModel(
-                ClassName("io.mehow", "FeatureB"),
-                listOf(FeatureFlagOption("A", isDefault = true)),
-                key = "io.mehow.FeatureA",
-              ),
+  @Test
+  fun `key matching other fqcn`() {
+    val exception =
+      shouldThrow<IllegalArgumentException> {
+        OptionFactoryModel(
+          ClassName("io.mehow", "Factory"),
+          listOf(
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureA"),
+              listOf(FeatureFlagOption("A", isDefault = true)),
             ),
-          )
-        }
+            FeatureFlagModel(
+              ClassName("io.mehow", "FeatureB"),
+              listOf(FeatureFlagOption("A", isDefault = true)),
+              key = "io.mehow.FeatureA",
+            ),
+          ),
+        )
+      }
 
-      exception shouldHaveMessage
-        """
-        Feature flags must have unique keys. Found following duplicates:
-         - io.mehow.FeatureA: [io.mehow.FeatureA, io.mehow.FeatureB]
-        """
-          .trimIndent()
-    }
-  })
+    exception shouldHaveMessage
+      """
+      Feature flags must have unique keys. Found following duplicates:
+       - io.mehow.FeatureA: [io.mehow.FeatureA, io.mehow.FeatureB]
+      """
+        .trimIndent()
+  }
+}

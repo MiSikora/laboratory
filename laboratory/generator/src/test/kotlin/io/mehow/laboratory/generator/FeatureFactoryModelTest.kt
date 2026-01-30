@@ -1,43 +1,43 @@
 package io.mehow.laboratory.generator
 
 import com.squareup.kotlinpoet.ClassName
-import io.kotest.core.spec.style.FunSpec
 import io.mehow.laboratory.generator.Visibility.Internal
 import io.mehow.laboratory.generator.Visibility.Public
 import io.mehow.laboratory.generator.test.shouldSpecify
+import org.junit.Test
 
-class FeatureFactoryModelSpec :
-  FunSpec({
-    val featureA =
-      FeatureFlagModel(
-        ClassName("io.mehow", "FeatureA"),
-        listOf(FeatureFlagOption("A", isDefault = true)),
+class FeatureFactoryModelTest {
+  val featureA =
+    FeatureFlagModel(
+      ClassName("io.mehow", "FeatureA"),
+      listOf(FeatureFlagOption("A", isDefault = true)),
+    )
+
+  val featureB =
+    FeatureFlagModel(
+      ClassName("io.mehow", "FeatureB"),
+      listOf(FeatureFlagOption("A", isDefault = true)),
+    )
+
+  val featureC =
+    FeatureFlagModel(
+      ClassName("io.mehow.c", "FeatureA"),
+      listOf(FeatureFlagOption("A", isDefault = true)),
+    )
+
+  @Test
+  fun `internal visibility`() {
+    val model =
+      FeatureFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(featureA, featureB, featureC),
+        visibility = Internal,
       )
 
-    val featureB =
-      FeatureFlagModel(
-        ClassName("io.mehow", "FeatureB"),
-        listOf(FeatureFlagOption("A", isDefault = true)),
-      )
+    val fileSpec = model.prepare()
 
-    val featureC =
-      FeatureFlagModel(
-        ClassName("io.mehow.c", "FeatureA"),
-        listOf(FeatureFlagOption("A", isDefault = true)),
-      )
-
-    test("internal visibility") {
-      val model =
-        FeatureFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(featureA, featureB, featureC),
-          visibility = Internal,
-        )
-
-      val fileSpec = model.prepare()
-
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -58,20 +58,21 @@ class FeatureFactoryModelSpec :
           ) as Set<Class<out Feature<*>>>
         }
         """
-    }
+  }
 
-    test("public visibility") {
-      val model =
-        FeatureFactoryModel(
-          ClassName("io.mehow", "Factory"),
-          listOf(featureA, featureB, featureC),
-          visibility = Public,
-        )
+  @Test
+  fun `public visibility`() {
+    val model =
+      FeatureFactoryModel(
+        ClassName("io.mehow", "Factory"),
+        listOf(featureA, featureB, featureC),
+        visibility = Public,
+      )
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -92,15 +93,16 @@ class FeatureFactoryModelSpec :
           ) as Set<Class<out Feature<*>>>
         }
         """
-    }
+  }
 
-    test("no features") {
-      val model = FeatureFactoryModel(ClassName("io.mehow", "Factory"), features = emptyList())
+  @Test
+  fun `no features`() {
+    val model = FeatureFactoryModel(ClassName("io.mehow", "Factory"), features = emptyList())
 
-      val fileSpec = model.prepare()
+    val fileSpec = model.prepare()
 
-      fileSpec shouldSpecify
-        """
+    fileSpec shouldSpecify
+      """
         package io.mehow
 
         import io.mehow.laboratory.Feature
@@ -115,5 +117,5 @@ class FeatureFactoryModelSpec :
           override fun create(): Set<Class<out Feature<*>>> = emptySet<Class<out Feature<*>>>()
         }
         """
-    }
-  })
+  }
+}

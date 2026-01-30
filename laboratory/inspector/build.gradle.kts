@@ -24,7 +24,8 @@ dependencies {
   implementation(libs.coroutines.android)
 
   testImplementation(projects.laboratory.testing)
-  testImplementation(libs.kotest.runner.junit5)
+  testImplementation(libs.coroutines.test)
+  testImplementation(libs.junit)
   testImplementation(libs.kotest.assertions)
   testImplementation(libs.turbine)
   testImplementation(libs.coroutines.test)
