@@ -65,7 +65,7 @@ repositories {
 }
 
 dependencies {
-  implementation "io.mehow.laboratory:laboratory:2.0.0"
+  implementation "io.mehow.laboratory:laboratory:2.0.1"
 }
 ```
 
@@ -73,12 +73,12 @@ Snapshots of the development version are available on [Sonatype's snapshots repo
 
 Here is the list of all available artifacts that Laboratory library provides.
 
-- **`io.mehow.laboratory:laboratory:2.0.0`**: Core of the library. Defines classes and interfaces that you can interact with from your application code. It also provides R8 rules.
-- **`io.mehow.laboratory:laboratory-shared-preferences:2.0.0`**: Provides implementation of `Storage` based on [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences).
-- **`io.mehow.laboratory:laboratory-data-store:2.0.0`**: Provides implementation of `Storage` based on [Jetpack `DataStore`](https://developer.android.com/topic/libraries/architecture/datastore).
-- **`io.mehow.laboratory:laboratory-inspector:2.0.0`**: QA module that allows users to preview all features and change them at runtime from one place.
-- **`io.mehow.laboratory:laboratory-hyperion-plugin:2.0.0`**: QA module that integrates `laboratory-inspector` with [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).
-- **`io.mehow.laboratory:laboratory-gradle-plugin:2.0.0`**: Gradle plugin for feature flags generation and other quality of life improvements. It is highly recommended to use it instead of manual class management.
+- **`io.mehow.laboratory:laboratory:2.0.1`**: Core of the library. Defines classes and interfaces that you can interact with from your application code. It also provides R8 rules.
+- **`io.mehow.laboratory:laboratory-shared-preferences:2.0.1`**: Provides implementation of `Storage` based on [`SharedPreferences`](https://developer.android.com/reference/android/content/SharedPreferences).
+- **`io.mehow.laboratory:laboratory-data-store:2.0.1`**: Provides implementation of `Storage` based on [Jetpack `DataStore`](https://developer.android.com/topic/libraries/architecture/datastore).
+- **`io.mehow.laboratory:laboratory-inspector:2.0.1`**: QA module that allows users to preview all features and change them at runtime from one place.
+- **`io.mehow.laboratory:laboratory-hyperion-plugin:2.0.1`**: QA module that integrates `laboratory-inspector` with [Hyperion](https://github.com/willowtreeapps/Hyperion-Android).
+- **`io.mehow.laboratory:laboratory-gradle-plugin:2.0.1`**: Gradle plugin for feature flags generation and other quality of life improvements. It is highly recommended to use it instead of manual class management.
 
 ## License
 
