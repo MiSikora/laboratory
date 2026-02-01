@@ -21,4 +21,4 @@ jobs:
           java-version: 21
 
       - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v5.0.0
+        uses: gradle/actions/wrapper-validation@v5.0.1
