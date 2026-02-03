@@ -63,23 +63,19 @@ public class BlockingLaboratory internal constructor(private val laboratory: Lab
 
   /** The blocking equivalent of [Laboratory.setOption]. */
   @BlockingIoCall
-  public fun <T> setOption(option: T): Boolean where T : Feature<T>, T : Enum<out T> = runBlocking {
-    laboratory.setOption(option)
+  public fun setOption(option: Feature<*>): Boolean = runBlocking { laboratory.setOption(option) }
+
+  /** The blocking equivalent of [Laboratory.setOptions]. */
+  @BlockingIoCall
+  public fun setOptions(vararg options: Feature<*>): Boolean = runBlocking {
+    laboratory.setOptions(*options)
   }
 
   /** The blocking equivalent of [Laboratory.setOptions]. */
   @BlockingIoCall
-  public fun <T> setOptions(vararg options: T): Boolean where T : Feature<T>, T : Enum<out T> =
-    runBlocking {
-      laboratory.setOptions(*options)
-    }
-
-  /** The blocking equivalent of [Laboratory.setOptions]. */
-  @BlockingIoCall
-  public fun <T> setOptions(options: Collection<T>): Boolean where T : Feature<T>, T : Enum<out T> =
-    runBlocking {
-      laboratory.setOptions(options)
-    }
+  public fun setOptions(options: Collection<Feature<*>>): Boolean = runBlocking {
+    laboratory.setOptions(options)
+  }
 
   /** The blocking equivalent of [Laboratory.clear]. */
   @BlockingIoCall public fun clear(): Boolean = runBlocking { laboratory.clear() }
