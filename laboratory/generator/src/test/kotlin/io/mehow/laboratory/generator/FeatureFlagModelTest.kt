@@ -192,21 +192,60 @@ class FeatureFlagModelTest {
 
     fileSpec shouldSpecify
       """
-        package io.mehow
+    package io.mehow
 
-        import io.mehow.laboratory.Feature
+    import io.mehow.laboratory.Feature
+    import kotlin.Boolean
 
-        public enum class FeatureA : Feature<FeatureA> {
-          A,
-          ;
+    public enum class FeatureA : Feature<FeatureA> {
+      A,
+      ;
 
-          override val defaultOption: FeatureA
-            get() = A
+      override val defaultOption: FeatureA
+        get() = A
 
-          override val defaultSource: Feature.Source
-            get() = Feature.Source.Remote
-        }
-        """
+      override val defaultSource: Feature.Source
+        get() = Feature.Source.Remote
+
+      override val isRemote: Boolean
+        get() = true
+    }
+    """
+  }
+
+  @Test
+  fun `remote source but local by default`() {
+    val model =
+      FeatureFlagModel(
+        ClassName("io.mehow", "FeatureA"),
+        listOf(FeatureFlagOption("A", isDefault = true)),
+        isRemote = true,
+        isRemoteValueDefault = false,
+      )
+
+    val fileSpec = model.prepare()
+
+    fileSpec shouldSpecify
+      """
+    package io.mehow
+
+    import io.mehow.laboratory.Feature
+    import kotlin.Boolean
+
+    public enum class FeatureA : Feature<FeatureA> {
+      A,
+      ;
+
+      override val defaultOption: FeatureA
+        get() = A
+
+      override val isRemote: Boolean
+        get() = true
+
+      override val isRemoteValueDefault: Boolean
+        get() = false
+    }
+    """
   }
 
   @Test

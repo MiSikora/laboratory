@@ -32,11 +32,13 @@ public abstract class io/mehow/laboratory/gradle/FeatureFlagInput : java/io/Seri
 	public final fun getPackageName ()Ljava/lang/String;
 	public abstract fun isPublic ()Z
 	public abstract fun isRemote ()Z
+	public abstract fun isRemoteValueDefault ()Z
 	public abstract fun setDescription (Ljava/lang/String;)V
 	public abstract fun setKey (Ljava/lang/String;)V
 	public final fun setPackageName (Ljava/lang/String;)V
 	public abstract fun setPublic (Z)V
 	public abstract fun setRemote (Z)V
+	public abstract fun setRemoteValueDefault (Z)V
 }
 
 public final class io/mehow/laboratory/gradle/FeatureFlagInput$BinaryOption : io/mehow/laboratory/gradle/FeatureFlagInput {
@@ -44,10 +46,12 @@ public final class io/mehow/laboratory/gradle/FeatureFlagInput$BinaryOption : io
 	public fun getKey ()Ljava/lang/String;
 	public fun isPublic ()Z
 	public fun isRemote ()Z
+	public fun isRemoteValueDefault ()Z
 	public fun setDescription (Ljava/lang/String;)V
 	public fun setKey (Ljava/lang/String;)V
 	public fun setPublic (Z)V
 	public fun setRemote (Z)V
+	public fun setRemoteValueDefault (Z)V
 }
 
 public final class io/mehow/laboratory/gradle/FeatureFlagInput$MultiOption : io/mehow/laboratory/gradle/FeatureFlagInput {
@@ -55,10 +59,12 @@ public final class io/mehow/laboratory/gradle/FeatureFlagInput$MultiOption : io/
 	public fun getKey ()Ljava/lang/String;
 	public fun isPublic ()Z
 	public fun isRemote ()Z
+	public fun isRemoteValueDefault ()Z
 	public fun setDescription (Ljava/lang/String;)V
 	public fun setKey (Ljava/lang/String;)V
 	public fun setPublic (Z)V
 	public fun setRemote (Z)V
+	public fun setRemoteValueDefault (Z)V
 	public final fun withDefaultOption (Ljava/lang/String;)V
 	public final fun withOption (Ljava/lang/String;)V
 }

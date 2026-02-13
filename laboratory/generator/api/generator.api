@@ -15,8 +15,8 @@ public final class io/mehow/laboratory/generator/FeatureFactoryModel {
 }
 
 public final class io/mehow/laboratory/generator/FeatureFlagModel {
-	public fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;ZLjava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/lang/String;Lio/mehow/laboratory/generator/FeatureFlagTrueOption;)V
-	public synthetic fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;ZLjava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/lang/String;Lio/mehow/laboratory/generator/FeatureFlagTrueOption;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;ZZLjava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/lang/String;Lio/mehow/laboratory/generator/FeatureFlagTrueOption;)V
+	public synthetic fun <init> (Lcom/squareup/kotlinpoet/ClassName;Ljava/util/List;Lio/mehow/laboratory/generator/Visibility;ZZLjava/lang/String;Lio/mehow/laboratory/generator/Deprecation;Ljava/lang/String;Lio/mehow/laboratory/generator/FeatureFlagTrueOption;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getClassName ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getDeprecation ()Lio/mehow/laboratory/generator/Deprecation;
@@ -27,6 +27,7 @@ public final class io/mehow/laboratory/generator/FeatureFlagModel {
 	public final fun getVisibility ()Lio/mehow/laboratory/generator/Visibility;
 	public fun hashCode ()I
 	public final fun isRemote ()Z
+	public final fun isRemoteValueDefault ()Z
 	public final fun prepare ()Lcom/squareup/kotlinpoet/FileSpec;
 	public fun toString ()Ljava/lang/String;
 }

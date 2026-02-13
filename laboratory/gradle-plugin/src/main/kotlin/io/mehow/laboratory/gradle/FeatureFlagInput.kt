@@ -22,8 +22,11 @@ public sealed class FeatureFlagInput(
   /** External key used to identify the feature flag in remote systems or option factories. */
   public abstract var key: String?
 
-  /** Marks the feature flag as remotely sourced by default. */
+  /** Marks the feature flag as remotely sourced. */
   public abstract var isRemote: Boolean
+
+  /** Sets feature flag default value to be remotely sourced. */
+  public abstract var isRemoteValueDefault: Boolean
 
   /** Human-readable description of the feature flag. */
   public abstract var description: String?
@@ -52,6 +55,7 @@ public sealed class FeatureFlagInput(
       options = options.values.map(FeatureFlagOptionInput::toModel),
       visibility = if (isPublic) Visibility.Public else Visibility.Internal,
       isRemote = isRemote,
+      isRemoteValueDefault = isRemoteValueDefault,
       description = description.orEmpty(),
       deprecation = deprecation?.toModel(),
       key = key,
@@ -73,6 +77,8 @@ public sealed class FeatureFlagInput(
     override var key: String? = null
 
     override var isRemote: Boolean = false
+
+    override var isRemoteValueDefault: Boolean = true
 
     override var description: String? = null
 
@@ -101,6 +107,8 @@ public sealed class FeatureFlagInput(
     override var key: String? = null
 
     override var isRemote: Boolean = false
+
+    override var isRemoteValueDefault: Boolean = true
 
     override var description: String? = null
 

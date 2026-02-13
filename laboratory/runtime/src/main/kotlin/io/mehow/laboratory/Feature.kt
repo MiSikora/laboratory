@@ -17,6 +17,14 @@ public interface Feature<out T> where T : Feature<T>, T : Enum<out T> {
   /** The default option for this feature. This will be used if no other option is selected. */
   public val defaultOption: T
 
+  /** Can feature's value be resolved from remote storage. */
+  public val isRemote: Boolean
+    get() = false
+
+  /** Is remote source a default one for resolving this feature's value. */
+  public val isRemoteValueDefault: Boolean
+    get() = true
+
   /** The default source for resolving this feature's value. */
   public val defaultSource: Source
     get() = Source.Local

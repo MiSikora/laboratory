@@ -20,6 +20,7 @@ public class FeatureFlagModel(
   public val options: List<FeatureFlagOption>,
   public val visibility: Visibility = Public,
   public val isRemote: Boolean = false,
+  public val isRemoteValueDefault: Boolean = true,
   public val description: String = "",
   public val deprecation: Deprecation? = null,
   public val key: String? = null,
@@ -71,7 +72,7 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
     }
 
   private val defaultSourceProperty =
-    if (feature.isRemote) {
+    if (feature.isRemote && feature.isRemoteValueDefault) {
       PropertySpec.builder(defaultSourcePropertyName, sourceType, OVERRIDE)
         .getter(
           FunSpec.getterBuilder().addCode("return %T.%L", sourceType, Feature.Source.Remote).build()
@@ -83,12 +84,30 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
 
   private val description: String? = feature.description.takeIf(String::isNotBlank)
 
+  private val isRemote: Boolean? = feature.isRemote.takeIf { it }
+
+  private val isRemoteValueDefault: Boolean? = feature.isRemoteValueDefault.takeIf { it.not() }
+
   private val kdocCodeBlock = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
 
   private val descriptionProperty =
     description?.let { description ->
       PropertySpec.builder(descriptionPropertyName, String::class, OVERRIDE)
         .initializer("%S", description)
+        .build()
+    }
+
+  private val isRemoteProperty =
+    isRemote?.let { isRemote ->
+      PropertySpec.builder(isRemotePropertyName, Boolean::class, OVERRIDE)
+        .getter(FunSpec.getterBuilder().addCode("return %L", isRemote).build())
+        .build()
+    }
+
+  private val isRemoteValueDefaultProperty =
+    isRemoteValueDefault?.let { isRemoteValueDefault ->
+      PropertySpec.builder(isRemoteValueDefaultPropertyName, Boolean::class, OVERRIDE)
+        .getter(FunSpec.getterBuilder().addCode("return %L", isRemoteValueDefault).build())
         .build()
     }
 
@@ -147,6 +166,8 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
       .apply { defaultSourceProperty?.let(::addProperty) }
       .apply { kdocCodeBlock?.let(::addKdoc) }
       .apply { descriptionProperty?.let(::addProperty) }
+      .apply { isRemoteProperty?.let(::addProperty) }
+      .apply { isRemoteValueDefaultProperty?.let(::addProperty) }
       .build()
 
   private val fileSpec =
@@ -161,6 +182,8 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
     const val defaultSourcePropertyName = "defaultSource"
     const val descriptionPropertyName = "description"
     const val binaryValuePropertyName = "binaryValue"
+    const val isRemotePropertyName = "isRemote"
+    const val isRemoteValueDefaultPropertyName = "isRemoteValueDefault"
 
     val sourceType = Feature.Source::class
   }

@@ -65,7 +65,7 @@ internal class FeatureViewHolder(
       }
     descriptionControl.setTextTokens(metadata.description)
     descriptionControl.isVisible = metadata.description.isNotEmpty()
-    sourceControl.isVisible = isRemoteSourceAvailable
+    sourceControl.isVisible = isRemoteSourceAvailable && metadata.isRemote
     optionsControl.setOptions(metadata.options)
 
     val previousOptionJob = optionJob
