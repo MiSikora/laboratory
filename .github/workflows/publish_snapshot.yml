@@ -6,26 +6,31 @@ on:
       - trunk
 
 jobs:
+  quality_check:
+    name: Quality Check
+    uses: ./.github/workflows/quality_check.yml
+
   publish-snapshot:
     if: ${{ github.repository == 'MiSikora/laboratory' }}
     name: Publish Snapshot
     runs-on: ubuntu-latest
+    needs: quality_check
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.13.0
         with:
           force_cancel: true
 
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v6.0.2
 
-      - name: Configure JDK
-        uses: actions/setup-java@v5.2.0
+      - name: Set Up JDK
+        uses: actions/setup-java@v5.1.0
         with:
           distribution: zulu
           java-version: 21
 
-      - name: Cache Gradle Dirs
+      - name: Cache Gradle Directories
         uses: actions/cache@v5.0.3
         with:
           path: |
