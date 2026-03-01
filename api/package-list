@@ -1,0 +1,9 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:generator
+io.mehow.laboratory.generator
+module:gradle-plugin
+io.mehow.laboratory.gradle
+module:runtime
+io.mehow.laboratory

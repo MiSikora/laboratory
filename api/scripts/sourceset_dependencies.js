@@ -1,0 +1,1 @@
+sourceset_dependencies = '{":laboratory:generator/main":[],":laboratory:gradle-plugin/main":[],":laboratory:runtime/main":[]}'
