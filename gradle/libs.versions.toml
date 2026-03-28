@@ -24,7 +24,7 @@ robolectric = "4.16.1"
 spotless = "8.2.1"
 tapmoc = "0.4.0"
 turbine = "1.2.1"
-wire = "5.5.0"
+wire = "6.2.0"
 
 # Used by convention plugin
 jvm-target = "11"
@@ -43,6 +43,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 # Used by convention plugin
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+wire = { id = "com.squareup.wire", version.ref = "wire" }
 
 [libraries]
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
