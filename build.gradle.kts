@@ -9,6 +9,7 @@ plugins {
   alias(libs.plugins.dokka)
   alias(libs.plugins.buildconfig) apply false
   alias(libs.plugins.ksp) apply false
+  alias(libs.plugins.wire) apply false
   alias(libs.plugins.laboratory.convention)
 }
 
