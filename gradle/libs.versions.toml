@@ -2,7 +2,7 @@
 agp = "9.0.1"
 android-material = "1.13.0"
 androidx-appcompat = "1.7.1"
-androidx-datastore = "1.2.0"
+androidx-datastore = "1.2.1"
 androidx-fragment = "1.8.9"
 androidx-recyclerview = "1.4.0"
 androidx-viewmodel = "2.10.0"
