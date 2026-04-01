@@ -41,34 +41,33 @@ class InspectionViewModelTest {
     )
 
   @Test
-  fun `search interaction`() =
-    scope.runTest {
-      viewModel.sectionFlow("test").test {
-        awaitItem().shouldBeEmpty()
+  fun `search interaction`() = scope.runTest {
+    viewModel.sectionFlow("test").test {
+      awaitItem().shouldBeEmpty()
 
-        var features = awaitItem().map(FeatureMetadata::name)
-        features shouldContainExactly listOf("LocalFeature", "RemoteFeature")
+      var features = awaitItem().map(FeatureMetadata::name)
+      features shouldContainExactly listOf("LocalFeature", "RemoteFeature")
 
-        searchQueries.value = QueryString.create("local")
-        features = awaitItem().map(FeatureMetadata::name)
-        features shouldContainExactly listOf("LocalFeature")
+      searchQueries.value = QueryString.create("local")
+      features = awaitItem().map(FeatureMetadata::name)
+      features shouldContainExactly listOf("LocalFeature")
 
-        searchQueries.value = QueryString.create("feature")
-        features = awaitItem().map(FeatureMetadata::name)
-        features shouldContainExactly listOf("LocalFeature", "RemoteFeature")
+      searchQueries.value = QueryString.create("feature")
+      features = awaitItem().map(FeatureMetadata::name)
+      features shouldContainExactly listOf("LocalFeature", "RemoteFeature")
 
-        searchQueries.value = QueryString.create("rem feat")
-        features = awaitItem().map(FeatureMetadata::name)
-        features shouldContainExactly listOf("RemoteFeature")
+      searchQueries.value = QueryString.create("rem feat")
+      features = awaitItem().map(FeatureMetadata::name)
+      features shouldContainExactly listOf("RemoteFeature")
 
-        searchQueries.value = QueryString.create("value1")
-        features = awaitItem().map(FeatureMetadata::name)
-        features shouldContainExactly listOf("LocalFeature")
+      searchQueries.value = QueryString.create("value1")
+      features = awaitItem().map(FeatureMetadata::name)
+      features shouldContainExactly listOf("LocalFeature")
 
-        searchQueries.value = QueryString.create("unknown")
-        awaitItem().shouldBeEmpty()
+      searchQueries.value = QueryString.create("unknown")
+      awaitItem().shouldBeEmpty()
 
-        cancel()
-      }
+      cancel()
     }
+  }
 }

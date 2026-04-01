@@ -85,11 +85,15 @@ internal class RawOptionStorage(private val storage: Storage) {
 
 @OptIn(InternalLaboratoryApi::class)
 private fun <T> Class<out T>.findOption(name: String): T? where T : Feature<T>, T : Enum<out T> =
-  options.firstOrNull { option -> option.name == name }
+  options.firstOrNull { option ->
+    option.name == name
+  }
 
 @OptIn(InternalLaboratoryApi::class)
 private fun Class<out Feature<*>>.findOption(name: String): Feature<*>? =
-  optionsRaw.firstOrNull { option -> option.name == name }
+  optionsRaw.firstOrNull { option ->
+    option.name == name
+  }
 
 private val Class<out Feature<*>>.storageKey
   get() = name
