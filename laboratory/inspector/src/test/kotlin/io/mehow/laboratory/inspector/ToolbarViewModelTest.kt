@@ -21,45 +21,43 @@ class ToolbarViewModelTest {
   private val viewModel = ToolbarViewModel(laboratory, scope.backgroundScope)
 
   @Test
-  fun `search interaction`() =
-    scope.runTest {
-      viewModel.uiModels.test {
-        var uiModel = awaitItem()
-        uiModel.isSearchOpen.shouldBeFalse()
-        uiModel.query shouldBe QueryString.Empty
+  fun `search interaction`() = scope.runTest {
+    viewModel.uiModels.test {
+      var uiModel = awaitItem()
+      uiModel.isSearchOpen.shouldBeFalse()
+      uiModel.query shouldBe QueryString.Empty
 
-        // Search mode is not enabled
-        uiModel.updateQuery("Hello")
-        expectNoEvents()
+      // Search mode is not enabled
+      uiModel.updateQuery("Hello")
+      expectNoEvents()
 
-        uiModel.openSearch()
-        uiModel = awaitItem()
-        uiModel.isSearchOpen.shouldBeTrue()
+      uiModel.openSearch()
+      uiModel = awaitItem()
+      uiModel.isSearchOpen.shouldBeTrue()
 
-        uiModel.updateQuery("abc")
-        uiModel = awaitItem()
-        uiModel.query shouldBe QueryString.create("abc")
+      uiModel.updateQuery("abc")
+      uiModel = awaitItem()
+      uiModel.query shouldBe QueryString.create("abc")
 
-        uiModel.updateQuery("def")
-        uiModel = awaitItem()
-        uiModel.query shouldBe QueryString.create("def")
+      uiModel.updateQuery("def")
+      uiModel = awaitItem()
+      uiModel.query shouldBe QueryString.create("def")
 
-        uiModel.closeSearch()
-        uiModel = awaitItem()
-        uiModel.isSearchOpen.shouldBeFalse()
-        uiModel.query shouldBe QueryString.Empty
-      }
+      uiModel.closeSearch()
+      uiModel = awaitItem()
+      uiModel.isSearchOpen.shouldBeFalse()
+      uiModel.query shouldBe QueryString.Empty
     }
+  }
 
   @Test
-  fun `clear laboratory`() =
-    scope.runTest {
-      laboratory.setOptions(FeatureA.C, FeatureB.A, FeatureC.B)
-      viewModel.uiModels.value.resetFeatureFlags()
-      yield()
+  fun `clear laboratory`() = scope.runTest {
+    laboratory.setOptions(FeatureA.C, FeatureB.A, FeatureC.B)
+    viewModel.uiModels.value.resetFeatureFlags()
+    yield()
 
-      laboratory.experiment<FeatureA>() shouldBe FeatureA.A
-      laboratory.experiment<FeatureB>() shouldBe FeatureB.B
-      laboratory.experiment<FeatureC>() shouldBe FeatureC.C
-    }
+    laboratory.experiment<FeatureA>() shouldBe FeatureA.A
+    laboratory.experiment<FeatureB>() shouldBe FeatureB.B
+    laboratory.experiment<FeatureC>() shouldBe FeatureC.C
+  }
 }

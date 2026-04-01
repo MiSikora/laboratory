@@ -85,12 +85,11 @@ private class FeatureFlagGenerator(private val feature: FeatureFlagModel) {
 
   private val kdocCodeBlock = description?.prepareKdocHyperlinks()?.let(CodeBlock::of)
 
-  private val descriptionProperty =
-    description?.let { description ->
-      PropertySpec.builder(descriptionPropertyName, String::class, OVERRIDE)
-        .initializer("%S", description)
-        .build()
-    }
+  private val descriptionProperty = description?.let { description ->
+    PropertySpec.builder(descriptionPropertyName, String::class, OVERRIDE)
+      .initializer("%S", description)
+      .build()
+  }
 
   private val binaryFeatureConstructor =
     if (feature.trueOption != null) {

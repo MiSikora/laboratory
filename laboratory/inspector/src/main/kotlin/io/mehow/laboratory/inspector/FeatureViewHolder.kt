@@ -37,11 +37,10 @@ internal class FeatureViewHolder(
   private val optionsControl =
     itemView.findViewById<OptionViewGroup>(R.id.io_mehow_laboratory_feature_options)
 
-  private val switchListener =
-    CompoundButton.OnCheckedChangeListener { _, isChecked ->
-      val source = if (isChecked) Feature.Source.Remote else Feature.Source.Local
-      listener.onSelectSource(metadata!!.type, source)
-    }
+  private val switchListener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
+    val source = if (isChecked) Feature.Source.Remote else Feature.Source.Local
+    listener.onSelectSource(metadata!!.type, source)
+  }
 
   init {
     descriptionControl.movementMethod = LinkMovementMethod.getInstance()
