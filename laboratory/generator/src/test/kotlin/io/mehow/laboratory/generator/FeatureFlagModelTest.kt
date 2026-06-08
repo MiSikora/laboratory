@@ -145,7 +145,10 @@ class FeatureFlagModelTest {
       shouldThrow<IllegalArgumentException> {
         FeatureFlagModel(
           ClassName("io.mehow", "FeatureA"),
-          listOf(FeatureFlagOption("A", isDefault = true), FeatureFlagOption("B", isDefault = true)),
+          listOf(
+            FeatureFlagOption("A", isDefault = true),
+            FeatureFlagOption("B", isDefault = true),
+          ),
         )
       }
 
