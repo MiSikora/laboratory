@@ -51,7 +51,7 @@ jobs:
           changelog_file: ./docs/changelog.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3.0.0
+        uses: softprops/action-gh-release@v3.0.1
         with:
           body: ${{ steps.extract-release-notes.outputs.release_notes }}
           files: |
