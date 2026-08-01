@@ -22,7 +22,7 @@ jobs:
           force_cancel: true
 
       - name: Checkout Repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
 
       - name: Set Up JDK
         uses: actions/setup-java@v5.2.0
